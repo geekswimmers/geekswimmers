@@ -1,0 +1,4 @@
+config.toml
+go.sum
+.gcloudignore
+app.yaml
