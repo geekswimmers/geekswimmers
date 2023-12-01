@@ -1,0 +1,61 @@
+{{template "base" .}}
+
+{{define "title"}}@{{.User.Username}} - Settings{{end}}
+
+{{define "content"}}
+    <h2>{{.User.Name }} | <small>Settings</small></h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-3">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-info"><strong>Profile</strong></li>
+                <li class="list-group-item list-group-item-light"><a href="email" class="text-info">Email</a></li>
+                <li class="list-group-item list-group-item-light"><a href="account" class="text-info">Account</a></li>
+            </ul>
+            <br>
+        </div>
+        <div class="col-sm-9">
+            <div class="card">
+                <div class="card-body">
+                    <p class="lead">Make it easier for others to identify you when your username is not obvious.</p>
+                    <form id="profile-form" method="post" action="profile">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <div id="username"><em>@{{.User.Username}}</em></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="lastName">Email</label>
+                                    <div id="username"><em>{{.User.Email}}</em></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" value="{{if .User.FirstName}}{{.User.FirstName}}{{end}}">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" value="{{if .User.LastName}}{{.User.LastName}}{{end}}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-info">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "scripts"}}
+{{end}}

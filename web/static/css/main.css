@@ -1,0 +1,22 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    padding-top: 75px;
+    padding-bottom: 75px;
+    background-color: rgb(255, 255, 255);
+}
+
+.error {
+    color: red;
+}
+
+.jumbotron {
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+}
+
+.success {
+    color: green;
+}

@@ -1,0 +1,5 @@
+Your email has successfully changed from {{.CurrentEmail}} to {{.NewEmail}}. Please use the new email to sign in from now on.
+
+Note: If you did not request this change, please let us know immediately by replying to this message.
+
+Thanks for using Geek Swimmers!

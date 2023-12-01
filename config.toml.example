@@ -1,0 +1,22 @@
+[database]
+url = "postgres://followinsteps:followinsteps@localhost:5432/followinsteps?sslmode=disable"
+maxopenconns = 10
+maxidleconns = 5
+connmaxlifetime = 30 # minutes
+
+[email]
+server = ""
+port = 
+transport = "TLS"
+username = ""
+password = ""
+from = ""
+
+[server]
+port = 8080
+sessionkey = ""
+url = "http://localhost:8080"
+
+[recaptcha]
+sitekey = ""
+secretkey = ""

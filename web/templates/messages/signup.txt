@@ -1,0 +1,16 @@
+Thanks for joining Geek Swimmers!
+
+You informed:
+
+Email: {{.CurrentEmail}}
+Username: {{.Username}}
+
+Please keep this message in case you need to remember the email and username you used to sign up.
+
+Please confirm your sign up by following the link below:
+
+{{.ServerUrl}}/auth/confirm/{{.Confirmation}}
+
+Note: This confirmation will let you receive notifications from us, If you did not sign up to Geek Swimmers and is not expecting any messages from us, then it is safe to ignore this message.
+
+Thanks for joining Geek Swimmers!

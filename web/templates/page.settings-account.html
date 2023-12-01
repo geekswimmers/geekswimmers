@@ -1,0 +1,66 @@
+{{template "base" .}}
+
+{{define "title"}}@{{.User.Username}} - Settings{{end}}
+
+{{define "content"}}
+    <h2>{{.User.Name }} | <small>Settings</small></h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-3">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light"><a href="settings" class="text-info">Profile</a></li>
+                <li class="list-group-item list-group-item-light"><a href="email" class="text-info">Email</a></li>
+                <li class="list-group-item list-group-item-info"><strong>Account</strong></li>
+            </ul>
+            <br>
+        </div>
+        <div class="col-sm-9">
+            {{if .Error }}
+                <div class="alert alert-warning" role="alert">
+                    {{html .Error}}
+                </div>
+            {{end}}
+
+            <div class="card">
+                <div class="card-body">
+                    <h4>Sign-Off</h4>
+                    <p class="lead">By signing off from <strong>Geek Swimmers</strong> you agree to:</p>
+                    <ul>
+                        <li>discard your <u>email address</u>, <u>first name</u>, <u>last name</u>, and <u>password</u></li>
+                        <li>keep your <u>username</u> to prevent other people from using it</li>
+                    </ul>
+
+                    <p class="lead">These rules will be applied 15 days after the day you signed off.
+                        However, you can recover your account if you sign in at least once within this period.</p>
+
+                    <p class="lead">Please, send your inquiries to <a href="mailto:contact@geekswimmers.com">contact@geekswimmers.com</a> for further clarifications.</p>
+
+                    <p class="lead">We need to verify your identity to continue:</p>
+
+                    <form id="auth-form" method="post" action="account" autocomplete="off">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{.User.Email}}" required>
+                                    <span class="error">{{html .ErrorEmail}}</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <span class="error">{{html .ErrorAuthentication}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning">Continue...</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "scripts"}}
+{{end}}
