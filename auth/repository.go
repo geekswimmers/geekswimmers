@@ -49,13 +49,13 @@ func UpdateUserAccount(userAccount *UserAccount, db storage.Database) error {
                  modified = current_timestamp,
                  first_name = $2,
                  last_name = $3,
-                 notification_promo = $4
+                 notification = $4
              where id = $5`
 
-	_, err := db.Exec(stmt, userAccount.Confirmation, userAccount.FirstName, userAccount.LastName, userAccount.NotificationPromo, userAccount.ID)
+	_, err := db.Exec(stmt, userAccount.Confirmation, userAccount.FirstName, userAccount.LastName, userAccount.Notification, userAccount.ID)
 	if err != nil {
 		return fmt.Errorf("auth.UpdateUserAccount(%v, %v, %v, %v, %v): %v", userAccount.Confirmation, userAccount.FirstName,
-			userAccount.LastName, userAccount.NotificationPromo, userAccount.ID, err)
+			userAccount.LastName, userAccount.Notification, userAccount.ID, err)
 	}
 
 	return nil
@@ -114,7 +114,7 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, username, first_name, last_name, password, sign_off, notification_promo, access_role
+	stmt := `select id, email, username, first_name, last_name, password, sign_off, notification, access_role
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
@@ -125,7 +125,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.Username,
 		&userAccount.FirstName, &userAccount.LastName, &userAccount.Password,
-		&userAccount.SignOff, &userAccount.NotificationPromo, &userAccount.Role)
+		&userAccount.SignOff, &userAccount.Notification, &userAccount.Role)
 	if err != nil {
 		log.Printf("auth.FindUserAccountByEmail(%v) : %v", email, err)
 		return nil
@@ -135,7 +135,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 }
 
 func FindUserAccountByUsername(username string, db storage.Database) *UserAccount {
-	stmt := `select ua.id, ua.email, ua.username, ua.first_name, ua.last_name, ua.password, ua.sign_off, ua.notification_promo, ua.access_role
+	stmt := `select ua.id, ua.email, ua.username, ua.first_name, ua.last_name, ua.password, ua.sign_off, ua.notification, ua.access_role
 			 from user_account ua
 			 where ua.username = $1`
 
@@ -143,7 +143,7 @@ func FindUserAccountByUsername(username string, db storage.Database) *UserAccoun
 
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.Username, &userAccount.FirstName,
-		&userAccount.LastName, &userAccount.Password, &userAccount.SignOff, &userAccount.NotificationPromo, &userAccount.Role)
+		&userAccount.LastName, &userAccount.Password, &userAccount.SignOff, &userAccount.Notification, &userAccount.Role)
 	if err != nil {
 		log.Printf("auth.FindUserAccountByUsername(%v): %v", username, err)
 		return nil
