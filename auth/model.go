@@ -23,20 +23,20 @@ const (
 )
 
 type UserAccount struct {
-	ID                int64      `json:"id"`
-	Email             string     `json:"-"`
-	Username          string     `json:"username"`
-	Password          []byte     `json:"-"`
-	FirstName         *string    `json:"-"`
-	LastName          *string    `json:"-"`
-	HumanScore        float32    `json:"-"`
-	Confirmation      *string    `json:"-"`
-	Created           time.Time  `json:"-"`
-	Modified          time.Time  `json:"-"`
-	SignOff           *time.Time `json:"-"`
-	SignOffFeedback   *string    `json:"-"`
-	NotificationPromo bool       `json:"-"` // User agrees to receive promotional emails in addition to notification emails.
-	Role              string     `json:"-"`
+	ID              int64      `json:"id"`
+	Email           string     `json:"-"`
+	Username        string     `json:"username"`
+	Password        []byte     `json:"-"`
+	FirstName       *string    `json:"-"`
+	LastName        *string    `json:"-"`
+	HumanScore      float32    `json:"-"`
+	Confirmation    *string    `json:"-"`
+	Created         time.Time  `json:"-"`
+	Modified        time.Time  `json:"-"`
+	SignOff         *time.Time `json:"-"`
+	SignOffFeedback *string    `json:"-"`
+	Notification    bool       `json:"-"` // User agrees to receive promotional emails in addition to notification emails.
+	Role            string     `json:"-"`
 }
 
 func (userAccount *UserAccount) Name() string {
