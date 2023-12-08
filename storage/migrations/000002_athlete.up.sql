@@ -1,7 +1,7 @@
 create table if not exists athlete (
 	id           serial      primary key,
 	user_account integer     not null references user_account,
-	birthday     date        not null,
+	date_birth   date        not null,
 	gender       varchar(20) not null
 );
 
@@ -22,16 +22,25 @@ create table if not exists club_coach (
 	club  integer not null references club
 );
 
+create table if not exists swim_season (
+	id         serial      primary key,
+	club       integer     not null references club,
+	name       varchar(50) not null,
+	start_date date        not null,
+	end_date   date        not null
+);
+
 create table if not exists swim_group (
-	id   serial       primary key,
-	name varchar(100) not null,
-	club integer      not null references club
+	id     serial       primary key,
+	name   varchar(100) not null,
+	club   integer      not null references club,
+	season integer      not null references swim_season
 );
 
 create table if not exists swim_group_schedule (
-    id         serial primary key,
-    swim_group integer not null references swim_group,
-    day_week   integer not null,
+    id         serial    primary key,
+    swim_group integer   not null references swim_group,
+    day_week   integer   not null,
     start_time timestamp not null,
     end_time   timestamp not null
 );
@@ -39,9 +48,7 @@ create table if not exists swim_group_schedule (
 create table if not exists swim_group_coach (
 	id         serial  primary key,
 	coach      integer not null references user_account,
-	swim_group integer not null references swim_group,
-	start_date date    null,
-	end_date   date    null
+	swim_group integer not null references swim_group
 );
 
 create table if not exists swim_group_athlete (
@@ -61,46 +68,47 @@ create table if not exists meet (
 );
 
 create table if not exists meet_session (
-    if         serial       primary key,
-    meet       integer not  null references meet,
-    name       varchar(50)  not null,
-    start_time timestamp    null,
-    end_time   timestamp    null
+    if         serial        primary key,
+    meet       integer not   not null references meet,
+    name       varchar(50)   not null,
+    start_time timestamp     null,
+    end_time   timestamp     null,
+	session_type varchar(20) null -- preliminary,, semifinal, final, etc.
 );
 
 create table if not exists meet_event (
 	id       serial       primary key,
 	session  integer      not null references meet_session,
 	stroke   varchar(20)  not null,
-	distance integer      not null
+	distance integer      not null,
+	gender   varchar(20)  null
+);
+
+create table if not exists meet_heat (
+	id          serial  primary key,
+	meet_event  integer not null references meet_event,
+	heat_number integer not null
 );
 
 create table if not exists meet_athlete (
 	id         serial primary key,
-	meet_event integer not null,
-	athlete    integer not null references athlete
+	athlete    integer not null references athlete,
+	meet_heat  integer not null references meet_heat,
+	lane       integer null,
+	race_time  integer null
 );
 
-create table if not exists timekeeping (
-	id         serial  primary key,
-	athlete    integer not null references athlete,
-	meet_event integer not null references meet_event,
-	time_taken integer not null,
-	date_taken date    null,
-	meet       integer null references meet
+create table if not exists position (
+    id          serial      primary key,
+    name        varchar(50) not null,
+    description text        null
 );
 
 create table if not exists meet_position (
-    id          serial       primary key,
-    name        varchar(50)  not null,
-    description varchar(255) null
-);
-
-create table if not exists volunteer_meet (
     id              serial  primary key,
     volunteer       integer not null references user_account,
     meet_session    integer not null references meet_session,
-    position        integer not null references meet_position,
+    position        integer not null references position,
     deck_evaluation boolean not null default false,
     absent          boolean not null default false
 );
