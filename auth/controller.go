@@ -431,7 +431,7 @@ func (ac *AuthController) SaveEmailSettings(res http.ResponseWriter, req *http.R
 	username := storage.GetSessionValue(req, "profile", "username")
 	user := FindUserAccountByUsername(username, ac.DB)
 
-	user.NotificationPromo, err = strconv.ParseBool(req.PostForm.Get("notification_promo"))
+	user.Notification, err = strconv.ParseBool(req.PostForm.Get("notification_promo"))
 	if err != nil {
 		log.Printf("Error reading form value: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
