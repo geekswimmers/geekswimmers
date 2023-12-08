@@ -1,5 +1,5 @@
 [database]
-url = "postgres://followinsteps:followinsteps@localhost:5432/followinsteps?sslmode=disable"
+url = "postgres://geekswimmers:geekswimmers@localhost:5432/geekswimmers?sslmode=disable"
 maxopenconns = 10
 maxidleconns = 5
 connmaxlifetime = 30 # minutes
