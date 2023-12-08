@@ -2,7 +2,7 @@ create table if not exists athlete (
 	id           serial      primary key,
 	user_account integer     not null references user_account,
 	date_birth   date        not null,
-	gender       varchar(20) not null
+	gender       varchar(20) not null -- MALE, FEMALE
 );
 
 create table if not exists parent_athlete (
@@ -55,33 +55,41 @@ create table if not exists swim_group_athlete (
 	id         serial  primary key,
 	athlete    integer not null references athlete,
 	swim_group integer not null references swim_group,
-    start_date date    null,
-	end_date   date    null
+    start_date date        null,
+	end_date   date        null
 );
 
 create table if not exists meet (
 	id         serial       primary key,
 	name       varchar(100) not null,
-    start_time timestamp    null,
-    end_time   timestamp    null,
-    organizer  integer      null references club
+	course     varchar(10)  not null, -- LONG, SHORT, OPEN_WATER
+    start_time timestamp        null,
+    end_time   timestamp        null,
+    organizer  integer          null references club
+);
+
+create table if not exists age_range (
+    id          serial      primary key,
+	description varchar(50) null,
+	age_from    integer     null,
+	age_to      integer     null
 );
 
 create table if not exists meet_session (
     if         serial        primary key,
-    meet       integer not   not null references meet,
+    meet       integer       not null references meet,
     name       varchar(50)   not null,
-    start_time timestamp     null,
-    end_time   timestamp     null,
-	session_type varchar(20) null -- preliminary,, semifinal, final, etc.
+    start_time timestamp         null,
+    end_time   timestamp         null,
+	session_type varchar(20)     null -- PRELIMINARY, SEMIFINAL, FINAL
 );
 
 create table if not exists meet_event (
 	id       serial       primary key,
 	session  integer      not null references meet_session,
-	stroke   varchar(20)  not null,
+	stroke   varchar(20)  not null, -- FREE, BREAST, BACK, BUTTERFLY, MEDLEY
 	distance integer      not null,
-	gender   varchar(20)  null
+	gender   varchar(20)      null -- FEMALE, MAKE, MIXED
 );
 
 create table if not exists meet_heat (
@@ -94,14 +102,14 @@ create table if not exists meet_athlete (
 	id         serial primary key,
 	athlete    integer not null references athlete,
 	meet_heat  integer not null references meet_heat,
-	lane       integer null,
-	race_time  integer null
+	lane       integer     null,
+	race_time  integer     null
 );
 
 create table if not exists position (
     id          serial      primary key,
     name        varchar(50) not null,
-    description text        null
+    description text            null
 );
 
 create table if not exists meet_position (
