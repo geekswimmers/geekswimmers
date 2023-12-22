@@ -5,10 +5,17 @@ create table if not exists athlete (
 	gender       varchar(20) not null -- MALE, FEMALE
 );
 
-create table if not exists parent_athlete (
-    id      serial primary key,
-    parent  integer not null references user_account,
-    athlete integer not null references athlete
+create table if not exists swim_season (
+	id         serial      primary key,
+	name       varchar(50) not null,
+	start_date date        not null,
+	end_date   date        not null
+);
+
+create table if not exists family_athlete (
+    id       serial primary key,
+    relative integer not null references user_account,
+    athlete  integer not null references athlete
 );
 
 create table if not exists club (
@@ -20,14 +27,6 @@ create table if not exists club_coach (
 	id    serial  primary key,
 	coach integer not null references user_account,
 	club  integer not null references club
-);
-
-create table if not exists swim_season (
-	id         serial      primary key,
-	club       integer     not null references club,
-	name       varchar(50) not null,
-	start_date date        not null,
-	end_date   date        not null
 );
 
 create table if not exists swim_group (
@@ -68,13 +67,6 @@ create table if not exists meet (
     organizer  integer          null references club
 );
 
-create table if not exists age_range (
-    id          serial      primary key,
-	description varchar(50) null,
-	age_from    integer     null,
-	age_to      integer     null
-);
-
 create table if not exists meet_session (
     if         serial        primary key,
     meet       integer       not null references meet,
@@ -101,7 +93,8 @@ create table if not exists meet_heat (
 create table if not exists meet_athlete (
 	id         serial primary key,
 	athlete    integer not null references athlete,
-	meet_heat  integer not null references meet_heat,
+	meet_event integer not null references meet_event,
+	meet_heat  integer     null references meet_heat,
 	lane       integer     null,
 	race_time  integer     null
 );
