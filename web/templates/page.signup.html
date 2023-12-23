@@ -53,11 +53,7 @@
             </form>
         </div>
     </div>
-{{end}}
-
-{{define "scripts"}}
     <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script src="/static/js/auth.js"></script>
     <script>
         function onSubmit(token) {
             document.getElementById("signup-form").submit();
