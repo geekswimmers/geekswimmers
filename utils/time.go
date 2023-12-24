@@ -2,7 +2,7 @@ package utils
 
 import "fmt"
 
-func ToMiliseconds(min int, sec int, milisec int) int64 {
+func ToMiliseconds(min, sec, milisec int) int64 {
 	return int64((min * 60000) + (sec * 1000) + (milisec * 10))
 }
 
@@ -19,6 +19,6 @@ func FormatMiliseconds(miliseconds int64) string {
 	return FormatTime(min, sec, milisec)
 }
 
-func FormatTime(min int, sec int, milisec int) string {
+func FormatTime(min, sec, milisec int) string {
 	return fmt.Sprintf("%s:%s:%s", fmt.Sprintf("%02d", min), fmt.Sprintf("%02d", sec), fmt.Sprintf("%02d", milisec))
 }
