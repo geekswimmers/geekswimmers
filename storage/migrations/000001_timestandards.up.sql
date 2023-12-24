@@ -5,10 +5,7 @@ create table if not exists swim_season (
 	end_date   date        not null
 );
 
-create table if not exists swim_organization (
-	id   serial       primary key,
-	name varchar(100) not null
-);
+create index idx_season_period on swim_season (start_date, end_date);
 
 create table if not exists time_standard (
     id      serial       primary key,
@@ -28,13 +25,14 @@ create table if not exists standard_time (
     standard      integer     not null
 );
 
+create index idx_standard_time on standard_time (age, gender, course, stroke, distance);
+
 create table if not exists meet (
 	id            serial       primary key,
 	name          varchar(100) not null,
 	course        varchar(10)  not null, -- LONG, SHORT
-    start_time    timestamp        null,
-    end_time      timestamp        null,
-    season        integer          null,
-    organizer     integer          null references swim_organization,
+    age_date      timestamp        null,
 	time_standard integer          null references time_standard
 );
+
+create index idx_meet_age on meet (course);
