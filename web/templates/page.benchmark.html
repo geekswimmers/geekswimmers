@@ -1,0 +1,37 @@
+{{template "base" .}}
+
+{{define "title"}}Time Benchmark{{end}}
+
+{{define "content"}}
+    <h2>Time Benchmark</h2>
+    <hr>
+
+    <p>
+        You completed a
+        <b>{{.Example.Distance}} {{.Example.Stroke | Title}}</b> event in a <b>{{if eq .Example.Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Example.Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
+        <b>{{.FormatedTime}}</b>. Comparing this time to swimming standards in Ontario, Canada, we have:
+    </p>
+
+    {{range .StandardTimes}}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{.TimeStandard.Name}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{.TimeStandard.Summary}}</h6>
+            <p class="card-text">
+                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Standard}}" style="height: 25px">
+                    <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%">{{$.FormatedTime}}</div>
+                </div>
+            </p>
+            <p class="card-text">
+                The time to qualify for <b>{{$.Example.Distance}} {{$.Example.Stroke | Title}}</b> 
+                at this meet is <b>{{.Standard | FormatMiliseconds}}</b>.
+                {{if (gt .Difference 0)}}
+                    You are <b>{{.Difference | FormatMiliseconds}}</b> away from this experience.
+                {{else}}
+                    Your time of <b>{{$.FormatedTime}}</b> gualifies you to compete at this meet! Congratulations!!!
+                {{end}}
+            </p>
+        </div>
+    </div>
+    {{end}}
+{{end}}
