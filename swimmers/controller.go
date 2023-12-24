@@ -1,6 +1,7 @@
 package swimmers
 
 import (
+	"fmt"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -51,11 +52,14 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	for _, standardTime := range standardTimes {
 		time := utils.ToMiliseconds(minute, second, milisecond)
 		standardTime.Difference = time - standardTime.Standard
+		fmt.Printf("%d , %d\n", time, standardTime.Standard)
+
 		if time <= standardTime.Standard {
 			standardTime.Percentage = 100
 		} else {
-			standardTime.Percentage = (time / standardTime.Standard) * 100
+			standardTime.Percentage = (standardTime.Standard * 100) / time
 		}
+		fmt.Printf("%d", standardTime.Percentage)
 	}
 
 	ctx := &context{
