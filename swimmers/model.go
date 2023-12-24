@@ -17,21 +17,16 @@ const (
 )
 
 type SwimSeason struct {
-	ID        int64
-	Name      string
-	StartDate time.Time
-	EndDate   time.Time
+	Name string
 }
 
 type TimeStandard struct {
-	ID      int64
 	Season  SwimSeason
 	Name    string
 	Summary string
 }
 
 type StandardTime struct {
-	ID           int64
 	TimeStandard TimeStandard
 	Age          int64
 	Gender       string
@@ -42,4 +37,22 @@ type StandardTime struct {
 
 	Difference int64
 	Percentage int64
+}
+
+type Meet struct {
+	Name    string
+	AgeDate time.Time
+}
+
+type Swimmer struct {
+	BirthDate time.Time
+	Gender    string
+}
+
+func (swimmer *Swimmer) AgeAt(date time.Time) int {
+	age := date.Year() - swimmer.BirthDate.Year()
+	if date.YearDay() < swimmer.BirthDate.YearDay() {
+		age--
+	}
+	return age
 }
