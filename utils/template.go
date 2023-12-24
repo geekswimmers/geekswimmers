@@ -57,7 +57,7 @@ func ToHTML(s string) template.HTML {
 	return template.HTML(s)
 }
 
-func FirstLetterUppercase(str string) string {
+func Title(str string) string {
 	if len(str) == 0 {
 		return str
 	}
