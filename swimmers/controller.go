@@ -49,6 +49,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	}
 	standardTimes, _ := FindTimeStandards(standardTimeExample, sc.DB)
 
+	// Calculate time difference and percentage of acomplishment
 	for _, standardTime := range standardTimes {
 		time := utils.ToMiliseconds(minute, second, milisecond)
 		standardTime.Difference = time - standardTime.Standard
