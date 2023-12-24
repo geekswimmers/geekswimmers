@@ -3,6 +3,7 @@ package server
 import (
 	"geekswimmers/auth"
 	"geekswimmers/storage"
+	"geekswimmers/swimmers"
 	"geekswimmers/web"
 	"net/http"
 
@@ -40,9 +41,15 @@ func (s *Server) Routes() {
 		AC: authController,
 	}
 
+	swimmersController := &swimmers.SwimmersController{
+		DB: s.DB,
+	}
+
 	// The order here must be absolutely respected.
 	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
+	s.Router.Post("/swimmers/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
+
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
 

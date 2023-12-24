@@ -3,10 +3,13 @@ package utils
 import (
 	"bytes"
 	"fmt"
-	"github.com/gomarkdown/markdown"
 	"html/template"
 	"log"
 	"regexp"
+
+	"github.com/gomarkdown/markdown"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func GetTemplate(layout, page string) *template.Template {
@@ -52,6 +55,14 @@ func ToMarkdown(s string) template.HTML {
 
 func ToHTML(s string) template.HTML {
 	return template.HTML(s)
+}
+
+func FirstLetterUppercase(str string) string {
+	if len(str) == 0 {
+		return str
+	}
+
+	return cases.Title(language.English, cases.Compact).String(str)
 }
 
 func normalizeNewlines(d []byte) []byte {
