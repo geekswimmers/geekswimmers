@@ -8,28 +8,37 @@
 
     <p>
         You completed a
-        <b>{{.Example.Distance}} {{.Example.Stroke | Title}}</b> event in a <b>{{if eq .Example.Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Example.Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
-        <b>{{.FormatedTime}}</b>. Comparing this time to swimming standards in Ontario, Canada, we have:
+        <b>{{.Distance}} {{.Stroke | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
+        <b>{{.FormatedTime}}</b>. We compared this time to swimming standards in Canada. Take a look at what we have found:
     </p>
 
-    {{range .StandardTimes}}
+    {{range .Meets}}
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{.TimeStandard.Name}}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{.TimeStandard.Summary}}</h6>
+            <h5 class="card-title">{{.StandardTime.TimeStandard.Name}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{.StandardTime.TimeStandard.Summary}}</h6>
             <p class="card-text">
-                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Standard}}" style="height: 25px">
-                    <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%">{{$.FormatedTime}}</div>
+                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 25px">
+                    <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%">{{$.FormatedTime}}</div>
                 </div>
             </p>
             <p class="card-text">
-                The time to qualify for <b>{{$.Example.Distance}} {{$.Example.Stroke | Title}}</b> 
-                at this meet is <b>{{.Standard | FormatMiliseconds}}</b>.
-                {{if (gt .Difference 0)}}
-                    You are <b>{{.Difference | FormatMiliseconds}}</b> away from this experience.
+                The time to qualify for <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
+                {{if (gt .StandardTime.Difference 0)}}
+                    You are <b>{{.StandardTime.Difference | FormatMiliseconds}}</b> away from this experience.
                 {{else}}
                     Your time of <b>{{$.FormatedTime}}</b> gualifies you to compete at this meet! Congratulations!!!
                 {{end}}
+            </p>
+        </div>
+    </div>
+    <br>
+    {{else}}
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Unfortunately, we didn't find any standards to compare to. Please, give us some time to
+                load the data and try again tomorrow.
             </p>
         </div>
     </div>

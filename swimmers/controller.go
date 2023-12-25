@@ -1,13 +1,13 @@
 package swimmers
 
 import (
-	"fmt"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type SwimmersController struct {
@@ -15,9 +15,12 @@ type SwimmersController struct {
 }
 
 type context struct {
-	Example       StandardTime
-	StandardTimes []*StandardTime
-	FormatedTime  string
+	Example      StandardTime
+	Distance     int64
+	Course       string
+	Stroke       string
+	Meets        []*Meet
+	FormatedTime string
 }
 
 // ResetPassword
@@ -27,7 +30,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	utils.Check(err)
 
 	// Get values from the form
-	age, _ := strconv.ParseInt(req.PostForm.Get("age"), 10, 64)
+	birthDate, _ := time.Parse("2006-01-02", req.PostForm.Get("birthDate"))
 	gender := req.PostForm.Get("gender")
 	course := req.PostForm.Get("course")
 	event := strings.Split(req.PostForm.Get("event"), "-")
@@ -35,38 +38,52 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	second, _ := strconv.Atoi(req.PostForm.Get("second"))
 	milisecond, _ := strconv.Atoi(req.PostForm.Get("milisecond"))
 
+	swimmer := &Swimmer{
+		BirthDate: birthDate,
+		Gender:    gender,
+	}
+
 	// Separate the event into distance and stroke
 	distance, _ := strconv.ParseInt(event[0], 10, 64)
 	stroke := event[1]
 
-	// Find standard times in the database.
-	standardTimeExample := StandardTime{
-		Age:      age,
-		Gender:   gender,
-		Course:   course,
-		Stroke:   stroke,
-		Distance: distance,
-	}
-	standardTimes, _ := FindTimeStandards(standardTimeExample, sc.DB)
+	var foundMeets []*Meet
+	meets, _ := FindChampionshipMeets(course, sc.DB)
+	for _, meet := range meets {
+		meet.Age = swimmer.AgeAt(meet.AgeDate)
 
-	// Calculate time difference and percentage of acomplishment
-	for _, standardTime := range standardTimes {
-		time := utils.ToMiliseconds(minute, second, milisecond)
-		standardTime.Difference = time - standardTime.Standard
-		fmt.Printf("%d , %d\n", time, standardTime.Standard)
-
-		if time <= standardTime.Standard {
-			standardTime.Percentage = 100
-		} else {
-			standardTime.Percentage = (standardTime.Standard * 100) / time
+		// Find standard times in the database.
+		standardTimeExample := StandardTime{
+			Age:          meet.Age,
+			Gender:       gender,
+			Course:       course,
+			Stroke:       stroke,
+			Distance:     distance,
+			TimeStandard: meet.TimeStandard,
 		}
-		fmt.Printf("%d", standardTime.Percentage)
+		standardTime, _ := FindStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
+
+		if standardTime != nil {
+			// Calculate time difference and percentage of acomplishment
+			time := utils.ToMiliseconds(minute, second, milisecond)
+			standardTime.Difference = time - standardTime.Standard
+
+			if time <= standardTime.Standard {
+				standardTime.Percentage = 100
+			} else {
+				standardTime.Percentage = (standardTime.Standard * 100) / time
+			}
+			meet.StandardTime = *standardTime
+			foundMeets = append(foundMeets, meet)
+		}
 	}
 
 	ctx := &context{
-		Example:       standardTimeExample,
-		StandardTimes: standardTimes,
-		FormatedTime:  utils.FormatTime(minute, second, milisecond),
+		Meets:        foundMeets,
+		FormatedTime: utils.FormatTime(minute, second, milisecond),
+		Distance:     distance,
+		Course:       course,
+		Stroke:       stroke,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{

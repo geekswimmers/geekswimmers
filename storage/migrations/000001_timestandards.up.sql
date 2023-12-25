@@ -25,14 +25,15 @@ create table if not exists standard_time (
     standard      integer     not null
 );
 
-create index idx_standard_time on standard_time (age, gender, course, stroke, distance);
+create unique index idx_standard_time on standard_time (time_standard, age, gender, course, stroke, distance);
 
 create table if not exists meet (
 	id            serial       primary key,
 	name          varchar(100) not null,
 	course        varchar(10)  not null, -- LONG, SHORT
-    age_date      timestamp        null,
-	time_standard integer          null references time_standard
+    season        integer      not null references swim_season,
+    time_standard integer          null references time_standard,
+    age_date      timestamp        null
 );
 
 create index idx_meet_age on meet (course);

@@ -18,18 +18,8 @@
 
                 <div class="row">
                     <div class="mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <select id="age" name="age" class="form-select" required>
-                            <option value="">Select...</option>
-                            <option value="10">10 & Under</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17 & Over</option>
-                        </select>
+                        <label for="birthDate" class="form-label">Birth Date</label>
+                        <input type="date" class="form-control" name="birthDate" id="birthDate" required>
                     </div>
 
                     <div class="mb-3">
@@ -90,15 +80,15 @@
                         <div class="row">
                             <div class="col">
                                 <label for="minute">Minutes</label><br>
-                                <input type="number" placeholder="0" id="minute" name="minute" min="0" max="59" size="3" required>
+                                <input type="number" class="form-control" placeholder="0" id="minute" name="minute" min="0" max="59" size="3" required>
                             </div>
                             <div class="col">
                                 <label for="second">Seconds</label><br>
-                                <input type="number" placeholder="0" id="second" name="second" min="0" max="59" size="3" required>
+                                <input type="number" class="form-control" placeholder="0" id="second" name="second" min="0" max="59" size="3" required>
                             </div>
                             <div class="col">
                                 <label for="milisecond">Miliseconds</label><br>
-                                <input type="number" placeholder="0" id="milisecond" name="milisecond" min="0" max="99" size="3" required>
+                                <input type="number" class="form-control" placeholder="0" id="milisecond" name="milisecond" min="0" max="99" size="3" required>
                             </div>
                         </div>
                     </div>
