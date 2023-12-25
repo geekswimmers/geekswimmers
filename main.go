@@ -36,8 +36,6 @@ func run() error {
 		return err
 	}
 
-	storage.InitSessionStore(config)
-
 	db, err := storage.InitializeConnectionPool(config)
 	if err != nil {
 		return err

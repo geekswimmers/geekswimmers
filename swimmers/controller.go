@@ -4,6 +4,7 @@ import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,11 +24,11 @@ type context struct {
 	FormatedTime string
 }
 
-// ResetPassword
-// post: /auth/password/reset/
 func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
-	utils.Check(err)
+	if err != nil {
+		log.Print(err)
+	}
 
 	// Get values from the form
 	birthDate, _ := time.Parse("2006-01-02", req.PostForm.Get("birthDate"))
@@ -93,5 +94,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	})
 
 	err = html.Execute(res, ctx)
-	utils.Check(err)
+	if err != nil {
+		log.Print(err)
+	}
 }

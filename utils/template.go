@@ -1,13 +1,10 @@
 package utils
 
 import (
-	"bytes"
 	"fmt"
 	"html/template"
 	"log"
-	"regexp"
 
-	"github.com/gomarkdown/markdown"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -41,35 +38,10 @@ func applyLayout(layout, page string) []string {
 	return files
 }
 
-// ToMarkdown A template funcConvert markdown content to HTML and unescape special characters.
-func ToMarkdown(s string) template.HTML {
-	md := normalizeNewlines([]byte(s))
-	html := markdown.ToHTML(md, nil, nil)
-
-	// Adds target="_blank" to any URL generated from markdown.
-	pattern := regexp.MustCompile(`(a href="[^"]+")`)
-	htmlWithTargetedUrls := pattern.ReplaceAllString(string(html), "${1} target=\"_blank\"")
-
-	return template.HTML(htmlWithTargetedUrls)
-}
-
-func ToHTML(s string) template.HTML {
-	return template.HTML(s)
-}
-
 func Title(str string) string {
 	if len(str) == 0 {
 		return str
 	}
 
 	return cases.Title(language.English, cases.Compact).String(str)
-}
-
-func normalizeNewlines(d []byte) []byte {
-	// replace CR(13) LF(10) (windows) with LF(10) (unix)
-	d = bytes.Replace(d, []byte{13, 10}, []byte{10}, -1)
-
-	// replace CF (mac) with LF (unix)
-	d = bytes.Replace(d, []byte{13}, []byte{10}, -1)
-	return d
 }
