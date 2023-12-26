@@ -24,24 +24,6 @@ const (
 	// DatabaseConnMaxLifetime defines the time the idle connections will remain active before being discarded. The default is 2.
 	DatabaseConnMaxLifetime = "database.connmaxlifetime"
 
-	// EmailServer is the URL address of the email server
-	EmailServer = "email.server"
-	// EmailPort is the number of the port in the server open for email exchange
-	EmailPort = "email.port"
-	// EmailTransport indicates the user transport layer security used
-	EmailTransport = "email.transport"
-	// EmailUsername is the user with the right to send email messages
-	EmailUsername = "email.username"
-	// EmailPassword is a secret key used to legitimate the identity of the user
-	EmailPassword = "email.password"
-	// EmailFrom is the address used as from in an email message
-	EmailFrom = "email.from"
-
-	// RecaptchaSiteKey reCAPTCHA Site Key used in the sign up page publically.
-	RecaptchaSiteKey = "recaptcha.sitekey"
-	// RecaptchaSecretKey reCAPTCHA Secret Key used in the backend to verify the authenticity with reCAPTCHA server.
-	RecaptchaSecretKey = "recaptcha.secretkey"
-
 	// ServerPort is the HTTP port used to serve the application.
 	ServerPort = "server.port"
 	// ServerSessionKey is a random key used to encrypt the session cookie.
@@ -97,8 +79,11 @@ func InitConfiguration(filePath string) (Config, error) {
 	return configuration, nil
 }
 
-/* The configuration entries that change from an environment to another are replaced by environment variables.
-   This function maps environment variables to configuration entries, considering only the ones that change. */
+/*
+The configuration entries that change from an environment to another are replaced by environment variables.
+
+	This function maps environment variables to configuration entries, considering only the ones that change.
+*/
 func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.AutomaticEnv()
 	viperConfig.SetEnvPrefix("geekswimmers")
@@ -106,16 +91,6 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	_ = viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS")
 	_ = viperConfig.BindEnv(DatabaseMaxIdleConns, "DATABASE_MAXIDLECONNS")
 	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
-
-	_ = viperConfig.BindEnv(EmailServer, "EMAIL_SERVER")
-	_ = viperConfig.BindEnv(EmailPort, "EMAIL_PORT")
-	_ = viperConfig.BindEnv(EmailTransport, "EMAIL_TRANSPORT")
-	_ = viperConfig.BindEnv(EmailUsername, "EMAIL_USERNAME")
-	_ = viperConfig.BindEnv(EmailPassword, "EMAIL_PASSWORD")
-	_ = viperConfig.BindEnv(EmailFrom, "EMAIL_FROM")
-
-	_ = viperConfig.BindEnv(RecaptchaSiteKey, "RECAPTCHA_SITEKEY")
-	_ = viperConfig.BindEnv(RecaptchaSecretKey, "RECAPTCHA_SECRETKEY")
 
 	_ = viperConfig.BindEnv(ServerPort, "PORT")
 	_ = viperConfig.BindEnv(ServerSessionKey, "SESSION_KEY")
