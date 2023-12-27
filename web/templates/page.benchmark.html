@@ -18,17 +18,18 @@
             <h5 class="card-title">{{.StandardTime.TimeStandard.Name}}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{.StandardTime.TimeStandard.Summary}}</h6>
             <p class="card-text">
-                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 25px">
-                    <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%">{{$.FormatedTime}}</div>
+                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
+                    <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
                 </div>
             </p>
             <p class="card-text">
-                The time to qualify for <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                The time a {{.Age}}-year-old need to qualify for <b>{{$.Distance}} {{$.Stroke | Title}}</b>
                 at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
                 {{if (gt .StandardTime.Difference 0)}}
                     You are <b>{{.StandardTime.Difference | FormatMiliseconds}}</b> away from this experience.
                 {{else}}
-                    Your time of <b>{{$.FormatedTime}}</b> gualifies you to compete at this meet! Congratulations!!!
+                    Your time of <b>{{$.FormatedTime}}</b> qualifies you to compete at this meet! Congratulations!!!<br>
+                    Please, confirm this information with your coach.
                 {{end}}
             </p>
         </div>
