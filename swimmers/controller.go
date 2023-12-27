@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -78,6 +79,10 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 			foundMeets = append(foundMeets, meet)
 		}
 	}
+
+	sort.SliceStable(foundMeets, func(i, j int) bool {
+		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
+	})
 
 	ctx := &context{
 		Meets:        foundMeets,
