@@ -37,6 +37,7 @@ func MigrateDatabase(c config.Config) error {
 
 // Migrate performs the datastore migration.
 func migrateDatabase(url string) (uint, bool, error) {
+	log.Printf("DB URL: %s", url)
 	migration, err := migrate.New("file://storage/migrations", url)
 	if err != nil {
 		return 0, false, fmt.Errorf("storage: migration files: %v", err)

@@ -19,28 +19,25 @@ var (
 	flgConfigPath = flag.String("cfg", config.DefaultConfigFile, "Path to the server configuration file")
 )
 
-func main() {
-	if err := run(); err != nil {
-		log.Printf("%s\n", err)
-		os.Exit(1)
-	}
-}
-
 func run() error {
+	log.Println("Loading configuration")
 	config, err := loadConfiguration()
 	if err != nil {
 		return err
 	}
 
+	log.Println("Migrating database")
 	if err := storage.MigrateDatabase(config); err != nil {
 		return err
 	}
 
+	log.Println("Initializing database connection pool")
 	db, err := storage.InitializeConnectionPool(config)
 	if err != nil {
 		return err
 	}
 
+	log.Println("Creating GeekSwimmers server")
 	s := server.CreateServer(db, pat.New())
 
 	runHTTPServer(s, defineHTTPPort(config))
@@ -72,8 +69,15 @@ func runHTTPServer(server *server.Server, port string) {
 		Debug:            false,
 	})
 
-	log.Printf("Serving on port: %v", port)
+	log.Printf("Serving GeekSwimmers on port: %v", port)
 	if err := http.ListenAndServe(":"+port, c.Handler(server.Router)); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Printf("%s\n", err)
+		os.Exit(1)
 	}
 }
