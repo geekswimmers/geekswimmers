@@ -81,8 +81,7 @@ func InitConfiguration(filePath string) (Config, error) {
 
 /*
 The configuration entries that change from an environment to another are replaced by environment variables.
-
-	This function maps environment variables to configuration entries, considering only the ones that change.
+This function maps environment variables to configuration entries, considering only the ones that change.
 */
 func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.AutomaticEnv()
