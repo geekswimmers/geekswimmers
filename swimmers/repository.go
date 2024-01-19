@@ -1,6 +1,9 @@
 package swimmers
 
-import "geekswimmers/storage"
+import (
+	"context"
+	"geekswimmers/storage"
+)
 
 func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) {
 	// When we have more than one season in the database, we have to add the swim season in the meet table.
@@ -12,7 +15,7 @@ func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) 
 			 	and time_standard is not null 
 				and age_date is not null
 			 order by age_date`
-	rows, err := db.Query(stmt, course)
+	rows, err := db.Query(context.Background(), stmt, course)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +50,7 @@ func FindStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 			   	and st.stroke = $6
 			   	and st.distance = $7`
 
-	row := db.QueryRow(stmt,
+	row := db.QueryRow(context.Background(), stmt,
 		season.ID, example.TimeStandard.ID, example.Age, example.Gender, example.Course, example.Stroke, example.Distance)
 
 	standardTime := &StandardTime{

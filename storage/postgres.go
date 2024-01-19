@@ -1,24 +1,26 @@
 package storage
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"geekswimmers/config"
 	"log"
-	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
+
+	pgx "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/pkg/errors"
 )
 
 type Database interface {
-	Query(query string, args ...any) (*sql.Rows, error)
-	QueryRow(query string, args ...any) *sql.Row
-	Exec(query string, args ...any) (sql.Result, error)
+	Query(context context.Context, query string, args ...any) (pgx.Rows, error)
+	QueryRow(context context.Context, query string, args ...any) pgx.Row
+	Exec(context context.Context, query string, args ...any) (pgconn.CommandTag, error)
 }
 
 func MigrateDatabase(c config.Config) error {
@@ -37,7 +39,6 @@ func MigrateDatabase(c config.Config) error {
 
 // Migrate performs the datastore migration.
 func migrateDatabase(url string) (uint, bool, error) {
-	log.Printf("DB URL: %s", url)
 	migration, err := migrate.New("file://storage/migrations", url)
 	if err != nil {
 		return 0, false, fmt.Errorf("storage: migration files: %v", err)
@@ -53,22 +54,22 @@ func migrateDatabase(url string) (uint, bool, error) {
 func InitializeConnectionPool(c config.Config) (Database, error) {
 	url := c.GetString(config.DatabaseURL)
 
-	db, err := sql.Open("postgres", url)
+	dbpool, err := pgxpool.New(context.Background(), url)
 	if err != nil {
 		return nil, err
 	}
 
-	maxOpenConns := c.GetInt(config.DatabaseMaxOpenConns)
-	maxIdleConns := c.GetInt(config.DatabaseMaxIdleConns)
-	connMaxLifetime := c.GetDuration(config.DatabaseConnMaxLifetime) * time.Minute
-	db.SetMaxOpenConns(maxOpenConns)
-	db.SetMaxIdleConns(maxIdleConns)
-	db.SetConnMaxLifetime(connMaxLifetime)
-	log.Printf("Database pool: %v max connections, %v idle connections, %v lifetime", maxOpenConns, maxIdleConns, connMaxLifetime)
+	//maxOpenConns := c.GetInt(config.DatabaseMaxOpenConns)
+	//maxIdleConns := c.GetInt(config.DatabaseMaxIdleConns)
+	//connMaxLifetime := c.GetDuration(config.DatabaseConnMaxLifetime) * time.Minute
+	//db.SetMaxOpenConns(maxOpenConns)
+	//db.SetMaxIdleConns(maxIdleConns)
+	//db.SetConnMaxLifetime(connMaxLifetime)
+	//log.Printf("Database pool: %v max connections, %v idle connections, %v lifetime", maxOpenConns, maxIdleConns, connMaxLifetime)
 
-	if err = db.Ping(); err != nil {
+	if err = dbpool.Ping(context.Background()); err != nil {
 		return nil, err
 	}
 
-	return db, nil
+	return dbpool, nil
 }
