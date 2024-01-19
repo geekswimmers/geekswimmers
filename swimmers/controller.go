@@ -16,7 +16,7 @@ type SwimmersController struct {
 	DB storage.Database
 }
 
-type context struct {
+type webContext struct {
 	Example      StandardTime
 	Distance     int64
 	Course       string
@@ -50,7 +50,11 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	stroke := event[1]
 
 	var foundMeets []*Meet
-	meets, _ := FindChampionshipMeets(course, sc.DB)
+	meets, err := FindChampionshipMeets(course, sc.DB)
+	if err != nil {
+		log.Print(err)
+	}
+
 	for _, meet := range meets {
 		meet.Age = swimmer.AgeAt(meet.AgeDate)
 
@@ -63,7 +67,10 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 			Distance:     distance,
 			TimeStandard: meet.TimeStandard,
 		}
-		standardTime, _ := FindStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
+		standardTime, err := FindStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
+		if err != nil {
+			log.Print(err)
+		}
 
 		if standardTime != nil {
 			// Calculate time difference and percentage of acomplishment
@@ -84,7 +91,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
 	})
 
-	ctx := &context{
+	ctx := &webContext{
 		Meets:        foundMeets,
 		FormatedTime: utils.FormatTime(minute, second, milisecond),
 		Distance:     distance,
