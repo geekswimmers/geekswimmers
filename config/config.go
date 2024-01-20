@@ -34,7 +34,7 @@ const (
 
 type Config interface {
 	GetString(key string) string
-	GetInt(key string) int
+	GetInt32(key string) int32
 	GetDuration(key string) time.Duration
 }
 

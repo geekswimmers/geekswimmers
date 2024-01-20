@@ -1,7 +1,6 @@
 [database]
-url = "postgres://geekswimmers:geekswimmers@localhost:5432/geekswimmers?sslmode=disable"
+url = "postgres://geekswimmers_usr:secretpassword@localhost:5432/geekswimmers"
 maxopenconns = 10
-maxidleconns = 5
 connmaxlifetime = 30 # minutes
 
 [server]

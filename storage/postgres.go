@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"geekswimmers/config"
 	"log"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -59,13 +60,11 @@ func InitializeConnectionPool(c config.Config) (Database, error) {
 		return nil, err
 	}
 
-	//maxOpenConns := c.GetInt(config.DatabaseMaxOpenConns)
-	//maxIdleConns := c.GetInt(config.DatabaseMaxIdleConns)
-	//connMaxLifetime := c.GetDuration(config.DatabaseConnMaxLifetime) * time.Minute
-	//db.SetMaxOpenConns(maxOpenConns)
-	//db.SetMaxIdleConns(maxIdleConns)
-	//db.SetConnMaxLifetime(connMaxLifetime)
-	//log.Printf("Database pool: %v max connections, %v idle connections, %v lifetime", maxOpenConns, maxIdleConns, connMaxLifetime)
+	maxOpenConns := c.GetInt32(config.DatabaseMaxOpenConns)
+	connMaxLifetime := c.GetDuration(config.DatabaseConnMaxLifetime) * time.Minute
+	dbpool.Config().MaxConns = maxOpenConns
+	dbpool.Config().MaxConnLifetime = connMaxLifetime
+	log.Printf("Database pool: %v max connections. Each connection lasting for %v innactive in the pool.", maxOpenConns, connMaxLifetime)
 
 	if err = dbpool.Ping(context.Background()); err != nil {
 		return nil, err
