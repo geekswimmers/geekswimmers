@@ -19,8 +19,6 @@ const (
 	DatabaseURL = "database.url"
 	// DatabaseMaxOpenConns limits the number of open connections (in-use + idle) at the same time. The default is unlimited.
 	DatabaseMaxOpenConns = "database.maxopenconns"
-	// DatabaseMaxIdleConns defines the number of idle connections ready to by used. The default is 2.
-	DatabaseMaxIdleConns = "database.maxidleconns"
 	// DatabaseConnMaxLifetime defines the time the idle connections will remain active before being discarded. The default is 2.
 	DatabaseConnMaxLifetime = "database.connmaxlifetime"
 
@@ -88,7 +86,6 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.SetEnvPrefix("geekswimmers")
 	_ = viperConfig.BindEnv(DatabaseURL, "DATABASE_URL")
 	_ = viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS")
-	_ = viperConfig.BindEnv(DatabaseMaxIdleConns, "DATABASE_MAXIDLECONNS")
 	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
 
 	_ = viperConfig.BindEnv(ServerPort, "PORT")
