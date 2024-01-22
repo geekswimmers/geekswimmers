@@ -9,13 +9,13 @@
     <p>
         You completed a
         <b>{{.Distance}} {{.Stroke | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
-        <b>{{.FormatedTime}}</b>. We compared this time to swimming standards in Canada. Take a look at what we have found:
+        <b>{{.FormatedTime}}</b>. We compared this time to some Canadian swimming standards. 
     </p>
 
     {{range .Meets}}
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{.StandardTime.TimeStandard.Name}}</h5>
+            <h5 class="card-title">{{.Name}}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{.StandardTime.TimeStandard.Summary}}</h6>
             <p class="card-text">
                 <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
@@ -23,12 +23,12 @@
                 </div>
             </p>
             <p class="card-text">
-                The time a {{.Age}}-year-old need to qualify for <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                The standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
                 at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
                 {{if (gt .StandardTime.Difference 0)}}
-                    You are <b>{{.StandardTime.Difference | FormatMiliseconds}}</b> away from this experience.
+                    The time missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
                 {{else}}
-                    Your time of <b>{{$.FormatedTime}}</b> qualifies you to compete at this meet! Congratulations!!!<br>
+                    Your time of <b>{{$.FormatedTime}}</b> meets these standards!<br>
                     Please, confirm this information with your coach.
                 {{end}}
             </p>
@@ -38,7 +38,7 @@
     <div class="card">
         <div class="card-body">
             <p class="card-text">
-                We didn't find any standards that match these criteria.
+                Unfortunately, we didn't find any standards that match these criteria.
             </p>
         </div>
     </div>
