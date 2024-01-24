@@ -13,37 +13,38 @@
     </p>
 
     {{range .Meets}}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{.Name}}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{.StandardTime.TimeStandard.Summary}}</h6>
-            <p class="card-text">
-                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
-                    <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
-                </div>
-            </p>
-            <p class="card-text">
-                The standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
-                at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
-                {{if (gt .StandardTime.Difference 0)}}
-                    The time missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
-                {{else}}
-                    Your time of <b>{{$.FormatedTime}}</b> meets these standards!<br>
-                    Please, confirm this information with your coach.
-                {{end}}
-            </p>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{.Name}}</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Standard: {{.StandardTime.TimeStandard.Name}}</h6>
+                <p class="card-text">
+                    <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
+                        <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                    </div>
+                </p>
+                <p class="card-text">
+                    The standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                    at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
+                    {{if (gt .StandardTime.Difference 0)}}
+                        It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
+                    {{else}}
+                        Your time of <b>{{$.FormatedTime}}</b> meets these standards!<br>
+                        Please, confirm this information with your coach.
+                    {{end}}
+                </p>
+            </div>
         </div>
-    </div>
+        <br>
     {{else}}
-    <div class="card">
-        <div class="card-body">
-            <p class="card-text">
-                Unfortunately, we didn't find any standards that match these criteria.
-            </p>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">
+                    Unfortunately, we didn't find any standards that match these criteria.
+                </p>
+            </div>
         </div>
-    </div>
+        <br>
     {{end}}
-    <br>
     <button class="btn btn-secondary" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>

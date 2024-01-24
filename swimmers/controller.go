@@ -57,10 +57,22 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 
 	for _, meet := range meets {
 		meet.Age = swimmer.AgeAt(meet.AgeDate)
+		searchAge := meet.Age
+		if !meet.MinAgeEnforced && meet.Age < meet.TimeStandard.MinAgeTime {
+			searchAge = meet.TimeStandard.MinAgeTime
+		} else if meet.MinAgeEnforced && meet.Age < meet.TimeStandard.MinAgeTime {
+			continue
+		}
+
+		if !meet.MaxAgeEnforced && meet.Age > meet.TimeStandard.MaxAgeTime {
+			searchAge = meet.TimeStandard.MaxAgeTime
+		} else if meet.MaxAgeEnforced && meet.Age > meet.TimeStandard.MaxAgeTime {
+			continue
+		}
 
 		// Find standard times in the database.
 		standardTimeExample := StandardTime{
-			Age:          meet.Age,
+			Age:          searchAge,
 			Gender:       gender,
 			Course:       course,
 			Stroke:       stroke,

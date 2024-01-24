@@ -6,15 +6,16 @@ import (
 )
 
 func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) {
-	// When we have more than one season in the database, we have to add the swim season in the meet table.
-	stmt := `select m.name, m.age_date, m.time_standard, ss.id, ss.name
+	stmt := `select m.name, m.age_date, m.time_standard, ss.id, ss.name, 
+	                ts.min_age_time, ts.max_age_time, m.min_age_enforced, m.max_age_enforced
 			 from meet m
 			 join swim_season ss on ss.id = m.season
+			 join time_standard ts on ts.id = m.time_standard
 			 where course = $1 
 			 	and ss.start_date <= now() and ss.end_date >= now()
-			 	and time_standard is not null 
-				and age_date is not null
-			 order by age_date`
+			 	and m.time_standard is not null 
+				and m.age_date is not null
+			 order by m.age_date`
 	rows, err := db.Query(context.Background(), stmt, course)
 	if err != nil {
 		return nil, err
@@ -26,7 +27,8 @@ func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) 
 		meet := &Meet{
 			Course: course,
 		}
-		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Season.ID, &meet.Season.Name)
+		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Season.ID, &meet.Season.Name,
+			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
 
 		if err != nil {
 			return nil, err
@@ -38,7 +40,7 @@ func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) 
 }
 
 func FindStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
-	stmt := `select ts.name, ts.summary, st.standard 
+	stmt := `select ts.name, st.standard 
 			 from standard_time st 
 	           	join time_standard ts on ts.id = st.time_standard
 	           	join swim_season ss on ss.id = ts.season 
@@ -60,7 +62,7 @@ func FindStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 		Stroke:   example.Stroke,
 		Distance: example.Distance,
 	}
-	err := row.Scan(&standardTime.TimeStandard.Name, &standardTime.TimeStandard.Summary, &standardTime.Standard)
+	err := row.Scan(&standardTime.TimeStandard.Name, &standardTime.Standard)
 	if err != nil {
 		return nil, err
 	}

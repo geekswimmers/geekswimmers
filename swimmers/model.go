@@ -22,10 +22,11 @@ type SwimSeason struct {
 }
 
 type TimeStandard struct {
-	ID      int64
-	Season  SwimSeason
-	Name    string
-	Summary string
+	ID         int64
+	Season     SwimSeason
+	Name       string
+	MinAgeTime int64
+	MaxAgeTime int64
 }
 
 type StandardTime struct {
@@ -43,11 +44,13 @@ type StandardTime struct {
 }
 
 type Meet struct {
-	Name         string
-	Course       string
-	AgeDate      time.Time
-	Season       SwimSeason
-	TimeStandard TimeStandard
+	Name           string
+	Course         string
+	AgeDate        time.Time
+	Season         SwimSeason
+	TimeStandard   TimeStandard
+	MinAgeEnforced bool
+	MaxAgeEnforced bool
 
 	// Transient
 	Age          int64
