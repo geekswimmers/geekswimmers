@@ -28,8 +28,8 @@
                     {{if (gt .StandardTime.Difference 0)}}
                         It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
                     {{else}}
-                        Your time of <b>{{$.FormatedTime}}</b> meets these standards!<br>
-                        Please, confirm this information with your coach.
+                        Your time of <b>{{$.FormatedTime}}</b> meets the standard!<br>
+                        Please, confirm this information with your coach, since some championships have additional requirements.
                     {{end}}
                 </p>
             </div>
