@@ -20,3 +20,30 @@ func TestFormatMiliseconds(t *testing.T) {
 		})
 	}
 }
+
+func TestFormatTime(t *testing.T) {
+
+	// Happy path
+	min, sec, milisec := 1, 2, 3
+	want := "01:02:03"
+	got := FormatTime(min, sec, milisec)
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+
+	// Edge cases
+	cases := []struct {
+		min, sec, milisec int
+		want              string
+	}{
+		{0, 0, 0, "00:00:00"},
+		{59, 59, 99, "59:59:99"},
+	}
+
+	for _, c := range cases {
+		got := FormatTime(c.min, c.sec, c.milisec)
+		if got != c.want {
+			t.Errorf("got %q, want %q", got, c.want)
+		}
+	}
+}
