@@ -87,7 +87,7 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	_ = viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS")
 	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
 
-	_ = viperConfig.BindEnv(ServerPort, "SERVER_PORT")
+	_ = viperConfig.BindEnv(ServerPort, "PORT")
 
 	_ = viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS")
 }
