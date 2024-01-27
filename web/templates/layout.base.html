@@ -12,16 +12,14 @@
             <!-- Global site tag (gtag.js) - Google Analytics -->
             <script async src="https://www.googletagmanager.com/gtag/js?id={{.MonitoringGoogleAnalytics}}"></script>
             <script>
-                if (window.location.hostname.includes("geekswimmers.com")) {
-                    window.dataLayer = window.dataLayer || [];
+                window.dataLayer = window.dataLayer || [];
 
-                    function gtag() {
-                        dataLayer.push(arguments);
-                    }
-
-                    gtag('js', new Date());
-                    gtag('config', '{{.MonitoringGoogleAnalytics}}');
+                function gtag() {
+                    dataLayer.push(arguments);
                 }
+
+                gtag('js', new Date());
+                gtag('config', '{{.MonitoringGoogleAnalytics}}');
             </script>
         {{end}}
 
