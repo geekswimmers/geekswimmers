@@ -8,27 +8,27 @@
 
     <p>
         You completed a
-        <b>{{.Distance}} {{.Stroke | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
-        <b>{{.FormatedTime}}</b>. We compared this time to some Canadian swimming standards. 
+        <b>{{.Page.Distance}} {{.Page.Stroke | Title}}</b> event in a <b>{{if eq .Page.Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Page.Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
+        <b>{{.Page.FormatedTime}}</b>. We compared this time to some Canadian swimming standards. 
     </p>
 
-    {{range .Meets}}
+    {{range .Page.Meets}}
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">{{.Name}}</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Standard: {{.StandardTime.TimeStandard.Name}}</h6>
                 <p class="card-text">
                     <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
-                        <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                        <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.Page.FormatedTime}}</b></div>
                     </div>
                 </p>
                 <p class="card-text">
-                    The standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                    The standard to qualify a {{.Age}}-year-old to <b>{{$.Page.Distance}} {{$.Page.Stroke | Title}}</b>
                     at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
                     {{if (gt .StandardTime.Difference 0)}}
                         It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
                     {{else}}
-                        Your time of <b>{{$.FormatedTime}}</b> meets the standard!<br>
+                        Your time of <b>{{$.Page.FormatedTime}}</b> meets the standard!<br>
                         Please, confirm this information with your coach, since some championships have additional requirements.
                     {{end}}
                 </p>

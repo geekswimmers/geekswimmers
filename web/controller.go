@@ -10,14 +10,15 @@ import (
 )
 
 type WebController struct {
-	DB storage.Database
+	DB                  storage.Database
+	BaseTemplateContext BaseTemplateContext
 }
 
 // HomeView
 // get: /
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	html := utils.GetTemplate("base", "home")
-	err := html.Execute(res, nil)
+	err := html.Execute(res, wc.BaseTemplateContext)
 	if err != nil {
 		log.Print(err)
 	}

@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/bmizerany/pat"
 	"github.com/pkg/errors"
 	"github.com/rs/cors"
 )
@@ -38,7 +37,7 @@ func run() error {
 	}
 
 	log.Println("Creating GeekSwimmers server")
-	s := server.CreateServer(db, pat.New())
+	s := server.CreateServer(config, db)
 
 	runHTTPServer(s, defineHTTPPort(config))
 

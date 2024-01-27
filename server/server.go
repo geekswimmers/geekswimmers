@@ -1,6 +1,7 @@
 package server
 
 import (
+	"geekswimmers/config"
 	"geekswimmers/storage"
 	"geekswimmers/swimmers"
 	"geekswimmers/web"
@@ -16,11 +17,15 @@ type Server struct {
 
 type Handler func(res http.ResponseWriter, req *http.Request)
 
-func CreateServer(db storage.Database, router *pat.PatternServeMux) *Server {
+func CreateServer(c config.Config, db storage.Database) *Server {
 	s := &Server{}
 	s.DB = db
-	s.Router = router
-	s.Routes()
+	s.Router = pat.New()
+
+	gc := web.BaseTemplateContext{
+		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
+	}
+	s.Routes(gc)
 	return s
 }
 
@@ -30,13 +35,15 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 	}
 }
 
-func (s *Server) Routes() {
+func (s *Server) Routes(gc web.BaseTemplateContext) {
 	webController := &web.WebController{
-		DB: s.DB,
+		DB:                  s.DB,
+		BaseTemplateContext: gc,
 	}
 
 	swimmersController := &swimmers.SwimmersController{
-		DB: s.DB,
+		DB:                  s.DB,
+		BaseTemplateContext: gc,
 	}
 
 	// The order here must be absolutely respected.

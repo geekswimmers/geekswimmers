@@ -3,6 +3,7 @@ package swimmers
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"geekswimmers/web"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,7 +14,8 @@ import (
 )
 
 type SwimmersController struct {
-	DB storage.Database
+	DB                  storage.Database
+	BaseTemplateContext web.BaseTemplateContext
 }
 
 type webContext struct {
@@ -110,6 +112,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		Course:       course,
 		Stroke:       stroke,
 	}
+	sc.BaseTemplateContext.Page = ctx
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
 		"Title":             utils.Title,
@@ -117,7 +120,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		"Abs":               utils.Abs,
 	})
 
-	err = html.Execute(res, ctx)
+	err = html.Execute(res, sc.BaseTemplateContext)
 	if err != nil {
 		log.Print(err)
 	}
