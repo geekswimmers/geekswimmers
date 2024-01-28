@@ -24,10 +24,9 @@ const (
 
 	// ServerPort is the HTTP port used to serve the application.
 	ServerPort = "server.port"
-	// ServerSessionKey is a random key used to encrypt the session cookie.
-	ServerSessionKey = "server.sessionkey"
-	// ServerURL is the url of the server where the application is running.
-	ServerURL = "server.url"
+
+	// MonitoringGoogleAnalytics is the Google Analytics ID.
+	MonitoringGoogleAnalytics = "monitoring.googleanalytics"
 )
 
 type Config interface {
@@ -89,6 +88,6 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
 
 	_ = viperConfig.BindEnv(ServerPort, "PORT")
-	_ = viperConfig.BindEnv(ServerSessionKey, "SESSION_KEY")
-	_ = viperConfig.BindEnv(ServerURL, "URL")
+
+	_ = viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS")
 }
