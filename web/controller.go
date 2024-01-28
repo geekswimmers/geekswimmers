@@ -14,8 +14,6 @@ type WebController struct {
 	BaseTemplateContext BaseTemplateContext
 }
 
-// HomeView
-// get: /
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	html := utils.GetTemplate("base", "home")
 	err := html.Execute(res, wc.BaseTemplateContext)
@@ -24,8 +22,6 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// CrawlerView
-// get: /robots.txt
 func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request) {
 	txt, err := template.ParseFiles("web/templates/robots.txt")
 	if err != nil {
