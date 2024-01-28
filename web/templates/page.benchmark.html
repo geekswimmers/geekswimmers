@@ -3,10 +3,11 @@
 {{define "title"}}Time Benchmark{{end}}
 
 {{define "content"}}
-    <h2>Time Benchmark</h2>
-    <hr>
+    <h1 class="display-6">
+        Time Benchmark
+    </h1>
 
-    <p>
+    <p class="lead">
         You completed a
         <b>{{.Page.Distance}} {{.Page.Stroke | Title}}</b> event in a <b>{{if eq .Page.Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Page.Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
         <b>{{.Page.FormatedTime}}</b>. We compared this time to some Canadian swimming standards. 

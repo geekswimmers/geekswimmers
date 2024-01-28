@@ -3,10 +3,11 @@
 {{define "title"}}Home{{end}}
 
 {{define "content"}}
-    <div class="jumbotron">
-        <h3 style="text-align: center;">How close am I from that Championship?</h1>
-        <hr class="my-4">
-
+        <h1 class="display-6">
+            Time Benchmark
+        </h1>
+        <p class="lead">How close am I from those Championships?</p>
+                
         <form id="benthmark-form" method="post" action="/swimmers/benchmark">
 
             {{if .Message }}
@@ -102,5 +103,4 @@
                 Search
             </button>
         </form>
-    </div>
 {{end}}
