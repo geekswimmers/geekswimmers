@@ -37,3 +37,13 @@ func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request)
 		log.Print(err)
 	}
 }
+
+func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
+	res.WriteHeader(http.StatusNotFound)
+
+	template := utils.GetTemplate("base", "not-found")
+	err := template.Execute(res, nil)
+	if err != nil {
+		log.Print(err)
+	}
+}

@@ -53,6 +53,8 @@ func (s *Server) Routes(gc web.BaseTemplateContext) {
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
+
+	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
