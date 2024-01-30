@@ -7,6 +7,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/golang-migrate/migrate/v4 v4.17.0
 	github.com/gorilla/securecookie v1.1.2
+	github.com/gorilla/sessions v1.2.2
 	github.com/jackc/pgx/v5 v5.3.1
 	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.10.1
