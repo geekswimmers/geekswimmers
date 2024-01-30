@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
+	// Blank required to register the postgres driver
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 

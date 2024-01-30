@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/rs/cors"
@@ -26,7 +27,7 @@ func run() error {
 	}
 
 	log.Println("Migrating database")
-	if err := storage.MigrateDatabase(config); err != nil {
+	if err = storage.MigrateDatabase(config); err != nil {
 		return err
 	}
 
@@ -69,7 +70,14 @@ func runHTTPServer(server *server.Server, port string) {
 	})
 
 	log.Printf("Serving GeekSwimmers on port: %v", port)
-	if err := http.ListenAndServe(":"+port, c.Handler(server.Router)); err != nil {
+
+	srvr := &http.Server{
+		Addr:              ":" + port,
+		ReadHeaderTimeout: 10 * time.Second,
+		Handler:           c.Handler(server.Router),
+	}
+
+	if err := srvr.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
