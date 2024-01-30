@@ -27,6 +27,9 @@ const (
 
 	// MonitoringGoogleAnalytics is the Google Analytics ID.
 	MonitoringGoogleAnalytics = "monitoring.googleanalytics"
+
+	// FeedbackForm is the URL of the feedback form.
+	FeedbackForm = "miscellaneous.feedbackform"
 )
 
 type Config interface {
@@ -90,4 +93,6 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	_ = viperConfig.BindEnv(ServerPort, "PORT")
 
 	_ = viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS")
+
+	_ = viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM")
 }
