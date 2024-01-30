@@ -1,6 +1,10 @@
 name: Lint Code Base
 
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -18,6 +22,9 @@ jobs:
         uses: github/super-linter@v4
         env:
           VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
           VALIDATE_GO: true
           VALIDATE_GITLEAKS: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# Ref: https://www.freecodecamp.org/news/github-super-linter/
