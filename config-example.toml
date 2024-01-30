@@ -5,6 +5,7 @@ connmaxlifetime = 30 # minutes
 
 [server]
 port = 8080
+sessionkey = ""
 
 [monitoring]
 googleanalytics = ""

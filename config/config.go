@@ -25,6 +25,9 @@ const (
 	// ServerPort is the HTTP port used to serve the application.
 	ServerPort = "server.port"
 
+	// ServerSessionKey is the key used to encrypt the session cookie.
+	ServerSessionKey = "server.sessionkey"
+
 	// MonitoringGoogleAnalytics is the Google Analytics ID.
 	MonitoringGoogleAnalytics = "monitoring.googleanalytics"
 
@@ -91,6 +94,7 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
 
 	_ = viperConfig.BindEnv(ServerPort, "PORT")
+	_ = viperConfig.BindEnv(ServerSessionKey, "SERVER_SESSION_KEY")
 
 	_ = viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS")
 
