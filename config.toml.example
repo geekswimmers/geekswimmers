@@ -8,3 +8,6 @@ port = 8080
 
 [monitoring]
 googleanalytics = ""
+
+[miscellaneous]
+feedbackform = ""
