@@ -5,18 +5,17 @@ import (
 	"geekswimmers/storage"
 )
 
-func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) {
-	stmt := `select m.name, m.age_date, m.time_standard, ss.id, ss.name, 
+func FindChampionshipMeets(db storage.Database) ([]*Meet, error) {
+	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name, 
 	                ts.min_age_time, ts.max_age_time, m.min_age_enforced, m.max_age_enforced
 			 from meet m
 			 join swim_season ss on ss.id = m.season
 			 join time_standard ts on ts.id = m.time_standard
-			 where course = $1 
-			 	and ss.start_date <= now() and ss.end_date >= now()
+			 where ss.start_date <= now() and ss.end_date >= now()
 			 	and m.time_standard is not null 
 				and m.age_date is not null
 			 order by m.age_date`
-	rows, err := db.Query(context.Background(), stmt, course)
+	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {
 		return nil, err
 	}
@@ -24,10 +23,8 @@ func FindChampionshipMeets(course string, db storage.Database) ([]*Meet, error) 
 
 	var meets []*Meet
 	for rows.Next() {
-		meet := &Meet{
-			Course: course,
-		}
-		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Season.ID, &meet.Season.Name,
+		meet := &Meet{}
+		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
 			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
 
 		if err != nil {

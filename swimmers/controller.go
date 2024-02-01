@@ -52,7 +52,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	stroke := event[1]
 
 	var foundMeets []*Meet
-	meets, err := FindChampionshipMeets(course, sc.DB)
+	meets, err := FindChampionshipMeets(sc.DB)
 	if err != nil {
 		log.Printf("swimmers.FindChampionshipMeets: %v", err)
 	}
@@ -72,7 +72,6 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 			continue
 		}
 
-		// Find standard times in the database.
 		standardTimeExample := StandardTime{
 			Age:          searchAge,
 			Gender:       gender,
