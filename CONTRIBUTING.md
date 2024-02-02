@@ -16,5 +16,12 @@ vscode plugin: https://marketplace.visualstudio.com/items?itemName=ms-vscode-rem
 
 ### Howto
 
-Once you install the extension, when you open the project vscode will notice you have the .devcontainer folder, and ask to reopen in the devcontainer.
-If you don't have the docker envt built, it will build the container, then run it and connect you.
+Once you install the extension, VSCode will notice you have the `.devcontainer` folder in the project, and ask to reopen in the `devcontainer`. If you don't have the docker environment built, it will build the container, then run it and connect you.
+
+## Continuous Integration
+
+We use Github Actions as continuous integration service.
+
+### Go Linter
+
+The linter is configured to run on every push and pull request, verifying the quality of the code. More info: https://github.com/golangci/golangci-lint-action

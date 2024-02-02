@@ -16,8 +16,8 @@ values (1, 1, 'Western Ontario Swimming Association Standards', 10, 17),
        (7, 1, 'Canadian Swimming Trials Standards', 18, 18);
 
 insert into meet (id, name, course, season, time_standard, age_date, start_date, end_date, website, min_age_enforced, max_age_enforced) 
-values (1, 'Western Ontario Swimming Association (WOSA) Short Course Championships', 'SHORT', 1, 1, '2024-02-22', '2024-02-23', '2024-02-25', 'https://www.swimming.ca/en/meet/39709/', false, false),
-       (2, 'Western Ontario Swimming Association (WOSA) Long Course Championships', 'LONG', 1, 1, '2024-06-01', '2024-05-31', '2024-06-02', 'https://www.swimming.ca/en/meet/39847/', false, false),
+values (1, 'Western Ontario Swimming Association (WOSA) Short Course Championships', 'SHORT', 1, 1, '2024-02-23', '2024-02-23', '2024-02-25', 'https://www.swimming.ca/en/meet/39709/', false, false),
+       (2, 'Western Ontario Swimming Association (WOSA) Long Course Championships', 'LONG', 1, 1, '2024-05-31', '2024-05-31', '2024-06-02', 'https://www.swimming.ca/en/meet/39847/', false, false),
        (3, 'Ontario Festival Championships Winter', 'SHORT', 1, 2, '2024-02-17', '2024-02-17', '2024-02-18', 'https://www.swimming.ca/en/meet/41093/', false, true),
        (4, 'Ontario Festival Championships Summer', 'LONG', 1, 2, '2024-06-14', '2024-06-14', '2024-06-16', null, false, true),
        (5, 'Ontario Youth-Junior Championships (OYJ) Winter', 'LONG', 1, 3, '2024-02-15', '2024-02-15', '2024-02-18', 'https://www.swimming.ca/en/meet/41092/', false, true),
