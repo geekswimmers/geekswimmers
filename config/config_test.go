@@ -6,7 +6,7 @@ import (
 
 func TestInitConfiguration(t *testing.T) {
 	// Happy path
-	config, err := InitConfiguration("../config.toml")
+	config, err := InitConfiguration("../config-example.toml")
 	if err != nil {
 		t.Fatal(err)
 	}
