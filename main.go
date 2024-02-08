@@ -31,6 +31,8 @@ func run() error {
 		return err
 	}
 
+	storage.InitSessionStore(config)
+
 	log.Println("Initializing database connection pool")
 	db, err := storage.InitializeConnectionPool(config)
 	if err != nil {

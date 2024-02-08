@@ -24,7 +24,6 @@ const (
 
 	// ServerPort is the HTTP port used to serve the application.
 	ServerPort = "server.port"
-
 	// ServerSessionKey is the key used to encrypt the session cookie.
 	ServerSessionKey = "server.sessionkey"
 

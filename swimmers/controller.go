@@ -47,6 +47,10 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		Gender:    gender,
 	}
 
+	if err = storage.AddSessionEntry(res, req, "profile", "birthDate", swimmer.BirthDate.String()); err != nil {
+		log.Printf("storage.AddSessionEntry: %v", err)
+	}
+
 	// Separate the event into distance and stroke
 	distance, _ := strconv.ParseInt(event[0], 10, 64)
 	stroke := event[1]
