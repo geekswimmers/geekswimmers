@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"math"
 	"strconv"
 )
 
@@ -11,5 +10,8 @@ func IsNumeric(s string) bool {
 }
 
 func Abs(n int64) int64 {
-	return int64(math.Abs(float64(n)))
+	if n < 0 {
+		return -n
+	}
+	return n
 }
