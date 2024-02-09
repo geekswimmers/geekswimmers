@@ -12,11 +12,6 @@ body {
     color: red;
 }
 
-.jumbotron {
-    background-color: rgb(255, 255, 255);
-    background-size: cover;
-}
-
 .success {
     color: green;
 }
