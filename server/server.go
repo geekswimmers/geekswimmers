@@ -21,12 +21,14 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s := &Server{}
 	s.DB = db
 	s.Router = pat.New()
+	sessionAvailable := storage.SessionAvailable()
 
-	gc := web.BaseTemplateContext{
+	btc := web.BaseTemplateContext{
 		FeedbackForm:              c.GetString(config.FeedbackForm),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
+		AcceptedCookies:           !sessionAvailable,
 	}
-	s.Routes(gc)
+	s.Routes(btc)
 	return s
 }
 
@@ -36,20 +38,22 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 	}
 }
 
-func (s *Server) Routes(gc web.BaseTemplateContext) {
+func (s *Server) Routes(btc web.BaseTemplateContext) {
 	webController := &web.WebController{
 		DB:                  s.DB,
-		BaseTemplateContext: gc,
+		BaseTemplateContext: btc,
 	}
 
 	swimmersController := &swimmers.SwimmersController{
 		DB:                  s.DB,
-		BaseTemplateContext: gc,
+		BaseTemplateContext: btc,
 	}
 
 	// The order here must be absolutely respected.
 	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
+	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
+
 	s.Router.Post("/swimmers/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))

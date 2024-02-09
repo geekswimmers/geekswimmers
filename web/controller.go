@@ -5,6 +5,7 @@ import (
 	"geekswimmers/utils"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"log"
 )
@@ -42,4 +43,18 @@ func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request
 	if err != nil {
 		log.Print(err)
 	}
+}
+
+func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
+	if storage.SessionAvailable() {
+		err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true")
+		if err != nil {
+			log.Printf("WebController: %v", err)
+			res.WriteHeader(http.StatusInternalServerError)
+		}
+		wc.BaseTemplateContext.AcceptedCookies, _ = strconv.ParseBool(storage.GetSessionValue(req, "profile", "acceptedCookies"))
+		log.Printf("User accepted Cookies: %v", wc.BaseTemplateContext.AcceptedCookies)
+	}
+
+	res.WriteHeader(http.StatusAccepted)
 }
