@@ -47,8 +47,11 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		Gender:    gender,
 	}
 
-	if err = storage.AddSessionEntry(res, req, "profile", "birthDate", swimmer.BirthDate.String()); err != nil {
-		log.Printf("storage.AddSessionEntry: %v", err)
+	if err = storage.AddSessionEntry(res, req, "profile", "birthDate", req.PostForm.Get("birthDate")); err != nil {
+		log.Printf("SwimmerController.BenchmarkTime: %v", err)
+	}
+	if err = storage.AddSessionEntry(res, req, "profile", "gender", req.PostForm.Get("gender")); err != nil {
+		log.Printf("SwimmerController.BenchmarkTime: %v", err)
 	}
 
 	// Separate the event into distance and stroke

@@ -15,7 +15,21 @@ type WebController struct {
 	BaseTemplateContext BaseTemplateContext
 }
 
+type webContext struct {
+	BirthDate string
+	Gender    string
+}
+
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
+	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
+	gender := storage.GetSessionValue(req, "profile", "gender")
+
+	ctx := &webContext{
+		BirthDate: birthDate,
+		Gender:    gender,
+	}
+	wc.BaseTemplateContext.Page = ctx
+
 	html := utils.GetTemplate("base", "home")
 	err := html.Execute(res, wc.BaseTemplateContext)
 	if err != nil {
