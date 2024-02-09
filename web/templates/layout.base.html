@@ -40,35 +40,47 @@
             {{template "content" .}}
         </main>
 
-        <div class="modal fade" id="cookieModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <img src="/static/images/logo.png" height="32" class="d-inline-block align-top" alt="Logo" loading="lazy">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Accept Cookies</h1>
-                    </div>
-                    <div class="modal-body">
-                        We know cookies are not healthy for swimmers, but we have to use them to improve your experience on our website.
-                        By clicking "Accept", you agree to use cookies for usability and analytics purposes.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Accept</button>
+        {{if not .AcceptedCookies}}
+            <div class="modal fade" id="cookieModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <img src="/static/images/logo.png" height="32" class="d-inline-block align-top" alt="Logo" loading="lazy">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Accept Cookies</h1>
+                        </div>
+                        <div class="modal-body">
+                            We know cookies are not healthy for swimmers, but we have to use them to improve your experience on our website.
+                            By clicking "Accept", you agree to use cookies for usability and analytics purposes.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptCookies();">Accept</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {{end}}
 
         {{template "footer" .}}
 
         <script src="/static/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/main.js"></script>
-        <script type="text/javascript">
-            const cookieModal = new bootstrap.Modal(document.getElementById('cookieModal'), {
-                keyboard: false,
-                backdrop:'static'
-            })
-            cookieModal.show()
-        </script>
+        {{if not .AcceptedCookies}}
+            <script type="text/javascript">
+                const cookieModal = new bootstrap.Modal(document.getElementById('cookieModal'), {
+                    keyboard: false,
+                    backdrop:'static'
+                })
+                cookieModal.show()
+
+                function acceptCookies() {
+                    fetch("/api/accepted-cookies").then(() => {
+                        cookieModal.hide()
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            </script>
+        {{end}}
     </body>
 </html>
 {{end}}

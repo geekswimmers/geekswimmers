@@ -8,18 +8,22 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var SessionStore *sessions.CookieStore
+var sessionStore *sessions.CookieStore
 
 func InitSessionStore(c config.Config) {
 	sessionKey := c.GetString(config.ServerSessionKey)
 	decodedKey, _ := base32.StdEncoding.DecodeString(sessionKey)
-	SessionStore = sessions.NewCookieStore(decodedKey)
+	sessionStore = sessions.NewCookieStore(decodedKey)
+}
+
+func SessionAvailable() bool {
+	return sessionStore != nil
 }
 
 func GetSessionValue(req *http.Request, store, key string) string {
 	var value string
 
-	session, err := SessionStore.Get(req, store)
+	session, err := sessionStore.Get(req, store)
 	if err != nil {
 		return value
 	}
@@ -31,7 +35,7 @@ func GetSessionValue(req *http.Request, store, key string) string {
 }
 
 func AddSessionEntry(res http.ResponseWriter, req *http.Request, store, key, value string) error {
-	session, err := SessionStore.Get(req, store)
+	session, err := sessionStore.Get(req, store)
 	if err != nil {
 		return err
 	}
@@ -45,7 +49,7 @@ func AddSessionEntry(res http.ResponseWriter, req *http.Request, store, key, val
 }
 
 func RemoveSessionEntry(res http.ResponseWriter, req *http.Request, store, key string) error {
-	session, err := SessionStore.Get(req, store)
+	session, err := sessionStore.Get(req, store)
 	if err != nil {
 		return err
 	}

@@ -21,28 +21,30 @@ var (
 
 func run() error {
 	log.Println("Loading configuration")
-	config, err := loadConfiguration()
+	conf, err := loadConfiguration()
 	if err != nil {
 		return err
 	}
 
 	log.Println("Migrating database")
-	if err = storage.MigrateDatabase(config); err != nil {
+	if err = storage.MigrateDatabase(conf); err != nil {
 		return err
 	}
 
-	storage.InitSessionStore(config)
-
 	log.Println("Initializing database connection pool")
-	db, err := storage.InitializeConnectionPool(config)
+	db, err := storage.InitializeConnectionPool(conf)
 	if err != nil {
 		return err
 	}
 
-	log.Println("Creating GeekSwimmers server")
-	s := server.CreateServer(config, db)
+	if conf.GetString(config.ServerSessionKey) != "" {
+		storage.InitSessionStore(conf)
+	}
 
-	runHTTPServer(s, defineHTTPPort(config))
+	log.Println("Creating GeekSwimmers server")
+	s := server.CreateServer(conf, db)
+
+	runHTTPServer(s, defineHTTPPort(conf))
 
 	return nil
 }
