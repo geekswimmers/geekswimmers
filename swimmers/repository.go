@@ -5,7 +5,7 @@ import (
 	"geekswimmers/storage"
 )
 
-func FindChampionshipMeets(db storage.Database) ([]*Meet, error) {
+func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name, 
 	                ts.min_age_time, ts.max_age_time, m.min_age_enforced, m.max_age_enforced
 			 from meet m
@@ -36,7 +36,7 @@ func FindChampionshipMeets(db storage.Database) ([]*Meet, error) {
 	return meets, nil
 }
 
-func FindStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
+func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
 	stmt := `select ts.name, st.standard 
 			 from standard_time st 
 	           	join time_standard ts on ts.id = st.time_standard

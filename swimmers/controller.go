@@ -61,7 +61,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	stroke := event[1]
 
 	var foundMeets []*Meet
-	meets, err := FindChampionshipMeets(sc.DB)
+	meets, err := findChampionshipMeets(sc.DB)
 	if err != nil {
 		log.Printf("swimmers.FindChampionshipMeets: %v", err)
 	}
@@ -89,7 +89,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 			Distance:     distance,
 			TimeStandard: meet.TimeStandard,
 		}
-		standardTime, err := FindStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
+		standardTime, err := findStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
 		if err != nil {
 			log.Printf("swimmers.FindStandardTimeMeet: %v", err)
 		}
