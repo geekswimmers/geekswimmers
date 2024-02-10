@@ -15,16 +15,18 @@ import (
 
 type SwimmersController struct {
 	DB                  storage.Database
-	BaseTemplateContext web.BaseTemplateContext
+	BaseTemplateContext *web.BaseTemplateContext
 }
 
 type webContext struct {
-	Example      StandardTime
-	Distance     int64
-	Course       string
-	Stroke       string
-	Meets        []*Meet
-	FormatedTime string
+	Example             StandardTime
+	Distance            int64
+	Course              string
+	Stroke              string
+	Meets               []*Meet
+	FormatedTime        string
+	BaseTemplateContext *web.BaseTemplateContext
+	AcceptedCookies     bool
 }
 
 func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
@@ -112,13 +114,14 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	})
 
 	ctx := &webContext{
-		Meets:        foundMeets,
-		FormatedTime: utils.FormatTime(minute, second, milisecond),
-		Distance:     distance,
-		Course:       course,
-		Stroke:       stroke,
+		Meets:               foundMeets,
+		FormatedTime:        utils.FormatTime(minute, second, milisecond),
+		Distance:            distance,
+		Course:              course,
+		Stroke:              stroke,
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
-	sc.BaseTemplateContext.Page = ctx
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
 		"Title":             utils.Title,
@@ -126,7 +129,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		"Abs":               utils.Abs,
 	})
 
-	err = html.Execute(res, sc.BaseTemplateContext)
+	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
 	}
