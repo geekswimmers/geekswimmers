@@ -3,6 +3,7 @@ package storage
 import (
 	"encoding/base32"
 	"geekswimmers/config"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -12,7 +13,10 @@ var sessionStore *sessions.CookieStore
 
 func InitSessionStore(c config.Config) {
 	sessionKey := c.GetString(config.ServerSessionKey)
-	decodedKey, _ := base32.StdEncoding.DecodeString(sessionKey)
+	decodedKey, err := base32.StdEncoding.DecodeString(sessionKey)
+	if err != nil {
+		log.Printf("Error decoding session key: %v", err)
+	}
 	sessionStore = sessions.NewCookieStore(decodedKey)
 }
 
