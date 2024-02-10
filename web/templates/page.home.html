@@ -9,17 +9,10 @@
         <p class="lead">How close am I from those Championships?</p>
                 
         <form id="benthmark-form" method="post" action="/swimmers/benchmark">
-
-            {{if .Message }}
-                <div class="alert alert-warning" role="alert">
-                    {{html .Message}}
-                </div>
-            {{end}}
-
             <div class="row">
                 <div class="mb-3">
                     <label for="birthDate" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.Page.BirthDate}}" required>
+                    <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
                     <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at the date specifyed by each championship.</small>
                 </div>
 
@@ -33,11 +26,11 @@
                     </a>
                     <br>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Page.Gender "FEMALE"}}checked{{end}} required>
+                        <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}} required>
                         <label class="form-check-label" for="genderFemale">Female</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Page.Gender "MALE"}}checked{{end}} required>
+                        <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}} required>
                         <label class="form-check-label" for="genderMale">Male</label>
                     </div>
                 </div>

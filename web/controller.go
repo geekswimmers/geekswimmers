@@ -5,19 +5,20 @@ import (
 	"geekswimmers/utils"
 	"html/template"
 	"net/http"
-	"strconv"
 
 	"log"
 )
 
 type WebController struct {
 	DB                  storage.Database
-	BaseTemplateContext BaseTemplateContext
+	BaseTemplateContext *BaseTemplateContext
 }
 
 type webContext struct {
-	BirthDate string
-	Gender    string
+	BirthDate           string
+	Gender              string
+	BaseTemplateContext *BaseTemplateContext
+	AcceptedCookies     bool
 }
 
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
@@ -25,13 +26,14 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	gender := storage.GetSessionValue(req, "profile", "gender")
 
 	ctx := &webContext{
-		BirthDate: birthDate,
-		Gender:    gender,
+		BirthDate:           birthDate,
+		Gender:              gender,
+		BaseTemplateContext: wc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
-	wc.BaseTemplateContext.Page = ctx
 
 	html := utils.GetTemplate("base", "home")
-	err := html.Execute(res, wc.BaseTemplateContext)
+	err := html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
 	}
@@ -52,8 +54,13 @@ func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request)
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
 	res.WriteHeader(http.StatusNotFound)
 
+	ctx := &webContext{
+		BaseTemplateContext: wc.BaseTemplateContext,
+		AcceptedCookies:     true,
+	}
+
 	template := utils.GetTemplate("base", "not-found")
-	err := template.Execute(res, nil)
+	err := template.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
 	}
@@ -66,8 +73,7 @@ func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *htt
 			log.Printf("WebController: %v", err)
 			res.WriteHeader(http.StatusInternalServerError)
 		}
-		wc.BaseTemplateContext.AcceptedCookies, _ = strconv.ParseBool(storage.GetSessionValue(req, "profile", "acceptedCookies"))
-		log.Printf("User accepted Cookies: %v", wc.BaseTemplateContext.AcceptedCookies)
+		log.Printf("User accepted Cookies: %v", storage.GetSessionValue(req, "profile", "acceptedCookies"))
 	}
 
 	res.WriteHeader(http.StatusAccepted)

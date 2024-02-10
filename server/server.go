@@ -21,12 +21,10 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s := &Server{}
 	s.DB = db
 	s.Router = pat.New()
-	sessionAvailable := storage.SessionAvailable()
 
 	btc := web.BaseTemplateContext{
 		FeedbackForm:              c.GetString(config.FeedbackForm),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
-		AcceptedCookies:           !sessionAvailable,
 	}
 	s.Routes(btc)
 	return s
@@ -41,12 +39,12 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 func (s *Server) Routes(btc web.BaseTemplateContext) {
 	webController := &web.WebController{
 		DB:                  s.DB,
-		BaseTemplateContext: btc,
+		BaseTemplateContext: &btc,
 	}
 
 	swimmersController := &swimmers.SwimmersController{
 		DB:                  s.DB,
-		BaseTemplateContext: btc,
+		BaseTemplateContext: &btc,
 	}
 
 	// The order here must be absolutely respected.
