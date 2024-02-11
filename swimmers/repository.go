@@ -26,7 +26,6 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 		meet := &Meet{}
 		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
 			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
-
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +59,7 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 		Distance: example.Distance,
 	}
 	err := row.Scan(&standardTime.TimeStandard.Name, &standardTime.Standard)
-	if err != nil {
+	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, err
 	}
 

@@ -70,7 +70,7 @@ func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *htt
 	if storage.SessionAvailable() {
 		err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true")
 		if err != nil {
-			log.Printf("WebController: %v", err)
+			log.Printf("web.ActivateCookieSession: %v", err)
 			res.WriteHeader(http.StatusInternalServerError)
 		}
 		log.Printf("User accepted Cookies: %v", storage.GetSessionValue(req, "profile", "acceptedCookies"))

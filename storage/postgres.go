@@ -19,6 +19,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+const ErrNoRows = "no rows in result set"
+
 type Database interface {
 	Query(context context.Context, query string, args ...any) (pgx.Rows, error)
 	QueryRow(context context.Context, query string, args ...any) pgx.Row
