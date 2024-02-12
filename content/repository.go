@@ -6,7 +6,7 @@ import (
 )
 
 func FindArticles(db storage.Database) ([]*Article, error) {
-	stmt := `select a.reference, a.title, a.published, a.content
+	stmt := `select a.reference, a.title, a.abstract, a.highlighted, a.published, a.content
 			 from article a
 			 order by a.published`
 	rows, err := db.Query(context.Background(), stmt)
@@ -18,7 +18,8 @@ func FindArticles(db storage.Database) ([]*Article, error) {
 	var articles []*Article
 	for rows.Next() {
 		article := &Article{}
-		err = rows.Scan(&article.Reference, &article.Title, &article.Published, &article.Content)
+		err = rows.Scan(&article.Reference, &article.Title, &article.Abstract,
+			&article.Highlighted, &article.Published, &article.Content)
 
 		if err != nil {
 			return nil, err

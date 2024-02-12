@@ -59,7 +59,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
 
-	s.Router.Get("/content/articles/:title/", s.handleRequest(contentController.ArticleView))
+	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
 	s.Router.Post("/swimmers/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
 

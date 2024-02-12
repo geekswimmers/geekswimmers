@@ -9,8 +9,10 @@
                 <h1 class="display-3">{{.Title}}</h1>
 
                 <div class="lead">
-                    {{markdown .Content}}
+                    {{markdown .Abstract}}
                 </div>
+
+                <p><a href="/content/articles/{{.Reference}}/">Continue reading...</a></p>
             {{end}}
         </div>
     </div>
