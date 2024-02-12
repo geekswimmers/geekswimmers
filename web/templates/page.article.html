@@ -1,0 +1,13 @@
+{{template "base" .}}
+
+{{define "title"}}Time Benchmark{{end}}
+
+{{define "content"}}
+    <h1 class="display-6">
+        {{.Article.Title}}
+    </h1>
+
+    <div class="lead">
+        {{.Article.Content}}
+    </div>
+{{end}}
