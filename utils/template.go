@@ -1,13 +1,22 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"log"
+	"regexp"
 
+	"github.com/yuin/goldmark"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
+
+// This context is shared globally within the application. Do not put any session-specific data here.
+type BaseTemplateContext struct {
+	FeedbackForm              string
+	MonitoringGoogleAnalytics string
+}
 
 func GetTemplate(layout, page string) *template.Template {
 	html, err := template.New(fmt.Sprintf("page.%s.html", page)).ParseFiles(applyLayout(layout, page)...)
@@ -44,4 +53,19 @@ func Title(str string) string {
 	}
 
 	return cases.Title(language.English, cases.Compact).String(str)
+}
+
+// ToHTML A template funcConvert markdown content to HTML and unescape special characters.
+func ToHTML(s string) template.HTML {
+	var html bytes.Buffer
+	if err := goldmark.Convert([]byte(s), &html); err != nil {
+		log.Printf("Error converting markdown to HTML: %v", err)
+		return template.HTML(s)
+	}
+
+	// Adds target="_blank" to any URL generated from markdown.
+	pattern := regexp.MustCompile(`(a href="[^"]+")`)
+	htmlWithTargetedUrls := pattern.ReplaceAllString(html.String(), "${1} target=\"_blank\"")
+
+	return template.HTML(htmlWithTargetedUrls)
 }

@@ -2,8 +2,10 @@ package server
 
 import (
 	"geekswimmers/config"
+	"geekswimmers/content"
 	"geekswimmers/storage"
 	"geekswimmers/swimmers"
+	"geekswimmers/utils"
 	"geekswimmers/web"
 	"net/http"
 
@@ -22,7 +24,7 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s.DB = db
 	s.Router = pat.New()
 
-	btc := web.BaseTemplateContext{
+	btc := utils.BaseTemplateContext{
 		FeedbackForm:              c.GetString(config.FeedbackForm),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
 	}
@@ -36,8 +38,13 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 	}
 }
 
-func (s *Server) Routes(btc web.BaseTemplateContext) {
+func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	webController := &web.WebController{
+		DB:                  s.DB,
+		BaseTemplateContext: &btc,
+	}
+
+	contentController := &content.ContentController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
 	}
@@ -51,6 +58,8 @@ func (s *Server) Routes(btc web.BaseTemplateContext) {
 	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
+
+	s.Router.Get("/content/articles/:title/", s.handleRequest(contentController.ArticleView))
 
 	s.Router.Post("/swimmers/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
 

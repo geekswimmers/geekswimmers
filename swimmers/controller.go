@@ -3,7 +3,6 @@ package swimmers
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
-	"geekswimmers/web"
 	"html/template"
 	"log"
 	"net/http"
@@ -15,7 +14,7 @@ import (
 
 type SwimmersController struct {
 	DB                  storage.Database
-	BaseTemplateContext *web.BaseTemplateContext
+	BaseTemplateContext *utils.BaseTemplateContext
 }
 
 type webContext struct {
@@ -25,7 +24,7 @@ type webContext struct {
 	Stroke              string
 	Meets               []*Meet
 	FormatedTime        string
-	BaseTemplateContext *web.BaseTemplateContext
+	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
 
