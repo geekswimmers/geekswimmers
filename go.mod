@@ -12,6 +12,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rs/cors v1.10.1
 	github.com/spf13/viper v1.18.2
+	github.com/yuin/goldmark v1.7.0
 	golang.org/x/text v0.14.0
 )
 
