@@ -1,6 +1,7 @@
 package web
 
 import (
+	"geekswimmers/content"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -11,29 +12,36 @@ import (
 
 type WebController struct {
 	DB                  storage.Database
-	BaseTemplateContext *BaseTemplateContext
+	BaseTemplateContext *utils.BaseTemplateContext
 }
 
 type webContext struct {
+	Articles            []*content.Article
 	BirthDate           string
 	Gender              string
-	BaseTemplateContext *BaseTemplateContext
+	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
 
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
 	gender := storage.GetSessionValue(req, "profile", "gender")
+	articles, err := content.FindArticles(wc.DB)
+	if err != nil {
+		log.Printf("Error viewing the articles: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
 
 	ctx := &webContext{
+		Articles:            articles,
 		BirthDate:           birthDate,
 		Gender:              gender,
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	html := utils.GetTemplate("base", "home")
-	err := html.Execute(res, ctx)
+	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{"markdown": utils.ToHTML})
+	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
 	}

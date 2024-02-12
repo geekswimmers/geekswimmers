@@ -5,7 +5,7 @@ import (
 	"geekswimmers/storage"
 )
 
-func findArticles(db storage.Database) ([]*Article, error) {
+func FindArticles(db storage.Database) ([]*Article, error) {
 	stmt := `select a.reference, a.title, a.published, a.content
 			 from article a
 			 order by a.published`

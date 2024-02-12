@@ -3,28 +3,19 @@ package content
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
-	"geekswimmers/web"
 	"log"
 	"net/http"
 )
 
 type ContentController struct {
 	DB                  storage.Database
-	BaseTemplateContext web.BaseTemplateContext
+	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-func (wc *ContentController) ArticlesView(res http.ResponseWriter, req *http.Request) {
-	articles, err := findArticles(wc.DB)
-	if err != nil {
-		log.Printf("Error viewing the article: %v", err)
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-	}
-
-	html := utils.GetTemplate("base", "articles")
-	err = html.Execute(res, nil)
-	if err != nil {
-		log.Print(err)
-	}
+type webContext struct {
+	Article             Article
+	BaseTemplateContext *utils.BaseTemplateContext
+	AcceptedCookies     bool
 }
 
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
@@ -34,8 +25,14 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	html := utils.GetTemplate("base", "home")
-	err = html.Execute(res, nil)
+	ctx := &webContext{
+		Article:             *article,
+		BaseTemplateContext: wc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	html := utils.GetTemplate("base", "article")
+	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
 	}
