@@ -1,7 +1,6 @@
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-console.log(location.protocol)
-if (location.protocol != "https:" && location.hostname != "localhost") {
-    window.location.replace("https://www.geekswimmers.com");
-}
+//if (location.protocol != "https:" && location.hostname != "localhost") {
+//    window.location.replace("https://www.geekswimmers.com");
+//}
