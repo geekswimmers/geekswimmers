@@ -30,3 +30,9 @@ We use Github Actions as continuous integration service.
 ### Go Linter
 
 The linter is configured to run on every push and pull request, verifying the quality of the code. More info: https://github.com/golangci/golangci-lint-action
+
+## Hosting
+
+### Heroku
+
+    $ heroku ps:scale web=1
