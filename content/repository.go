@@ -31,14 +31,14 @@ func FindArticles(db storage.Database) ([]*Article, error) {
 }
 
 func findArticle(reference string, db storage.Database) (*Article, error) {
-	stmt := `select a.reference, a.title, a.published, a.content
+	stmt := `select a.reference, a.title, a.abstract, a.published, a.content
 			 from article a
 			 where a.reference = $1`
 
 	row := db.QueryRow(context.Background(), stmt, reference)
 
 	article := &Article{}
-	err := row.Scan(&article.Reference, &article.Title, &article.Published, &article.Content)
+	err := row.Scan(&article.Reference, &article.Title, &article.Abstract, &article.Published, &article.Content)
 	if err != nil {
 		return nil, err
 	}

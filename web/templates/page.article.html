@@ -3,11 +3,13 @@
 {{define "title"}}Time Benchmark{{end}}
 
 {{define "content"}}
-    <h1 class="display-6">
+    <h1 class="display-3">
         {{.Article.Title}}
     </h1>
 
     <div class="lead">
-        {{.Article.Content}}
+        {{markdown .Article.Abstract}}
     </div>
+
+    {{markdown .Article.Content}}
 {{end}}

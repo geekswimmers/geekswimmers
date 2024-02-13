@@ -3,6 +3,7 @@ package content
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"html/template"
 	"log"
 	"net/http"
 )
@@ -31,7 +32,7 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	html := utils.GetTemplate("base", "article")
+	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.ToHTML})
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
