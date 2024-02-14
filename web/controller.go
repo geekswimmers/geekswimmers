@@ -26,7 +26,7 @@ type webContext struct {
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
 	gender := storage.GetSessionValue(req, "profile", "gender")
-	articles, err := content.FindArticles(wc.DB)
+	articles, err := content.FindHighlightedArticles(wc.DB)
 	if err != nil {
 		log.Printf("Error viewing the articles: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
