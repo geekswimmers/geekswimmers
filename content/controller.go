@@ -14,7 +14,8 @@ type ContentController struct {
 }
 
 type webContext struct {
-	Article             Article
+	Article             *Article
+	OtherArticles       []*Article
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
@@ -26,8 +27,15 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	otherArticles, err := FindArticlesExcept(article.Reference, wc.DB)
+	if err != nil {
+		log.Printf("Error viewing the articles: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	ctx := &webContext{
-		Article:             *article,
+		Article:             article,
+		OtherArticles:       otherArticles,
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
