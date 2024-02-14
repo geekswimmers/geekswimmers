@@ -15,3 +15,9 @@ body {
 .success {
     color: green;
 }
+
+.article-content {
+    font-family: "Gafata", sans-serif;
+    font-weight: 400;
+    font-size: 15pt;
+}

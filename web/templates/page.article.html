@@ -3,13 +3,35 @@
 {{define "title"}}Time Benchmark{{end}}
 
 {{define "content"}}
-    <h1 class="display-3">
-        {{.Article.Title}}
-    </h1>
-
-    <div class="lead">
-        {{markdown .Article.Abstract}}
+    <div class="card">
+        {{if .Article.Image}}
+            <img src="/static/images/content/{{.Article.Image}}" class="card-img" alt="{{.Article.ImageCopyright}}">
+        {{end}}
+        <div class="card-body">
+            <h1 class="display-5">{{.Article.Title}}</h1>
+            <div class="lead">
+                {{markdown .Article.Abstract}}
+            </div>
+        </div>
     </div>
-
-    {{markdown .Article.Content}}
+    <br>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="article-content">
+                {{markdown .Article.Content}}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <h4 class="card-header">
+                  More Readings
+                </h4>
+                <div class="card-body">
+                  <h5 class="card-title">Special title treatment</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+        </div>
+    </div>
 {{end}}
