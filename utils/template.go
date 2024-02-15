@@ -55,7 +55,7 @@ func Title(str string) string {
 	return cases.Title(language.English, cases.Compact).String(str)
 }
 
-// ToHTML A template funcConvert markdown content to HTML and unescape special characters.
+// ToHTML Given a markdown content, converts it to HTML and unescape special characters.
 func ToHTML(s string) template.HTML {
 	var html bytes.Buffer
 	if err := goldmark.Convert([]byte(s), &html); err != nil {
@@ -63,9 +63,13 @@ func ToHTML(s string) template.HTML {
 		return template.HTML(s)
 	}
 
-	// Adds target="_blank" to any URL generated from markdown.
+	// Adds target="_blank" to all URLs
 	pattern := regexp.MustCompile(`(a href="[^"]+")`)
-	htmlWithTargetedUrls := pattern.ReplaceAllString(html.String(), "${1} target=\"_blank\"")
+	htmlWithTargetedUrls := pattern.ReplaceAllString(html.String(), "${1} target=\"_blank\" rel=\"noopener noreferrer\"")
+
+	// Makes all images responsive.
+	pattern = regexp.MustCompile(`(img src="[^"]+")`)
+	htmlWithTargetedUrls = pattern.ReplaceAllString(htmlWithTargetedUrls, "${1} class=\"img-fluid\"")
 
 	return template.HTML(htmlWithTargetedUrls)
 }
