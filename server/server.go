@@ -4,7 +4,7 @@ import (
 	"geekswimmers/config"
 	"geekswimmers/content"
 	"geekswimmers/storage"
-	"geekswimmers/swimmers"
+	"geekswimmers/times"
 	"geekswimmers/utils"
 	"geekswimmers/web"
 	"net/http"
@@ -49,7 +49,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
-	swimmersController := &swimmers.SwimmersController{
+	swimmersController := &times.SwimmersController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
 	}
@@ -61,7 +61,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
-	s.Router.Post("/swimmers/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
+	s.Router.Post("/times/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
