@@ -18,12 +18,12 @@ type SwimmersController struct {
 }
 
 type webContext struct {
-	Example             StandardTime
-	Distance            int64
-	Course              string
-	Stroke              string
-	Meets               []*Meet
-	FormatedTime        string
+	Distance     int64
+	Course       string
+	Stroke       string
+	Meets        []*Meet
+	FormatedTime string
+
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }

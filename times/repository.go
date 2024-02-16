@@ -36,7 +36,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 }
 
 func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
-	stmt := `select ts.name, st.standard 
+	stmt := `select ts.id, ts.name, st.standard 
 			 from standard_time st 
 	           	join time_standard ts on ts.id = st.time_standard
 	           	join swim_season ss on ss.id = ts.season 
@@ -58,7 +58,7 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 		Stroke:   example.Stroke,
 		Distance: example.Distance,
 	}
-	err := row.Scan(&standardTime.TimeStandard.Name, &standardTime.Standard)
+	err := row.Scan(&standardTime.TimeStandard.ID, &standardTime.TimeStandard.Name, &standardTime.Standard)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, err
 	}
