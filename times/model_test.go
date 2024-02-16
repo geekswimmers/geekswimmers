@@ -1,4 +1,4 @@
-package swimmers
+package times
 
 import (
 	"testing"
