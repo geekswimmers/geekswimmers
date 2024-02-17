@@ -13,6 +13,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/rs/cors"
+
+	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 var (
