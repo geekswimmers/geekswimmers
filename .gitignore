@@ -1,5 +1,4 @@
 config.toml
-.gcloudignore
-app.yaml
 geekswimmers
 .vscode/settings.json
+*.bkp
