@@ -1,9 +1,5 @@
 # Contributing to Geek Swimmers
 
-## Configuration
-
-### User Session
-
 ## IDEs
 
 ### VSCode
@@ -18,8 +14,6 @@ Development Containers are used to provide a development environment without hav
 
 Ref: https://containers.dev/
 VSCode plugin: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
-
-### Howto
 
 Once you install the extension, VSCode will notice you have the `.devcontainer` folder in the project, and ask to reopen in the `devcontainer`. If you don't have the docker environment built, it will build the container, then run it and connect you.
 
