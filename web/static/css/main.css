@@ -8,6 +8,10 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
+label {
+    font-weight: bold;
+}
+
 .error {
     color: red;
 }

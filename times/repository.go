@@ -65,3 +65,22 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 
 	return standardTime, nil
 }
+
+func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
+	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time
+			 from time_standard ts
+			 	join swim_season ss on ss.id = ts.season
+	         where ts.id = $1`
+
+	row := db.QueryRow(context.Background(), stmt, id)
+
+	timeStandard := &TimeStandard{
+		ID: id,
+	}
+	err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, err
+	}
+
+	return timeStandard, nil
+}

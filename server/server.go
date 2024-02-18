@@ -62,6 +62,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
 	s.Router.Post("/times/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
+	s.Router.Get("/times/standards/:id/", s.handleRequest(swimmersController.TimeStandardView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
