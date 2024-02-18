@@ -24,6 +24,9 @@ type webContext struct {
 	Meets        []*Meet
 	FormatedTime string
 
+	TimeStandard TimeStandard
+	Ages         []int64
+
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
@@ -128,6 +131,31 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 		"Abs":               utils.Abs,
 	})
 
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Print(err)
+	}
+}
+
+func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	timeStandard, err := findTimeStandard(id, sc.DB)
+	if err != nil {
+		log.Printf("Error viewing the time standard: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx := &webContext{
+		TimeStandard:        *timeStandard,
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	for i := timeStandard.MinAgeTime; i <= timeStandard.MaxAgeTime; i++ {
+		ctx.Ages = append(ctx.Ages, i)
+	}
+
+	html := utils.GetTemplate("base", "timestandard")
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)
