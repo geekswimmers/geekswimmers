@@ -13,13 +13,12 @@
 
     <div class="card">
         <div class="card-header">
-            <form id="benthmark-form" method="get" action="/times/standards/{{.TimeStandard.ID}}">
+            <form id="filter-form" method="get" action="/times/standards/{{.TimeStandard.ID}}">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="mb-3">
                             <label for="event">Age</label>
-                            <select id="age" name="age" class="form-select" required>
-                                <option value="">Select...</option>
+                            <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
                                 {{range .Ages}}
                                     <option value="{{.}}" {{if eq $.Age .}}selected{{end}}>{{.}}</option>
                                 {{end}}
@@ -37,11 +36,11 @@
                             </a>
                             <br>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" required{{if eq $.Gender "FEMALE"}} checked{{end}}>
+                                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE"  onchange="document.getElementById('filter-form').submit();" required{{if eq $.Gender "FEMALE"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" required{{if eq $.Gender "MALE"}} checked{{end}}>
+                                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE"  onchange="document.getElementById('filter-form').submit();" required{{if eq $.Gender "MALE"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
                             </div>
                         </div>
@@ -51,11 +50,11 @@
                         <div class="mb-3">
                             <label for="course">Course</label><br>
                             <div class="form-check form-check-inline" style="padding-top: 8px;">
-                                <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" required{{if eq $.Course "SHORT"}} checked{{end}}>
+                                <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "SHORT"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" required{{if eq $.Course "LONG"}} checked{{end}}>
+                                <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG"  onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "LONG"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                             </div>
                         </div>
@@ -67,7 +66,7 @@
             <thead>
                 <tr>
                     <th scope="col">Event</th>
-                    <th scope="col">Time</th>
+                    <th scope="col">Qualifying Time</th>
                 </tr>
             </thead>
             <tbody>
