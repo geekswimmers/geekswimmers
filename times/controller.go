@@ -24,8 +24,11 @@ type webContext struct {
 	Meets        []*Meet
 	FormatedTime string
 
-	TimeStandard TimeStandard
-	Ages         []int64
+	Age           int64
+	Gender        string
+	TimeStandard  *TimeStandard
+	Ages          []int64
+	StandardTimes []*StandardTime
 
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
@@ -145,8 +148,31 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
+	if err != nil {
+		age = timeStandard.MinAgeTime
+	}
+	gender := req.URL.Query().Get("gender")
+	course := req.URL.Query().Get("course")
+
+	example := StandardTime{
+		Age:          age,
+		Gender:       gender,
+		Course:       course,
+		TimeStandard: *timeStandard,
+	}
+	standardTimes, err := findStandardTimes(example, sc.DB)
+	if err != nil {
+		log.Printf("Error viewing the time standard: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	ctx := &webContext{
-		TimeStandard:        *timeStandard,
+		Age:                 age,
+		Gender:              gender,
+		Course:              course,
+		TimeStandard:        timeStandard,
+		StandardTimes:       standardTimes,
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -155,7 +181,10 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 		ctx.Ages = append(ctx.Ages, i)
 	}
 
-	html := utils.GetTemplate("base", "timestandard")
+	html := utils.GetTemplateWithFunctions("base", "timestandard", template.FuncMap{
+		"Title":             utils.Title,
+		"FormatMiliseconds": utils.FormatMiliseconds,
+	})
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)

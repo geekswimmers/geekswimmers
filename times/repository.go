@@ -84,3 +84,29 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 
 	return timeStandard, nil
 }
+
+func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
+	stmt := `select st.stroke, st.distance, st.standard
+			 from standard_time st
+			 where st.age = $1 
+			   and st.gender = $2 
+			   and st.course = $3 
+			   and st.time_standard = $4`
+	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.TimeStandard.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var times []*StandardTime
+	for rows.Next() {
+		time := &StandardTime{}
+		err = rows.Scan(&time.Stroke, &time.Distance, &time.Standard)
+		if err != nil {
+			return nil, err
+		}
+		times = append(times, time)
+	}
+
+	return times, nil
+}
