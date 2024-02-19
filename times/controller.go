@@ -30,6 +30,10 @@ type webContext struct {
 	Ages          []int64
 	StandardTimes []*StandardTime
 
+	SwimSeason    *SwimSeason
+	SwimSeasons   []*SwimSeason
+	TimeStandards []*TimeStandard
+
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
@@ -140,6 +144,43 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	}
 }
 
+func (sc *SwimmersController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
+	swimSeasonID, _ := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
+	swimSeason := &SwimSeason{
+		ID: swimSeasonID,
+	}
+
+	swimSeasons, err := findSwimSeasons(sc.DB)
+	if err != nil {
+		log.Printf("Error viewing the time standards: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	if swimSeasonID == 0 {
+		swimSeason.ID = swimSeasons[0].ID
+	}
+
+	timeStandards, err := findTimeStandards(*swimSeason, sc.DB)
+	if err != nil {
+		log.Printf("Error viewing the time standards: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx := &webContext{
+		SwimSeason:          swimSeason,
+		SwimSeasons:         swimSeasons,
+		TimeStandards:       timeStandards,
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	html := utils.GetTemplate("base", "timestandards")
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := findTimeStandard(id, sc.DB)
@@ -153,7 +194,13 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 		age = timeStandard.MinAgeTime
 	}
 	gender := req.URL.Query().Get("gender")
+	if gender == "" {
+		gender = GenderFemale
+	}
 	course := req.URL.Query().Get("course")
+	if course == "" {
+		course = CourseLong
+	}
 
 	example := StandardTime{
 		Age:          age,

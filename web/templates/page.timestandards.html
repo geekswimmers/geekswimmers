@@ -1,0 +1,45 @@
+{{template "base" .}}
+
+{{define "title"}}Time Standard{{end}}
+
+{{define "content"}}
+    <h1 class="display-6">
+        Time Standards
+    </h1>
+
+    <div class="card">
+        <div class="card-header">
+            <form id="filter-form" method="get" action="/times/standards">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="event">Season</label>
+                            <select id="season" name="season" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                                {{range .SwimSeasons}}
+                                    <option value="{{.ID}}" {{if eq $.SwimSeason.ID .ID}}selected{{end}}>{{.Name}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age Range</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .TimeStandards}}
+                <tr>
+                    <td><a href="/times/standards/{{.ID}}">{{.Name}}</td>
+                    <td>{{.MinAgeTime}} - {{.MaxAgeTime}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+{{end}}
