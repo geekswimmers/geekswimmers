@@ -17,8 +17,10 @@ const (
 )
 
 type SwimSeason struct {
-	ID   int64
-	Name string
+	ID        int64
+	Name      string
+	StartDate time.Time
+	EndDate   time.Time
 }
 
 type TimeStandard struct {

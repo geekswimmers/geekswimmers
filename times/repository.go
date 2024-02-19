@@ -66,6 +66,54 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 	return standardTime, nil
 }
 
+func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
+	stmt := `select ss.id, ss.name, ss.start_date, ss.end_date
+	         from swim_season ss
+			 order by ss.start_date desc`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var swimSeasons []*SwimSeason
+	for rows.Next() {
+		swimSeason := &SwimSeason{}
+		err = rows.Scan(&swimSeason.ID, &swimSeason.Name, &swimSeason.StartDate, &swimSeason.EndDate)
+		if err != nil {
+			return nil, err
+		}
+		swimSeasons = append(swimSeasons, swimSeason)
+	}
+
+	return swimSeasons, nil
+}
+
+func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
+	stmt := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time
+	         from time_standard ts
+			 where ts.season = $1`
+	rows, err := db.Query(context.Background(), stmt, season.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var timeStandards []*TimeStandard
+	for rows.Next() {
+		timeStandard := &TimeStandard{
+			Season: season,
+		}
+		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime)
+		if err != nil {
+			return nil, err
+		}
+		timeStandards = append(timeStandards, timeStandard)
+	}
+
+	return timeStandards, nil
+}
+
 func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time
 			 from time_standard ts
