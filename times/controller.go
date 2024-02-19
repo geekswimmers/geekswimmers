@@ -39,29 +39,23 @@ type webContext struct {
 }
 
 func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	if err != nil {
-		log.Print(err)
-	}
-
-	// Get values from the form
-	birthDate, _ := time.Parse("2006-01-02", req.PostForm.Get("birthDate"))
-	gender := req.PostForm.Get("gender")
-	course := req.PostForm.Get("course")
-	event := strings.Split(req.PostForm.Get("event"), "-")
-	minute, _ := strconv.Atoi(req.PostForm.Get("minute"))
-	second, _ := strconv.Atoi(req.PostForm.Get("second"))
-	milisecond, _ := strconv.Atoi(req.PostForm.Get("milisecond"))
+	birthDate, _ := time.Parse("2006-01-02", req.URL.Query().Get("birthDate"))
+	gender := req.URL.Query().Get("gender")
+	course := req.URL.Query().Get("course")
+	event := strings.Split(req.URL.Query().Get("event"), "-")
+	minute, _ := strconv.Atoi(req.URL.Query().Get("minute"))
+	second, _ := strconv.Atoi(req.URL.Query().Get("second"))
+	milisecond, _ := strconv.Atoi(req.URL.Query().Get("milisecond"))
 
 	swimmer := &Swimmer{
 		BirthDate: birthDate,
 		Gender:    gender,
 	}
 
-	if err = storage.AddSessionEntry(res, req, "profile", "birthDate", req.PostForm.Get("birthDate")); err != nil {
+	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.PostForm.Get("birthDate")); err != nil {
 		log.Printf("SwimmerController.BenchmarkTime: %v", err)
 	}
-	if err = storage.AddSessionEntry(res, req, "profile", "gender", req.PostForm.Get("gender")); err != nil {
+	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.PostForm.Get("gender")); err != nil {
 		log.Printf("SwimmerController.BenchmarkTime: %v", err)
 	}
 
