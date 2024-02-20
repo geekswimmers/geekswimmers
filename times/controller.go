@@ -193,6 +193,13 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 	if err != nil {
 		age = timeStandard.MinAgeTime
 	}
+	if age < timeStandard.MinAgeTime {
+		age = timeStandard.MinAgeTime
+	}
+	if age > timeStandard.MaxAgeTime {
+		age = timeStandard.MaxAgeTime
+	}
+
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
 		gender = GenderFemale
