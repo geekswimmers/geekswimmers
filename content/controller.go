@@ -14,17 +14,24 @@ type ContentController struct {
 }
 
 type webContext struct {
-	Article             *Article
-	OtherArticles       []*Article
+	Article       *Article
+	OtherArticles []*Article
+
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
 
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
+	ctx := &webContext{
+		BaseTemplateContext: wc.BaseTemplateContext,
+		AcceptedCookies:     true,
+	}
+
 	article, err := findArticle(req.URL.Query().Get(":reference"), wc.DB)
-	if err != nil {
-		log.Printf("Error viewing the article: %v", err)
-		http.Error(res, err.Error(), http.StatusInternalServerError)
+
+	if err != nil || article == nil {
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
 	}
 
 	otherArticles, err := FindArticlesExcept(article.Reference, wc.DB)
@@ -33,12 +40,9 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
-		Article:             article,
-		OtherArticles:       otherArticles,
-		BaseTemplateContext: wc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
-	}
+	ctx.Article = article
+	ctx.OtherArticles = otherArticles
+	ctx.AcceptedCookies = storage.GetSessionValue(req, "profile", "acceptedCookies") == "true"
 
 	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.ToHTML})
 	err = html.Execute(res, ctx)

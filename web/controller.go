@@ -60,18 +60,12 @@ func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request)
 }
 
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
-	res.WriteHeader(http.StatusNotFound)
-
 	ctx := &webContext{
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     true,
 	}
 
-	template := utils.GetTemplate("base", "not-found")
-	err := template.Execute(res, ctx)
-	if err != nil {
-		log.Print(err)
-	}
+	utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 }
 
 func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
