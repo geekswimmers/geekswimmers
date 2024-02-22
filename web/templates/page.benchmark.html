@@ -17,7 +17,9 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">{{.Name}}</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Standard: <a href="/times/standards/{{.StandardTime.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Gender}}&course={{$.Course}}">{{.StandardTime.TimeStandard.Name}}</a></h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Standard: 
+                    <a href="/times/standards/{{.StandardTime.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Gender}}&course={{$.Course}}">{{.StandardTime.TimeStandard.Name}}</a>
+                </h6>
                 <p class="card-text">
                     <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
                         <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>

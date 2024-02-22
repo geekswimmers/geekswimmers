@@ -15,7 +15,7 @@
         <div class="card-header">
             <form id="filter-form" method="get" action="/times/standards/{{.TimeStandard.ID}}">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label for="event">Age</label>
                             <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
@@ -25,7 +25,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
                             <a href="#" data-bs-toggle="tooltip" data-bs-title="Swim Canada and Swim Ontario use only two genders to categorize time standards.">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
         
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="mb-3">
                             <label for="course">Course</label><br>
                             <div class="form-check form-check-inline">
