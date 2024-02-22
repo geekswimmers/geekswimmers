@@ -176,11 +176,17 @@ func (sc *SwimmersController) TimeStandardsView(res http.ResponseWriter, req *ht
 }
 
 func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
+	ctx := &webContext{
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := findTimeStandard(id, sc.DB)
-	if err != nil {
-		log.Printf("Error viewing the time standard: %v", err)
-		http.Error(res, err.Error(), http.StatusInternalServerError)
+	if err != nil || timeStandard == nil {
+		log.Printf("Error viewing the time standard %d: %v", id, err)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
 	}
 
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
@@ -215,15 +221,11 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
-		Age:                 age,
-		Gender:              gender,
-		Course:              course,
-		TimeStandard:        timeStandard,
-		StandardTimes:       standardTimes,
-		BaseTemplateContext: sc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
-	}
+	ctx.Age = age
+	ctx.Gender = gender
+	ctx.Course = course
+	ctx.TimeStandard = timeStandard
+	ctx.StandardTimes = standardTimes
 
 	for i := timeStandard.MinAgeTime; i <= timeStandard.MaxAgeTime; i++ {
 		ctx.Ages = append(ctx.Ages, i)

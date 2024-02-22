@@ -22,7 +22,7 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 		err = rows.Scan(&article.Reference, &article.Title, &article.Abstract,
 			&article.Highlighted, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
 
-		if err != nil {
+		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, err
 		}
 		articles = append(articles, article)
@@ -48,7 +48,7 @@ func FindArticlesExcept(reference string, db storage.Database) ([]*Article, erro
 		err = rows.Scan(&article.Reference, &article.Title, &article.Abstract,
 			&article.Highlighted, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
 
-		if err != nil {
+		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, err
 		}
 		articles = append(articles, article)
