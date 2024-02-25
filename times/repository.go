@@ -139,7 +139,8 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 			 where st.age = $1 
 			   and st.gender = $2 
 			   and st.course = $3 
-			   and st.time_standard = $4`
+			   and st.time_standard = $4
+			 order by st.stroke, st.standard asc`
 	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.TimeStandard.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, err
