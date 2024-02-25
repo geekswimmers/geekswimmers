@@ -240,3 +240,80 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 		log.Print(err)
 	}
 }
+
+func (sc *SwimmersController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
+	ctx := &webContext{
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	distance, err := strconv.ParseInt(req.URL.Query().Get("distance"), 10, 64)
+	if err != nil {
+		distance = 100
+	}
+	ctx.Distance = distance
+
+	stroke := req.URL.Query().Get("stroke")
+	if stroke == "" {
+		stroke = StrokeFree
+	}
+	ctx.Stroke = stroke
+
+	min, max, err := findMinAndMaxAges(sc.DB)
+	if err != nil {
+		log.Printf("Error getting min and max ages: %v", err)
+	}
+
+	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
+	if err != nil {
+		age = min
+	}
+	if age < min {
+		age = min
+	}
+	if age > max {
+		age = max
+	}
+	ctx.Age = age
+
+	for i := min; i <= max; i++ {
+		ctx.Ages = append(ctx.Ages, i)
+	}
+
+	gender := req.URL.Query().Get("gender")
+	if gender == "" {
+		gender = GenderFemale
+	}
+	ctx.Gender = gender
+
+	course := req.URL.Query().Get("course")
+	if course == "" {
+		course = CourseLong
+	}
+	ctx.Course = course
+
+	example := StandardTime{
+		Age:      age,
+		Gender:   gender,
+		Course:   course,
+		Stroke:   stroke,
+		Distance: distance,
+	}
+
+	standardsEvent, err := findStandardsEvent(example, sc.DB)
+	if err != nil {
+		log.Printf("Error viewing the standards of the event %d-%s: %v", distance, utils.Title(stroke), err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx.StandardTimes = standardsEvent
+
+	html := utils.GetTemplateWithFunctions("base", "standards-event", template.FuncMap{
+		"Title":             utils.Title,
+		"FormatMiliseconds": utils.FormatMiliseconds,
+	})
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Print(err)
+	}
+}

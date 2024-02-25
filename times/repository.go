@@ -158,3 +158,42 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	return times, nil
 }
+
+func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {
+	stmt := `select ts.id , ts.name, st.standard 
+			 from standard_time st 
+				join time_standard ts on ts.id = st.time_standard 
+			 where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.stroke = $5
+			 order by st.standard desc`
+	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.Distance, example.Stroke)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var times []*StandardTime
+	for rows.Next() {
+		time := &StandardTime{}
+		err = rows.Scan(&time.TimeStandard.ID, &time.TimeStandard.Name, &time.Standard)
+		if err != nil {
+			return nil, err
+		}
+		times = append(times, time)
+	}
+
+	return times, nil
+}
+
+func findMinAndMaxAges(db storage.Database) (int64, int64, error) {
+	stmt := `select min(age) as min_age, max(age) as max_age from standard_time`
+
+	row := db.QueryRow(context.Background(), stmt)
+
+	var minAge, maxAge int64
+	err := row.Scan(&minAge, &maxAge)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return minAge, maxAge, nil
+}
