@@ -10,23 +10,23 @@ I had to get back to my position, but I left my cellphone at reach, anxiously wa
 
 After this experience we decided to sit down and definitely learn how these time standards work. And that was not self-explanatory. First, there is no such a thing like one time standard. There are several ones, in different levels and jurisdictions. Age is a criteria to find the time, but meets can follow different rules. Some consider your age on December 31st, others on the race day, and open meets don't consider age at all. It is so tricky that what athletes and parents usually do is to spend some time to find one time, set it as goal, and ignore all the rest until that goal is reached. I wondered if there was a way to simplify that.
 
-That's when we came up with the idea behind [geekswimmers.com](https://geekswimmers.com). An app that would explain and streamline all numbers around the sport of swimming, starting with time standards, which still seems to be an open problem out there. 
+That's when we came up with the idea behind **Geekswimmers.com**. An app that would explain and streamline all numbers around the sport of swimming, starting with time standards, which still seems to be an open problem out there. 
 
-Let's imagine you are watching your kid in an invitational meet. They just finished swimming an event and you want to know if their time can qualify them for a championship. In GeekSwimmers, complete the [Time Benchmark](https://geekswimmers.com) form with the date of birth, gender, course, event, and the time.
+Let's imagine you are watching your kid in an invitational meet. They just finished swimming an event and you want to know if their time can qualify them for a championship. In GeekSwimmers, complete the [Time Benchmark](/#time-benchmark) form with the date of birth, gender, course, event, and the time.
 
-![Time benchmark form](time-benchmark-form.png)
+![Time benchmark form](/static/images/content/how-idea-geekswimmers-emerged-1.png)
 
-Time standards are organized by age, gender, course, and event. We ask for the date of birth, instead of age, because the meets consider the age the swimmer was at a particular date, not the age when the time was taken. So, with the date of birth, we can calculate the age according to the specifications of each meet. That's what we learned when we thought our kid was qualified for Regionals, but he would be actually older at the time of the meet, which puts him in a different category. 
+Time standards are organized by age, gender, course, and event. We ask for the date of birth, instead of age, because the meets consider the age the swimmer was at a particular date, not the age when the time was taken. So, with the date of birth, we can calculate the age according to the specifications of each meet. That's what we learned when we thought our kid was qualified for Regionals (WOSA), but he would be actually older at the time of the meet, which puts him in a different category. 
 
 All fields in the form are required. After submitting the form, the app shows a list of meets that require time standards, sorted by how close the swimmer is from qualifying.
 
-![Time benchmark results](time-benchmark-results.png)
+![Time benchmark results](/static/images/content/how-idea-geekswimmers-emerged-2.png)
 
 At this point in time, we have data that covers just some meets in Ontario, Canada. They are:
 
-* **Western Region SC Championships**: short course at Canada Games Aquatic Centre in London, for all age groups.
+* **Western Region SC Championships (WOSA)**: short course at Canada Games Aquatic Centre in London, for all age groups.
 
-* **Western Region LC Championships**: long course at Windsor International Aquatic and Training Centre, for all age groups.
+* **Western Region LC Championships (WOSA)**: long course at Windsor International Aquatic and Training Centre, for all age groups.
 
 * **Winter Ontario Youth-Junior Championships (OYJ)**: long course at Markham Pan Am Centre, up to 18 years old, with qualifying times achieved from Sept. 1, 2022 to Feb. 4, 2024.
 
