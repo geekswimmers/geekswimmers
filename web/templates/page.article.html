@@ -32,7 +32,8 @@
                         <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
                     {{end}}
                     <div class="card-body">
-                        <p><b><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/articles/{{.Reference}}/">{{.Title}}</a></b></p>
+                        <h5 class="card-title"><a href="/content/articles/{{.Reference}}/">{{.Title}}</a></h5>
+                        <p class="card-text">{{.SubTitle}}</p>
                     </div>
                 </div>
                 <br>
