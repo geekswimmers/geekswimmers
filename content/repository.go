@@ -2,7 +2,9 @@ package content
 
 import (
 	"context"
+	"fmt"
 	"geekswimmers/storage"
+	"os"
 )
 
 func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
@@ -31,8 +33,8 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 	return articles, nil
 }
 
-func FindArticlesExcept(reference string, db storage.Database) ([]*Article, error) {
-	stmt := `select a.reference, a.title, a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+func findArticlesExcept(reference string, db storage.Database) ([]*Article, error) {
+	stmt := `select a.reference, a.title, coalesce(a.sub_title, ''), a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			 from article a
 			 where a.reference != $1
 			 order by a.published desc`
@@ -45,7 +47,7 @@ func FindArticlesExcept(reference string, db storage.Database) ([]*Article, erro
 	var articles []*Article
 	for rows.Next() {
 		article := &Article{}
-		err = rows.Scan(&article.Reference, &article.Title, &article.Abstract,
+		err = rows.Scan(&article.Reference, &article.Title, &article.SubTitle, &article.Abstract,
 			&article.Highlighted, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
 
 		if err != nil && err.Error() != storage.ErrNoRows {
@@ -70,5 +72,18 @@ func findArticle(reference string, db storage.Database) (*Article, error) {
 		return nil, err
 	}
 
+	article.Content, err = loadContent(fmt.Sprintf("web/content/%s", article.Content))
+	if err != nil {
+		return nil, err
+	}
+
 	return article, nil
+}
+
+func loadContent(filePath string) (string, error) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
 }
