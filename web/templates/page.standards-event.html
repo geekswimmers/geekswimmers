@@ -4,16 +4,18 @@
 
 {{define "content"}}
     <h1 class="display-6">
-        Time Standard
+        Standard Event
     </h1>
 
     <h3>
-        {{.TimeStandard.Name}}
+        {{.Distance}} {{.Stroke | Title}}
     </h3>
 
     <div class="card">
         <div class="card-header">
-            <form id="filter-form" method="get" action="/times/standards/{{.TimeStandard.ID}}">
+            <form id="filter-form" method="get" action="/times/standards/event">
+                <input type="hidden" name="distance" value="{{.Distance}}">
+                <input type="hidden" name="stroke" value="{{.Stroke}}">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="mb-3">
@@ -65,16 +67,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Event</th>
+                    <th scope="col">Standard</th>
                     <th scope="col">Qualifying Time</th>
                 </tr>
             </thead>
             <tbody>
                 {{range .StandardTimes}}
-                    <tr>
-                        <td><a href="/times/standards/event?distance={{.Distance}}&stroke={{.Stroke}}&age={{$.Age}}&gender={{$.Gender}}&course={{$.Course}}">{{.Distance}} {{.Stroke | Title}}</a></td>
-                        <td>{{.Standard | FormatMiliseconds}}</td>
-                    </tr>
+                <tr>
+                    <td><a href="/times/standards/{{.TimeStandard.ID}}">{{.TimeStandard.Name}}</a></td>
+                    <td>{{.Standard | FormatMiliseconds}}</td>
+                </tr>
                 {{end}}
             </tbody>
         </table>
