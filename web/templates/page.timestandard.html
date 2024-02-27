@@ -72,7 +72,7 @@
             <tbody>
                 {{range .StandardTimes}}
                     <tr>
-                        <td><a href="/times/standards/event?distance={{.Distance}}&stroke={{.Stroke}}&age={{$.Age}}&gender={{$.Gender}}&course={{$.Course}}">{{.Distance}} {{.Stroke | Title}}</a></td>
+                        <td><a href="/times/standards/event?event={{.Distance}}-{{.Stroke}}&age={{$.Age}}&gender={{$.Gender}}&course={{$.Course}}">{{.Distance}} {{.Stroke | Title}}</a></td>
                         <td>{{.Standard | FormatMiliseconds}}</td>
                     </tr>
                 {{end}}

@@ -14,10 +14,30 @@
     <div class="card">
         <div class="card-header">
             <form id="filter-form" method="get" action="/times/standards/event">
-                <input type="hidden" name="distance" value="{{.Distance}}">
-                <input type="hidden" name="stroke" value="{{.Stroke}}">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="event">Event</label>
+                            <select id="event" name="event" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                                <option value="50-FREE" {{if eq .Event "50-FREE"}}selected{{end}}>50m Free</option>
+                                <option value="100-FREE" {{if eq .Event "100-FREE"}}selected{{end}}>100m Free</option>
+                                <option value="200-FREE" {{if eq .Event "200-FREE"}}selected{{end}}>200m Free</option>
+                                <option value="400-FREE" {{if eq .Event "400-FREE"}}selected{{end}}>400m Free</option>
+                                <option value="800-FREE" {{if eq .Event "800-FREE"}}selected{{end}}>800m Free</option>
+                                <option value="1500-FREE" {{if eq .Event "1500-FREE"}}selected{{end}}>1500m Free</option>
+                                <option value="100-BACK" {{if eq .Event "100-BACK"}}selected{{end}}>100m Back</option>
+                                <option value="200-BACK" {{if eq .Event "200-BACK"}}selected{{end}}>200m Back</option>
+                                <option value="100-BREAST" {{if eq .Event "100-BREAST"}}selected{{end}}>100m Breast</option>
+                                <option value="200-BREAST" {{if eq .Event "200-BREAST"}}selected{{end}}>200m Breast</option>
+                                <option value="100-FLY" {{if eq .Event "100-FLY"}}selected{{end}}>100m Fly</option>
+                                <option value="200-FLY" {{if eq .Event "200-FLY"}}selected{{end}}>200m Fly</option>
+                                <option value="100-MEDLEY" {{if eq .Event "100-MEDLEY"}}selected{{end}}>100m Medley</option>
+                                <option value="200-MEDLEY" {{if eq .Event "200-MEDLEY"}}selected{{end}}>200m Medley</option>
+                                <option value="400-MEDLEY" {{if eq .Event "400-MEDLEY"}}selected{{end}}>400m Medley</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="event">Age</label>
                             <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
@@ -27,7 +47,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
                             <a href="#" data-bs-toggle="tooltip" data-bs-title="Swim Canada and Swim Ontario use only two genders to categorize time standards.">
@@ -48,7 +68,7 @@
                         </div>
                     </div>
         
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="course">Course</label><br>
                             <div class="form-check form-check-inline">
