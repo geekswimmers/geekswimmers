@@ -1,6 +1,7 @@
 package times
 
 import (
+	"fmt"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -18,6 +19,7 @@ type SwimmersController struct {
 }
 
 type webContext struct {
+	Event        string
 	Distance     int64
 	Course       string
 	Stroke       string
@@ -247,17 +249,24 @@ func (sc *SwimmersController) StandardsEventView(res http.ResponseWriter, req *h
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	distance, err := strconv.ParseInt(req.URL.Query().Get("distance"), 10, 64)
+	// Represents the event in two parts: distance and stroke
+	event := strings.Split(req.URL.Query().Get("event"), "-")
+
+	distance, err := strconv.ParseInt(event[0], 10, 64)
 	if err != nil {
 		distance = 100
 	}
 	ctx.Distance = distance
 
-	stroke := req.URL.Query().Get("stroke")
+	var stroke string
+	if len(event) > 1 {
+		stroke = event[1]
+	}
 	if stroke == "" {
 		stroke = StrokeFree
 	}
 	ctx.Stroke = stroke
+	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
 
 	min, max, err := findMinAndMaxAges(sc.DB)
 	if err != nil {
