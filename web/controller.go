@@ -70,8 +70,7 @@ func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request
 
 func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
 	if storage.SessionAvailable() {
-		err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true")
-		if err != nil {
+		if err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true"); err != nil {
 			log.Printf("web.ActivateCookieSession: %v", err)
 			res.WriteHeader(http.StatusInternalServerError)
 		}

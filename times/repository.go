@@ -125,8 +125,7 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	timeStandard := &TimeStandard{
 		ID: id,
 	}
-	err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime)
-	if err != nil {
+	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime); err != nil {
 		return nil, err
 	}
 
@@ -191,8 +190,7 @@ func findMinAndMaxAges(db storage.Database) (int64, int64, error) {
 	row := db.QueryRow(context.Background(), stmt)
 
 	var minAge, maxAge int64
-	err := row.Scan(&minAge, &maxAge)
-	if err != nil {
+	if err := row.Scan(&minAge, &maxAge); err != nil {
 		return 0, 0, err
 	}
 

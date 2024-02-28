@@ -10,8 +10,7 @@ func ErrorHandler(res http.ResponseWriter, req *http.Request, ctx any, status in
 
 	if status == http.StatusNotFound {
 		html := GetTemplate("base", "not-found")
-		err := html.Execute(res, ctx)
-		if err != nil {
+		if err := html.Execute(res, ctx); err != nil {
 			log.Print(err)
 		}
 	}
