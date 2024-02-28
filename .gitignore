@@ -2,3 +2,5 @@ config.toml
 geekswimmers
 .vscode/settings.json
 *.bkp
+
+test/
