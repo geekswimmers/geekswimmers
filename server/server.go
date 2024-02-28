@@ -49,7 +49,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
-	swimmersController := &times.SwimmersController{
+	swimmersController := &times.StandardsController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
 	}

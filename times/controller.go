@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-type SwimmersController struct {
+type StandardsController struct {
 	DB                  storage.Database
 	BaseTemplateContext *utils.BaseTemplateContext
 }
@@ -40,7 +40,7 @@ type webContext struct {
 	AcceptedCookies     bool
 }
 
-func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
+func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
 	birthDate, _ := time.Parse("2006-01-02", req.URL.Query().Get("birthDate"))
 	gender := req.URL.Query().Get("gender")
 	course := req.URL.Query().Get("course")
@@ -140,7 +140,7 @@ func (sc *SwimmersController) BenchmarkTime(res http.ResponseWriter, req *http.R
 	}
 }
 
-func (sc *SwimmersController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
+func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
 	swimSeasonID, _ := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
 	swimSeason := &SwimSeason{
 		ID: swimSeasonID,
@@ -177,7 +177,7 @@ func (sc *SwimmersController) TimeStandardsView(res http.ResponseWriter, req *ht
 	}
 }
 
-func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
+func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
@@ -243,7 +243,7 @@ func (sc *SwimmersController) TimeStandardView(res http.ResponseWriter, req *htt
 	}
 }
 
-func (sc *SwimmersController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
+func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
