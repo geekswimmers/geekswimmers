@@ -5,7 +5,7 @@ create table if not exists record_scope (
 	region   varchar(50)     null, -- WESTERN
     city     varchar(50)     null, -- WATERLOO
     club     varchar(50)     null, -- ROW
-    meet     varchar(50)     null, -- DEAN_BOLE, CUNNINGHAM_CLASSIC, NOVICE_1, NOVICE_2
+    meet     varchar(50)     null  -- DEAN_BOLE, CUNNINGHAM_CLASSIC, NOVICE_1, NOVICE_2
 );
 
 create table if not exists record (
