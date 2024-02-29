@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/server"
 	"geekswimmers/storage"
@@ -30,17 +31,19 @@ func run() error {
 
 	log.Println("Migrating database")
 	if err = storage.MigrateDatabase(conf); err != nil {
-		return err
+		return fmt.Errorf("storage: %v", err)
 	}
 
 	log.Println("Initializing database connection pool")
 	db, err := storage.InitializeConnectionPool(conf)
 	if err != nil {
-		return err
+		return fmt.Errorf("storage: %v", err)
 	}
 
 	if conf.GetString(config.ServerSessionKey) != "" {
-		storage.InitSessionStore(conf)
+		if err := storage.InitSessionStore(conf); err != nil {
+			return fmt.Errorf("storage: %v", err)
+		}
 	}
 
 	log.Println("Creating GeekSwimmers server")

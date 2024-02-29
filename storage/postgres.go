@@ -45,12 +45,12 @@ func MigrateDatabase(c config.Config) error {
 func migrateDatabase(url string) (uint, bool, error) {
 	migration, err := migrate.New("file://storage/migrations", url)
 	if err != nil {
-		return 0, false, fmt.Errorf("storage: migration files: %v", err)
+		return 0, false, fmt.Errorf("migration files: %v", err)
 	}
 
 	err = migration.Up()
 	if err != nil && err.Error() != "no change" {
-		return 0, false, fmt.Errorf("storage: migration execution: %v", err)
+		return 0, false, fmt.Errorf("migration execution: %v", err)
 	}
 	return migration.Version()
 }
@@ -60,7 +60,7 @@ func InitializeConnectionPool(c config.Config) (Database, error) {
 
 	dbpool, err := pgxpool.New(context.Background(), url)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not possible to create a connection pool: %v", err)
 	}
 
 	maxOpenConns := c.GetInt32(config.DatabaseMaxOpenConns)
@@ -70,7 +70,7 @@ func InitializeConnectionPool(c config.Config) (Database, error) {
 	log.Printf("Database pool: %v max connections. Each connection lasting for %v innactive in the pool.", maxOpenConns, connMaxLifetime)
 
 	if err = dbpool.Ping(context.Background()); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("not possible to ping the database: %v", err)
 	}
 
 	return dbpool, nil
