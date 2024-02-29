@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/server"
@@ -12,14 +11,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/rs/cors"
 
 	_ "github.com/heroku/x/hmetrics/onload"
-)
-
-var (
-	flgBDClean = flag.Bool("dbclean", true, "If present, set the schema migration as clean.")
 )
 
 func run() error {
@@ -55,7 +49,7 @@ func run() error {
 func loadConfiguration() (config.Config, error) {
 	config, err := config.InitConfiguration(config.DefaultConfigFile)
 	if err != nil {
-		return nil, errors.Wrap(err, "loading configuration")
+		return nil, fmt.Errorf("loading configuration: %v", err)
 	}
 
 	return config, nil
