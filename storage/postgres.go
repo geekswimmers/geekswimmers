@@ -15,8 +15,6 @@ import (
 	pgx "github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"github.com/pkg/errors"
 )
 
 const ErrNoRows = "no rows in result set"
@@ -29,15 +27,25 @@ type Database interface {
 
 func MigrateDatabase(c config.Config) error {
 	version, dirty, err := migrateDatabase(c.GetString(config.DatabaseURL))
+
 	if err != nil {
-		return errors.Wrap(err, "migrating database")
+		if dirty {
+			log.Printf("Database is dirty. Cleaning...")
+			version, dirty, err = cleanDatabase(c.GetString(config.DatabaseURL))
+			if err != nil {
+				err = fmt.Errorf("MigrateDatabase: %v", err)
+			}
+			if dirty {
+				log.Fatalf("Database is not clean yet: %v", err)
+			} else {
+				log.Fatalf("Database is clean, reverted to %v, but migration failed: %v", version, err)
+			}
+		} else {
+			return fmt.Errorf("MigrateDatabase: %v", err)
+		}
 	}
 
-	if dirty {
-		return fmt.Errorf("migration generated a dirty version of the database")
-	}
-
-	log.Printf("Database version: %v", version)
+	log.Printf("Database version: %v, dirty: %v", version, dirty)
 	return nil
 }
 
@@ -50,7 +58,25 @@ func migrateDatabase(url string) (uint, bool, error) {
 
 	err = migration.Up()
 	if err != nil && err.Error() != "no change" {
-		return 0, false, fmt.Errorf("migration execution: %v", err)
+		return 0, true, fmt.Errorf("migration execution: %v", err)
+	}
+	return migration.Version()
+}
+
+func cleanDatabase(url string) (uint, bool, error) {
+	migration, err := migrate.New("file://storage/migrations", url)
+	if err != nil {
+		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
+	}
+
+	err = migration.Force(6)
+	if err != nil {
+		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
+	}
+
+	err = migration.Steps(-1)
+	if err != nil {
+		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
 	}
 	return migration.Version()
 }

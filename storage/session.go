@@ -15,7 +15,7 @@ func InitSessionStore(c config.Config) error {
 	sessionKey := c.GetString(config.ServerSessionKey)
 	decodedKey, err := base32.StdEncoding.DecodeString(sessionKey)
 	if err != nil {
-		fmt.Errorf("error decoding session key: %v", err)
+		return fmt.Errorf("error decoding session key: %v", err)
 	}
 	sessionStore = sessions.NewCookieStore(decodedKey)
 	return nil

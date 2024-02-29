@@ -19,26 +19,25 @@ import (
 )
 
 var (
-	flgConfigPath = flag.String("cfg", config.DefaultConfigFile, "Path to the server configuration file")
+	flgBDClean = flag.Bool("dbclean", true, "If present, set the schema migration as clean.")
 )
 
 func run() error {
-	log.Println("Loading configuration")
 	conf, err := loadConfiguration()
 	if err != nil {
 		return err
 	}
+	log.Println("Configuration loaded successfully.")
 
-	log.Println("Migrating database")
 	if err = storage.MigrateDatabase(conf); err != nil {
 		return fmt.Errorf("storage: %v", err)
 	}
 
-	log.Println("Initializing database connection pool")
 	db, err := storage.InitializeConnectionPool(conf)
 	if err != nil {
 		return fmt.Errorf("storage: %v", err)
 	}
+	log.Println("Database connection pool initialized successfully.")
 
 	if conf.GetString(config.ServerSessionKey) != "" {
 		if err := storage.InitSessionStore(conf); err != nil {
@@ -46,7 +45,6 @@ func run() error {
 		}
 	}
 
-	log.Println("Creating GeekSwimmers server")
 	s := server.CreateServer(conf, db)
 
 	runHTTPServer(s, defineHTTPPort(conf))
@@ -55,7 +53,7 @@ func run() error {
 }
 
 func loadConfiguration() (config.Config, error) {
-	config, err := config.InitConfiguration(*flgConfigPath)
+	config, err := config.InitConfiguration(config.DefaultConfigFile)
 	if err != nil {
 		return nil, errors.Wrap(err, "loading configuration")
 	}
