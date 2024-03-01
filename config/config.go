@@ -3,6 +3,7 @@ package config
 
 import (
 	"fmt"
+	"geekswimmers/utils"
 	"io/fs"
 	"log"
 	"time"
@@ -88,14 +89,14 @@ This function maps environment variables to configuration entries, considering o
 func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.AutomaticEnv()
 	viperConfig.SetEnvPrefix("geekswimmers")
-	_ = viperConfig.BindEnv(DatabaseURL, "DATABASE_URL")
-	_ = viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS")
-	_ = viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME")
+	utils.LogError(viperConfig.BindEnv(DatabaseURL, "DATABASE_URL"), "Error binding environment variable DATABASE_URL")
+	utils.LogError(viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS"), "Error binding environment variable DATABASE_MAXOPENCONNS")
+	utils.LogError(viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME"), "Error binding environment variable DATABASE_CONNMAXLIFETIME")
 
-	_ = viperConfig.BindEnv(ServerPort, "PORT")
-	_ = viperConfig.BindEnv(ServerSessionKey, "SERVER_SESSION_KEY")
+	utils.LogError(viperConfig.BindEnv(ServerPort, "PORT"), "Error binding environment variable PORT")
+	utils.LogError(viperConfig.BindEnv(ServerSessionKey, "SERVER_SESSION_KEY"), "Error binding environment variable SERVER_SESSION_KEY")
 
-	_ = viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS")
+	utils.LogError(viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS"), "Error binding environment variable MONITORING_GOOGLE_ANALYTICS")
 
-	_ = viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM")
+	utils.LogError(viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM"), "Error binding environment variable MISCELLANEOUS_FEEDBACKFORM")
 }

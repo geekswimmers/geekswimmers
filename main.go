@@ -19,23 +19,23 @@ import (
 func run() error {
 	conf, err := loadConfiguration()
 	if err != nil {
-		return err
+		return fmt.Errorf("config.%v", err)
 	}
 	log.Println("Configuration loaded successfully.")
 
 	if err = storage.MigrateDatabase(conf); err != nil {
-		return fmt.Errorf("storage: %v", err)
+		return fmt.Errorf("storage.%v", err)
 	}
 
 	db, err := storage.InitializeConnectionPool(conf)
 	if err != nil {
-		return fmt.Errorf("storage: %v", err)
+		return fmt.Errorf("storage.%v", err)
 	}
 	log.Println("Database connection pool initialized successfully.")
 
 	if conf.GetString(config.ServerSessionKey) != "" {
 		if err := storage.InitSessionStore(conf); err != nil {
-			return fmt.Errorf("storage: %v", err)
+			return fmt.Errorf("storage.%v", err)
 		}
 	}
 
@@ -49,7 +49,7 @@ func run() error {
 func loadConfiguration() (config.Config, error) {
 	config, err := config.InitConfiguration(config.DefaultConfigFile)
 	if err != nil {
-		return nil, fmt.Errorf("loading configuration: %v", err)
+		return nil, fmt.Errorf("loadConfiguration.%v", err)
 	}
 
 	return config, nil
