@@ -13,6 +13,11 @@ import (
 	"time"
 )
 
+type BenchmarkController struct {
+	DB                  storage.Database
+	BaseTemplateContext *utils.BaseTemplateContext
+}
+
 type StandardsController struct {
 	DB                  storage.Database
 	BaseTemplateContext *utils.BaseTemplateContext
@@ -40,7 +45,7 @@ type webContext struct {
 	AcceptedCookies     bool
 }
 
-func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
+func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
 	birthDate, _ := time.Parse("2006-01-02", req.URL.Query().Get("birthDate"))
 	gender := req.URL.Query().Get("gender")
 	course := req.URL.Query().Get("course")
@@ -55,10 +60,10 @@ func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.
 	}
 
 	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.PostForm.Get("birthDate")); err != nil {
-		log.Printf("SwimmerController.BenchmarkTime: %v", err)
+		log.Printf("storage.%v", err)
 	}
 	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.PostForm.Get("gender")); err != nil {
-		log.Printf("SwimmerController.BenchmarkTime: %v", err)
+		log.Printf("storage.%v", err)
 	}
 
 	// Separate the event into distance and stroke
@@ -66,9 +71,9 @@ func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.
 	stroke := event[1]
 
 	var foundMeets []*Meet
-	meets, err := findChampionshipMeets(sc.DB)
+	meets, err := findChampionshipMeets(bc.DB)
 	if err != nil {
-		log.Printf("swimmers.FindChampionshipMeets: %v", err)
+		log.Printf("times.%v", err)
 	}
 
 	for _, meet := range meets {
@@ -94,9 +99,9 @@ func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.
 			Distance:     distance,
 			TimeStandard: meet.TimeStandard,
 		}
-		standardTime, err := findStandardTimeMeet(standardTimeExample, meet.Season, sc.DB)
+		standardTime, err := findStandardTimeMeet(standardTimeExample, meet.Season, bc.DB)
 		if err != nil {
-			log.Printf("swimmers.FindStandardTimeMeet: %v", err)
+			log.Printf("times.%v", err)
 		}
 
 		if standardTime != nil {
@@ -124,7 +129,7 @@ func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Distance:            distance,
 		Course:              course,
 		Stroke:              stroke,
-		BaseTemplateContext: sc.BaseTemplateContext,
+		BaseTemplateContext: bc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
@@ -136,7 +141,7 @@ func (sc *StandardsController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Print(err)
+		log.Printf("times.BenchmarkTime: %v", err)
 	}
 }
 
@@ -148,7 +153,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 	swimSeasons, err := findSwimSeasons(sc.DB)
 	if err != nil {
-		log.Printf("Error viewing the time standards: %v", err)
+		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -158,7 +163,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 	timeStandards, err := findTimeStandards(*swimSeason, sc.DB)
 	if err != nil {
-		log.Printf("Error viewing the time standards: %v", err)
+		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -173,7 +178,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 	html := utils.GetTemplate("base", "timestandards")
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Print(err)
+		log.Printf("times.TimeStandardsView: %v", err)
 	}
 }
 
@@ -186,7 +191,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := findTimeStandard(id, sc.DB)
 	if err != nil || timeStandard == nil {
-		log.Printf("Error viewing the time standard %d: %v", id, err)
+		log.Printf("times.%v (%d)", err, id)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
@@ -219,7 +224,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 	standardTimes, err := findStandardTimes(example, sc.DB)
 	if err != nil {
-		log.Printf("Error viewing the time standard: %v", err)
+		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -239,7 +244,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Print(err)
+		log.Printf("times.TimeStandardView: %v", err)
 	}
 }
 
@@ -270,7 +275,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	min, max, err := findMinAndMaxAges(sc.DB)
 	if err != nil {
-		log.Printf("Error getting min and max ages: %v", err)
+		log.Printf("times.%v", err)
 	}
 
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
@@ -311,7 +316,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	standardsEvent, err := findStandardsEvent(example, sc.DB)
 	if err != nil {
-		log.Printf("Error viewing the standards of the event %d-%s: %v", distance, utils.Title(stroke), err)
+		log.Printf("times.%v (%d-%s)", err, distance, utils.Title(stroke))
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -323,6 +328,6 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Print(err)
+		log.Printf("times.StandardsEventView: %v", err)
 	}
 }
