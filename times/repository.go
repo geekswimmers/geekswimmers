@@ -2,6 +2,7 @@ package times
 
 import (
 	"context"
+	"fmt"
 	"geekswimmers/storage"
 )
 
@@ -17,7 +18,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 			 order by m.age_date`
 	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
 	}
 	defer rows.Close()
 
@@ -27,7 +28,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
 			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, err
+			return nil, fmt.Errorf("findChampionshipMeets: %v", err)
 		}
 		meets = append(meets, meet)
 	}
@@ -60,7 +61,7 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 	}
 	err := row.Scan(&standardTime.TimeStandard.ID, &standardTime.TimeStandard.Name, &standardTime.Standard)
 	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, err
+		return nil, fmt.Errorf("findStandardTimeMeet: %v", err)
 	}
 
 	return standardTime, nil
@@ -72,7 +73,7 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 			 order by ss.start_date desc`
 	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("findSwimSeasons: %v", err)
 	}
 	defer rows.Close()
 
@@ -81,7 +82,7 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 		swimSeason := &SwimSeason{}
 		err = rows.Scan(&swimSeason.ID, &swimSeason.Name, &swimSeason.StartDate, &swimSeason.EndDate)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, err
+			return nil, fmt.Errorf("findSwimSeasons: %v", err)
 		}
 		swimSeasons = append(swimSeasons, swimSeason)
 	}
@@ -95,7 +96,7 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 			 where ts.season = $1`
 	rows, err := db.Query(context.Background(), stmt, season.ID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("findTimeStandards: %v", err)
 	}
 	defer rows.Close()
 
@@ -106,7 +107,7 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 		}
 		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, err
+			return nil, fmt.Errorf("findTimeStandards: %v", err)
 		}
 		timeStandards = append(timeStandards, timeStandard)
 	}
@@ -126,7 +127,7 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 		ID: id,
 	}
 	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("findTimeStandard: %v", err)
 	}
 
 	return timeStandard, nil
@@ -142,7 +143,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 			 order by st.stroke, st.standard asc`
 	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.TimeStandard.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, err
+		return nil, fmt.Errorf("findStandardTimes: %v", err)
 	}
 	defer rows.Close()
 
@@ -151,7 +152,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		time := &StandardTime{}
 		err = rows.Scan(&time.Stroke, &time.Distance, &time.Standard)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
 		times = append(times, time)
 	}
@@ -167,7 +168,7 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 			 order by st.standard desc`
 	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.Distance, example.Stroke)
 	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, err
+		return nil, fmt.Errorf("findStandardsEvent: %v", err)
 	}
 	defer rows.Close()
 
@@ -176,7 +177,7 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 		time := &StandardTime{}
 		err = rows.Scan(&time.TimeStandard.ID, &time.TimeStandard.Name, &time.Standard)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("findStandardsEvent: %v", err)
 		}
 		times = append(times, time)
 	}
@@ -191,7 +192,7 @@ func findMinAndMaxAges(db storage.Database) (int64, int64, error) {
 
 	var minAge, maxAge int64
 	if err := row.Scan(&minAge, &maxAge); err != nil {
-		return 0, 0, err
+		return 0, 0, fmt.Errorf("findMinAndMaxAges: %v", err)
 	}
 
 	return minAge, maxAge, nil

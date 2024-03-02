@@ -49,6 +49,11 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
+	benchmarkController := &times.BenchmarkController{
+		DB:                  s.DB,
+		BaseTemplateContext: &btc,
+	}
+
 	swimmersController := &times.StandardsController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
@@ -61,7 +66,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
-	s.Router.Get("/times/benchmark", s.handleRequest(swimmersController.BenchmarkTime))
+	s.Router.Get("/times/benchmark", s.handleRequest(benchmarkController.BenchmarkTime))
 	s.Router.Get("/times/standards/event/", s.handleRequest(swimmersController.StandardsEventView))
 	s.Router.Get("/times/standards/:id/", s.handleRequest(swimmersController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(swimmersController.TimeStandardsView))
