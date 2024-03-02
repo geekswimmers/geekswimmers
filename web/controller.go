@@ -28,7 +28,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	gender := storage.GetSessionValue(req, "profile", "gender")
 	articles, err := content.FindHighlightedArticles(wc.DB)
 	if err != nil {
-		log.Printf("Error viewing the articles: %v", err)
+		log.Printf("content.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -43,19 +43,19 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{"markdown": utils.ToHTML})
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Print(err)
+		log.Printf("web.HomeView: %v", err)
 	}
 }
 
 func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request) {
 	txt, err := template.ParseFiles("web/templates/robots.txt")
 	if err != nil {
-		log.Print(err)
+		log.Printf("html.template.ParseFiles: %v", err)
 	}
 
 	err = txt.Execute(res, nil)
 	if err != nil {
-		log.Print(err)
+		log.Printf("html.template.Template: %v", err)
 	}
 }
 
@@ -71,7 +71,7 @@ func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request
 func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
 	if storage.SessionAvailable() {
 		if err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true"); err != nil {
-			log.Printf("web.ActivateCookieSession: %v", err)
+			log.Printf("storage.%v", err)
 			res.WriteHeader(http.StatusInternalServerError)
 		}
 		log.Printf("User accepted Cookies: %v", storage.GetSessionValue(req, "profile", "acceptedCookies"))
