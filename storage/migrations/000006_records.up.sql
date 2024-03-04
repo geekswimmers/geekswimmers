@@ -8,22 +8,22 @@ create table if not exists jurisdiction (
     meet     varchar(50)     null  -- DEAN_BOLE, CUNNINGHAM_CLASSIC, NOVICE_1, NOVICE_2
 );
 
-create table if not exists record (
+create table if not exists record_definition (
     id           serial       primary key,
-    jurisdiction integer      not null references jurisdiction,
-    age          integer          null,
-    gender       varchar(10)      null, -- MALE, FEMALE
-    course       varchar(10)      null, -- LONG, SHORT
-    stroke       varchar(10)      null, -- FREE, BREAST, BACK, FLY, MEDLEY
-    distance     integer          null
+    age          integer      not null,
+    gender       varchar(10)  not null, -- MALE, FEMALE
+    course       varchar(10)  not null, -- LONG, SHORT
+    stroke       varchar(10)  not null, -- FREE, BREAST, BACK, FLY, MEDLEY
+    distance     integer      not null
 );
 
-create table if not exists record_time (
-    id          serial      primary key,
-    record      integer     not null references record,
-    holder      varchar(50)     null,
-    record_time integer     not null,
-    record_date date            null
+create table if not exists record (
+    id           serial      primary key,
+    jurisdiction integer     not null references jurisdiction,
+    definition   integer     not null references record_definition,
+    record_time  integer     not null,
+    record_date  date            null,
+    holder       varchar(50)     null
 );
 
 alter table time_standard add jurisdiction integer null references jurisdiction;
