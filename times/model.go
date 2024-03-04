@@ -23,12 +23,23 @@ type SwimSeason struct {
 	EndDate   time.Time
 }
 
+type Jurisdiction struct {
+	ID       int64
+	Country  string
+	Province string
+	Region   string
+	City     string
+	Meet     string
+	Club     string
+}
+
 type TimeStandard struct {
-	ID         int64
-	Season     SwimSeason
-	Name       string
-	MinAgeTime int64
-	MaxAgeTime int64
+	ID           int64
+	Season       SwimSeason
+	Name         string
+	MinAgeTime   int64
+	MaxAgeTime   int64
+	Jurisdiction Jurisdiction
 }
 
 type StandardTime struct {
@@ -57,6 +68,24 @@ type Meet struct {
 	// Transient
 	Age          int64
 	StandardTime StandardTime
+}
+
+type RecordDefinition struct {
+	ID       int64
+	Age      int64
+	Gender   string
+	Course   string
+	Stroke   string
+	Distance int64
+}
+
+type Record struct {
+	ID           int64
+	Jurisdiction Jurisdiction
+	Definition   RecordDefinition
+	Time         int64
+	Date         time.Time
+	Holder       string
 }
 
 type Swimmer struct {
