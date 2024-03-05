@@ -10,8 +10,8 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name, 
 	                ts.min_age_time, ts.max_age_time, m.min_age_enforced, m.max_age_enforced
 			 from meet m
-			 join swim_season ss on ss.id = m.season
-			 join time_standard ts on ts.id = m.time_standard
+			    join swim_season ss on ss.id = m.season
+			    join time_standard ts on ts.id = m.time_standard
 			 where ss.start_date <= now() and ss.end_date >= now()
 			 	and m.time_standard is not null 
 				and m.age_date is not null
@@ -65,6 +65,38 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 	}
 
 	return standardTime, nil
+}
+
+func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
+	sql := `select r.record_time, r.record_date, r.holder,
+			       j.id, j.country, j.province, j.region, j.city, j.club, j.meet
+			from record r
+                join record_definition rd on rd.id = r.definition
+                join jurisdiction j on j.id = r.jurisdiction 
+            where rd.age = $1 and
+                rd.gender = $2 and
+                rd.course = $3 and
+                rd.stroke = $4 and
+                rd.distance = $5
+                order by r.record_time desc`
+	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Stroke, example.Distance)
+	if err != nil {
+		return nil, fmt.Errorf("findRecords: %v", err)
+	}
+	defer rows.Close()
+
+	var records []*Record
+	for rows.Next() {
+		record := &Record{}
+		err = rows.Scan(&record.Time, &record.Date, &record.Holder,
+			&record.Jurisdiction.ID, &record.Jurisdiction.Country, &record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City, &record.Jurisdiction.Club, &record.Jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecords: %v", err)
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
 }
 
 func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
