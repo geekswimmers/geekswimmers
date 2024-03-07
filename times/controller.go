@@ -36,6 +36,7 @@ type webContext struct {
 	TimeStandard  *TimeStandard
 	Ages          []int64
 	StandardTimes []*StandardTime
+	Records       []*Record
 
 	SwimSeason    *SwimSeason
 	SwimSeasons   []*SwimSeason
@@ -50,9 +51,11 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	gender := req.URL.Query().Get("gender")
 	course := req.URL.Query().Get("course")
 	event := strings.Split(req.URL.Query().Get("event"), "-")
+
 	minute, _ := strconv.Atoi(req.URL.Query().Get("minute"))
 	second, _ := strconv.Atoi(req.URL.Query().Get("second"))
 	milisecond, _ := strconv.Atoi(req.URL.Query().Get("milisecond"))
+	swimmerTime := utils.ToMiliseconds(minute, second, milisecond)
 
 	swimmer := &Swimmer{
 		BirthDate: birthDate,
@@ -105,17 +108,40 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 
 		if standardTime != nil {
-			// Calculate time difference and percentage of acomplishment
-			time := utils.ToMiliseconds(minute, second, milisecond)
-			standardTime.Difference = time - standardTime.Standard
+			standardTime.Difference = swimmerTime - standardTime.Standard
 
-			if time <= standardTime.Standard {
+			if swimmerTime <= standardTime.Standard {
 				standardTime.Percentage = 100
 			} else {
-				standardTime.Percentage = (standardTime.Standard * 100) / time
+				standardTime.Percentage = (standardTime.Standard * 100) / swimmerTime
 			}
 			meet.StandardTime = *standardTime
 			foundMeets = append(foundMeets, meet)
+		}
+	}
+
+	recordExample := StandardTime{
+		Age:      swimmer.AgeAt(time.Now()),
+		Gender:   gender,
+		Course:   course,
+		Stroke:   stroke,
+		Distance: distance,
+	}
+	records, err := findRecords(recordExample, bc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
+	for _, record := range records {
+		record.SetTitle()
+		record.SetSubTitle()
+
+		record.Difference = swimmerTime - record.Time
+
+		if swimmerTime <= record.Time {
+			record.Percentage = 100
+		} else {
+			record.Percentage = (record.Time * 100) / swimmerTime
 		}
 	}
 
@@ -125,6 +151,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	ctx := &webContext{
 		Meets:               foundMeets,
+		Records:             records,
 		FormatedTime:        utils.FormatTime(minute, second, milisecond),
 		Distance:            distance,
 		Course:              course,
