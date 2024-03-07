@@ -1,6 +1,10 @@
 package times
 
-import "time"
+import (
+	"database/sql"
+	"fmt"
+	"time"
+)
 
 const (
 	GenderFemale = "FEMALE"
@@ -84,8 +88,53 @@ type Record struct {
 	Jurisdiction Jurisdiction
 	Definition   RecordDefinition
 	Time         int64
-	Date         time.Time
+	Date         sql.NullTime
 	Holder       string
+
+	// Transient
+	Title      string
+	SubTitle   string
+	Difference int64
+	Percentage int64
+}
+
+func (record *Record) SetTitle() {
+	if record.Jurisdiction.ID == 0 {
+		if record.Definition.Age == 0 {
+			record.Title = "World Record"
+		} else {
+			record.Title = "World Junior Record"
+		}
+		return
+	}
+
+	if record.Jurisdiction.Meet != "" {
+		record.Title = record.Jurisdiction.Meet
+	} else if record.Jurisdiction.Club != "" {
+		record.Title = record.Jurisdiction.Club
+	} else if record.Jurisdiction.City != "" {
+		record.Title = record.Jurisdiction.City
+	} else if record.Jurisdiction.Region != "" {
+		record.Title = record.Jurisdiction.Region
+	} else if record.Jurisdiction.Province != "" {
+		record.Title = record.Jurisdiction.Province
+	} else {
+		record.Title = record.Jurisdiction.Country
+	}
+}
+
+func (record *Record) SetSubTitle() {
+	if record.Jurisdiction.Meet != "" {
+		record.SubTitle = fmt.Sprintf("%s, %s, %s, %s - %s", record.Jurisdiction.Club, record.Jurisdiction.City, record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
+	} else if record.Jurisdiction.Club != "" {
+		record.SubTitle = fmt.Sprintf("%s, %s, %s - %s", record.Jurisdiction.City, record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
+	} else if record.Jurisdiction.City != "" {
+		record.SubTitle = fmt.Sprintf("%s, %s - %s", record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
+	} else if record.Jurisdiction.Region != "" {
+		record.SubTitle = fmt.Sprintf("%s - %s", record.Jurisdiction.Province, record.Jurisdiction.Country)
+	} else if record.Jurisdiction.Province != "" {
+		record.SubTitle = record.Jurisdiction.Country
+	}
 }
 
 type Swimmer struct {

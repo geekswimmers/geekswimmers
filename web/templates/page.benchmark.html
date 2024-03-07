@@ -10,44 +10,97 @@
     <p class="lead">
         You completed a
         <b>{{.Distance}} {{.Stroke | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
-        <b>{{.FormatedTime}}</b>. We compared this time to some Canadian swimming standards. 
+        <b>{{.FormatedTime}}</b>. We compared this time to some swimming standards and records. 
     </p>
 
-    {{range .Meets}}
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{.Name}}</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Standard: 
-                    <a href="/times/standards/{{.StandardTime.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Gender}}&course={{$.Course}}">{{.StandardTime.TimeStandard.Name}}</a>
-                </h6>
-                <p class="card-text">
-                    <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
-                        <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Championships</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Records</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            {{range .Meets}}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{.Name}}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Standard: 
+                            <a href="/times/standards/{{.StandardTime.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Gender}}&course={{$.Course}}">{{.StandardTime.TimeStandard.Name}}</a>
+                        </h6>
+                        <p class="card-text">
+                            <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
+                                <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                            </div>
+                        </p>
+                        <p class="card-text">
+                            The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                            at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
+                            {{if (gt .StandardTime.Difference 0)}}
+                                It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
+                            {{else}}
+                                Your time of <b>{{$.FormatedTime}}</b> meets the standard!<br>
+                                Please, confirm this information with your coach, since some championships have additional requirements.
+                            {{end}}
+                        </p>
                     </div>
-                </p>
-                <p class="card-text">
-                    The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
-                    at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
-                    {{if (gt .StandardTime.Difference 0)}}
-                        It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
-                    {{else}}
-                        Your time of <b>{{$.FormatedTime}}</b> meets the standard!<br>
-                        Please, confirm this information with your coach, since some championships have additional requirements.
-                    {{end}}
-                </p>
-            </div>
+                </div>
+                <br>
+            {{else}}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Unfortunately, we didn't find any standards that match these criteria.
+                        </p>
+                    </div>
+                </div>
+                <br>
+            {{end}}
         </div>
-        <br>
-    {{else}}
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text">
-                    Unfortunately, we didn't find any standards that match these criteria.
-                </p>
-            </div>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            {{range .Records}}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{.Title}}</h5>
+                        <small>{{.SubTitle}}</small>
+                        <p class="card-text">
+                            <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Time}}" style="height: 30px">
+                                <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                            </div>
+                        </p>
+                        <p class="card-text">
+                            The <b>{{$.Distance}} {{$.Stroke | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}</b> record, 
+                            {{if .Holder}}
+                                set by {{.Holder}}{{if .Date.Valid}} in {{.Date.Value.Format "2006"}}{{end}},
+                            {{else}}
+                                for a {{.Definition.Age}}-year-old,
+                            {{end}}
+                            is <b>{{.Time | FormatMiliseconds}}</b>.
+                            {{if (gt .Difference 0)}}
+                                Your time missed the record by <b>{{.Difference | FormatMiliseconds}}</b>.
+                            {{else}}
+                                Your time of <b>{{$.FormatedTime}}</b> broke the record!<br>
+                                Please, confirm this information with your coach, since it takes time to confirm it.
+                            {{end}}
+                        </p>
+                    </div>
+                </div>
+                <br>
+            {{else}}
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Unfortunately, we didn't find any records that match these criteria.
+                        </p>
+                    </div>
+                </div>
+                <br>
+            {{end}}
         </div>
-        <br>
-    {{end}}
+    </div>
+
     <button class="btn btn-secondary" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
