@@ -33,7 +33,7 @@ func MigrateDatabase(c config.Config) error {
 			log.Printf("Database is dirty. Cleaning...")
 			version, dirty, err = cleanDatabase(c.GetString(config.DatabaseURL))
 			if err != nil {
-				err = fmt.Errorf("MigrateDatabase: %v", err)
+				err = fmt.Errorf("MigrateDatabase.%v", err)
 			}
 			if dirty {
 				log.Fatalf("Database is not clean yet: %v", err)
@@ -66,20 +66,20 @@ func migrateDatabase(url string) (uint, bool, error) {
 func cleanDatabase(url string) (uint, bool, error) {
 	migration, err := migrate.New("file://storage/migrations", url)
 	if err != nil {
-		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
+		return 0, true, fmt.Errorf("cleanDatabase.migrate.New: %v", err)
 	}
 
 	// Forces the dirty version to be able to step down right after.
 	version, _, _ := migration.Version()
 	err = migration.Force(int(version))
 	if err != nil {
-		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
+		return 0, true, fmt.Errorf("cleanDatabase.migration.Force: %v", err)
 	}
 
 	// The step down only works if the migration is clean.
 	err = migration.Steps(-1)
 	if err != nil {
-		return 0, true, fmt.Errorf("cleanDatabase: %v", err)
+		return 0, true, fmt.Errorf("cleanDatabase.migration.Steps: %v", err)
 	}
 	return migration.Version()
 }
