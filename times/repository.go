@@ -73,7 +73,7 @@ func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
 			from record r
                 join record_definition rd on rd.id = r.definition
                 left join jurisdiction j on j.id = r.jurisdiction 
-            where (rd.age = $1 or rd.age is null) and
+            where (rd.min_age <= $1 or rd.max_age >= $1 or (rd.min_age is null and rd.max_age is null)) and
                 rd.gender = $2 and
                 rd.course = $3 and
                 rd.stroke = $4 and
@@ -217,7 +217,7 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 	return times, nil
 }
 
-func findMinAndMaxAges(db storage.Database) (int64, int64, error) {
+func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 	stmt := `select min(age) as min_age, max(age) as max_age from standard_time`
 
 	row := db.QueryRow(context.Background(), stmt)
