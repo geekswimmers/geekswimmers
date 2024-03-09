@@ -89,14 +89,14 @@ This function maps environment variables to configuration entries, considering o
 func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.AutomaticEnv()
 	viperConfig.SetEnvPrefix("geekswimmers")
-	utils.LogError(viperConfig.BindEnv(DatabaseURL, "DATABASE_URL"), "Error binding environment variable DATABASE_URL")
-	utils.LogError(viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS"), "Error binding environment variable DATABASE_MAXOPENCONNS")
-	utils.LogError(viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME"), "Error binding environment variable DATABASE_CONNMAXLIFETIME")
+	utils.LogError(viperConfig.BindEnv(DatabaseURL, "DATABASE_URL"), "Environment variable not available")
+	utils.LogError(viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS"), "Environment variable not available")
+	utils.LogError(viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME"), "Environment variable not available")
 
-	utils.LogError(viperConfig.BindEnv(ServerPort, "PORT"), "Error binding environment variable PORT")
-	utils.LogError(viperConfig.BindEnv(ServerSessionKey, "SERVER_SESSION_KEY"), "Error binding environment variable SERVER_SESSION_KEY")
+	utils.LogError(viperConfig.BindEnv(ServerPort, "PORT"), "Environment variable not available")
+	utils.LogError(viperConfig.BindEnv(ServerSessionKey, "SERVER_SESSION_KEY"), "Environment variable not available")
 
-	utils.LogError(viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS"), "Error binding environment variable MONITORING_GOOGLE_ANALYTICS")
+	utils.LogError(viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS"), "Environment variable not available")
 
-	utils.LogError(viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM"), "Error binding environment variable MISCELLANEOUS_FEEDBACKFORM")
+	utils.LogError(viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM"), "Environment variable not available")
 }

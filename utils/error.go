@@ -17,5 +17,7 @@ func ErrorHandler(res http.ResponseWriter, req *http.Request, ctx any, status in
 }
 
 func LogError(err error, funcName string) {
-	log.Printf("%s: %v", funcName, err)
+	if err != nil {
+		log.Printf("%s: %v", funcName, err)
+	}
 }
