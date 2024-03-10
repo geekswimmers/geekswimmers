@@ -68,7 +68,7 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 }
 
 func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(rd.age, 0), coalesce(j.id, 0), coalesce(j.country, ''), 
+	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
 	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
 			from record r
                 join record_definition rd on rd.id = r.definition
@@ -87,9 +87,14 @@ func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
 
 	var records []*Record
 	for rows.Next() {
-		record := &Record{}
-		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Definition.Age,
-			&record.Jurisdiction.ID, &record.Jurisdiction.Country, &record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City, &record.Jurisdiction.Club, &record.Jurisdiction.Meet)
+		record := &Record{
+			Definition: RecordDefinition{
+				Age: example.Age,
+			},
+		}
+		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
+			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
+			&record.Jurisdiction.Club, &record.Jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecords: %v", err)
 		}
