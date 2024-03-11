@@ -73,7 +73,7 @@
                         <p class="card-text">
                             The <b>{{$.Distance}} {{$.Stroke | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}</b> record, 
                             {{if .Holder}}
-                                set by {{.Holder}}{{if .Date.Valid}} in {{.Date.Value.Format "2006"}}{{end}},
+                                set by <b>{{.Holder}}</b>{{if .Date.Valid}} in {{.Date.Value.Format "2006"}}{{end}},
                             {{else}}
                                 for a {{.Definition.Age}}-year-old,
                             {{end}}
@@ -85,6 +85,17 @@
                                 Please, confirm this information with your coach, since it takes time to confirm it.
                             {{end}}
                         </p>
+                        {{if .Previous}}
+                            <p><i>Previous records</i>:</p>
+                            <ul>
+                                {{range .Previous}}
+                                    <li>
+                                        {{.Time | FormatMiliseconds}} - {{.Holder}}
+                                        {{if .Date.Valid}}, {{.Date.Value.Format "2006"}}{{end}}
+                                    </li>
+                                {{end}}
+                            </ul>
+                        {{end}}
                     </div>
                 </div>
                 <br>

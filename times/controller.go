@@ -127,7 +127,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Stroke:   stroke,
 		Distance: distance,
 	}
-	records, err := findRecords(recordExample, bc.DB)
+	records, err := findCurrentAndPreviousRecords(recordExample, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}

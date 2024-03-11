@@ -92,6 +92,7 @@ type Record struct {
 	Holder       string
 
 	// Transient
+	Previous   []Record
 	Title      string
 	SubTitle   string
 	Difference int64
