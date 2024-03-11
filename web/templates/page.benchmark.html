@@ -90,8 +90,7 @@
                             <ul>
                                 {{range .Previous}}
                                     <li>
-                                        {{.Time | FormatMiliseconds}} - {{.Holder}}
-                                        {{if .Date.Valid}}, {{.Date.Value.Format "2006"}}{{end}}
+                                        {{.Time | FormatMiliseconds}} - {{.Holder}}{{if .Date.Valid}}, {{.Date.Value.Format "2006"}}{{end}}
                                     </li>
                                 {{end}}
                             </ul>
