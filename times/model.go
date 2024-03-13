@@ -76,11 +76,15 @@ type Meet struct {
 
 type RecordDefinition struct {
 	ID       int64
-	Age      int64
+	MinAge   *int64
+	MaxAge   *int64
 	Gender   string
 	Course   string
 	Stroke   string
 	Distance int64
+
+	// Transient
+	Age int64
 }
 
 type Record struct {

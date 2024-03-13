@@ -69,16 +69,19 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 
 func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
-	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
+				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
                 left join jurisdiction j on j.id = r.jurisdiction 
-            where (rd.min_age <= $1 or rd.max_age >= $1 or (rd.min_age is null and rd.max_age is null)) and
+            where ((rd.min_age is null and rd.max_age >= $1) or 
+				(rd.min_age <= $1 and rd.max_age is null) or 
+				(rd.min_age <= $1 and rd.max_age >= $1)) and
                 rd.gender = $2 and
                 rd.course = $3 and
                 rd.stroke = $4 and
                 rd.distance = $5
-                order by r.record_time desc`
+            order by r.record_time desc`
 	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Stroke, example.Distance)
 	if err != nil {
 		return nil, fmt.Errorf("findRecords: %v", err)
@@ -94,7 +97,7 @@ func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
 		}
 		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
 			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
-			&record.Jurisdiction.Club, &record.Jurisdiction.Meet)
+			&record.Jurisdiction.Club, &record.Jurisdiction.Meet, &record.Definition.MinAge, &record.Definition.MaxAge)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecords: %v", err)
 		}
