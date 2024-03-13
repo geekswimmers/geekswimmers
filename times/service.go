@@ -7,7 +7,7 @@ import (
 )
 
 func findCurrentAndPreviousRecords(example StandardTime, db storage.Database) ([]*Record, error) {
-	records, err := findRecords(example, db)
+	records, err := findRecordsByExample(example, db)
 	if err != nil {
 		log.Printf("findCurrentAndPreviousRecords.%v", err)
 	}

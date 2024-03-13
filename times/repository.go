@@ -36,7 +36,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 	return meets, nil
 }
 
-func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
+func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
 	stmt := `select ts.id, ts.name, st.standard 
 			 from standard_time st 
 	           	join time_standard ts on ts.id = st.time_standard
@@ -67,10 +67,9 @@ func findStandardTimeMeet(example StandardTime, season SwimSeason, db storage.Da
 	return standardTime, nil
 }
 
-func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
+func findRecordsByExample(example StandardTime, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
-	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
-				rd.min_age, rd.max_age
+	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
 			from record r
                 join record_definition rd on rd.id = r.definition
                 left join jurisdiction j on j.id = r.jurisdiction 
@@ -97,7 +96,7 @@ func findRecords(example StandardTime, db storage.Database) ([]*Record, error) {
 		}
 		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
 			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
-			&record.Jurisdiction.Club, &record.Jurisdiction.Meet, &record.Definition.MinAge, &record.Definition.MaxAge)
+			&record.Jurisdiction.Club, &record.Jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecords: %v", err)
 		}
