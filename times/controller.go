@@ -120,17 +120,18 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 	}
 
-	recordExample := StandardTime{
+	recordExample := RecordDefinition{
 		Age:      swimmer.AgeAt(time.Now()),
 		Gender:   gender,
 		Course:   course,
 		Stroke:   stroke,
 		Distance: distance,
 	}
-	records, err := findCurrentAndPreviousRecords(recordExample, bc.DB)
+	records, err := findRecordsByExample(recordExample, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
+	records = groupCurrentAndPreviousRecords(records)
 
 	for _, record := range records {
 		record.SetTitle()

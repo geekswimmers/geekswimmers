@@ -2,16 +2,9 @@ package times
 
 import (
 	"fmt"
-	"geekswimmers/storage"
-	"log"
 )
 
-func findCurrentAndPreviousRecords(example StandardTime, db storage.Database) ([]*Record, error) {
-	records, err := findRecordsByExample(example, db)
-	if err != nil {
-		log.Printf("findCurrentAndPreviousRecords.%v", err)
-	}
-
+func groupCurrentAndPreviousRecords(records []*Record) []*Record {
 	checkDuplicates := make(map[string]*Record)
 
 	for _, record := range records {
@@ -36,5 +29,5 @@ func findCurrentAndPreviousRecords(example StandardTime, db storage.Database) ([
 	for _, record := range checkDuplicates {
 		fastestRecords = append(fastestRecords, record)
 	}
-	return fastestRecords, nil
+	return fastestRecords
 }
