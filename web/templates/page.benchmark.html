@@ -71,7 +71,14 @@
                             </div>
                         </p>
                         <p class="card-text">
-                            The <b>{{$.Distance}} {{$.Stroke | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}</b> record, 
+                            The <b>{{$.Distance}} {{$.Stroke | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                            {{if and .Definition.MinAge .Definition.MaxAge}}
+                                {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
+                            {{else if .Definition.MinAge}}
+                                {{.Definition.MinAge}}&Over-year-old
+                            {{else}}
+                                {{.Definition.MaxAge}}&Under-year-old
+                            {{end}}</b> record,
                             {{if .Holder}}
                                 set by <b>{{.Holder}}</b>{{if .Date.Valid}} in {{.Date.Value.Format "2006"}}{{end}},
                             {{else}}
@@ -102,7 +109,7 @@
                 <div class="card">
                     <div class="card-body">
                         <p class="card-text">
-                            Unfortunately, we didn't find any records that match these criteria.
+                            We didn't find any records that match these criteria.
                         </p>
                     </div>
                 </div>

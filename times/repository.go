@@ -69,7 +69,8 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 
 func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
-	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
+				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
                 left join jurisdiction j on j.id = r.jurisdiction 
@@ -96,51 +97,10 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 		}
 		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
 			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
-			&record.Jurisdiction.Club, &record.Jurisdiction.Meet)
+			&record.Jurisdiction.Club, &record.Jurisdiction.Meet,
+			&record.Definition.MinAge, &record.Definition.MaxAge)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByExample: %v", err)
-		}
-		records = append(records, record)
-	}
-
-	return records, nil
-}
-
-func findRecordsByJurisdiction(jurisdiction Jurisdiction, definition RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.record_date, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
-	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
-				rd.min_age, rd.max_age, rd.stroke, rd.distance
-			from record r
-                join record_definition rd on rd.id = r.definition
-                left join jurisdiction j on j.id = r.jurisdiction 
-            where j.id = $1 and
-				((rd.min_age is null and rd.max_age >= $2) or 
-				(rd.min_age <= $2 and rd.max_age is null) or 
-				(rd.min_age <= $2 and rd.max_age >= $2)) and
-                rd.gender = $3 and
-                rd.course = $4
-            order by r.record_time desc`
-	rows, err := db.Query(context.Background(), sql, jurisdiction.ID, definition.Age, definition.Gender, definition.Course)
-	if err != nil {
-		return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
-	}
-	defer rows.Close()
-
-	var records []*Record
-	for rows.Next() {
-		record := &Record{
-			Definition: RecordDefinition{
-				Age:    definition.Age,
-				Gender: definition.Gender,
-				Course: definition.Course,
-			},
-		}
-		err = rows.Scan(&record.Time, &record.Date, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
-			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
-			&record.Jurisdiction.Club, &record.Jurisdiction.Meet, &record.Definition.MinAge, &record.Definition.MaxAge,
-			&record.Definition.Stroke, &record.Definition.Distance)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
 		}
 		records = append(records, record)
 	}
