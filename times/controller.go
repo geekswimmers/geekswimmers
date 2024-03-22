@@ -140,7 +140,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
-	records = groupCurrentAndPreviousRecords(records)
+	records = groupRecordsByJurisdiction(records)
 
 	for _, record := range records {
 		record.Jurisdiction.SetTitle(record.Definition.Age)
@@ -334,6 +334,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
+	records = groupRecordsByDefinition(records)
 
 	var ageRanges []*RecordDefinition
 	ageRanges, err = findRecordsAgeRanges(*jurisdiction, rc.DB)
