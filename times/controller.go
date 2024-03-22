@@ -299,8 +299,9 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		return
 	}
 
-	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
-	if err != nil {
+	ageParam := req.URL.Query().Get("age")
+	age, err := strconv.ParseInt(ageParam, 10, 64)
+	if err != nil && len(ageParam) > 0 {
 		ctx.AgeRange = req.URL.Query().Get("age")
 		minMaxAge := strings.Split(ctx.AgeRange, "-")
 		minAge, err := strconv.ParseInt(minMaxAge[0], 10, 64)
@@ -315,6 +316,9 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 			}
 		}
 	}
+	jurisdiction.SetTitle(age)
+	jurisdiction.SetSubTitle()
+
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
 		gender = GenderFemale
