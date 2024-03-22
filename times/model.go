@@ -35,6 +35,49 @@ type Jurisdiction struct {
 	City     string
 	Meet     string
 	Club     string
+
+	// Transient
+	Title    string
+	SubTitle string
+}
+
+func (jurisdiction *Jurisdiction) SetTitle(age int64) {
+	if jurisdiction.ID == 0 {
+		if age == 0 {
+			jurisdiction.Title = "World Record"
+		} else {
+			jurisdiction.Title = "World Junior Record"
+		}
+		return
+	}
+
+	if jurisdiction.Meet != "" {
+		jurisdiction.Title = jurisdiction.Meet
+	} else if jurisdiction.Club != "" {
+		jurisdiction.Title = jurisdiction.Club
+	} else if jurisdiction.City != "" {
+		jurisdiction.Title = jurisdiction.City
+	} else if jurisdiction.Region != "" {
+		jurisdiction.Title = jurisdiction.Region
+	} else if jurisdiction.Province != "" {
+		jurisdiction.Title = jurisdiction.Province
+	} else {
+		jurisdiction.Title = jurisdiction.Country
+	}
+}
+
+func (jurisdiction *Jurisdiction) SetSubTitle() {
+	if jurisdiction.Meet != "" {
+		jurisdiction.SubTitle = fmt.Sprintf("%s, %s, %s, %s - %s", jurisdiction.Club, jurisdiction.City, jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Club != "" {
+		jurisdiction.SubTitle = fmt.Sprintf("%s, %s, %s - %s", jurisdiction.City, jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.City != "" {
+		jurisdiction.SubTitle = fmt.Sprintf("%s, %s - %s", jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Region != "" {
+		jurisdiction.SubTitle = fmt.Sprintf("%s - %s", jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Province != "" {
+		jurisdiction.SubTitle = jurisdiction.Country
+	}
 }
 
 type TimeStandard struct {
@@ -87,6 +130,20 @@ type RecordDefinition struct {
 	Age int64
 }
 
+func (definition *RecordDefinition) AgeRange() string {
+	if definition.MinAge != nil && definition.MaxAge != nil {
+		return fmt.Sprintf("%d-%d", *definition.MinAge, *definition.MaxAge)
+	}
+	if definition.MinAge != nil {
+		return fmt.Sprintf("%d-Over", *definition.MinAge)
+	}
+	if definition.MaxAge != nil {
+		return fmt.Sprintf("%d-Under", *definition.MaxAge)
+	}
+
+	return "All"
+}
+
 type Record struct {
 	ID           int64
 	Jurisdiction Jurisdiction
@@ -97,49 +154,8 @@ type Record struct {
 
 	// Transient
 	Previous   []Record
-	Title      string
-	SubTitle   string
 	Difference int64
 	Percentage int64
-}
-
-func (record *Record) SetTitle() {
-	if record.Jurisdiction.ID == 0 {
-		if record.Definition.Age == 0 {
-			record.Title = "World Record"
-		} else {
-			record.Title = "World Junior Record"
-		}
-		return
-	}
-
-	if record.Jurisdiction.Meet != "" {
-		record.Title = record.Jurisdiction.Meet
-	} else if record.Jurisdiction.Club != "" {
-		record.Title = record.Jurisdiction.Club
-	} else if record.Jurisdiction.City != "" {
-		record.Title = record.Jurisdiction.City
-	} else if record.Jurisdiction.Region != "" {
-		record.Title = record.Jurisdiction.Region
-	} else if record.Jurisdiction.Province != "" {
-		record.Title = record.Jurisdiction.Province
-	} else {
-		record.Title = record.Jurisdiction.Country
-	}
-}
-
-func (record *Record) SetSubTitle() {
-	if record.Jurisdiction.Meet != "" {
-		record.SubTitle = fmt.Sprintf("%s, %s, %s, %s - %s", record.Jurisdiction.Club, record.Jurisdiction.City, record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
-	} else if record.Jurisdiction.Club != "" {
-		record.SubTitle = fmt.Sprintf("%s, %s, %s - %s", record.Jurisdiction.City, record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
-	} else if record.Jurisdiction.City != "" {
-		record.SubTitle = fmt.Sprintf("%s, %s - %s", record.Jurisdiction.Region, record.Jurisdiction.Province, record.Jurisdiction.Country)
-	} else if record.Jurisdiction.Region != "" {
-		record.SubTitle = fmt.Sprintf("%s - %s", record.Jurisdiction.Province, record.Jurisdiction.Country)
-	} else if record.Jurisdiction.Province != "" {
-		record.SubTitle = record.Jurisdiction.Country
-	}
 }
 
 type Swimmer struct {

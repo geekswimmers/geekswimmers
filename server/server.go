@@ -54,7 +54,12 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
-	swimmersController := &times.StandardsController{
+	standardsController := &times.StandardsController{
+		DB:                  s.DB,
+		BaseTemplateContext: &btc,
+	}
+
+	recordsController := &times.RecordsController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
 	}
@@ -67,9 +72,10 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
 	s.Router.Get("/times/benchmark", s.handleRequest(benchmarkController.BenchmarkTime))
-	s.Router.Get("/times/standards/event/", s.handleRequest(swimmersController.StandardsEventView))
-	s.Router.Get("/times/standards/:id/", s.handleRequest(swimmersController.TimeStandardView))
-	s.Router.Get("/times/standards", s.handleRequest(swimmersController.TimeStandardsView))
+	s.Router.Get("/times/records/:id/", s.handleRequest(recordsController.RecordsView))
+	s.Router.Get("/times/standards/event/", s.handleRequest(standardsController.StandardsEventView))
+	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
+	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
