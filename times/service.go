@@ -1,11 +1,12 @@
 package times
 
 import (
+	"cmp"
 	"fmt"
-	"sort"
+	"slices"
 )
 
-func groupRecordsByJurisdiction(records []*Record) []*Record {
+func groupRecordsByJurisdiction(records []*Record) []Record {
 	grouping := make(map[any]*Record)
 
 	for _, record := range records {
@@ -16,7 +17,7 @@ func groupRecordsByJurisdiction(records []*Record) []*Record {
 	return squizeFastests(grouping)
 }
 
-func groupRecordsByDefinition(records []*Record) []*Record {
+func groupRecordsByDefinition(records []*Record) []Record {
 	grouping := make(map[any]*Record)
 
 	for _, record := range records {
@@ -44,17 +45,22 @@ func groupDuplicates(grouping map[any]*Record, record *Record, key any) {
 	}
 }
 
-func squizeFastests(grouping map[any]*Record) []*Record {
-	fastestRecords := make([]*Record, 0, len(grouping))
+func squizeFastests(grouping map[any]*Record) []Record {
+	fastestRecords := make([]Record, 0, len(grouping))
 	for _, record := range grouping {
-		fastestRecords = append(fastestRecords, record)
+		fastestRecords = append(fastestRecords, *record)
 	}
 	sortByStroke(fastestRecords)
 	return fastestRecords
 }
 
-func sortByStroke(records []*Record) {
-	sort.Sort(byStroke(records))
+func sortByStroke(records []Record) {
+	slices.SortStableFunc(records, func(a, b Record) int {
+		if n := cmp.Compare(a.Definition.Stroke, b.Definition.Stroke); n != 0 {
+			return n
+		}
+		return cmp.Compare(a.Definition.Distance, b.Definition.Distance)
+	})
 }
 
 type byStroke []*Record

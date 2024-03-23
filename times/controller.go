@@ -43,7 +43,7 @@ type webContext struct {
 	Ages             []int64
 	AgeRanges        []*RecordDefinition
 	StandardTimes    []*StandardTime
-	Records          []*Record
+	Records          []Record
 	Jurisdiction     *Jurisdiction
 	RecordDefinition RecordDefinition
 
@@ -140,7 +140,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
-	records = groupRecordsByJurisdiction(records)
+	groupedRecords := groupRecordsByJurisdiction(records)
 
 	for _, record := range records {
 		record.Jurisdiction.SetTitle(record.Definition.Age)
@@ -161,7 +161,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	ctx := &webContext{
 		Meets:               foundMeets,
-		Records:             records,
+		Records:             groupedRecords,
 		FormatedTime:        utils.FormatTime(minute, second, milisecond),
 		Distance:            distance,
 		Course:              course,
@@ -338,7 +338,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
-	records = groupRecordsByDefinition(records)
+	groupedRecords := groupRecordsByDefinition(records)
 
 	var ageRanges []*RecordDefinition
 	ageRanges, err = findRecordsAgeRanges(*jurisdiction, rc.DB)
@@ -352,7 +352,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	ctx.Course = course
 	ctx.Jurisdiction = jurisdiction
 	ctx.RecordDefinition = definition
-	ctx.Records = records
+	ctx.Records = groupedRecords
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":             utils.Title,
