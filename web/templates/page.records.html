@@ -78,7 +78,7 @@
                         <td>{{.Definition.Distance}} {{.Definition.Stroke | Title}}</a></td>
                         <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{.Holder}}</td>
-                        <td>{{if .Date.Valid}}{{.Date.Value.Format "2006"}}{{end}}</td>
+                        <td>{{if .Date.Valid}}{{.Date.Value.Format "Jan-2006"}}{{end}}</td>
                     </tr>
                 {{end}}
             </tbody>
