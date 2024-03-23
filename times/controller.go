@@ -143,7 +143,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	}
 	groupedRecords := groupRecordsByJurisdiction(records)
 
-	for _, record := range records {
+	for i, record := range groupedRecords {
 		record.Jurisdiction.SetTitle(record.Definition.Age)
 		record.Jurisdiction.SetSubTitle()
 
@@ -154,6 +154,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		} else {
 			record.Percentage = (record.Time * 100) / swimmerTime
 		}
+		groupedRecords[i] = record
 	}
 
 	sort.SliceStable(foundMeets, func(i, j int) bool {
