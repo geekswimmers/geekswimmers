@@ -62,17 +62,3 @@ func sortByStroke(records []Record) {
 		return cmp.Compare(a.Definition.Distance, b.Definition.Distance)
 	})
 }
-
-type byStroke []*Record
-
-func (s byStroke) Len() int {
-	return len(s)
-}
-
-func (s byStroke) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s byStroke) Less(i, j int) bool {
-	return s[i].Definition.Stroke < s[j].Definition.Stroke || s[i].Definition.Distance < s[j].Definition.Distance
-}
