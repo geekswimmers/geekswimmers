@@ -73,6 +73,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 
 	s.Router.Get("/times/benchmark", s.handleRequest(benchmarkController.BenchmarkTime))
 	s.Router.Get("/times/records/:id/", s.handleRequest(recordsController.RecordsView))
+	s.Router.Get("/times/records", s.handleRequest(recordsController.RecordsListView))
 	s.Router.Get("/times/standards/event/", s.handleRequest(standardsController.StandardsEventView))
 	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))

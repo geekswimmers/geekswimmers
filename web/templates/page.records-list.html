@@ -1,0 +1,28 @@
+{{template "base" .}}
+
+{{define "title"}}Records{{end}}
+
+{{define "content"}}
+    <h1 class="display-6">
+        Records
+    </h1>
+
+    <div class="card">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Records</th>
+                    <th scope="col">Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Jurisdictions}}
+                <tr>
+                    <td><a href="/times/records/{{.ID}}">{{.Title}}</td>
+                    <td>{{.SubTitle}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+{{end}}

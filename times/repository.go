@@ -214,6 +214,31 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	return timeStandard, nil
 }
 
+func findJurisdictions(db storage.Database) ([]*Jurisdiction, error) {
+	stmt := `select j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+	         from jurisdiction j
+			 order by country, province, region, city, club, meet`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("findJurisdictions: %v", err)
+	}
+	defer rows.Close()
+
+	var jurisdictions []*Jurisdiction
+	for rows.Next() {
+		jurisdiction := &Jurisdiction{}
+		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findJurisdictions: %v", err)
+		}
+		jurisdiction.SetTitle(0)
+		jurisdiction.SetSubTitle()
+		jurisdictions = append(jurisdictions, jurisdiction)
+	}
+
+	return jurisdictions, nil
+}
+
 func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
 	sql := `select j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
 			from jurisdiction j

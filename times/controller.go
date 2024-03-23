@@ -45,6 +45,7 @@ type webContext struct {
 	StandardTimes    []*StandardTime
 	Records          []Record
 	Jurisdiction     *Jurisdiction
+	Jurisdictions    []*Jurisdiction
 	RecordDefinition RecordDefinition
 
 	SwimSeason    *SwimSeason
@@ -282,6 +283,26 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.TimeStandardView: %v", err)
+	}
+}
+
+func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.Request) {
+	jurisdictions, err := findJurisdictions(sc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx := &webContext{
+		Jurisdictions:       jurisdictions,
+		BaseTemplateContext: sc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	html := utils.GetTemplate("base", "records-list")
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("times.RecordsListView: %v", err)
 	}
 }
 
