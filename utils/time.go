@@ -22,3 +22,16 @@ func FormatMiliseconds(miliseconds int64) string {
 func FormatTime(min, sec, milisec int) string {
 	return fmt.Sprintf("%s:%s:%s", fmt.Sprintf("%02d", min), fmt.Sprintf("%02d", sec), fmt.Sprintf("%02d", milisec))
 }
+
+func MonthName(month int64) string {
+	if month < 1 || month > 12 {
+		return ""
+	}
+
+	months := [...]string{
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+	}
+
+	return months[month-1]
+}

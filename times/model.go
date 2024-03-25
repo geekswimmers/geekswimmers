@@ -1,8 +1,8 @@
 package times
 
 import (
-	"database/sql"
 	"fmt"
+	"geekswimmers/utils"
 	"time"
 )
 
@@ -149,13 +149,18 @@ type Record struct {
 	Jurisdiction Jurisdiction
 	Definition   RecordDefinition
 	Time         int64
-	Date         sql.NullTime
+	Year         *int64
+	Month        *int64
 	Holder       string
 
 	// Transient
 	Previous   []Record
 	Difference int64
 	Percentage int64
+}
+
+func (record *Record) MonthName() string {
+	return utils.MonthName(*record.Month)
 }
 
 type Swimmer struct {

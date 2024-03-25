@@ -80,7 +80,7 @@
                                 {{.Definition.MaxAge}}&Under-year-old
                             {{end}}</b> record,
                             {{if .Holder}}
-                                set by <b>{{.Holder}}</b>{{if .Date.Valid}} in {{.Date.Value.Format "2006"}}{{end}},
+                                set by <b>{{.Holder}}</b>{{if .Month}} in {{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}},
                             {{else}}
                                 for a {{.Definition.Age}}-year-old,
                             {{end}}
@@ -97,7 +97,7 @@
                             <ul>
                                 {{range .Previous}}
                                     <li>
-                                        {{.Time | FormatMiliseconds}} - {{.Holder}}{{if .Date.Valid}}, {{.Date.Value.Format "2006"}}{{end}}
+                                        {{.Time | FormatMiliseconds}} - {{.Holder}}{{if .Month}}, {{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}
                                     </li>
                                 {{end}}
                             </ul>

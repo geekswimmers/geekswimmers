@@ -47,3 +47,23 @@ func TestFormatTime(t *testing.T) {
 		}
 	}
 }
+func TestMonthName(t *testing.T) {
+	tests := []struct {
+		month int64
+		want  string
+	}{
+		{1, "Jan"},
+		{2, "Feb"},
+		{12, "Dec"},
+		{0, ""},
+		{-1, ""},
+		{13, ""},
+	}
+
+	for _, tt := range tests {
+		got := MonthName(tt.month)
+		if got != tt.want {
+			t.Errorf("MonthName(%d) = %q, want %q", tt.month, got, tt.want)
+		}
+	}
+}
