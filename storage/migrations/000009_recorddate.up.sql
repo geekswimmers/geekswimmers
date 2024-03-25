@@ -6,9 +6,11 @@ update record set month = date_part('month', record_date) where record_date is n
 
 alter table record drop column record_date;
 
+update article set highlighted = false;
+
 insert into article values (
 	'giving_records_to_break',
-    '# We Are Giving You Something to Break: Records!',
+    'We Are Giving You Something to Break: Records!',
     'Geek Swimmers is only three months old, and we have already got bored of serving only time standards. We looked around for other things to compare your times with and quickly found another obvious option: Swim Records!', 
    	true, 
    	'2024-03-24', 
