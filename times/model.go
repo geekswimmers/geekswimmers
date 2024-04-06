@@ -132,6 +132,9 @@ type RecordDefinition struct {
 
 func (definition *RecordDefinition) AgeRange() string {
 	if definition.MinAge != nil && definition.MaxAge != nil {
+		if *definition.MinAge == *definition.MaxAge {
+			return fmt.Sprintf("%d", *definition.MinAge)
+		}
 		return fmt.Sprintf("%d-%d", *definition.MinAge, *definition.MaxAge)
 	}
 	if definition.MinAge != nil {

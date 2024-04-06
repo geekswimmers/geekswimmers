@@ -321,11 +321,16 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		return
 	}
 
+	var ageRanges []*RecordDefinition
+	ageRanges, err = findRecordsAgeRanges(*jurisdiction, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
 	ageParam := req.URL.Query().Get("age")
 	age, err := strconv.ParseInt(ageParam, 10, 64)
 	if err != nil && len(ageParam) > 0 {
-		ctx.AgeRange = req.URL.Query().Get("age")
-		minMaxAge := strings.Split(ctx.AgeRange, "-")
+		minMaxAge := strings.Split(ageParam, "-")
 		minAge, err := strconv.ParseInt(minMaxAge[0], 10, 64)
 		if err == nil {
 			age = minAge
@@ -337,7 +342,17 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 				age = 0
 			}
 		}
+	} else if len(ageParam) == 0 {
+		if ageRanges[0].MinAge != nil {
+			age = *ageRanges[0].MinAge
+		} else if ageRanges[0].MaxAge != nil {
+			age = *ageRanges[0].MaxAge
+		} else {
+			age = 0
+		}
 	}
+	ctx.AgeRange = ageParam
+
 	jurisdiction.SetTitle(age)
 	jurisdiction.SetSubTitle()
 
@@ -361,12 +376,6 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 	groupedRecords := groupRecordsByDefinition(records)
-
-	var ageRanges []*RecordDefinition
-	ageRanges, err = findRecordsAgeRanges(*jurisdiction, rc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
-	}
 
 	ctx.Age = age
 	ctx.AgeRanges = ageRanges
