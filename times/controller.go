@@ -117,7 +117,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			log.Printf("times.%v", err)
 		}
 
-		if standardTime != nil {
+		if standardTime.Standard > 0 {
 			standardTime.Difference = swimmerTime - standardTime.Standard
 
 			if swimmerTime <= standardTime.Standard {
