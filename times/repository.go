@@ -13,6 +13,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 			    join swim_season ss on ss.id = m.season
 			    join time_standard ts on ts.id = m.time_standard
 			 where ss.start_date <= now() and ss.end_date >= now()
+			 	and m.end_date >= now()
 			 	and m.time_standard is not null 
 				and m.age_date is not null
 			 order by m.age_date`
