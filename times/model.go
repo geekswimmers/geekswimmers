@@ -13,10 +13,10 @@ const (
 	CourseShort = "SHORT"
 	CourseLong  = "LONG"
 
-	StrokeFree   = "FREE"
-	StrokeBack   = "BACK"
-	StrokeBreast = "BREAST"
-	StrokeFly    = "FLY"
+	StrokeFree   = "FREESTYLE"
+	StrokeBack   = "BACKSTROKE"
+	StrokeBreast = "BREASTSTROKE"
+	StrokeFly    = "BUTTERFLY"
 	StrokeMedley = "MEDLEY"
 )
 
@@ -94,7 +94,7 @@ type StandardTime struct {
 	Age          int64
 	Gender       string
 	Course       string
-	Stroke       string
+	Modality     string
 	Distance     int64
 	Standard     int64
 
@@ -123,7 +123,7 @@ type RecordDefinition struct {
 	MaxAge   *int64
 	Gender   string
 	Course   string
-	Stroke   string
+	Modality string
 	Distance int64
 
 	// Transient

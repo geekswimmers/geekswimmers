@@ -32,7 +32,7 @@ type webContext struct {
 	Event        string
 	Distance     int64
 	Course       string
-	Stroke       string
+	Modality     string
 	Meets        []*Meet
 	FormatedTime string
 
@@ -108,7 +108,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			Age:          searchAge,
 			Gender:       gender,
 			Course:       course,
-			Stroke:       stroke,
+			Modality:     stroke,
 			Distance:     distance,
 			TimeStandard: meet.TimeStandard,
 		}
@@ -134,7 +134,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Age:      swimmer.AgeAt(time.Now()),
 		Gender:   gender,
 		Course:   course,
-		Stroke:   stroke,
+		Modality: stroke,
 		Distance: distance,
 	}
 	records, err := findRecordsByExample(recordExample, bc.DB)
@@ -167,7 +167,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		FormatedTime:        utils.FormatTime(minute, second, milisecond),
 		Distance:            distance,
 		Course:              course,
-		Stroke:              stroke,
+		Modality:            stroke,
 		BaseTemplateContext: bc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -417,7 +417,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	if stroke == "" {
 		stroke = StrokeFree
 	}
-	ctx.Stroke = stroke
+	ctx.Modality = stroke
 	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
 
 	min, max, err := findMinAndMaxStandardAges(sc.DB)
@@ -457,7 +457,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		Age:      age,
 		Gender:   gender,
 		Course:   course,
-		Stroke:   stroke,
+		Modality: stroke,
 		Distance: distance,
 	}
 

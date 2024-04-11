@@ -9,7 +9,7 @@
 
     <p class="lead">
         You completed a
-        <b>{{.Distance}} {{.Stroke | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
+        <b>{{.Distance}} {{.Modality | Title}}</b> event in a <b>{{if eq .Course "SHORT"}} short course meet (25m pool){{end}}{{if eq .Course "LONG"}} long course meet (50m pool){{end}}</b>, achieving the time of 
         <b>{{.FormatedTime}}</b>. We compared this time to some swimming standards and records. 
     </p>
 
@@ -36,7 +36,7 @@
                             </div>
                         </p>
                         <p class="card-text">
-                            The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Stroke | Title}}</b>
+                            The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Modality | Title}}</b>
                             at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
                             {{if (gt .StandardTime.Difference 0)}}
                                 It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
@@ -71,7 +71,7 @@
                             </div>
                         </p>
                         <p class="card-text">
-                            The <b>{{$.Distance}} {{$.Stroke | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                            The <b>{{$.Distance}} {{$.Modality | Title}} {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
                             {{if and .Definition.MinAge .Definition.MaxAge}}
                                 {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
                             {{else if .Definition.MinAge}}

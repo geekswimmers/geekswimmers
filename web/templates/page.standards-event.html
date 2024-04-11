@@ -8,7 +8,7 @@
     </h1>
 
     <h3>
-        {{.Distance}} {{.Stroke | Title}}
+        {{.Distance}} {{.Modality | Title}}
     </h3>
 
     <div class="card">
@@ -19,18 +19,18 @@
                         <div class="mb-3">
                             <label for="event">Event</label>
                             <select id="event" name="event" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
-                                <option value="50-FREE" {{if eq .Event "50-FREE"}}selected{{end}}>50m Free</option>
-                                <option value="100-FREE" {{if eq .Event "100-FREE"}}selected{{end}}>100m Free</option>
-                                <option value="200-FREE" {{if eq .Event "200-FREE"}}selected{{end}}>200m Free</option>
-                                <option value="400-FREE" {{if eq .Event "400-FREE"}}selected{{end}}>400m Free</option>
-                                <option value="800-FREE" {{if eq .Event "800-FREE"}}selected{{end}}>800m Free</option>
-                                <option value="1500-FREE" {{if eq .Event "1500-FREE"}}selected{{end}}>1500m Free</option>
-                                <option value="100-BACK" {{if eq .Event "100-BACK"}}selected{{end}}>100m Back</option>
-                                <option value="200-BACK" {{if eq .Event "200-BACK"}}selected{{end}}>200m Back</option>
-                                <option value="100-BREAST" {{if eq .Event "100-BREAST"}}selected{{end}}>100m Breast</option>
-                                <option value="200-BREAST" {{if eq .Event "200-BREAST"}}selected{{end}}>200m Breast</option>
-                                <option value="100-FLY" {{if eq .Event "100-FLY"}}selected{{end}}>100m Fly</option>
-                                <option value="200-FLY" {{if eq .Event "200-FLY"}}selected{{end}}>200m Fly</option>
+                                <option value="50-FREESTYLE" {{if eq .Event "50-FREESTYLE"}}selected{{end}}>50m Freestyle</option>
+                                <option value="100-FREESTYLE" {{if eq .Event "100-FREESTYLE"}}selected{{end}}>100m Freestyle</option>
+                                <option value="200-FREESTYLE" {{if eq .Event "200-FREESTYLE"}}selected{{end}}>200m Freestyle</option>
+                                <option value="400-FREESTYLE" {{if eq .Event "400-FREESTYLE"}}selected{{end}}>400m Freestyle</option>
+                                <option value="800-FREESTYLE" {{if eq .Event "800-FREESTYLE"}}selected{{end}}>800m Freestyle</option>
+                                <option value="1500-FREESTYLE" {{if eq .Event "1500-FREESTYLE"}}selected{{end}}>1500m Freestyle</option>
+                                <option value="100-BACKSTROKE" {{if eq .Event "100-BACKSTROKE"}}selected{{end}}>100m Backstroke</option>
+                                <option value="200-BACKSTROKE" {{if eq .Event "200-BACKSTROKE"}}selected{{end}}>200m Backstroke</option>
+                                <option value="100-BREASTSTROKE" {{if eq .Event "100-BREASTSTROKE"}}selected{{end}}>100m Breaststroke</option>
+                                <option value="200-BREASTSTROKE" {{if eq .Event "200-BREASTSTROKE"}}selected{{end}}>200m Breaststroke</option>
+                                <option value="100-BUTTERFLY" {{if eq .Event "100-BUTTERFLY"}}selected{{end}}>100m Butterfly</option>
+                                <option value="200-BUTTERFLY" {{if eq .Event "200-BUTTERFLY"}}selected{{end}}>200m Butterfly</option>
                                 <option value="100-MEDLEY" {{if eq .Event "100-MEDLEY"}}selected{{end}}>100m Medley</option>
                                 <option value="200-MEDLEY" {{if eq .Event "200-MEDLEY"}}selected{{end}}>200m Medley</option>
                                 <option value="400-MEDLEY" {{if eq .Event "400-MEDLEY"}}selected{{end}}>400m Medley</option>
