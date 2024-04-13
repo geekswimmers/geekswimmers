@@ -3,6 +3,7 @@ package server
 import (
 	"geekswimmers/config"
 	"geekswimmers/content"
+	"geekswimmers/meets"
 	"geekswimmers/storage"
 	"geekswimmers/times"
 	"geekswimmers/utils"
@@ -64,6 +65,11 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
+	meetController := &meets.MeetController{
+		DB:                  s.DB,
+		BaseTemplateContext: &btc,
+	}
+
 	// The order here must be absolutely respected.
 	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
@@ -77,6 +83,9 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/times/standards/event/", s.handleRequest(standardsController.StandardsEventView))
 	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))
+
+	s.Router.Get("/meets/modalities", s.handleRequest(meetController.MeetModalitiesView))
+	s.Router.Get("/meets/modalities/:stroke/", s.handleRequest(meetController.MeetModalityView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))

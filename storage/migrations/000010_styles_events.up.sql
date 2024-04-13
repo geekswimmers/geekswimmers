@@ -2,19 +2,17 @@ create table if not exists swim_modality (
     id          serial      primary key,
     stroke      varchar(20) not null,
     description text            null,
-    rules       text            null
+    sequence    integer         null
 );
 
 create unique index idx_modality_stroke on swim_modality (stroke);
 
-create table if not exists swim_distance (
+create table if not exists swim_modality_instruction (
     id          serial      primary key,
     modality    integer     not null references swim_modality,
-    distance    integer     not null,
-    description text            null
+    instruction text        not null,
+    sequence    integer     not null
 );
-
-create unique index idx_swim_distance on swim_distance (modality, distance);
 
 alter table record_definition rename column stroke to modality;
 alter table record_definition alter column modality type varchar(20);
