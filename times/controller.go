@@ -72,10 +72,10 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Gender:    gender,
 	}
 
-	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.PostForm.Get("birthDate")); err != nil {
+	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.URL.Query().Get("birthDate")); err != nil {
 		log.Printf("storage.%v", err)
 	}
-	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.PostForm.Get("gender")); err != nil {
+	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.URL.Query().Get("gender")); err != nil {
 		log.Printf("storage.%v", err)
 	}
 
