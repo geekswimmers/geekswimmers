@@ -6,53 +6,53 @@ import (
 	"geekswimmers/storage"
 )
 
-func findModalities(db storage.Database) ([]*Modality, error) {
+func findStyles(db storage.Database) ([]*Style, error) {
 	stmt := `select m.stroke, m.description
-			 from swim_modality m
+			 from swim_style m
 			 order by m.sequence`
 	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {
-		return nil, fmt.Errorf("findModalities: %v", err)
+		return nil, fmt.Errorf("findStyles: %v", err)
 	}
 	defer rows.Close()
 
-	var modalities []*Modality
+	var modalities []*Style
 	for rows.Next() {
-		modality := &Modality{}
-		err = rows.Scan(&modality.Stroke, &modality.Description)
+		style := &Style{}
+		err = rows.Scan(&style.Stroke, &style.Description)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findModalities: %v", err)
+			return nil, fmt.Errorf("findStyles: %v", err)
 		}
-		modalities = append(modalities, modality)
+		modalities = append(modalities, style)
 	}
 
 	return modalities, nil
 }
 
-func findModality(stroke string, db storage.Database) (*Modality, error) {
+func findStyle(stroke string, db storage.Database) (*Style, error) {
 	stmt := `select m.id, m.description 
-			 from swim_modality m 
+			 from swim_style m 
 	         where m.stroke = $1`
 
 	row := db.QueryRow(context.Background(), stmt, stroke)
 
-	modality := &Modality{
+	style := &Style{
 		Stroke: stroke,
 	}
-	err := row.Scan(&modality.ID, &modality.Description)
+	err := row.Scan(&style.ID, &style.Description)
 	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, fmt.Errorf("findModality: %v", err)
+		return nil, fmt.Errorf("findStyle: %v", err)
 	}
 
-	return modality, nil
+	return style, nil
 }
 
-func findInstructions(modality *Modality, db storage.Database) ([]*Instruction, error) {
+func findInstructions(style *Style, db storage.Database) ([]*Instruction, error) {
 	stmt := `select i.instruction, i.sequence
-			 from swim_modality_instruction i
-			 where i.modality = $1
+			 from swim_style_instruction i
+			 where i.style = $1
 			 order by i.sequence`
-	rows, err := db.Query(context.Background(), stmt, modality.ID)
+	rows, err := db.Query(context.Background(), stmt, style.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findInstructions: %v", err)
 	}
@@ -61,7 +61,7 @@ func findInstructions(modality *Modality, db storage.Database) ([]*Instruction, 
 	var instructions []*Instruction
 	for rows.Next() {
 		instruction := &Instruction{
-			Modality: modality,
+			Style: style,
 		}
 		err = rows.Scan(&instruction.Instruction, &instruction.Sequence)
 		if err != nil && err.Error() != storage.ErrNoRows {

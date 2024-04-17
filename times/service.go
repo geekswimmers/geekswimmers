@@ -56,7 +56,7 @@ func squizeFastests(grouping map[any]*Record) []Record {
 
 func sortByStroke(records []Record) {
 	slices.SortStableFunc(records, func(a, b Record) int {
-		if n := cmp.Compare(a.Definition.Modality, b.Definition.Modality); n != 0 {
+		if n := cmp.Compare(a.Definition.Style, b.Definition.Style); n != 0 {
 			return n
 		}
 		return cmp.Compare(a.Definition.Distance, b.Definition.Distance)

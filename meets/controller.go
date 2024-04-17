@@ -15,21 +15,21 @@ type MeetController struct {
 
 type webContext struct {
 	Instructions []*Instruction
-	Modalities   []*Modality
-	Modality     *Modality
+	Styles       []*Style
+	Style        *Style
 
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }
 
-func (mc *MeetController) MeetModalitiesView(res http.ResponseWriter, req *http.Request) {
-	modalities, err := findModalities(mc.DB)
+func (mc *MeetController) MeetStylesView(res http.ResponseWriter, req *http.Request) {
+	modalities, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
 	ctx := &webContext{
-		Modalities:          modalities,
+		Styles:              modalities,
 		BaseTemplateContext: mc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -40,36 +40,36 @@ func (mc *MeetController) MeetModalitiesView(res http.ResponseWriter, req *http.
 
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Printf("meets.MeetModalitiesView: %v", err)
+		log.Printf("meets.MeetStylesView: %v", err)
 	}
 }
 
-func (mc *MeetController) MeetModalityView(res http.ResponseWriter, req *http.Request) {
+func (mc *MeetController) MeetStyleView(res http.ResponseWriter, req *http.Request) {
 	stroke := req.URL.Query().Get(":stroke")
 
-	modality, err := findModality(stroke, mc.DB)
+	style, err := findStyle(stroke, mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
-	instructions, err := findInstructions(modality, mc.DB)
+	instructions, err := findInstructions(style, mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
 	ctx := &webContext{
-		Modality:            modality,
+		Style:               style,
 		Instructions:        instructions,
 		BaseTemplateContext: mc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "modality", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "style", template.FuncMap{
 		"Title": utils.Title,
 	})
 
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Printf("meets.MeetModalityView: %v", err)
+		log.Printf("meets.MeetStyleView: %v", err)
 	}
 }

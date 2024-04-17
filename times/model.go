@@ -94,7 +94,7 @@ type StandardTime struct {
 	Age          int64
 	Gender       string
 	Course       string
-	Modality     string
+	Style        string
 	Distance     int64
 	Standard     int64
 
@@ -123,7 +123,7 @@ type RecordDefinition struct {
 	MaxAge   *int64
 	Gender   string
 	Course   string
-	Modality string
+	Style    string
 	Distance int64
 
 	// Transient

@@ -47,17 +47,17 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 		       	and st.age = $3
 			   	and st.gender = $4
 			   	and st.course  = $5
-			   	and st.modality = $6
+			   	and st.style = $6
 			   	and st.distance = $7`
 
 	row := db.QueryRow(context.Background(), stmt,
-		season.ID, example.TimeStandard.ID, example.Age, example.Gender, example.Course, example.Modality, example.Distance)
+		season.ID, example.TimeStandard.ID, example.Age, example.Gender, example.Course, example.Style, example.Distance)
 
 	standardTime := &StandardTime{
 		Age:      example.Age,
 		Gender:   example.Gender,
 		Course:   example.Course,
-		Modality: example.Modality,
+		Style:    example.Style,
 		Distance: example.Distance,
 	}
 	err := row.Scan(&standardTime.TimeStandard.ID, &standardTime.TimeStandard.Name, &standardTime.Standard)
@@ -80,10 +80,10 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 				(rd.min_age <= $1 and rd.max_age >= $1)) and
                 rd.gender = $2 and
                 rd.course = $3 and
-                rd.modality = $4 and
+                rd.style = $4 and
                 rd.distance = $5
             order by r.record_time desc`
-	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Modality, example.Distance)
+	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Style, example.Distance)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByExample: %v", err)
 	}
@@ -111,7 +111,7 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 
 func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefinition, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
-				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.modality, rd.distance
+				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance
 			from record r
                 join record_definition rd on rd.id = r.definition
                 left join jurisdiction j on j.id = r.jurisdiction 
@@ -121,7 +121,7 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 				(rd.min_age <= $2 and rd.max_age >= $2)) and
                 rd.gender = $3 and
                 rd.course = $4
-            order by rd.modality, r.record_time asc`
+            order by rd.style, r.record_time asc`
 	rows, err := db.Query(context.Background(), sql, jurisdiction.ID, example.Age, example.Gender, example.Course)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
@@ -139,7 +139,7 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 			Jurisdiction: jurisdiction,
 		}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
-			&record.Definition.Modality, &record.Definition.Distance)
+			&record.Definition.Style, &record.Definition.Distance)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
 		}
@@ -285,13 +285,13 @@ func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
 }
 
 func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
-	stmt := `select st.modality, st.distance, st.standard
+	stmt := `select st.style, st.distance, st.standard
 			 from standard_time st
 			 where st.age = $1 
 			   and st.gender = $2 
 			   and st.course = $3 
 			   and st.time_standard = $4
-			 order by st.modality, st.standard asc`
+			 order by st.style, st.standard asc`
 	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.TimeStandard.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("findStandardTimes: %v", err)
@@ -301,7 +301,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	var times []*StandardTime
 	for rows.Next() {
 		time := &StandardTime{}
-		err = rows.Scan(&time.Modality, &time.Distance, &time.Standard)
+		err = rows.Scan(&time.Style, &time.Distance, &time.Standard)
 		if err != nil {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
@@ -315,9 +315,9 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 	stmt := `select ts.id , ts.name, st.standard 
 			 from standard_time st 
 				join time_standard ts on ts.id = st.time_standard 
-			 where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.modality = $5
+			 where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.style = $5
 			 order by st.standard desc`
-	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.Distance, example.Modality)
+	rows, err := db.Query(context.Background(), stmt, example.Age, example.Gender, example.Course, example.Distance, example.Style)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("findStandardsEvent: %v", err)
 	}

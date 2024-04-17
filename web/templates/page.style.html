@@ -1,16 +1,16 @@
 {{template "base" .}}
 
-{{define "title"}}Style - {{ .Modality.Stroke | Title }}{{end}}
+{{define "title"}}Style - {{ .Style.Stroke | Title }}{{end}}
 
 {{define "content"}}
     <h1 class="display-6">
-        {{ .Modality.Stroke | Title }}
+        {{ .Style.Stroke | Title }}
     </h1>
-    <p class="lead">{{ .Modality.Description }}</p>
+    <p class="lead">{{ .Style.Description }}</p>
 
     <h3>Rules</h3>
 
-    <p>Here are some guidelines to avoid disqualification in a {{ .Modality.Stroke | Title }} event.
+    <p>Here are some guidelines to avoid disqualification in a {{ .Style.Stroke | Title }} event.
        This list is not exhaustive. Keep following your coach's instructions to swim properly while being competitive.</p>
 
     {{ range .Instructions }}

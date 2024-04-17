@@ -1,6 +1,6 @@
 package meets
 
-type Modality struct {
+type Style struct {
 	ID          int64
 	Stroke      string
 	Description string
@@ -8,7 +8,7 @@ type Modality struct {
 
 type Instruction struct {
 	ID          int64
-	Modality    *Modality
+	Style       *Style
 	Instruction string
 	Sequence    int64
 }
