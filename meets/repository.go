@@ -16,17 +16,17 @@ func findStyles(db storage.Database) ([]*Style, error) {
 	}
 	defer rows.Close()
 
-	var modalities []*Style
+	var styles []*Style
 	for rows.Next() {
 		style := &Style{}
 		err = rows.Scan(&style.Stroke, &style.Description)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStyles: %v", err)
 		}
-		modalities = append(modalities, style)
+		styles = append(styles, style)
 	}
 
-	return modalities, nil
+	return styles, nil
 }
 
 func findStyle(stroke string, db storage.Database) (*Style, error) {

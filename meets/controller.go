@@ -23,18 +23,18 @@ type webContext struct {
 }
 
 func (mc *MeetController) MeetStylesView(res http.ResponseWriter, req *http.Request) {
-	modalities, err := findStyles(mc.DB)
+	styles, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
 	ctx := &webContext{
-		Styles:              modalities,
+		Styles:              styles,
 		BaseTemplateContext: mc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "modalities", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "styles", template.FuncMap{
 		"Title": utils.Title,
 	})
 
