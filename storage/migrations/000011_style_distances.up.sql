@@ -1,6 +1,6 @@
 alter table swim_modality rename to swim_style;
 alter table swim_modality_instruction rename to swim_style_instruction;
-alter table swim_style_instruction rename column modality to swim_style;
+alter table swim_style_instruction rename column modality to style;
 alter table record_definition rename column modality to style;
 alter table standard_time rename column modality to style;
 

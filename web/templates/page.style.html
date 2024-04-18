@@ -8,10 +8,20 @@
     </h1>
     <p class="lead">{{ .Style.Description }}</p>
 
-    <h3>Rules</h3>
+    <h3>Guidelines</h3>
 
-    <p>Here are some guidelines to avoid disqualification in a {{ .Style.Stroke | Title }} event.
-       This list is not exhaustive. Keep following your coach's instructions to swim properly while being competitive.</p>
+    <p>
+        Officials on deck ensure safety, organization, timekeeping, and fair 
+        competition. During the race, they observe you swimming to the best 
+        of your hability, ensuring the rules of the competition. They don't like
+        when they have to disqualify a swimmer, so here is a list of what you can
+        do in a {{ .Style.Stroke | Title }} event to have a valid race.
+    </p>
+    <p>
+        This list is not exhaustive because rules come and go all the time, but 
+        keep following your coach's instructions to swim properly while being 
+        competitive.
+    </p>
 
     {{ range .Instructions }}
         <div class="card mb-3">
