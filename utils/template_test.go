@@ -5,6 +5,49 @@ import (
 	"testing"
 )
 
+func TestTitle(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{
+			name:     "lowercase",
+			input:    "freestyle",
+			expected: "Freestyle",
+		},
+		{
+			name:     "uppercase",
+			input:    "FREESTYLE",
+			expected: "Freestyle",
+		},
+		{
+			name:     "mixed case",
+			input:    "FreEsTyLe",
+			expected: "Freestyle",
+		},
+		{
+			name:     "empty string",
+			input:    "",
+			expected: "",
+		},
+		{
+			name:     "underscore",
+			input:    "FREESTYLE_RELAY",
+			expected: "Freestyle Relay",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			actual := Title(tc.input)
+			if actual != tc.expected {
+				t.Errorf("Title(%q) = %q, want %q", tc.input, actual, tc.expected)
+			}
+		})
+	}
+}
+
 func TestToHTML(t *testing.T) {
 	testCases := []struct {
 		name     string

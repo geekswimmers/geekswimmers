@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/yuin/goldmark"
 	"golang.org/x/text/cases"
@@ -52,7 +53,15 @@ func Title(str string) string {
 		return str
 	}
 
-	return cases.Title(language.English, cases.Compact).String(str)
+	words := strings.Split(str, "_")
+	separator := ""
+	var title string
+	for _, word := range words {
+		title += separator + cases.Title(language.English, cases.Compact).String(word)
+		separator = " "
+	}
+
+	return title
 }
 
 // ToHTML Given a markdown content, converts it to HTML and unescape special characters.
