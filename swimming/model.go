@@ -1,4 +1,4 @@
-package meets
+package swimming
 
 type Style struct {
 	ID          int64

@@ -3,8 +3,8 @@ package server
 import (
 	"geekswimmers/config"
 	"geekswimmers/content"
-	"geekswimmers/meets"
 	"geekswimmers/storage"
+	"geekswimmers/swimming"
 	"geekswimmers/times"
 	"geekswimmers/utils"
 	"geekswimmers/web"
@@ -65,7 +65,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 		BaseTemplateContext: &btc,
 	}
 
-	meetController := &meets.MeetController{
+	meetController := &swimming.MeetController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
 	}

@@ -1,4 +1,4 @@
-package meets
+package swimming
 
 import (
 	"context"
