@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type MeetController struct {
@@ -22,7 +23,7 @@ type webContext struct {
 	AcceptedCookies     bool
 }
 
-func (mc *MeetController) MeetStylesView(res http.ResponseWriter, req *http.Request) {
+func (mc *MeetController) SwimStylesView(res http.ResponseWriter, req *http.Request) {
 	styles, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
@@ -35,7 +36,8 @@ func (mc *MeetController) MeetStylesView(res http.ResponseWriter, req *http.Requ
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "styles", template.FuncMap{
-		"Title": utils.Title,
+		"Title":     utils.Title,
+		"Lowercase": utils.Lowercase,
 	})
 
 	err = html.Execute(res, ctx)
@@ -44,10 +46,10 @@ func (mc *MeetController) MeetStylesView(res http.ResponseWriter, req *http.Requ
 	}
 }
 
-func (mc *MeetController) MeetStyleView(res http.ResponseWriter, req *http.Request) {
+func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Request) {
 	stroke := req.URL.Query().Get(":stroke")
 
-	style, err := findStyle(stroke, mc.DB)
+	style, err := findStyle(strings.ToUpper(stroke), mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}

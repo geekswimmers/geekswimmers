@@ -63,6 +63,10 @@ func Title(str string) string {
 	return title
 }
 
+func Lowercase(str string) string {
+	return strings.ToLower(str)
+}
+
 // ToHTML Given a markdown content, converts it to HTML and unescape special characters.
 func ToHTML(s string) template.HTML {
 	var html bytes.Buffer

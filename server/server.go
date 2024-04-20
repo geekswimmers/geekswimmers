@@ -84,8 +84,8 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))
 
-	s.Router.Get("/swimming/styles", s.handleRequest(meetController.MeetStylesView))
-	s.Router.Get("/swimming/styles/:stroke/", s.handleRequest(meetController.MeetStyleView))
+	s.Router.Get("/swimming/styles", s.handleRequest(meetController.SwimStylesView))
+	s.Router.Get("/swimming/styles/:stroke/", s.handleRequest(meetController.SwimStyleView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
