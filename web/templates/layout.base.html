@@ -94,10 +94,24 @@
             </div>
         {{end}}
 
-        {{template "footer" .}}
+        <footer class="footer">
+            <nav class="navbar fixed-bottom navbar-light bg-light">
+                <div class="container">
+                    <span class="text-muted">
+                        {{if .BaseTemplateContext.FeedbackForm }}
+                            <a href="{{.BaseTemplateContext.FeedbackForm}}" target="_blank" rel="noopener noreferrer">
+                                Please, give feedback!
+                            </a>
+                        {{end}}
+                    </span>
+                    <span class="text-muted">Proudly supported by <a href="http://www.rowswimming.ca" target="_blank" rel="noopener noreferrer">ROW Swim Club</a></span>
+                </div>
+            </nav>
+        </footer>
 
         <script src="/static/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/main.js"></script>
+
         {{if not .AcceptedCookies}}
             <script type="text/javascript">
                 const cookieModal = new bootstrap.Modal(document.getElementById('cookieModal'), {

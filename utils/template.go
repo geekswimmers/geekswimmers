@@ -42,7 +42,6 @@ func applyLayout(layout, page string) []string {
 	files := []string{
 		fmt.Sprintf("web/templates/page.%s.html", page),
 		fmt.Sprintf("web/templates/layout.%s.html", layout),
-		"web/templates/partial.footer.html",
 	}
 
 	return files
