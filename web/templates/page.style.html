@@ -21,16 +21,16 @@
         <div class="tab-pane fade show active" id="tab-guidelines-pane" role="tabpanel" aria-labelledby="guidelines-tab" tabindex="0">
             <br>
             <p>
-                Officials on deck ensure safety, organization, timekeeping, and fair 
-                competition. During the race, they observe you swimming to the best 
-                of your hability, ensuring the rules of the competition. They don't like
-                when they have to disqualify a swimmer, so here is a list of what you can
-                do in a {{ .Style.Stroke | Title }} event to have a valid race.
-            </p>
+                Officials on deck ensure safety, organization, timekeeping, and fair competition. 
+                During the race, they observe you swimming to the best of your ability and ensure 
+                the rules of the competition. They implement the rules with a heavy heart, knowing 
+                it's a part of the swimmer's learning process. By learning the rules during 
+                practice and reviewing them here, you reduce the likelihood of disqualification.
+            </p>    
             <p>
-                This list is not exhaustive because rules come and go all the time, but 
-                keep following your coach's instructions to swim properly while being 
-                competitive.
+                We compiled a list of what you can do in a <b>{{ .Style.Stroke | Title }}</b> 
+                event to have a valid race. <b>This list is not exhaustive!</b> Keep following 
+                your coach's instructions to swim properly while being competitive.
             </p>
         
             {{ range .Instructions }}
@@ -41,6 +41,11 @@
                     </div>
                 </div>
             {{ end }}
+
+            <p style="text-align: right;">
+                <b>Source</b>: 
+                <a href="https://www.swimming.ca/en/swimmingcanadarules/" target="_blank" rel="noopener noreferrer">Swimming Canada Rules</a>
+            </p>
         </div>
         <!--<div class="tab-pane fade" id="tab-distances-pane" role="tabpanel" aria-labelledby="distances-tab" tabindex="1">
 
