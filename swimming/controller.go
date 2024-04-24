@@ -15,9 +15,11 @@ type MeetController struct {
 }
 
 type webContext struct {
-	Instructions []*Instruction
-	Styles       []*Style
-	Style        *Style
+	Instructions  []*Instruction
+	Styles        []*Style
+	Style         *Style
+	PreviousStyle *Style
+	NextStyle     *Style
 
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
@@ -54,6 +56,16 @@ func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Reque
 		log.Printf("meets.%v", err)
 	}
 
+	previousStyle, err := findStyleBySequence(style.Sequence-1, mc.DB)
+	if err != nil {
+		log.Printf("meets.%v", err)
+	}
+
+	nextStyle, err := findStyleBySequence(style.Sequence+1, mc.DB)
+	if err != nil {
+		log.Printf("meets.%v", err)
+	}
+
 	instructions, err := findInstructions(style, mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
@@ -61,13 +73,16 @@ func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Reque
 
 	ctx := &webContext{
 		Style:               style,
+		PreviousStyle:       previousStyle,
+		NextStyle:           nextStyle,
 		Instructions:        instructions,
 		BaseTemplateContext: mc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "style", template.FuncMap{
-		"Title": utils.Title,
+		"Title":     utils.Title,
+		"Lowercase": utils.Lowercase,
 	})
 
 	err = html.Execute(res, ctx)

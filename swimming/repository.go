@@ -30,7 +30,7 @@ func findStyles(db storage.Database) ([]*Style, error) {
 }
 
 func findStyle(stroke string, db storage.Database) (*Style, error) {
-	stmt := `select m.id, m.description 
+	stmt := `select m.id, m.description, m.sequence 
 			 from swim_style m 
 	         where m.stroke = $1`
 
@@ -39,11 +39,25 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 	style := &Style{
 		Stroke: stroke,
 	}
-	err := row.Scan(&style.ID, &style.Description)
+	err := row.Scan(&style.ID, &style.Description, &style.Sequence)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("findStyle: %v", err)
 	}
 
+	return style, nil
+}
+
+func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
+	sql := `select id, stroke
+			from swim_style
+			where sequence = $1`
+	row := db.QueryRow(context.Background(), sql, sequence)
+
+	style := &Style{}
+	err := row.Scan(&style.ID, &style.Stroke)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, fmt.Errorf("findStyleBySequence: %v", err)
+	}
 	return style, nil
 }
 

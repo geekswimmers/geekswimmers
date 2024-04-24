@@ -4,6 +4,7 @@ type Style struct {
 	ID          int64
 	Stroke      string
 	Description string
+	Sequence    int64
 }
 
 type Instruction struct {
