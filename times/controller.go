@@ -176,6 +176,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 		"Abs":               utils.Abs,
+		"Lowercase":         utils.Lowercase,
 	})
 
 	err = html.Execute(res, ctx)
