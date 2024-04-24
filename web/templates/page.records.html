@@ -75,7 +75,7 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{.Definition.Distance}} {{.Definition.Style | Title}}</a></td>
+                        <td>{{.Definition.Distance}} <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{.Definition.Style | Title}}</a></td>
                         <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{.Holder}}</td>
                         <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>

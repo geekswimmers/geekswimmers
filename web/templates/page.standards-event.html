@@ -4,11 +4,11 @@
 
 {{define "content"}}
     <h1 class="display-6">
-        Standard Event
+        Standard Events
     </h1>
 
     <h3>
-        {{.Distance}} {{.Style | Title}}
+        {{.Distance}} <a href="/swimming/styles/{{.Style | Lowercase}}/">{{.Style | Title}}</a>
     </h3>
 
     <div class="card">

@@ -22,7 +22,7 @@ type BaseTemplateContext struct {
 func GetTemplate(layout, page string) *template.Template {
 	html, err := template.New(fmt.Sprintf("page.%s.html", page)).ParseFiles(applyLayout(layout, page)...)
 	if err != nil {
-		log.Fatalf("GetTemplate(%v, %v): %v", layout, page, err)
+		log.Fatalf("utils.GetTemplate(%v, %v): %v", layout, page, err)
 	}
 
 	return html
@@ -32,7 +32,7 @@ func GetTemplateWithFunctions(layout, page string, funcMap template.FuncMap) *te
 	html, err := template.New(fmt.Sprintf("page.%s.html", page)).Funcs(funcMap).
 		ParseFiles(applyLayout(layout, page)...)
 	if err != nil {
-		log.Fatalf("GetTemplate(%v, %v): %v", layout, page, err)
+		log.Fatalf("utils.GetTemplateWithFunctions(%v, %v): %v", layout, page, err)
 	}
 
 	return html

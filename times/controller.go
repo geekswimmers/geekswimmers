@@ -388,6 +388,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":             utils.Title,
+		"Lowercase":         utils.Lowercase,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 	})
 	err = html.Execute(res, ctx)
@@ -472,6 +473,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	html := utils.GetTemplateWithFunctions("base", "standards-event", template.FuncMap{
 		"Title":             utils.Title,
+		"Lowercase":         utils.Lowercase,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 	})
 	err = html.Execute(res, ctx)
