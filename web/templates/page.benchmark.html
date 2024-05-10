@@ -71,7 +71,7 @@
                             </div>
                         </p>
                         <p class="card-text">
-                            The <b>{{$.Distance}} <a href="/swimming/styles/{{.Style | Lowercase}}/">{{$.Style | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                            The <b>{{$.Distance}} <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.Style | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
                             {{if and .Definition.MinAge .Definition.MaxAge}}
                                 {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
                             {{else if .Definition.MinAge}}
