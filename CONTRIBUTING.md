@@ -1,5 +1,9 @@
 # Contributing to Geek Swimmers
 
+## Getting It Up and Running
+
+    $ go run main.go
+
 ## IDEs
 
 ### VSCode
