@@ -88,6 +88,7 @@
             <thead>
                 <tr>
                     <th scope="col">Standard</th>
+                    <th scope="col">Season</th>
                     <th scope="col">Qualifying Time</th>
                 </tr>
             </thead>
@@ -95,6 +96,7 @@
                 {{range .StandardTimes}}
                 <tr>
                     <td><a href="/times/standards/{{.TimeStandard.ID}}">{{.TimeStandard.Name}}</a></td>
+                    <td>{{.TimeStandard.Season.Name}}</td>
                     <td>{{.Standard | FormatMiliseconds}}</td>
                 </tr>
                 {{end}}
