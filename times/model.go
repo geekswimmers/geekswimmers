@@ -104,6 +104,7 @@ type StandardTime struct {
 }
 
 type Meet struct {
+	ID             int64
 	Name           string
 	Course         string
 	AgeDate        time.Time

@@ -83,6 +83,33 @@
             </tbody>
         </table>
     </div>
+
+    <br>
+    <h4>Meets Following These Standards</h4>
+
+    <div class="card">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Meet</th>
+                    <th scope="col">Course</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Meets}}
+                    <tr>
+                        <td>{{.Name}}</a></td>
+                        <td>{{.Course | Title}}</td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2">No meets associated with these standards.</td>
+                    </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    
     <br>
     <button class="btn btn-secondary" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">

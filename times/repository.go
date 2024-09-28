@@ -37,6 +37,30 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 	return meets, nil
 }
 
+func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
+	stmt := `select m.id, m.name, m.course
+			 from meet m
+			 where m.time_standard = $1
+			 order by m.name`
+	rows, err := db.Query(context.Background(), stmt, timeStandard.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
+	}
+	defer rows.Close()
+
+	var meets []*Meet
+	for rows.Next() {
+		meet := &Meet{}
+		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
+		}
+		meets = append(meets, meet)
+	}
+
+	return meets, nil
+}
+
 func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
 	stmt := `select ts.id, ts.name, st.standard 
 			 from standard_time st 

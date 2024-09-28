@@ -278,6 +278,13 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		ctx.Ages = append(ctx.Ages, i)
 	}
 
+	meets, err := findStandardChampionshipMeets(*timeStandard, sc.DB)
+	if err != nil {
+		log.Printf("TimeStandardView.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+	ctx.Meets = meets
+
 	html := utils.GetTemplateWithFunctions("base", "timestandard", template.FuncMap{
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
