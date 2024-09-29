@@ -250,7 +250,7 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 }
 
 func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
-	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time
+	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#')
 			 from time_standard ts
 			 	join swim_season ss on ss.id = ts.season
 	         where ts.id = $1`
@@ -260,7 +260,9 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	timeStandard := &TimeStandard{
 		ID: id,
 	}
-	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime); err != nil {
+	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name,
+		&timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Open,
+		&timeStandard.Source.Title, &timeStandard.Source.Link); err != nil {
 		return nil, fmt.Errorf("findTimeStandard: %v", err)
 	}
 
@@ -309,7 +311,36 @@ func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
 	return jurisdiction, nil
 }
 
-func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
+func findOpenStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
+	stmt := `select st.style, st.distance, st.standard
+			 from standard_time st
+			 where st.age between $1 and $2
+			   and st.gender = $3 
+			   and st.course = $4 
+			   and st.time_standard = $5
+			 order by st.style, st.standard asc`
+	rows, err := db.Query(context.Background(), stmt,
+		example.TimeStandard.MinAgeTime, example.TimeStandard.MaxAgeTime, example.Gender, example.Course,
+		example.TimeStandard.ID)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, fmt.Errorf("findStandardTimes: %v", err)
+	}
+	defer rows.Close()
+
+	var times []*StandardTime
+	for rows.Next() {
+		time := &StandardTime{}
+		err = rows.Scan(&time.Style, &time.Distance, &time.Standard)
+		if err != nil {
+			return nil, fmt.Errorf("findStandardTimes: %v", err)
+		}
+		times = append(times, time)
+	}
+
+	return times, nil
+}
+
+func findAgeGroupStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
 	stmt := `select st.style, st.distance, st.standard
 			 from standard_time st
 			 where st.age = $1 
@@ -334,6 +365,14 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	}
 
 	return times, nil
+}
+
+func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
+	if example.TimeStandard.Open {
+		return findOpenStandardTimes(example, db)
+	}
+
+	return findAgeGroupStandardTimes(example, db)
 }
 
 func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {

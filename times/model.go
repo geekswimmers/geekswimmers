@@ -80,6 +80,11 @@ func (jurisdiction *Jurisdiction) SetSubTitle() {
 	}
 }
 
+type Source struct {
+	Title string
+	Link  string
+}
+
 type TimeStandard struct {
 	ID           int64
 	Season       SwimSeason
@@ -87,6 +92,8 @@ type TimeStandard struct {
 	MinAgeTime   int64
 	MaxAgeTime   int64
 	Jurisdiction Jurisdiction
+	Open         bool
+	Source       Source
 }
 
 type StandardTime struct {
