@@ -28,7 +28,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
 	gender := storage.GetSessionValue(req, "profile", "gender")
 
-	quoteOfTheDay, err := content.GetQuoteOfTheDay(3, wc.DB)
+	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
 		log.Printf("content.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

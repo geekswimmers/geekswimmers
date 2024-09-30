@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func ToMiliseconds(min, sec, milisec int) int64 {
 	return int64((min * 60000) + (sec * 1000) + (milisec * 10))
@@ -34,4 +37,9 @@ func MonthName(month int64) string {
 	}
 
 	return months[month-1]
+}
+
+func DayOfTheYear() int {
+	t := time.Now()
+	return t.YearDay()
 }

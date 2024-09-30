@@ -88,10 +88,10 @@ func loadContent(filePath string) (string, error) {
 	return string(content), nil
 }
 
-func GetQuoteOfTheDay(dayOfYear int64, db storage.Database) (*Quote, error) {
+func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 	stmt := `select count(seq) from quote`
 	row := db.QueryRow(context.Background(), stmt)
-	var count int64
+	var count int
 	err := row.Scan(&count)
 	if err != nil {
 		return nil, err
