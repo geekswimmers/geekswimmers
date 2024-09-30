@@ -87,3 +87,32 @@ func loadContent(filePath string) (string, error) {
 	}
 	return string(content), nil
 }
+
+func GetQuoteOfTheDay(dayOfYear int64, db storage.Database) (*Quote, error) {
+	stmt := `select count(seq) from quote`
+	row := db.QueryRow(context.Background(), stmt)
+	var count int64
+	err := row.Scan(&count)
+	if err != nil {
+		return nil, err
+	}
+
+	if count > 0 {
+		stmt = `select seq, quote, coalesce(author, '')
+				from quote q
+				where q.seq = $1`
+
+		seq := (dayOfYear - 1) % count
+
+		row = db.QueryRow(context.Background(), stmt, seq)
+
+		quote := &Quote{}
+		err = row.Scan(&quote.Sequence, &quote.Quote, &quote.Author)
+		if err != nil {
+			return nil, err
+		}
+		return quote, nil
+	}
+
+	return nil, nil
+}

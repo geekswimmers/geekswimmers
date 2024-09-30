@@ -13,3 +13,9 @@ type Article struct {
 	Image          string
 	ImageCopyright string
 }
+
+type Quote struct {
+	Sequence int64
+	Quote    string
+	Author   string
+}

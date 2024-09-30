@@ -3,6 +3,23 @@
 {{define "title"}}Home{{end}}
 
 {{define "content"}}
+    <div class="row">
+        {{if .QuoteOfTheDay}}
+        <div class="mb-3">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h4 class="card-title">Daily Dive!</h4>
+                    <p class="card-text lead"><i>"{{.QuoteOfTheDay.Quote}}"</i>
+                    {{if .QuoteOfTheDay.Author}}
+                        <br>{{.QuoteOfTheDay.Author}}
+                    {{end}}</p>
+                </div>
+            </div>
+        </div>
+        {{end}}
+        <div class="mb-3"></div>
+    </div>
+
     {{range .Articles}}
         <div class="card">
             {{if.Image}}
@@ -20,6 +37,7 @@
         </div>
         <br>
     {{end}}
+
     <div class="card">
         <div class="card-body">
             <h5 class="display-5"><a id="time-benchmark">Time Benchmark</a></h5>

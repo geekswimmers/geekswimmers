@@ -21,11 +21,19 @@ type webContext struct {
 	Gender              string
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
+	QuoteOfTheDay       *content.Quote
 }
 
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
 	gender := storage.GetSessionValue(req, "profile", "gender")
+
+	quoteOfTheDay, err := content.GetQuoteOfTheDay(3, wc.DB)
+	if err != nil {
+		log.Printf("content.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	articles, err := content.FindHighlightedArticles(wc.DB)
 	if err != nil {
 		log.Printf("content.%v", err)
@@ -34,6 +42,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 
 	ctx := &webContext{
 		Articles:            articles,
+		QuoteOfTheDay:       quoteOfTheDay,
 		BirthDate:           birthDate,
 		Gender:              gender,
 		BaseTemplateContext: wc.BaseTemplateContext,
