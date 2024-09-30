@@ -84,10 +84,13 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th scope="col" colspan="3">Total: {{len .Records}} records</th>
+                    <th scope="col" colspan="4">Total: {{len .Records}} records</th>
                 </tr>
             </tfoot>
         </table>
+        <div class="card-footer text-end">
+            Source: <a href="{{.Source.Link}}" target="_blank" rel="noopener noreferrer">{{.Source.Title}}</a>
+        </div>
     </div>
 
     <br>

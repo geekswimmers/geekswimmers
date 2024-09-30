@@ -103,7 +103,8 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
-                left join jurisdiction j on j.id = r.jurisdiction 
+				join record_set rs on rs.id = r.record_set
+                left join jurisdiction j on j.id = rs.jurisdiction
             where ((rd.min_age is null and rd.max_age >= $1) or 
 				(rd.min_age <= $1 and rd.max_age is null) or 
 				(rd.min_age <= $1 and rd.max_age >= $1)) and
@@ -125,9 +126,9 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 				Age: example.Age,
 			},
 		}
-		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.Jurisdiction.ID, &record.Jurisdiction.Country,
-			&record.Jurisdiction.Province, &record.Jurisdiction.Region, &record.Jurisdiction.City,
-			&record.Jurisdiction.Club, &record.Jurisdiction.Meet,
+		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.Jurisdiction.ID, &record.RecordSet.Jurisdiction.Country,
+			&record.RecordSet.Jurisdiction.Province, &record.RecordSet.Jurisdiction.Region, &record.RecordSet.Jurisdiction.City,
+			&record.RecordSet.Jurisdiction.Club, &record.RecordSet.Jurisdiction.Meet,
 			&record.Definition.MinAge, &record.Definition.MaxAge)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByExample: %v", err)
@@ -139,11 +140,12 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 }
 
 func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
+	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance
 			from record r
                 join record_definition rd on rd.id = r.definition
-                left join jurisdiction j on j.id = r.jurisdiction 
+				join record_set rs on rs.id = r.record_set
+                left join jurisdiction j on j.id = rs.jurisdiction
             where j.id = $1 and
 				((rd.min_age is null and rd.max_age >= $2) or 
 				(rd.min_age <= $2 and rd.max_age is null) or 
@@ -159,15 +161,20 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 
 	var records []*Record
 	for rows.Next() {
+		rs := RecordSet{
+			Jurisdiction: jurisdiction,
+		}
+
 		record := &Record{
 			Definition: RecordDefinition{
 				Age:    example.Age,
 				Gender: example.Gender,
 				Course: example.Course,
 			},
-			Jurisdiction: jurisdiction,
+			RecordSet: rs,
 		}
-		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
+		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
+			&record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
 			&record.Definition.Style, &record.Definition.Distance)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
@@ -181,8 +188,9 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*RecordDefinition, error) {
 	sql := `select distinct rd.min_age, rd.max_age 
 			from record_definition rd 
-				join record r on r.definition = rd.id 
-			where r.jurisdiction = $1
+				join record r on r.definition = rd.id
+				join record_set rs on rs.id = r.record_set
+			where rs.jurisdiction = $1
 			order by rd.max_age, rd.min_age`
 
 	rows, err := db.Query(context.Background(), sql, jurisdiction.ID)

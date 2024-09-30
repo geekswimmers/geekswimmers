@@ -155,14 +155,20 @@ func (definition *RecordDefinition) AgeRange() string {
 	return "All"
 }
 
-type Record struct {
+type RecordSet struct {
 	ID           int64
 	Jurisdiction Jurisdiction
-	Definition   RecordDefinition
-	Time         int64
-	Year         *int64
-	Month        *int64
-	Holder       string
+	Source       Source
+}
+
+type Record struct {
+	ID         int64
+	RecordSet  RecordSet
+	Definition RecordDefinition
+	Time       int64
+	Year       *int64
+	Month      *int64
+	Holder     string
 
 	// Transient
 	Previous   []Record

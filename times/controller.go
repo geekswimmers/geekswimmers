@@ -47,6 +47,7 @@ type webContext struct {
 	Jurisdiction     *Jurisdiction
 	Jurisdictions    []*Jurisdiction
 	RecordDefinition RecordDefinition
+	Source           Source
 
 	SwimSeason    *SwimSeason
 	SwimSeasons   []*SwimSeason
@@ -144,8 +145,8 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	groupedRecords := groupRecordsByJurisdiction(records)
 
 	for i, record := range groupedRecords {
-		record.Jurisdiction.SetTitle(record.Definition.Age)
-		record.Jurisdiction.SetSubTitle()
+		record.RecordSet.Jurisdiction.SetTitle(record.Definition.Age)
+		record.RecordSet.Jurisdiction.SetSubTitle()
 
 		record.Difference = swimmerTime - record.Time
 
@@ -392,6 +393,10 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	ctx.Jurisdiction = jurisdiction
 	ctx.RecordDefinition = definition
 	ctx.Records = groupedRecords
+
+	if len(records) > 0 {
+		ctx.Source = records[0].RecordSet.Source
+	}
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":             utils.Title,
