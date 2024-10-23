@@ -63,8 +63,8 @@
             {{range .Records}}
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="/times/records/{{.Jurisdiction.ID}}/">{{.Jurisdiction.Title}}</a></h5>
-                        <small>{{.Jurisdiction.SubTitle}}</small>
+                        <h5 class="card-title"><a href="/times/records/{{.RecordSet.Jurisdiction.ID}}/">{{.RecordSet.Jurisdiction.Title}}</a></h5>
+                        <small>{{.RecordSet.Jurisdiction.SubTitle}}</small>
                         <p class="card-text">
                             <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Time}}" style="height: 30px">
                                 <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.FormatedTime}}</b></div>

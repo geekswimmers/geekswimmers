@@ -64,3 +64,16 @@ func sortByStroke(records []Record) {
 		return cmp.Compare(a.Definition.Distance, b.Definition.Distance)
 	})
 }
+
+func getStandardAgeInterval(age int64, timeStandard TimeStandard) (int64, int64) {
+	minAge := age
+	maxAge := age
+	if timeStandard.Open {
+		if timeStandard.MaxAgeTime != nil && age < *timeStandard.MaxAgeTime {
+			maxAge = *timeStandard.MaxAgeTime
+		} else if age > *timeStandard.MinAgeTime {
+			minAge = *timeStandard.MinAgeTime
+		}
+	}
+	return minAge, maxAge
+}

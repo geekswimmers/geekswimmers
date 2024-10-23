@@ -89,8 +89,8 @@ type TimeStandard struct {
 	ID           int64
 	Season       SwimSeason
 	Name         string
-	MinAgeTime   int64
-	MaxAgeTime   int64
+	MinAgeTime   *int64
+	MaxAgeTime   *int64
 	Jurisdiction Jurisdiction
 	Open         bool
 	Source       Source

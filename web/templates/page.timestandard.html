@@ -22,7 +22,7 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="event">Age</label>
-                            <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                            <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" {{ if not .Ages }}disabled{{ end }}>
                                 {{range .Ages}}
                                     <option value="{{.}}" {{if eq $.Age .}}selected{{end}}>{{.}}</option>
                                 {{end}}

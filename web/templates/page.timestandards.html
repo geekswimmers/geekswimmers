@@ -36,7 +36,15 @@
                 {{range .TimeStandards}}
                 <tr>
                     <td><a href="/times/standards/{{.ID}}">{{.Name}}</td>
-                    <td>{{.MinAgeTime}} - {{.MaxAgeTime}}</td>
+                    <td>
+                    {{ if and .MinAgeTime .MaxAgeTime }}
+                        {{.MinAgeTime}} - {{.MaxAgeTime}}
+                    {{ else if .MinAgeTime }}
+                        {{.MinAgeTime}} & Over
+                    {{ else if .MaxAgeTime }}
+                        {{.MaxAgeTime}} & Under
+                    {{ end }}
+                    </td>
                 </tr>
                 {{end}}
             </tbody>

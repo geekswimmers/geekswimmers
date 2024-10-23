@@ -93,15 +93,16 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	for _, meet := range meets {
 		meet.Age = swimmer.AgeAt(meet.AgeDate)
 		searchAge := meet.Age
-		if !meet.MinAgeEnforced && meet.Age < meet.TimeStandard.MinAgeTime {
-			searchAge = meet.TimeStandard.MinAgeTime
-		} else if meet.MinAgeEnforced && meet.Age < meet.TimeStandard.MinAgeTime {
+
+		if !meet.MinAgeEnforced && meet.TimeStandard.MinAgeTime != nil && meet.Age < *meet.TimeStandard.MinAgeTime {
+			searchAge = *meet.TimeStandard.MinAgeTime
+		} else if meet.MinAgeEnforced && meet.Age < *meet.TimeStandard.MinAgeTime {
 			continue
 		}
 
-		if !meet.MaxAgeEnforced && meet.Age > meet.TimeStandard.MaxAgeTime {
-			searchAge = meet.TimeStandard.MaxAgeTime
-		} else if meet.MaxAgeEnforced && meet.Age > meet.TimeStandard.MaxAgeTime {
+		if !meet.MaxAgeEnforced && meet.TimeStandard.MaxAgeTime != nil && meet.Age > *meet.TimeStandard.MaxAgeTime {
+			searchAge = *meet.TimeStandard.MaxAgeTime
+		} else if meet.MaxAgeEnforced && meet.Age > *meet.TimeStandard.MaxAgeTime {
 			continue
 		}
 
@@ -239,13 +240,13 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
 	if err != nil {
-		age = timeStandard.MinAgeTime
+		age = *timeStandard.MinAgeTime
 	}
-	if age < timeStandard.MinAgeTime {
-		age = timeStandard.MinAgeTime
+	if age < *timeStandard.MinAgeTime {
+		age = *timeStandard.MinAgeTime
 	}
-	if age > timeStandard.MaxAgeTime {
-		age = timeStandard.MaxAgeTime
+	if timeStandard.MaxAgeTime != nil && age > *timeStandard.MaxAgeTime {
+		age = *timeStandard.MaxAgeTime
 	}
 
 	gender := req.URL.Query().Get("gender")
@@ -275,8 +276,10 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	ctx.TimeStandard = timeStandard
 	ctx.StandardTimes = standardTimes
 
-	for i := timeStandard.MinAgeTime; i <= timeStandard.MaxAgeTime; i++ {
-		ctx.Ages = append(ctx.Ages, i)
+	if timeStandard.MaxAgeTime != nil {
+		for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
+			ctx.Ages = append(ctx.Ages, i)
+		}
 	}
 
 	meets, err := findStandardChampionshipMeets(*timeStandard, sc.DB)
