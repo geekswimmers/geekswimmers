@@ -94,7 +94,7 @@ func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetQuoteOfTheDay.count: %v", err)
 	}
 
 	if count > 0 {
@@ -109,7 +109,7 @@ func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 		quote := &Quote{}
 		err = row.Scan(&quote.Sequence, &quote.Quote, &quote.Author)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("GetQuoteOfTheDay.quotes: %v", err)
 		}
 		return quote, nil
 	}
