@@ -2,14 +2,20 @@
 
 {{define "title"}}Time Standard{{end}}
 
-{{define "content"}}
-    <h1 class="display-6">
-        Standard Events
-    </h1>
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/times/standards">Time Standards</a></li>
+    <li class="breadcrumb-item"><a href="/times/standards">Events</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{.Distance}} {{.Style | Title}}</li>
+{{end}}
 
+{{define "content"}}
     <h3>
-        {{.Distance}} <a href="/swimming/styles/{{.Style | Lowercase}}/">{{.Style | Title}}</a>
+        Standard Events
     </h3>
+
+    <h1 class="display-6">
+        {{.Distance}} {{.Style | Title}}
+    </h1>
 
     <div class="card">
         <div class="card-header">

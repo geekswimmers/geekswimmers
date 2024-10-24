@@ -2,16 +2,21 @@
 
 {{define "title"}}Time Standard{{end}}
 
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/times/standards">Time Standards</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{.TimeStandard.Name}}</li>
+{{end}}
+
 {{define "content"}}
-    <h1 class="display-6">
+    <h3>
         Time Standard
-    </h1>
+    </h3>
 
     <h4>
         Season {{.TimeStandard.Season.Name}}
     </h4>
 
-    <h3>
+    <h3 class="display-6">
         {{.TimeStandard.Name}}
     </h3>
 

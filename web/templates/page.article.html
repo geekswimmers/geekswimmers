@@ -2,6 +2,11 @@
 
 {{define "title"}}{{.Article.Title}}{{end}}
 
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/swimming/styles">Articles</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{.Article.Title}}</li>
+{{end}}
+
 {{define "content"}}
     <div class="card">
         {{if .Article.Image}}

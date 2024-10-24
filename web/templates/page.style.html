@@ -2,6 +2,11 @@
 
 {{define "title"}}Style - {{ .Style.Stroke | Title }}{{end}}
 
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/swimming/styles">Swimming Styles</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ .Style.Stroke | Title }}</li>
+{{end}}
+
 {{define "content"}}
     <h1 class="display-6">
         {{ .Style.Stroke | Title }}

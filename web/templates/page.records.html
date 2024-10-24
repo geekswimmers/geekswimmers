@@ -2,6 +2,11 @@
 
 {{define "title"}}Records{{end}}
 
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{.Jurisdiction.Title}}</li>
+{{end}}
+
 {{define "content"}}
     <h1 class="display-6">
         Records
