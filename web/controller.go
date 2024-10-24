@@ -30,13 +30,13 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 
 	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
-		log.Printf("content.%v", err)
+		log.Printf("home.quoteOfTheDay.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
 	articles, err := content.FindHighlightedArticles(wc.DB)
 	if err != nil {
-		log.Printf("content.%v", err)
+		log.Printf("home.Articles.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
