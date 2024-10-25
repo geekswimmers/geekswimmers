@@ -102,12 +102,7 @@ func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 				from quote q
 				where q.seq = $1`
 
-		seq := (dayOfYear - 1) % count
-
-		if seq == 0 {
-			seq = 1
-		}
-
+		seq := getQuoteSequence(dayOfYear, count)
 		row = db.QueryRow(context.Background(), stmt, seq)
 
 		quote := &Quote{}
@@ -119,4 +114,14 @@ func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 	}
 
 	return nil, nil
+}
+
+func getQuoteSequence(dayOfYear, count int) int {
+	seq := (dayOfYear - 1) % count
+
+	if seq == 0 {
+		seq = count
+	}
+
+	return seq
 }
