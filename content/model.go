@@ -19,3 +19,9 @@ type Quote struct {
 	Quote    string
 	Author   string
 }
+
+type ServiceUpdate struct {
+	Title     string
+	Content   string
+	Published time.Time
+}

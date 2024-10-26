@@ -28,7 +28,7 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 	}
 
 	reference := req.URL.Query().Get(":reference")
-	article, err := findArticle(reference, wc.DB)
+	article, err := getArticle(reference, wc.DB)
 
 	if err != nil || article == nil {
 		log.Printf("Error retrieving the article %s: %v", reference, err)

@@ -4,6 +4,17 @@
 
     $ go run main.go
 
+## Upgrading Go
+
+To upgrade the version of Go, we have to increment it in the following files:
+
+* `go.mod`
+* `Dockerfile`
+* `.github/workflows/go.yml`
+* `.github/workflows/golangcl-int.yml`
+
+We may need to increment the version of the lint too at `.github/workflows/golangcl-int.yml`, keeping up with the evolution of the language.
+
 ## IDEs
 
 ### VSCode

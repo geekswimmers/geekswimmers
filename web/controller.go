@@ -17,6 +17,7 @@ type WebController struct {
 
 type webContext struct {
 	Articles            []*content.Article
+	Updates             []*content.ServiceUpdate
 	BirthDate           string
 	Gender              string
 	BaseTemplateContext *utils.BaseTemplateContext
@@ -40,8 +41,15 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	updates, err := content.FindUpdates(wc.DB)
+	if err != nil {
+		log.Printf("home.Updates.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	ctx := &webContext{
 		Articles:            articles,
+		Updates:             updates,
 		QuoteOfTheDay:       quoteOfTheDay,
 		BirthDate:           birthDate,
 		Gender:              gender,

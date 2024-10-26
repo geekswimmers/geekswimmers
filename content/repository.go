@@ -59,7 +59,7 @@ func findArticlesExcept(reference string, db storage.Database) ([]*Article, erro
 	return articles, nil
 }
 
-func findArticle(reference string, db storage.Database) (*Article, error) {
+func getArticle(reference string, db storage.Database) (*Article, error) {
 	stmt := `select a.reference, a.title, a.abstract, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			 from article a
 			 where a.reference = $1`
@@ -124,4 +124,29 @@ func getQuoteSequence(dayOfYear, count int) int {
 	}
 
 	return seq
+}
+
+func FindUpdates(db storage.Database) ([]*ServiceUpdate, error) {
+	stmt := `select su.title, su.content, su.published
+			 from service_update su
+			 order by su.published desc
+			 limit 5`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var updates []*ServiceUpdate
+	for rows.Next() {
+		update := &ServiceUpdate{}
+		err = rows.Scan(&update.Title, &update.Content, &update.Published)
+
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, err
+		}
+		updates = append(updates, update)
+	}
+
+	return updates, nil
 }
