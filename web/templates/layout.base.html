@@ -85,7 +85,7 @@
         </main>
 
         {{if not .AcceptedCookies}}
-            <div class="modal fade" id="cookieModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
+            <div class="modal fade" id="cookieModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -124,11 +124,12 @@
 
         {{if not .AcceptedCookies}}
             <script type="text/javascript">
-                const cookieModal = new bootstrap.Modal(document.getElementById('cookieModal'), {
+                const modalElement = document.getElementById('cookieModal');
+                const cookieModal = new bootstrap.Modal(modalElement, {
                     keyboard: false,
                     backdrop:'static'
-                })
-                cookieModal.show()
+                });
+                cookieModal.show(modalElement);
 
                 function acceptCookies() {
                     fetch("/api/accepted-cookies").then(() => {
