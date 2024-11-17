@@ -76,6 +76,29 @@ func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request)
 	}
 }
 
+func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request) {
+	articles, err := content.FindArticlesExcept("", wc.DB)
+	if err != nil {
+		log.Printf("home.Articles.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx := &webContext{
+		Articles:        articles,
+		AcceptedCookies: storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	txt, err := template.ParseFiles("web/templates/sitemap.xml")
+	if err != nil {
+		log.Printf("html.template.ParseFiles: %v", err)
+	}
+
+	err = txt.Execute(res, ctx)
+	if err != nil {
+		log.Printf("html.template.Template: %v", err)
+	}
+}
+
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: wc.BaseTemplateContext,

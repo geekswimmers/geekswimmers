@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {{range .Articles}}
+    <url>
+        <loc>https://www.geekswimmers.com/content/articles/{{.Reference}}/</loc>
+        <lastmod>{{ .Published.Format "2006-01-02" }}</lastmod>
+    </url>
+    {{end}}
+    <url>
+        <loc>https://www.geekswimmers.com/times/standards</loc>
+        <lastmod>2024-10-31</lastmod>
+    </url>
+    <url>
+        <loc>https://www.geekswimmers.com/times/records</loc>
+        <lastmod>2024-11-16</lastmod>
+    </url>
+    <url>
+        <loc>https://www.geekswimmers.com/swimming/styles</loc>
+        <lastmod>2024-06-16</lastmod>
+    </url>
+</urlset>

@@ -88,6 +88,7 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router.Get("/swimming/styles/:stroke/", s.handleRequest(meetController.SwimStyleView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
+	s.Router.Get("/sitemap.xml", http.HandlerFunc(webController.SitemapView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)

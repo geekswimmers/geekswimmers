@@ -24,7 +24,6 @@ type webContext struct {
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: wc.BaseTemplateContext,
-		AcceptedCookies:     true,
 	}
 
 	reference := req.URL.Query().Get(":reference")
@@ -36,7 +35,7 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 		return
 	}
 
-	otherArticles, err := findArticlesExcept(article.Reference, wc.DB)
+	otherArticles, err := FindArticlesExcept(article.Reference, wc.DB)
 	if err != nil {
 		log.Printf("Error retrieving other articles: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
