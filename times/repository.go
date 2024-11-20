@@ -9,14 +9,14 @@ import (
 )
 
 func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
-	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name, 
+	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
 	                ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			 from meet m
 			    join swim_season ss on ss.id = m.season
 			    join time_standard ts on ts.id = m.time_standard
 			 where ss.start_date <= now() and ss.end_date >= now()
 			 	and m.end_date >= now()
-			 	and m.time_standard is not null 
+			 	and m.time_standard is not null
 				and m.age_date is not null
 			 order by m.age_date`
 	rows, err := db.Query(context.Background(), stmt)
@@ -63,16 +63,65 @@ func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Databas
 	return meets, nil
 }
 
+func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, error) {
+	stmt := `select rd.gender, rd.course, rd.style, rd.distance, rd.min_age, rd.max_age
+			 from record_definition rd
+			 where rd.id = $1`
+
+	row := db.QueryRow(context.Background(), stmt, id)
+
+	recordDefinition := &RecordDefinition{
+		ID: id,
+	}
+	err := row.Scan(&recordDefinition.Gender, &recordDefinition.Course, &recordDefinition.Style, &recordDefinition.Distance,
+		&recordDefinition.MinAge, &recordDefinition.MaxAge)
+	if err != nil {
+		return nil, err
+	}
+
+	return recordDefinition, nil
+}
+
+func findRecordsByDefinition(definition RecordDefinition, db storage.Database) ([]*Record, error) {
+	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
+				rs.id, coalesce(rs.source_title, ''), coalesce(rs.source_link, ''),
+				j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+			from record r
+                join record_set rs on rs.id = r.record_set
+                left join jurisdiction j on j.id = rs.jurisdiction
+            where r.definition = $1
+            order by r.record_time asc`
+	rows, err := db.Query(context.Background(), sql, definition.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
+	}
+	defer rows.Close()
+
+	var records []*Record
+	for rows.Next() {
+		record := &Record{}
+		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.ID, &record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
+			&record.RecordSet.Jurisdiction.ID, &record.RecordSet.Jurisdiction.Country, &record.RecordSet.Jurisdiction.Province, &record.RecordSet.Jurisdiction.Region,
+			&record.RecordSet.Jurisdiction.City, &record.RecordSet.Jurisdiction.Club, &record.RecordSet.Jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
+}
+
 func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''), 
+	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''),
 	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
 				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
 				join record_set rs on rs.id = r.record_set
                 left join jurisdiction j on j.id = rs.jurisdiction
-            where ((rd.min_age is null and rd.max_age >= $1) or 
-				(rd.min_age <= $1 and rd.max_age is null) or 
+            where ((rd.min_age is null and rd.max_age >= $1) or
+				(rd.min_age <= $1 and rd.max_age is null) or
 				(rd.min_age <= $1 and rd.max_age >= $1)) and
                 rd.gender = $2 and
                 rd.course = $3 and
@@ -113,8 +162,8 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 				join record_set rs on rs.id = r.record_set
                 left join jurisdiction j on j.id = rs.jurisdiction
             where j.id = $1 and
-				((rd.min_age is null and rd.max_age >= $2) or 
-				(rd.min_age <= $2 and rd.max_age is null) or 
+				((rd.min_age is null and rd.max_age >= $2) or
+				(rd.min_age <= $2 and rd.max_age is null) or
 				(rd.min_age <= $2 and rd.max_age >= $2)) and
                 rd.gender = $3 and
                 rd.course = $4
@@ -152,8 +201,8 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 }
 
 func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*RecordDefinition, error) {
-	sql := `select distinct rd.min_age, rd.max_age 
-			from record_definition rd 
+	sql := `select distinct rd.min_age, rd.max_age
+			from record_definition rd
 				join record r on r.definition = rd.id
 				join record_set rs on rs.id = r.record_set
 			where rs.jurisdiction = $1
@@ -298,9 +347,9 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		// Age groups
 		stmt := `select st.style, st.distance, st.standard
 			 from standard_time st
-			 where st.age between $1 and $2 
+			 where st.age between $1 and $2
 			   and st.gender = $3
-			   and st.course = $4 
+			   and st.course = $4
 			   and st.time_standard = $5
 			 order by st.style, st.standard asc`
 
@@ -316,7 +365,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		stmt := `select st.style, st.distance, st.standard
 		from standard_time st
 		where st.gender = $1
-		  and st.course = $2 
+		  and st.course = $2
 		  and st.time_standard = $3
 		order by st.style, st.standard asc`
 
@@ -346,10 +395,10 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
-		stmt := `select ts.id, ts.name, st.standard 
-				from standard_time st 
+		stmt := `select ts.id, ts.name, st.standard
+				from standard_time st
 					join time_standard ts on ts.id = st.time_standard
-					join swim_season ss on ss.id = ts.season 
+					join swim_season ss on ss.id = ts.season
 				where ss.id = $1
 					and st.time_standard = $2
 					and st.age between $3 and $4
@@ -363,10 +412,10 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 		row = db.QueryRow(context.Background(), stmt,
 			season.ID, example.TimeStandard.ID, minAge, maxAge, example.Gender, example.Course, example.Style, example.Distance)
 	} else {
-		stmt := `select ts.id, ts.name, st.standard 
-				from standard_time st 
+		stmt := `select ts.id, ts.name, st.standard
+				from standard_time st
 					join time_standard ts on ts.id = st.time_standard
-					join swim_season ss on ss.id = ts.season 
+					join swim_season ss on ss.id = ts.season
 				where ss.id = $1
 					and st.time_standard = $2
 					and st.gender = $3
@@ -394,9 +443,9 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 }
 
 func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {
-	stmt := `select ts.id , ts.name, st.standard, ss.id, ss.name 
-			 from standard_time st 
-				join time_standard ts on ts.id = st.time_standard 
+	stmt := `select ts.id , ts.name, st.standard, ss.id, ss.name
+			 from standard_time st
+				join time_standard ts on ts.id = st.time_standard
 				join swim_season ss on ts.season = ss.id
 			 where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.style = $5
 			 order by ss.name desc, st.standard desc`

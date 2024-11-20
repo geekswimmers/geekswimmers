@@ -364,6 +364,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		}
 	}
 	ctx.AgeRange = ageParam
+	ctx.AgeRanges = ageRanges
 
 	jurisdiction.SetTitle(age)
 	jurisdiction.SetSubTitle()
@@ -390,7 +391,6 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	groupedRecords := groupRecordsByDefinition(records)
 
 	ctx.Age = age
-	ctx.AgeRanges = ageRanges
 	ctx.Gender = gender
 	ctx.Course = course
 	ctx.Jurisdiction = jurisdiction
@@ -409,6 +409,56 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordsView: %v", err)
+	}
+}
+
+func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *http.Request) {
+	type wContext struct {
+		RecordDefinition    *RecordDefinition
+		RecordSet           RecordSet
+		Records             []*Record
+		Jurisdiction        Jurisdiction
+		BaseTemplateContext *utils.BaseTemplateContext
+		AcceptedCookies     bool
+	}
+
+	ctx := &wContext{
+		BaseTemplateContext: rc.BaseTemplateContext,
+		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+	}
+
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	recordDefinition, err := getRecordDefinition(id, rc.DB)
+	if err != nil || recordDefinition == nil {
+		log.Printf("times.RecordHistoryView (%d): %v", id, err)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
+	}
+	ctx.RecordDefinition = recordDefinition
+
+	records, err := findRecordsByDefinition(*recordDefinition, rc.DB)
+	if err != nil {
+		log.Printf("times.RecordHistoryView (%d): %v", id, err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+	ctx.Records = records
+
+	if len(records) > 0 {
+		ctx.RecordSet = records[0].RecordSet
+
+		jur := records[0].RecordSet.Jurisdiction
+		jur.SetTitle(0)
+		jur.SetSubTitle()
+		ctx.Jurisdiction = jur
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{
+		"Title":             utils.Title,
+		"FormatMiliseconds": utils.FormatMiliseconds,
+	})
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("times.RecordHistoryView: %v", err)
 	}
 }
 

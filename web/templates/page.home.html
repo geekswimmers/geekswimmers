@@ -26,7 +26,7 @@
         <div class="col-sm-8">
             {{range .Articles}}
                 <div class="card">
-                    {{if.Image}}
+                    {{if .Image}}
                         <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
                     {{end}}
                     <div class="card-body">

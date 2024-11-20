@@ -1,0 +1,87 @@
+{{template "base" .}} 
+
+{{define "title"}}Record History{{end}} 
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+        {{.Jurisdiction.Title}}
+    </li>
+{{end}} 
+
+{{define "content"}}
+    <h1 class="display-6">Record History</h1>
+
+    <h3>{{.Jurisdiction.Title}}</h3>
+    <p class="lead">{{.Jurisdiction.SubTitle}}</p>
+
+    <div class="card">
+        <div class="card-header">
+            <form
+                id="filter-form"
+                method="get"
+                action="/times/records/{{.Jurisdiction.ID}}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="age">Age</label>
+                            <p id="age">
+                                {{.RecordDefinition.MinAge}} -
+                                {{.RecordDefinition.MaxAge}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <p id="gender">{{.RecordDefinition.Gender | Title}}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="course">Course</label><br />
+                            <p id="course">{{.RecordDefinition.Course | Title}}</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Event</th>
+                    <th scope="col">Record</th>
+                    <th scope="col">Holder</th>
+                    <th scope="col">When</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Records}}
+                    <tr>
+                        <td>{{$.RecordDefinition.Distance}} {{$.RecordDefinition.Style | Title}}</td>
+                        <td>{{.Time | FormatMiliseconds}}</td>
+                        <td>{{.Holder}}</td>
+                        <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                    </tr>
+                {{end}}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="col" colspan="4">Total: {{len .Records}} records</th>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="card-footer text-end">
+            Source: <a href="{{.RecordSet.Source.Link}}" target="_blank" rel="noopener noreferrer">{{.RecordSet.Source.Title}}</a>
+        </div>
+    </div>
+
+    <br>
+    <a class="btn btn-secondary" href="/times/records/{{.RecordSet.ID}}/?age={{.RecordDefinition.MinAge}}-{{.RecordDefinition.MaxAge}}&gender={{.RecordDefinition.Gender}}&course={{.RecordDefinition.Course}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+        </svg>
+        Back
+    </a>
+{{end}}

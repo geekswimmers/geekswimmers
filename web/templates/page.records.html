@@ -51,7 +51,7 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="course">Course</label><br>
@@ -80,7 +80,13 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{.Definition.Distance}} <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{.Definition.Style | Title}}</a></td>
+                        <td>
+                            {{if .Previous}}
+                                <a href="/times/records/{{.Definition.ID}}/history/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a>
+                            {{else}}
+                                {{.Definition.Distance}} {{.Definition.Style | Title}}
+                            {{end}}
+                        </td>
                         <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{.Holder}}</td>
                         <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
