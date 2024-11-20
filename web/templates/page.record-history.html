@@ -22,8 +22,8 @@
                 method="get"
                 action="/times/records/{{.Jurisdiction.ID}}">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="mb-3">
+                    <div class="col">
+                        <div class="mb-0">
                             <label for="age">Age</label>
                             <p id="age">
                                 {{.RecordDefinition.MinAge}} -
@@ -31,15 +31,15 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mb-3">
+                    <div class="col">
+                        <div class="mb-0">
                             <label for="gender" class="form-label">Gender</label>
                             <p id="gender">{{.RecordDefinition.Gender | Title}}</p>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="mb-3">
+                    <div class="col">
+                        <div class="mb-0">
                             <label for="course">Course</label><br />
                             <p id="course">{{.RecordDefinition.Course | Title}}</p>
                         </div>

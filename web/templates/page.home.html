@@ -24,24 +24,6 @@
 
     <div class="row">
         <div class="col-sm-8">
-            {{range .Articles}}
-                <div class="card">
-                    {{if .Image}}
-                        <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
-                    {{end}}
-                    <div class="card-body">
-                        <h1 class="display-5"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/articles/{{.Reference}}/">{{.Title}}</a></h1>
-
-                        <div class="lead">
-                            {{markdown .Abstract}}
-                        </div>
-
-                        <p><a href="/content/articles/{{.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
-                    </div>
-                </div>
-                <br>
-            {{end}}
-
             <div class="card">
                 <div class="card-body">
                     <h5 class="display-5"><a id="time-benchmark">Time Benchmark</a></h5>
@@ -139,6 +121,24 @@
                     </form>
                 </div>
             </div>
+            <br>
+            
+            {{range .Articles}}
+                <div class="card">
+                    {{if .Image}}
+                        <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
+                    {{end}}
+                    <div class="card-body">
+                        <h1 class="display-5"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/articles/{{.Reference}}/">{{.Title}}</a></h1>
+
+                        <div class="lead">
+                            {{markdown .Abstract}}
+                        </div>
+
+                        <p><a href="/content/articles/{{.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
+                    </div>
+                </div>
+            {{end}}
         </div>
         <div class="col-sm-4">
             {{range .Updates}}
