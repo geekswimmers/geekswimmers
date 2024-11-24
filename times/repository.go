@@ -8,59 +8,27 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
-	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
-	                ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
-			 from meet m
-			    join swim_season ss on ss.id = m.season
-			    join time_standard ts on ts.id = m.time_standard
-			 where ss.start_date <= now() and ss.end_date >= now()
-			 	and m.end_date >= now()
-			 	and m.time_standard is not null
-				and m.age_date is not null
-			 order by m.age_date`
+func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
+	stmt := `select ss.id, ss.name, ss.start_date, ss.end_date
+	         from swim_season ss
+			 order by ss.start_date desc`
 	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {
-		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+		return nil, fmt.Errorf("findSwimSeasons: %v", err)
 	}
 	defer rows.Close()
 
-	var meets []*Meet
+	var swimSeasons []*SwimSeason
 	for rows.Next() {
-		meet := &Meet{}
-		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
-			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.TimeStandard.Open, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
+		swimSeason := &SwimSeason{}
+		err = rows.Scan(&swimSeason.ID, &swimSeason.Name, &swimSeason.StartDate, &swimSeason.EndDate)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+			return nil, fmt.Errorf("findSwimSeasons: %v", err)
 		}
-		meets = append(meets, meet)
+		swimSeasons = append(swimSeasons, swimSeason)
 	}
 
-	return meets, nil
-}
-
-func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
-	stmt := `select m.id, m.name, m.course
-			 from meet m
-			 where m.time_standard = $1
-			 order by m.name`
-	rows, err := db.Query(context.Background(), stmt, timeStandard.ID)
-	if err != nil {
-		return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
-	}
-	defer rows.Close()
-
-	var meets []*Meet
-	for rows.Next() {
-		meet := &Meet{}
-		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
-		}
-		meets = append(meets, meet)
-	}
-
-	return meets, nil
+	return swimSeasons, nil
 }
 
 func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, error) {
@@ -226,29 +194,6 @@ func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*Re
 	}
 
 	return definitions, nil
-}
-
-func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
-	stmt := `select ss.id, ss.name, ss.start_date, ss.end_date
-	         from swim_season ss
-			 order by ss.start_date desc`
-	rows, err := db.Query(context.Background(), stmt)
-	if err != nil {
-		return nil, fmt.Errorf("findSwimSeasons: %v", err)
-	}
-	defer rows.Close()
-
-	var swimSeasons []*SwimSeason
-	for rows.Next() {
-		swimSeason := &SwimSeason{}
-		err = rows.Scan(&swimSeason.ID, &swimSeason.Name, &swimSeason.StartDate, &swimSeason.EndDate)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findSwimSeasons: %v", err)
-		}
-		swimSeasons = append(swimSeasons, swimSeason)
-	}
-
-	return swimSeasons, nil
 }
 
 func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
@@ -483,4 +428,59 @@ func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 	}
 
 	return minAge, maxAge, nil
+}
+
+func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
+	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
+	                ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
+			 from meet m
+			    join swim_season ss on ss.id = m.season
+			    join time_standard ts on ts.id = m.time_standard
+			 where ss.start_date <= now() and ss.end_date >= now()
+			 	and m.end_date >= now()
+			 	and m.time_standard is not null
+				and m.age_date is not null
+			 order by m.age_date`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+	}
+	defer rows.Close()
+
+	var meets []*Meet
+	for rows.Next() {
+		meet := &Meet{}
+		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
+			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.TimeStandard.Open, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+		}
+		meets = append(meets, meet)
+	}
+
+	return meets, nil
+}
+
+func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
+	stmt := `select m.id, m.name, m.course
+			 from meet m
+			 where m.time_standard = $1
+			 order by m.name`
+	rows, err := db.Query(context.Background(), stmt, timeStandard.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
+	}
+	defer rows.Close()
+
+	var meets []*Meet
+	for rows.Next() {
+		meet := &Meet{}
+		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findStandardChampioshipMeets: %v", err)
+		}
+		meets = append(meets, meet)
+	}
+
+	return meets, nil
 }
