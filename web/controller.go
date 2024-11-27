@@ -26,8 +26,8 @@ type webContext struct {
 }
 
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
-	birthDate := storage.GetSessionValue(req, "profile", "birthDate")
-	gender := storage.GetSessionValue(req, "profile", "gender")
+	birthDate := storage.GetSessionEntryValue(req, "profile", "birthDate")
+	gender := storage.GetSessionEntryValue(req, "profile", "gender")
 
 	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
@@ -54,7 +54,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		BirthDate:           birthDate,
 		Gender:              gender,
 		BaseTemplateContext: wc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{"markdown": utils.ToHTML})
@@ -85,7 +85,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 
 	ctx := &webContext{
 		Articles:        articles,
-		AcceptedCookies: storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies: storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	txt, err := template.ParseFiles("web/templates/sitemap.xml")
@@ -109,12 +109,13 @@ func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request
 }
 
 func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
-	if storage.SessionAvailable() {
+	if storage.SessionStoreAvailable() {
 		if err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true"); err != nil {
 			log.Printf("storage.%v", err)
 			res.WriteHeader(http.StatusInternalServerError)
+			return
 		}
-		log.Printf("User accepted Cookies: %v", storage.GetSessionValue(req, "profile", "acceptedCookies"))
+		log.Printf("User accepted Cookies: %v", storage.GetSessionEntryValue(req, "profile", "acceptedCookies"))
 	}
 
 	res.WriteHeader(http.StatusAccepted)

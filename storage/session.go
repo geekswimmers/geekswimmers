@@ -4,6 +4,7 @@ import (
 	"encoding/base32"
 	"fmt"
 	"geekswimmers/config"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -18,14 +19,19 @@ func InitSessionStore(c config.Config) error {
 		return fmt.Errorf("InitSessionStore: %v", err)
 	}
 	sessionStore = sessions.NewCookieStore(decodedKey)
+	sessionStore.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   60 * 60 * 24 * 30, // 30 days
+		HttpOnly: true,
+	}
 	return nil
 }
 
-func SessionAvailable() bool {
+func SessionStoreAvailable() bool {
 	return sessionStore != nil
 }
 
-func GetSessionValue(req *http.Request, store, key string) string {
+func GetSessionEntryValue(req *http.Request, store, key string) string {
 	var value string
 
 	session, err := sessionStore.Get(req, store)
@@ -42,13 +48,13 @@ func GetSessionValue(req *http.Request, store, key string) string {
 func AddSessionEntry(res http.ResponseWriter, req *http.Request, store, key, value string) error {
 	session, err := sessionStore.Get(req, store)
 	if err != nil {
-		return fmt.Errorf("AddSessionEntry: %v", err)
+		log.Printf("AddSessionEntry.Get: %v, %v", err, session)
 	}
 
 	session.Values[key] = value
 
 	if err = session.Save(req, res); err != nil {
-		return fmt.Errorf("AddSessionEntry: %v", err)
+		return fmt.Errorf("AddSessionEntry.Save: %v", err)
 	}
 	return nil
 }

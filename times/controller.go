@@ -171,7 +171,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Course:              course,
 		Style:               stroke,
 		BaseTemplateContext: bc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
@@ -214,7 +214,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		SwimSeasons:         swimSeasons,
 		TimeStandards:       timeStandards,
 		BaseTemplateContext: sc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplate("base", "timestandards")
@@ -227,7 +227,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: sc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -309,7 +309,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 	ctx := &webContext{
 		Jurisdictions:       jurisdictions,
 		BaseTemplateContext: sc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplate("base", "records-list")
@@ -322,7 +322,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: rc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -424,7 +424,7 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 
 	ctx := &wContext{
 		BaseTemplateContext: rc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -465,7 +465,7 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
 	ctx := &webContext{
 		BaseTemplateContext: sc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	// Represents the event in two parts: distance and stroke

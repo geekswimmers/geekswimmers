@@ -43,7 +43,7 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 
 	ctx.Article = article
 	ctx.OtherArticles = otherArticles
-	ctx.AcceptedCookies = storage.GetSessionValue(req, "profile", "acceptedCookies") == "true"
+	ctx.AcceptedCookies = storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true"
 
 	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.ToHTML})
 	err = html.Execute(res, ctx)

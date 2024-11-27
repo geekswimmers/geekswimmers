@@ -34,7 +34,7 @@ func (mc *MeetController) SwimStylesView(res http.ResponseWriter, req *http.Requ
 	ctx := &webContext{
 		Styles:              styles,
 		BaseTemplateContext: mc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "styles", template.FuncMap{
@@ -77,7 +77,7 @@ func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Reque
 		NextStyle:           nextStyle,
 		Instructions:        instructions,
 		BaseTemplateContext: mc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionValue(req, "profile", "acceptedCookies") == "true",
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "style", template.FuncMap{
