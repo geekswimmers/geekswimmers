@@ -308,11 +308,12 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		// Age groups
 		stmt := `select st.style, st.distance, st.standard
 			 from standard_time st
+			     join swim_style ss on ss.stroke = st.style
 			 where st.age between $1 and $2
 			   and st.gender = $3
 			   and st.course = $4
 			   and st.time_standard = $5
-			 order by st.style, st.standard asc`
+			 order by ss.sequence, st.standard asc`
 
 		minAge, maxAge := getStandardAgeInterval(example.Age, example.TimeStandard)
 
