@@ -95,6 +95,7 @@ type TimeStandard struct {
 	Open         bool
 	Source       Source
 	Previous     *TimeStandard
+	Benchmark    bool
 }
 
 type StandardTime struct {

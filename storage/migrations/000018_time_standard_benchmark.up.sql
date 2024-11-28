@@ -1,0 +1,1 @@
+alter table time_standard add benchmark boolean not null default true;

@@ -197,7 +197,7 @@ func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*Re
 }
 
 func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
-	stmt := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time
+	stmt := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
 	         from time_standard ts
 			 where ts.season = $1
 			 order by ts.name`
@@ -212,7 +212,7 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 		timeStandard := &TimeStandard{
 			Season: season,
 		}
-		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime)
+		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Benchmark)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findTimeStandards: %v", err)
 		}
@@ -456,6 +456,7 @@ func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
 			 	and m.end_date >= now()
 			 	and m.time_standard is not null
 				and m.age_date is not null
+				and ts.benchmark = true
 			 order by m.age_date`
 	rows, err := db.Query(context.Background(), stmt)
 	if err != nil {

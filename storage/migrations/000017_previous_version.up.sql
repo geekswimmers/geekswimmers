@@ -1,2 +1,1 @@
-
 alter table time_standard add previous integer null references time_standard (id);
