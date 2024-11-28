@@ -94,6 +94,7 @@ type TimeStandard struct {
 	Jurisdiction Jurisdiction
 	Open         bool
 	Source       Source
+	Previous     *TimeStandard
 }
 
 type StandardTime struct {

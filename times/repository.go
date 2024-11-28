@@ -223,7 +223,7 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 }
 
 func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
-	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#')
+	stmt := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#'), coalesce(ts.previous, 0)
 			 from time_standard ts
 			 	join swim_season ss on ss.id = ts.season
 	         where ts.id = $1`
@@ -231,12 +231,28 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	row := db.QueryRow(context.Background(), stmt, id)
 
 	timeStandard := &TimeStandard{
-		ID: id,
+		ID:       id,
+		Previous: &TimeStandard{},
 	}
 	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name,
 		&timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Open,
-		&timeStandard.Source.Title, &timeStandard.Source.Link); err != nil {
+		&timeStandard.Source.Title, &timeStandard.Source.Link, &timeStandard.Previous.ID); err != nil {
 		return nil, fmt.Errorf("findTimeStandard: %v", err)
+	}
+
+	return timeStandard, nil
+}
+
+func findLatestTimeStandard(previousId int64, db storage.Database) (*TimeStandard, error) {
+	stmt := `select ts.id, ts.name
+			 from time_standard ts
+	         where ts.previous = $1`
+
+	row := db.QueryRow(context.Background(), stmt, previousId)
+
+	timeStandard := &TimeStandard{}
+	if err := row.Scan(&timeStandard.ID, &timeStandard.Name); err != nil {
+		return nil, fmt.Errorf("findLatestVersion: %v", err)
 	}
 
 	return timeStandard, nil

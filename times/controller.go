@@ -36,18 +36,19 @@ type webContext struct {
 	Meets        []*Meet
 	FormatedTime string
 
-	Age              int64
-	AgeRange         string
-	Gender           string
-	TimeStandard     *TimeStandard
-	Ages             []int64
-	AgeRanges        []*RecordDefinition
-	StandardTimes    []*StandardTime
-	Records          []Record
-	Jurisdiction     *Jurisdiction
-	Jurisdictions    []*Jurisdiction
-	RecordDefinition RecordDefinition
-	Source           Source
+	Age                int64
+	AgeRange           string
+	Gender             string
+	TimeStandard       *TimeStandard
+	LatestTimeStandard *TimeStandard
+	Ages               []int64
+	AgeRanges          []*RecordDefinition
+	StandardTimes      []*StandardTime
+	Records            []Record
+	Jurisdiction       *Jurisdiction
+	Jurisdictions      []*Jurisdiction
+	RecordDefinition   RecordDefinition
+	Source             Source
 
 	SwimSeason    *SwimSeason
 	SwimSeasons   []*SwimSeason
@@ -280,6 +281,11 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
 			ctx.Ages = append(ctx.Ages, i)
 		}
+	}
+
+	latestTimeStandard, err := findLatestTimeStandard(timeStandard.ID, sc.DB)
+	if condition := err == nil && latestTimeStandard != nil; condition {
+		ctx.LatestTimeStandard = latestTimeStandard
 	}
 
 	meets, err := findStandardChampionshipMeets(*timeStandard, sc.DB)
