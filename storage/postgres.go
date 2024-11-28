@@ -30,7 +30,7 @@ func MigrateDatabase(c config.Config) error {
 
 	if err != nil {
 		if dirty {
-			log.Printf("Database is dirty. Cleaning...")
+			log.Printf("Database is dirty: %v \nCleaning...", err)
 			version, dirty, err = cleanDatabase(c.GetString(config.DatabaseURL))
 			if err != nil {
 				err = fmt.Errorf("MigrateDatabase.%v", err)

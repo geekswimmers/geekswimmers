@@ -137,7 +137,8 @@ type RecordDefinition struct {
 	Distance int64
 
 	// Transient
-	Age int64
+	Age      int64
+	Sequence int64
 }
 
 func (definition *RecordDefinition) AgeRange() string {
