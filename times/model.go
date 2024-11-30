@@ -13,6 +13,13 @@ const (
 	CourseShort = "SHORT"
 	CourseLong  = "LONG"
 
+	JurisdictionLevelCountry  = "COUNTRY"
+	JurisdictionLevelProvince = "PROVINCE"
+	JurisdictionLevelRegion   = "REGION"
+	JurisdictionLevelCity     = "CITY"
+	JurisdictionLevelClub     = "CLUB"
+	JurisdictionLevelMeet     = "MEET"
+
 	StrokeFree   = "FREESTYLE"
 	StrokeBack   = "BACKSTROKE"
 	StrokeBreast = "BREASTSTROKE"
@@ -30,52 +37,43 @@ type SwimSeason struct {
 type Jurisdiction struct {
 	ID       int64
 	Country  string
-	Province string
-	Region   string
-	City     string
-	Meet     string
-	Club     string
+	Province *string
+	Region   *string
+	City     *string
+	Meet     *string
+	Club     *string
 
 	// Transient
 	Title    string
 	SubTitle string
 }
 
-func (jurisdiction *Jurisdiction) SetTitle(age int64) {
-	if jurisdiction.ID == 0 {
-		if age == 0 {
-			jurisdiction.Title = "World Record"
-		} else {
-			jurisdiction.Title = "World Junior Record"
-		}
-		return
-	}
-
-	if jurisdiction.Meet != "" {
-		jurisdiction.Title = jurisdiction.Meet
-	} else if jurisdiction.Club != "" {
-		jurisdiction.Title = jurisdiction.Club
-	} else if jurisdiction.City != "" {
-		jurisdiction.Title = jurisdiction.City
-	} else if jurisdiction.Region != "" {
-		jurisdiction.Title = jurisdiction.Region
-	} else if jurisdiction.Province != "" {
-		jurisdiction.Title = jurisdiction.Province
+func (jurisdiction *Jurisdiction) SetTitle() {
+	if jurisdiction.Meet != nil {
+		jurisdiction.Title = *jurisdiction.Meet
+	} else if jurisdiction.Club != nil {
+		jurisdiction.Title = *jurisdiction.Club
+	} else if jurisdiction.City != nil {
+		jurisdiction.Title = *jurisdiction.City
+	} else if jurisdiction.Region != nil {
+		jurisdiction.Title = *jurisdiction.Region
+	} else if jurisdiction.Province != nil {
+		jurisdiction.Title = *jurisdiction.Province
 	} else {
 		jurisdiction.Title = jurisdiction.Country
 	}
 }
 
 func (jurisdiction *Jurisdiction) SetSubTitle() {
-	if jurisdiction.Meet != "" {
-		jurisdiction.SubTitle = fmt.Sprintf("%s, %s, %s, %s - %s", jurisdiction.Club, jurisdiction.City, jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Club != "" {
-		jurisdiction.SubTitle = fmt.Sprintf("%s, %s, %s - %s", jurisdiction.City, jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.City != "" {
-		jurisdiction.SubTitle = fmt.Sprintf("%s, %s - %s", jurisdiction.Region, jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Region != "" {
-		jurisdiction.SubTitle = fmt.Sprintf("%s - %s", jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Province != "" {
+	if jurisdiction.Meet != nil {
+		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v, %v - %v", *jurisdiction.Club, *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Club != nil {
+		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v - %v", *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.City != nil {
+		jurisdiction.SubTitle = fmt.Sprintf("%v, %v - %v", *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Region != nil {
+		jurisdiction.SubTitle = fmt.Sprintf("%v - %v", *jurisdiction.Province, jurisdiction.Country)
+	} else if jurisdiction.Province != nil {
 		jurisdiction.SubTitle = jurisdiction.Country
 	}
 }

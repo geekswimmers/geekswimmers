@@ -4,7 +4,7 @@
 
 {{define "breadcrumb"}}
     <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{.Jurisdiction.Title}}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{.RecordSet.Jurisdiction.Title}}</li>
 {{end}}
 
 {{define "content"}}
@@ -13,13 +13,13 @@
     </h1>
 
     <h3>
-        {{.Jurisdiction.Title}}
+        {{.RecordSet.Jurisdiction.Title}}
     </h3>
-    <p class="lead">{{.Jurisdiction.SubTitle}}</p>
+    <p class="lead">{{.RecordSet.Jurisdiction.SubTitle}}</p>
 
     <div class="card">
         <div class="card-header">
-            <form id="filter-form" method="get" action="/times/records/{{.Jurisdiction.ID}}">
+            <form id="filter-form" method="get" action="/times/records/{{.RecordSet.Jurisdiction.ID}}">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="mb-3">
@@ -100,7 +100,7 @@
             </tfoot>
         </table>
         <div class="card-footer text-end">
-            Source: <a href="{{.Source.Link}}" target="_blank" rel="noopener noreferrer">{{.Source.Title}}</a>
+            Source: <a href="{{.RecordSet.Source.Link}}" target="_blank" rel="noopener noreferrer">{{.RecordSet.Source.Title}}</a>
         </div>
     </div>
 

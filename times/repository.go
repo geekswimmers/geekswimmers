@@ -53,7 +53,7 @@ func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, erro
 func findRecordsByDefinition(definition RecordDefinition, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
 				rs.id, coalesce(rs.source_title, ''), coalesce(rs.source_link, ''),
-				j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+				coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet
 			from record r
                 join record_set rs on rs.id = r.record_set
                 left join jurisdiction j on j.id = rs.jurisdiction
@@ -74,6 +74,9 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
 		}
+		record.RecordSet.Jurisdiction.SetTitle()
+		record.RecordSet.Jurisdiction.SetSubTitle()
+
 		records = append(records, record)
 	}
 
@@ -81,8 +84,8 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 }
 
 func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(j.id, 0), coalesce(j.country, ''),
-	            coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, ''),
+	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
+	            coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet,
 				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
@@ -116,52 +119,50 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByExample: %v", err)
 		}
+		record.RecordSet.Jurisdiction.SetTitle()
+		record.RecordSet.Jurisdiction.SetSubTitle()
+
 		records = append(records, record)
 	}
 
 	return records, nil
 }
 
-func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefinition, db storage.Database) ([]*Record, error) {
+func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db storage.Database) ([]*Record, error) {
 	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 			from record r
                 join record_definition rd on rd.id = r.definition
 				join record_set rs on rs.id = r.record_set
 				join swim_style ss on ss.stroke = rd.style
-                left join jurisdiction j on j.id = rs.jurisdiction
-            where j.id = $1 and
+            where rs.id = $1 and
 				((rd.min_age is null and rd.max_age >= $2) or
 				(rd.min_age <= $2 and rd.max_age is null) or
 				(rd.min_age <= $2 and rd.max_age >= $2)) and
                 rd.gender = $3 and
                 rd.course = $4
             order by ss.sequence asc, rd.distance asc`
-	rows, err := db.Query(context.Background(), sql, jurisdiction.ID, example.Age, example.Gender, example.Course)
+	rows, err := db.Query(context.Background(), sql, recordSet.ID, example.Age, example.Gender, example.Course)
 	if err != nil {
-		return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
+		return nil, fmt.Errorf("findRecordsByRecordSet: %v", err)
 	}
 	defer rows.Close()
 
 	var records []*Record
 	for rows.Next() {
-		rs := RecordSet{
-			Jurisdiction: jurisdiction,
-		}
-
 		record := &Record{
 			Definition: RecordDefinition{
 				Age:    example.Age,
 				Gender: example.Gender,
 				Course: example.Course,
 			},
-			RecordSet: rs,
+			RecordSet: recordSet,
 		}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
 			&record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
 			&record.Definition.Style, &record.Definition.Distance, &record.Definition.Sequence)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findRecordsByJurisdiction: %v", err)
+			return nil, fmt.Errorf("findRecordsByRecordSet: %v", err)
 		}
 		records = append(records, record)
 	}
@@ -169,15 +170,14 @@ func findRecordsByJurisdiction(jurisdiction Jurisdiction, example RecordDefiniti
 	return records, nil
 }
 
-func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*RecordDefinition, error) {
+func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDefinition, error) {
 	sql := `select distinct rd.min_age, rd.max_age
 			from record_definition rd
 				join record r on r.definition = rd.id
-				join record_set rs on rs.id = r.record_set
-			where rs.jurisdiction = $1
+			where r.record_set = $1
 			order by rd.max_age, rd.min_age`
 
-	rows, err := db.Query(context.Background(), sql, jurisdiction.ID)
+	rows, err := db.Query(context.Background(), sql, recordSet.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsAgeRanges: %v", err)
 	}
@@ -195,6 +195,54 @@ func findRecordsAgeRanges(jurisdiction Jurisdiction, db storage.Database) ([]*Re
 	}
 
 	return definitions, nil
+}
+
+func findRecordSets(db storage.Database) ([]*RecordSet, error) {
+	stmt := `select rs.id, rs.jurisdiction,
+	                j.country, j.province, j.region, j.city, j.club, j.meet
+			 from record_set rs
+				join jurisdiction j on j.id = rs.jurisdiction
+			 order by j.country, j.province, j.region, j.city, j.club, j.meet`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordSets: %v", err)
+	}
+	defer rows.Close()
+
+	var recordSets []*RecordSet
+	for rows.Next() {
+		recordSet := &RecordSet{}
+		err = rows.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Jurisdiction.Country,
+			&recordSet.Jurisdiction.Province, &recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City,
+			&recordSet.Jurisdiction.Club, &recordSet.Jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordSets: %v", err)
+		}
+		recordSet.Jurisdiction.SetTitle()
+		recordSet.Jurisdiction.SetSubTitle()
+
+		recordSets = append(recordSets, recordSet)
+	}
+
+	return recordSets, nil
+}
+
+func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
+	stmt := `select rs.jurisdiction, j.country, j.province, j.region, j.city, j.club, j.meet
+			 from record_set rs
+				join jurisdiction j on j.id = rs.jurisdiction
+			 where rs.id = $1`
+	row := db.QueryRow(context.Background(), stmt, id)
+
+	recordSet := &RecordSet{
+		ID: id,
+	}
+	if err := row.Scan(&recordSet.Jurisdiction.ID, &recordSet.Jurisdiction.Country, &recordSet.Jurisdiction.Province,
+		&recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Club, &recordSet.Jurisdiction.Meet); err != nil {
+		return nil, fmt.Errorf("findRecordSet: %v", err)
+	}
+
+	return recordSet, nil
 }
 
 func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
@@ -260,7 +308,7 @@ func findLatestTimeStandard(previousId int64, db storage.Database) (*TimeStandar
 }
 
 func findJurisdictions(db storage.Database) ([]*Jurisdiction, error) {
-	stmt := `select j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+	stmt := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
 	         from jurisdiction j
 			 order by country, province, region, city, club, meet`
 	rows, err := db.Query(context.Background(), stmt)
@@ -276,7 +324,7 @@ func findJurisdictions(db storage.Database) ([]*Jurisdiction, error) {
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findJurisdictions: %v", err)
 		}
-		jurisdiction.SetTitle(0)
+		jurisdiction.SetTitle()
 		jurisdiction.SetSubTitle()
 		jurisdictions = append(jurisdictions, jurisdiction)
 	}
@@ -285,7 +333,7 @@ func findJurisdictions(db storage.Database) ([]*Jurisdiction, error) {
 }
 
 func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
-	sql := `select j.id, coalesce(j.country, ''), coalesce(j.province, ''), coalesce(j.region, ''), coalesce(j.city, ''), coalesce(j.club, ''), coalesce(j.meet, '')
+	sql := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
 			from jurisdiction j
 			where j.id = $1`
 
@@ -297,6 +345,8 @@ func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
 	if err := row.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet); err != nil {
 		return nil, fmt.Errorf("findJurisdiction: %v", err)
 	}
+	jurisdiction.SetTitle()
+	jurisdiction.SetSubTitle()
 
 	return jurisdiction, nil
 }

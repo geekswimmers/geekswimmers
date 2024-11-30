@@ -45,9 +45,9 @@ type webContext struct {
 	AgeRanges          []*RecordDefinition
 	StandardTimes      []*StandardTime
 	Records            []Record
-	Jurisdiction       *Jurisdiction
-	Jurisdictions      []*Jurisdiction
 	RecordDefinition   RecordDefinition
+	RecordSet          *RecordSet
+	RecordSets         []*RecordSet
 	Source             Source
 
 	SwimSeason    *SwimSeason
@@ -147,9 +147,6 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	groupedRecords := groupRecordsByJurisdiction(records)
 
 	for i, record := range groupedRecords {
-		record.RecordSet.Jurisdiction.SetTitle(record.Definition.Age)
-		record.RecordSet.Jurisdiction.SetSubTitle()
-
 		record.Difference = swimmerTime - record.Time
 
 		if swimmerTime <= record.Time {
@@ -306,14 +303,14 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 }
 
 func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.Request) {
-	jurisdictions, err := findJurisdictions(sc.DB)
+	recordSets, err := findRecordSets(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
 	ctx := &webContext{
-		Jurisdictions:       jurisdictions,
+		RecordSets:          recordSets,
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -331,16 +328,16 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	jurisdiction, err := findJurisdiction(id, rc.DB)
-	if err != nil || jurisdiction == nil {
-		log.Printf("times.%v (%d)", err, id)
+	recordSetId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	recordSet, err := findRecordSet(recordSetId, rc.DB)
+	if err != nil || recordSet == nil {
+		log.Printf("times.%v (%d)", err, recordSetId)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
 
 	var ageRanges []*RecordDefinition
-	ageRanges, err = findRecordsAgeRanges(*jurisdiction, rc.DB)
+	ageRanges, err = findRecordsAgeRanges(*recordSet, rc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
@@ -372,9 +369,6 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	ctx.AgeRange = ageParam
 	ctx.AgeRanges = ageRanges
 
-	jurisdiction.SetTitle(age)
-	jurisdiction.SetSubTitle()
-
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
 		gender = GenderFemale
@@ -389,7 +383,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		Gender: gender,
 		Course: course,
 	}
-	records, err := findRecordsByJurisdiction(*jurisdiction, definition, rc.DB)
+	records, err := findRecordsByRecordSet(*recordSet, definition, rc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -399,13 +393,9 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	ctx.Age = age
 	ctx.Gender = gender
 	ctx.Course = course
-	ctx.Jurisdiction = jurisdiction
+	ctx.RecordSet = recordSet
 	ctx.RecordDefinition = definition
 	ctx.Records = groupedRecords
-
-	if len(records) > 0 {
-		ctx.Source = records[0].RecordSet.Source
-	}
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":             utils.Title,
@@ -451,11 +441,7 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 
 	if len(records) > 0 {
 		ctx.RecordSet = records[0].RecordSet
-
-		jur := records[0].RecordSet.Jurisdiction
-		jur.SetTitle(0)
-		jur.SetSubTitle()
-		ctx.Jurisdiction = jur
+		ctx.Jurisdiction = records[0].RecordSet.Jurisdiction
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{
