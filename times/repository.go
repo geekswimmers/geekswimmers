@@ -307,50 +307,6 @@ func findLatestTimeStandard(previousId int64, db storage.Database) (*TimeStandar
 	return timeStandard, nil
 }
 
-func findJurisdictions(db storage.Database) ([]*Jurisdiction, error) {
-	stmt := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
-	         from jurisdiction j
-			 order by country, province, region, city, club, meet`
-	rows, err := db.Query(context.Background(), stmt)
-	if err != nil {
-		return nil, fmt.Errorf("findJurisdictions: %v", err)
-	}
-	defer rows.Close()
-
-	var jurisdictions []*Jurisdiction
-	for rows.Next() {
-		jurisdiction := &Jurisdiction{}
-		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findJurisdictions: %v", err)
-		}
-		jurisdiction.SetTitle()
-		jurisdiction.SetSubTitle()
-		jurisdictions = append(jurisdictions, jurisdiction)
-	}
-
-	return jurisdictions, nil
-}
-
-func findJurisdiction(id int64, db storage.Database) (*Jurisdiction, error) {
-	sql := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
-			from jurisdiction j
-			where j.id = $1`
-
-	row := db.QueryRow(context.Background(), sql, id)
-
-	jurisdiction := &Jurisdiction{
-		ID: id,
-	}
-	if err := row.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet); err != nil {
-		return nil, fmt.Errorf("findJurisdiction: %v", err)
-	}
-	jurisdiction.SetTitle()
-	jurisdiction.SetSubTitle()
-
-	return jurisdiction, nil
-}
-
 func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
 	var rows pgx.Rows
 	var err error
