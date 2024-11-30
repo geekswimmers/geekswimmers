@@ -241,6 +241,8 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 		&recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Club, &recordSet.Jurisdiction.Meet); err != nil {
 		return nil, fmt.Errorf("findRecordSet: %v", err)
 	}
+	recordSet.Jurisdiction.SetTitle()
+	recordSet.Jurisdiction.SetSubTitle()
 
 	return recordSet, nil
 }
