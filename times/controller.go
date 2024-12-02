@@ -59,56 +59,43 @@ type webContext struct {
 }
 
 func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
+	// Put all the fields in the session cookie
+	fields := []string{"jurisdiction", "birthDate", "gender", "course", "event", "minute", "second", "millisecond"}
+	for _, field := range fields {
+		if err := storage.AddSessionEntry(res, req, "profile", field, req.URL.Query().Get(field)); err != nil {
+			log.Printf("storage.%v", err)
+		}
+	}
+
+	jurisdiction := req.URL.Query().Get("jurisdiction")
 	birthDate, _ := time.Parse("2006-01-02", req.URL.Query().Get("birthDate"))
 	gender := req.URL.Query().Get("gender")
 	course := req.URL.Query().Get("course")
 	event := strings.Split(req.URL.Query().Get("event"), "-")
-
 	minute, _ := strconv.Atoi(req.URL.Query().Get("minute"))
 	second, _ := strconv.Atoi(req.URL.Query().Get("second"))
 	millisecond, _ := strconv.Atoi(req.URL.Query().Get("millisecond"))
 	swimmerTime := utils.ToMiliseconds(minute, second, millisecond)
+
+	// Separate the event into distance and stroke
+	distance, _ := strconv.ParseInt(event[0], 10, 64)
+	stroke := event[1]
+
+	jurisdictionId, err := strconv.Atoi(jurisdiction)
+	if err != nil {
+		jurisdictionId = 0
+	}
+	meets, err := findChampionshipMeets(jurisdictionId, bc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
 
 	swimmer := &Swimmer{
 		BirthDate: birthDate,
 		Gender:    gender,
 	}
 
-	if err := storage.AddSessionEntry(res, req, "profile", "jurisdiction", req.URL.Query().Get("jurisdiction")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.URL.Query().Get("birthDate")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.URL.Query().Get("gender")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "course", req.URL.Query().Get("course")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "event", req.URL.Query().Get("event")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "minute", req.URL.Query().Get("minute")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "second", req.URL.Query().Get("second")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-	if err := storage.AddSessionEntry(res, req, "profile", "millisecond", req.URL.Query().Get("millisecond")); err != nil {
-		log.Printf("storage.%v", err)
-	}
-
-	// Separate the event into distance and stroke
-	distance, _ := strconv.ParseInt(event[0], 10, 64)
-	stroke := event[1]
-
 	var foundMeets []*Meet
-	meets, err := findChampionshipMeets(bc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
-	}
-
 	for _, meet := range meets {
 		meet.Age = swimmer.AgeAt(meet.AgeDate)
 		searchAge := meet.Age

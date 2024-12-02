@@ -500,19 +500,21 @@ func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 	return minAge, maxAge, nil
 }
 
-func findChampionshipMeets(db storage.Database) ([]*Meet, error) {
+func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, error) {
 	stmt := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
 	                ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			 from meet m
 			    join swim_season ss on ss.id = m.season
 			    join time_standard ts on ts.id = m.time_standard
-			 where ss.start_date <= now() and ss.end_date >= now()
+				join jurisdiction j on j.id = ts.jurisdiction
+			 where (j.id = $1 or j.region is null)
+			    and ss.start_date <= now() and ss.end_date >= now()
 			 	and m.end_date >= now()
 			 	and m.time_standard is not null
 				and m.age_date is not null
 				and ts.benchmark = true
 			 order by m.age_date`
-	rows, err := db.Query(context.Background(), stmt)
+	rows, err := db.Query(context.Background(), stmt, jurisdictionId)
 	if err != nil {
 		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
 	}
