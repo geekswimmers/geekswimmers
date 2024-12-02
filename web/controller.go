@@ -3,6 +3,8 @@ package web
 import (
 	"geekswimmers/content"
 	"geekswimmers/storage"
+	"geekswimmers/swimming"
+	"geekswimmers/times"
 	"geekswimmers/utils"
 	"html/template"
 	"net/http"
@@ -15,23 +17,22 @@ type WebController struct {
 	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-type webContext struct {
-	Articles            []*content.Article
-	Updates             []*content.ServiceUpdate
-	BirthDate           string
-	Gender              string
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
-	QuoteOfTheDay       *content.Quote
-}
-
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
-	birthDate := storage.GetSessionEntryValue(req, "profile", "birthDate")
-	gender := storage.GetSessionEntryValue(req, "profile", "gender")
-
 	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
 		log.Printf("home.quoteOfTheDay.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	jurisdictions, err := times.FindJurisdictionsByLevel(times.JurisdictionLevelRegion, wc.DB)
+	if err != nil {
+		log.Printf("home.jurisdictions.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	events, err := swimming.FindEvents(wc.DB)
+	if err != nil {
+		log.Printf("home.events.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -47,17 +48,28 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
+	ctx := &HomeViewContext{
+		QuoteOfTheDay:       quoteOfTheDay,
 		Articles:            articles,
 		Updates:             updates,
-		QuoteOfTheDay:       quoteOfTheDay,
-		BirthDate:           birthDate,
-		Gender:              gender,
+		Jurisdictions:       jurisdictions,
+		Events:              events,
+		Jurisdiction:        storage.GetSessionEntryValue(req, "profile", "jurisdiction"),
+		BirthDate:           storage.GetSessionEntryValue(req, "profile", "birthDate"),
+		Gender:              storage.GetSessionEntryValue(req, "profile", "gender"),
+		Course:              storage.GetSessionEntryValue(req, "profile", "course"),
+		Event:               storage.GetSessionEntryValue(req, "profile", "event"),
+		Minute:              storage.GetSessionEntryValue(req, "profile", "minute"),
+		Second:              storage.GetSessionEntryValue(req, "profile", "second"),
+		Millisecond:         storage.GetSessionEntryValue(req, "profile", "millisecond"),
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{"markdown": utils.ToHTML})
+	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{
+		"Title":    utils.Title,
+		"markdown": utils.ToHTML,
+	})
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("web.HomeView: %v", err)
@@ -83,7 +95,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
+	ctx := &SitemapViewContext{
 		Articles:        articles,
 		AcceptedCookies: storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -100,7 +112,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 }
 
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
-	ctx := &webContext{
+	ctx := &NotFoundViewContext{
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     true,
 	}

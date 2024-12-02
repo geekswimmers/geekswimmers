@@ -13,3 +13,8 @@ type Instruction struct {
 	Instruction string
 	Sequence    int64
 }
+
+type Event struct {
+	Distance int64
+	Stroke   string
+}

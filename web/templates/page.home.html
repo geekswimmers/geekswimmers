@@ -32,6 +32,17 @@
                     <form id="benthmark-form" method="get" action="/times/benchmark">
                         <div class="row">
                             <div class="mb-3">
+                                <label for="jurisdiction" class="form-label">Region</label>
+                                <select id="jurisdiction" name="jurisdiction" class="form-select" required>
+                                    <option value="">Select...</option>
+                                    {{range .Jurisdictions}}
+                                        {{$id := printf "%d" .ID}}
+                                        <option value="{{.ID}}" {{if eq $id $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
                                 <label for="birthDate" class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
                                 <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at the date specified by each championship.</small>
@@ -59,11 +70,11 @@
                             <div class="mb-3">
                                 <label for="course">Course</label><br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" required>
+                                    <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" {{if eq .Course "LONG"}}checked{{end}} required>
                                     <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" required>
+                                    <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" {{if eq .Course "SHORT"}}checked{{end}} required>
                                     <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
                                 </div>
                             </div>
@@ -72,22 +83,10 @@
                                 <label for="event">Event</label>
                                 <select id="event" name="event" class="form-select" required>
                                     <option value="">Select...</option>
-                                    <option value="50-FREESTYLE">50m Free</option>
-                                    <option value="100-FREESTYLE">100m Free</option>
-                                    <option value="200-FREESTYLE">200m Free</option>
-                                    <option value="400-FREESTYLE">400m Free</option>
-                                    <option value="800-FREESTYLE">800m Free</option>
-                                    <option value="1500-FREESTYLE">1500m Free</option>
-                                    <option value="100-BACKSTROKE">100m Backstroke</option>
-                                    <option value="200-BACKSTROKE">200m Backstroke</option>
-                                    <option value="100-BREASTSTROKE">100m Breaststroke</option>
-                                    <option value="200-BREASTSTROKE">200m Breaststroke</option>
-                                    <option value="50-BUTTERFLY">50m Butterfly</option>
-                                    <option value="100-BUTTERFLY">100m Butterfly</option>
-                                    <option value="200-BUTTERFLY">200m Butterfly</option>
-                                    <option value="100-MEDLEY">100m Individual Medley</option>
-                                    <option value="200-MEDLEY">200m Individual Medley</option>
-                                    <option value="400-MEDLEY">400m Individual Medley</option>
+                                    {{range .Events}}
+                                        {{$eventValue := printf "%d-%s" .Distance .Stroke}}
+                                        <option value="{{$eventValue}}" {{if eq $eventValue $.Event}}selected{{end}}>{{.Distance}}m {{.Stroke | Title}}</option>
+                                    {{end}}
                                 </select>
                             </div>
 
@@ -96,15 +95,15 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="minute">Minutes</label><br>
-                                        <input type="number" class="form-control" id="minute" name="minute" min="0" max="59" size="3" required>
+                                        <input type="number" class="form-control" id="minute" name="minute" min="0" max="59" size="3" value="{{.Minute}}" required>
                                     </div>
                                     <div class="col">
                                         <label for="second">Seconds</label><br>
-                                        <input type="number" class="form-control" id="second" name="second" min="0" max="59" size="3" required>
+                                        <input type="number" class="form-control" id="second" name="second" min="0" max="59" size="3" value="{{.Second}}" required>
                                     </div>
                                     <div class="col">
-                                        <label for="milisecond">Miliseconds</label><br>
-                                        <input type="number" class="form-control" id="milisecond" name="milisecond" min="0" max="99" size="3" required>
+                                        <label for="millisecond">Milliseconds</label><br>
+                                        <input type="number" class="form-control" id="millisecond" name="millisecond" min="0" max="99" size="3" value="{{.Millisecond}}" required>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +121,7 @@
                 </div>
             </div>
             <br>
-            
+
             {{range .Articles}}
                 <div class="card">
                     {{if .Image}}

@@ -10,9 +10,9 @@ func groupRecordsByJurisdiction(records []*Record) []Record {
 	grouping := make(map[any]*Record)
 
 	for _, record := range records {
-		key := fmt.Sprintf("%s-%s-%s-%s-%s-%s",
-			record.RecordSet.Jurisdiction.Country, *record.RecordSet.Jurisdiction.Province, *record.RecordSet.Jurisdiction.Region,
-			*record.RecordSet.Jurisdiction.City, *record.RecordSet.Jurisdiction.Club, *record.RecordSet.Jurisdiction.Meet)
+		key := fmt.Sprintf("%s-%s",
+			record.RecordSet.Jurisdiction.SubTitle,
+			record.RecordSet.Jurisdiction.Title)
 		groupDuplicates(grouping, record, key)
 	}
 

@@ -66,18 +66,36 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	minute, _ := strconv.Atoi(req.URL.Query().Get("minute"))
 	second, _ := strconv.Atoi(req.URL.Query().Get("second"))
-	milisecond, _ := strconv.Atoi(req.URL.Query().Get("milisecond"))
-	swimmerTime := utils.ToMiliseconds(minute, second, milisecond)
+	millisecond, _ := strconv.Atoi(req.URL.Query().Get("millisecond"))
+	swimmerTime := utils.ToMiliseconds(minute, second, millisecond)
 
 	swimmer := &Swimmer{
 		BirthDate: birthDate,
 		Gender:    gender,
 	}
 
+	if err := storage.AddSessionEntry(res, req, "profile", "jurisdiction", req.URL.Query().Get("jurisdiction")); err != nil {
+		log.Printf("storage.%v", err)
+	}
 	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", req.URL.Query().Get("birthDate")); err != nil {
 		log.Printf("storage.%v", err)
 	}
 	if err := storage.AddSessionEntry(res, req, "profile", "gender", req.URL.Query().Get("gender")); err != nil {
+		log.Printf("storage.%v", err)
+	}
+	if err := storage.AddSessionEntry(res, req, "profile", "course", req.URL.Query().Get("course")); err != nil {
+		log.Printf("storage.%v", err)
+	}
+	if err := storage.AddSessionEntry(res, req, "profile", "event", req.URL.Query().Get("event")); err != nil {
+		log.Printf("storage.%v", err)
+	}
+	if err := storage.AddSessionEntry(res, req, "profile", "minute", req.URL.Query().Get("minute")); err != nil {
+		log.Printf("storage.%v", err)
+	}
+	if err := storage.AddSessionEntry(res, req, "profile", "second", req.URL.Query().Get("second")); err != nil {
+		log.Printf("storage.%v", err)
+	}
+	if err := storage.AddSessionEntry(res, req, "profile", "millisecond", req.URL.Query().Get("millisecond")); err != nil {
 		log.Printf("storage.%v", err)
 	}
 
@@ -164,7 +182,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	ctx := &webContext{
 		Meets:               foundMeets,
 		Records:             groupedRecords,
-		FormatedTime:        utils.FormatTime(minute, second, milisecond),
+		FormatedTime:        utils.FormatTime(minute, second, millisecond),
 		Distance:            distance,
 		Course:              course,
 		Style:               stroke,

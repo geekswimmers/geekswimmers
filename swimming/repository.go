@@ -47,6 +47,30 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 	return style, nil
 }
 
+func FindEvents(db storage.Database) ([]*Event, error) {
+	stmt := `select ssd.distance , ss.stroke 
+			 from swim_style_distance ssd 
+				join swim_style ss on ssd.style = ss.id
+			 order by ss.sequence`
+	rows, err := db.Query(context.Background(), stmt)
+	if err != nil {
+		return nil, fmt.Errorf("findEvents: %v", err)
+	}
+	defer rows.Close()
+
+	var events []*Event
+	for rows.Next() {
+		event := &Event{}
+		err = rows.Scan(&event.Distance, &event.Stroke)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findEvents: %v", err)
+		}
+		events = append(events, event)
+	}
+
+	return events, nil
+}
+
 func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
 	sql := `select id, stroke
 			from swim_style
