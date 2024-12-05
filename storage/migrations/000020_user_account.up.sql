@@ -2,14 +2,14 @@ create table if not exists user_account (
     id                serial       primary key,
     first_name        varchar(50)  not null,
     last_name         varchar(50)  not null,
-    gender            varchar(2)       null,
+    gender            varchar(10)      null,
     birth_date        date             null,
     confirmation      varchar(255)     null,
     human_score       numeric(3,2)     null,
     email             varchar(100)     null,
     username          varchar(30)      null,
     password          varchar(100)     null,
-    notification      boolean      not null default true,
+    promotional_msg   boolean      not null default true,
     sign_off          timestamp        null,
     sign_off_feedback text             null,
     created           timestamp    not null current_timestamp,
@@ -21,15 +21,16 @@ create index idx_user_confirmation on user_account (confirmation);
 create table if not exists user_role (
     id           serial      primary key,
     user_account integer     not null references user_account(id),
-    role         varchar(20) not null default 'PARENT', -- ATHLETE, COACH, OFFICIAL
+    role         varchar(20) not null default 'PARENT'
 );
 
 create index udx_user_role on user_role (user_account, role);
 
 create table if not exists family (
-    id     serial   primary key,
-    member integer     not null references user_account(id),
-    main   boolean     not null default false
+    id     serial       primary key,
+    member integer      not null references user_account(id),
+    main   boolean      not null default false,
+    name   varchar(100)     null
 );
 
 create table if not exists email_message_sent (
