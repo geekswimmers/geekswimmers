@@ -12,8 +12,8 @@ create table if not exists user_account (
     promotional_msg   boolean      not null default true,
     sign_off          timestamp        null,
     sign_off_feedback text             null,
-    created           timestamp    not null current_timestamp,
-    modified          timestamp    not null current_timestamp
+    created           timestamp    not null default current_timestamp,
+    modified          timestamp    not null default current_timestamp
 );
 
 create index idx_user_confirmation on user_account (confirmation);
@@ -39,7 +39,7 @@ create table if not exists email_message_sent (
     subject   varchar(200) not null,
     body      text         not null,
     username  varchar(30)      null,
-    sent      timestamp        null default current_timestamp
+    sent      timestamp    not null default current_timestamp
 );
 
 create table if not exists sign_in_attempt (
