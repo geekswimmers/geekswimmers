@@ -35,6 +35,9 @@ type UserAccount struct {
 	SignOff         *time.Time
 	SignOffFeedback *string
 	PromotionalMsg  bool
+
+	// Transient
+	Roles []*UserRole
 }
 
 type UserRole struct {
