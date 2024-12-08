@@ -6,6 +6,7 @@ import (
 	"geekswimmers/storage"
 	"geekswimmers/swimming"
 	"geekswimmers/times"
+	"geekswimmers/user"
 	"geekswimmers/utils"
 	"geekswimmers/web"
 	"net/http"
@@ -40,6 +41,11 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 }
 
 func (s *Server) Routes(btc utils.BaseTemplateContext) {
+	userController := &user.UserController{
+		DB:                  s.DB,
+		BaseTemplateContext: &btc,
+	}
+
 	webController := &web.WebController{
 		DB:                  s.DB,
 		BaseTemplateContext: &btc,
@@ -74,6 +80,18 @@ func (s *Server) Routes(btc utils.BaseTemplateContext) {
 	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
+
+	s.Router.Get("/signup/", http.HandlerFunc(userController.SignUpView))
+	s.Router.Post("/signup/", s.handleRequest(userController.SignUp))
+
+	s.Router.Get("/auth/confirm/:confirmation", s.handleRequest(userController.PasswordView))
+	s.Router.Get("/auth/password/reset/", http.HandlerFunc(userController.ResetPasswordView))
+	s.Router.Post("/auth/password/reset/", s.handleRequest(userController.ResetPassword))
+	s.Router.Post("/auth/password/", s.handleRequest(userController.SetNewPassword))
+
+	s.Router.Get("/auth/signout/", http.HandlerFunc(userController.SignOut))
+	s.Router.Get("/auth/signin/", http.HandlerFunc(userController.SignInView))
+	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
