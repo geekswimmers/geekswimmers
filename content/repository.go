@@ -8,11 +8,11 @@ import (
 )
 
 func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
-	stmt := `select a.reference, a.title, a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
-			 from article a
-			 where a.highlighted = true
-			 order by a.published desc`
-	rows, err := db.Query(context.Background(), stmt)
+	sql := `select a.reference, a.title, a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+			from article a
+			where a.highlighted = true
+			order by a.published desc`
+	rows, err := db.Query(context.Background(), sql)
 	if err != nil {
 		return nil, err
 	}
@@ -34,11 +34,11 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 }
 
 func FindArticlesExcept(reference string, db storage.Database) ([]*Article, error) {
-	stmt := `select a.reference, a.title, coalesce(a.sub_title, ''), a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
-			 from article a
-			 where a.reference != $1
-			 order by a.published desc`
-	rows, err := db.Query(context.Background(), stmt, reference)
+	sql := `select a.reference, a.title, coalesce(a.sub_title, ''), a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+			from article a
+			where a.reference != $1
+			order by a.published desc`
+	rows, err := db.Query(context.Background(), sql, reference)
 	if err != nil {
 		return nil, err
 	}
@@ -60,11 +60,11 @@ func FindArticlesExcept(reference string, db storage.Database) ([]*Article, erro
 }
 
 func getArticle(reference string, db storage.Database) (*Article, error) {
-	stmt := `select a.reference, a.title, a.abstract, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+	sql := `select a.reference, a.title, a.abstract, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			 from article a
 			 where a.reference = $1`
 
-	row := db.QueryRow(context.Background(), stmt, reference)
+	row := db.QueryRow(context.Background(), sql, reference)
 
 	article := &Article{}
 	err := row.Scan(&article.Reference, &article.Title, &article.Abstract, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
@@ -89,8 +89,8 @@ func loadContent(filePath string) (string, error) {
 }
 
 func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
-	stmt := `select count(seq) from quote`
-	row := db.QueryRow(context.Background(), stmt)
+	sql := `select count(seq) from quote`
+	row := db.QueryRow(context.Background(), sql)
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
@@ -98,12 +98,12 @@ func GetQuoteOfTheDay(dayOfYear int, db storage.Database) (*Quote, error) {
 	}
 
 	if count > 0 {
-		stmt = `select seq, quote, coalesce(author, '')
+		sql = `select seq, quote, coalesce(author, '')
 				from quote q
 				where q.seq = $1`
 
 		seq := getQuoteSequence(dayOfYear, count)
-		row = db.QueryRow(context.Background(), stmt, seq)
+		row = db.QueryRow(context.Background(), sql, seq)
 
 		quote := &Quote{}
 		err = row.Scan(&quote.Sequence, &quote.Quote, &quote.Author)
@@ -127,11 +127,11 @@ func getQuoteSequence(dayOfYear, count int) int {
 }
 
 func FindUpdates(db storage.Database) ([]*ServiceUpdate, error) {
-	stmt := `select su.title, su.content, su.published
-			 from service_update su
-			 order by su.published desc
-			 limit 5`
-	rows, err := db.Query(context.Background(), stmt)
+	sql := `select su.title, su.content, su.published
+			from service_update su
+			order by su.published desc
+			limit 5`
+	rows, err := db.Query(context.Background(), sql)
 	if err != nil {
 		return nil, err
 	}
