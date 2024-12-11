@@ -49,6 +49,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := &HomeViewContext{
+		Username:            storage.GetSessionEntryValue(req, "profile", "username"),
 		QuoteOfTheDay:       quoteOfTheDay,
 		Articles:            articles,
 		Updates:             updates,
@@ -70,6 +71,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		"Title":    utils.Title,
 		"markdown": utils.ToHTML,
 	})
+
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("web.HomeView: %v", err)

@@ -8,6 +8,7 @@ import (
 )
 
 type HomeViewContext struct {
+	Username            string
 	Articles            []*content.Article
 	Updates             []*content.ServiceUpdate
 	Jurisdictions       []*times.Jurisdiction
