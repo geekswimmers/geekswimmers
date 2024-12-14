@@ -1,6 +1,7 @@
 package user
 
 import (
+	"geekswimmers/utils"
 	"time"
 )
 
@@ -70,4 +71,53 @@ type SignInAttempt struct {
 	Status      string
 	IPAddress   string
 	FailedMatch string
+}
+
+type signUpViewData struct {
+	ReCaptchaSiteKey    string
+	BaseTemplateContext *utils.BaseTemplateContext
+}
+
+type signUpData struct {
+	Email               string
+	ErrorAgreed         string
+	ErrorEmail          string
+	ErrorUsername       string
+	UsernameSignUp      string
+	ReCaptchaSiteKey    string
+	BaseTemplateContext *utils.BaseTemplateContext
+	AcceptedCookies     bool
+}
+
+type passwordViewData struct {
+	Confirmation        string
+	Email               string
+	BaseTemplateContext *utils.BaseTemplateContext
+	AcceptedCookies     bool
+}
+
+type setNewPasswordData struct {
+	Confirmation        string
+	Email               string
+	Error               string
+	BaseTemplateContext *utils.BaseTemplateContext
+	AcceptedCookies     bool
+}
+
+type resetPasswordData struct {
+	Email               string
+	BaseTemplateContext *utils.BaseTemplateContext
+}
+
+type signInViewData struct {
+	ReCaptchaSiteKey    string
+	BaseTemplateContext *utils.BaseTemplateContext
+}
+
+type signInData struct {
+	Identifier          string
+	Error               string
+	ReCaptchaSiteKey    string
+	Lock                bool
+	BaseTemplateContext *utils.BaseTemplateContext
 }

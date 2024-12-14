@@ -28,36 +28,6 @@ type RecordsController struct {
 	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-type webContext struct {
-	Event        string
-	Distance     int64
-	Course       string
-	Style        string
-	Meets        []*Meet
-	FormatedTime string
-
-	Age                int64
-	AgeRange           string
-	Gender             string
-	TimeStandard       *TimeStandard
-	LatestTimeStandard *TimeStandard
-	Ages               []int64
-	AgeRanges          []*RecordDefinition
-	StandardTimes      []*StandardTime
-	Records            []Record
-	RecordDefinition   RecordDefinition
-	RecordSet          *RecordSet
-	RecordSets         []*RecordSet
-	Source             Source
-
-	SwimSeason    *SwimSeason
-	SwimSeasons   []*SwimSeason
-	TimeStandards []*TimeStandard
-
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
-}
-
 func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
 	// Put all the fields in the session cookie
 	fields := []string{"jurisdiction", "birthDate", "gender", "course", "event", "minute", "second", "millisecond"}
@@ -166,7 +136,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
 	})
 
-	ctx := &webContext{
+	ctx := &benchmaskTimeViewData{
 		Meets:               foundMeets,
 		Records:             groupedRecords,
 		FormatedTime:        utils.FormatTime(minute, second, millisecond),
@@ -212,7 +182,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
+	ctx := &timeStandardsViewData{
 		SwimSeason:          swimSeason,
 		SwimSeasons:         swimSeasons,
 		TimeStandards:       timeStandards,
@@ -228,7 +198,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 }
 
 func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
-	ctx := &webContext{
+	ctx := &timeStandardViewData{
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -314,7 +284,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &webContext{
+	ctx := &recordsListViewData{
 		RecordSets:          recordSets,
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
@@ -328,7 +298,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 }
 
 func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Request) {
-	ctx := &webContext{
+	ctx := &recordsViewData{
 		BaseTemplateContext: rc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -414,16 +384,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 }
 
 func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *http.Request) {
-	type wContext struct {
-		RecordDefinition    *RecordDefinition
-		RecordSet           RecordSet
-		Records             []*Record
-		Jurisdiction        Jurisdiction
-		BaseTemplateContext *utils.BaseTemplateContext
-		AcceptedCookies     bool
-	}
-
-	ctx := &wContext{
+	ctx := &recordHistoryViewData{
 		BaseTemplateContext: rc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -460,7 +421,7 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 }
 
 func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
-	ctx := &webContext{
+	ctx := &standardsEventViewData{
 		BaseTemplateContext: sc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}

@@ -1,6 +1,9 @@
 package content
 
-import "time"
+import (
+	"geekswimmers/utils"
+	"time"
+)
 
 type Article struct {
 	Reference      string
@@ -24,4 +27,11 @@ type ServiceUpdate struct {
 	Title     string
 	Content   string
 	Published time.Time
+}
+
+type articleViewData struct {
+	Article             *Article
+	OtherArticles       []*Article
+	BaseTemplateContext *utils.BaseTemplateContext
+	AcceptedCookies     bool
 }
