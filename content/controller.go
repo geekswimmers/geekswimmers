@@ -13,16 +13,8 @@ type ContentController struct {
 	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-type webContext struct {
-	Article       *Article
-	OtherArticles []*Article
-
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
-}
-
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
-	ctx := &webContext{
+	ctx := &articleViewData{
 		BaseTemplateContext: wc.BaseTemplateContext,
 	}
 

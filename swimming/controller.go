@@ -14,24 +14,13 @@ type MeetController struct {
 	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-type webContext struct {
-	Instructions  []*Instruction
-	Styles        []*Style
-	Style         *Style
-	PreviousStyle *Style
-	NextStyle     *Style
-
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
-}
-
 func (mc *MeetController) SwimStylesView(res http.ResponseWriter, req *http.Request) {
 	styles, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
-	ctx := &webContext{
+	ctx := &swimStylesViewData{
 		Styles:              styles,
 		BaseTemplateContext: mc.BaseTemplateContext,
 		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
@@ -71,7 +60,7 @@ func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Reque
 		log.Printf("meets.%v", err)
 	}
 
-	ctx := &webContext{
+	ctx := &swimStyleViewData{
 		Style:               style,
 		PreviousStyle:       previousStyle,
 		NextStyle:           nextStyle,

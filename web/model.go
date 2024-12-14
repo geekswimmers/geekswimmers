@@ -7,7 +7,7 @@ import (
 	"geekswimmers/utils"
 )
 
-type HomeViewContext struct {
+type homeViewData struct {
 	Username            string
 	Articles            []*content.Article
 	Updates             []*content.ServiceUpdate
@@ -26,12 +26,12 @@ type HomeViewContext struct {
 	QuoteOfTheDay       *content.Quote
 }
 
-type SitemapViewContext struct {
+type sitemapViewData struct {
 	Articles        []*content.Article
 	AcceptedCookies bool
 }
 
-type NotFoundViewContext struct {
+type notFoundViewData struct {
 	BaseTemplateContext *utils.BaseTemplateContext
 	AcceptedCookies     bool
 }

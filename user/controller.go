@@ -21,44 +21,24 @@ import (
 
 var usernameRegex = regexp.MustCompile("^[a-zA-Z0-9]{2,30}$")
 
-// Context used by the handler to send data to templates.
-type webContext struct {
-	ReCaptchaSiteKey string
-	Confirmation     string
-	Email            string
-	Identifier       string
-	Username         string
-	UsernameSignUp   string
-	Lock             bool
-
-	Error         string
-	ErrorUsername string
-	ErrorEmail    string
-	ErrorAgreed   string
-}
-
 type UserController struct {
 	DB                  storage.Database
 	BaseTemplateContext *utils.BaseTemplateContext
 }
 
-// SignUpView is the http handler for '/signup/'. It populates the sign up form
-// with the reCaptcha site key.
-// get: /signup/
 func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 
 	html := utils.GetTemplate("base", "signup")
-	err := html.Execute(res, &webContext{ReCaptchaSiteKey: reCaptchaSiteKey})
+	err := html.Execute(res, &signUpViewData{
+		ReCaptchaSiteKey:    reCaptchaSiteKey,
+		BaseTemplateContext: uc.BaseTemplateContext,
+	})
 	if err != nil {
 		log.Print(err)
 	}
 }
 
-// SignUp is the http handler for '/signup/new/'. It gets data from the signup
-// form, creates a new user in the database, and sends an email to the user
-// with a link to confirm the email address.
-// post: /signup/
 func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
@@ -66,7 +46,8 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	var html *template.Template
-	context := &webContext{}
+	context := &signUpData{}
+	context.BaseTemplateContext = uc.BaseTemplateContext
 
 	// Validates username
 	context.UsernameSignUp = strings.TrimSpace(req.PostForm.Get("username"))
@@ -158,8 +139,6 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// PasswordView
-// get: /auth/confirm/:confirmation
 func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Request) {
 	confirmation := req.URL.Query().Get(":confirmation")
 	userAccount := FindUserAccountByConfirmation(confirmation, "", uc.DB)
@@ -167,7 +146,7 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 	if userAccount != nil {
 		html := utils.GetTemplate("base", "password")
 
-		err := html.Execute(res, &webContext{Email: userAccount.Email, Confirmation: confirmation})
+		err := html.Execute(res, &passwordViewData{Email: userAccount.Email, Confirmation: confirmation})
 		if err != nil {
 			log.Print(err)
 		}
@@ -176,8 +155,6 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 	}
 }
 
-// SetNewPassword
-// post: /auth/password/
 func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
@@ -192,7 +169,7 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	if userAccount == nil {
 		html := utils.GetTemplate("base", "password")
 
-		err = html.Execute(res, &webContext{Email: email, Confirmation: confirmation, Error: "Error setting a new password. User doesn't match."})
+		err = html.Execute(res, &setNewPasswordData{Email: email, Confirmation: confirmation, Error: "Error setting a new password. User doesn't match."})
 		if err != nil {
 			log.Print(err)
 		}
@@ -201,6 +178,9 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 
 	password := req.PostForm.Get("password")
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		log.Print(err)
+	}
 	userAccount.Password = hashedPassword
 	userAccount.Confirmation = &confirmation
 
@@ -215,8 +195,6 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 }
 
-// ResetPasswordView
-// get: /auth/password/reset/
 func (uc *UserController) ResetPasswordView(res http.ResponseWriter, req *http.Request) {
 	html := utils.GetTemplate("base", "password-reset")
 
@@ -226,8 +204,6 @@ func (uc *UserController) ResetPasswordView(res http.ResponseWriter, req *http.R
 	}
 }
 
-// ResetPassword
-// post: /auth/password/reset/
 func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
@@ -247,33 +223,35 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 				Confirmation: *userAccount.Confirmation,
 			})
 
-			go messaging.SendMessage(userAccount.Email, userAccount.Username, "Reset your password on followinsteps.com", body, uc.DB)
+			go messaging.SendMessage(userAccount.Email, userAccount.Username, "Reset your password on geekswimmers.com", body, uc.DB)
 		}
 	}
 
 	html := utils.GetTemplate("base", "password-reset-ok")
 
-	err = html.Execute(res, &webContext{Email: email})
+	err = html.Execute(res, &resetPasswordData{
+		Email:               email,
+		BaseTemplateContext: uc.BaseTemplateContext,
+	})
 	if err != nil {
 		log.Print(err)
 	}
 }
 
-// SignInView
-// get: /auth/signin/
 func (uc *UserController) SignInView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 
 	html := utils.GetTemplate("base", "signin")
 
-	err := html.Execute(res, &webContext{ReCaptchaSiteKey: reCaptchaSiteKey})
+	err := html.Execute(res, &signInViewData{
+		ReCaptchaSiteKey:    reCaptchaSiteKey,
+		BaseTemplateContext: uc.BaseTemplateContext,
+	})
 	if err != nil {
 		log.Print(err)
 	}
 }
 
-// SignIn
-// post: /auth/signin/
 func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
@@ -286,11 +264,11 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	reCaptcha := req.PostForm.Get("g-recaptcha-response")
 	humanScore := getReCaptchaScore(reCaptcha)
 
-	userAccount, signInAttempt := uc.Authenticate(identifier, password, utils.GetIP(req), humanScore)
+	userAccount, signInAttempt := uc.authenticate(identifier, password, utils.GetIP(req), humanScore)
 
 	if signInAttempt == nil {
 		html := utils.GetTemplateWithFunctions("base", "signin", template.FuncMap{"html": utils.ToHTML})
-		err = html.Execute(res, &webContext{
+		err = html.Execute(res, &signInData{
 			Identifier:       identifier,
 			Error:            "Too many attempts to sign in. Please, try again after an hour from now.",
 			ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
@@ -329,7 +307,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 			http.Redirect(res, req, "/to/"+userAccount.Username+"/", http.StatusSeeOther)
 		} else {
 			html := utils.GetTemplateWithFunctions("base", "signin", template.FuncMap{"html": utils.ToHTML})
-			err = html.Execute(res, &webContext{
+			err = html.Execute(res, &signInData{
 				Identifier:       identifier,
 				Error:            "Your credentials don't match. Did you <a href='/auth/password/reset/'>forget your password</a>?",
 				ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
@@ -343,7 +321,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		html := utils.GetTemplate("base", "signin")
 
 		log.Printf("Fail to login: %v", identifier)
-		err = html.Execute(res, &webContext{
+		err = html.Execute(res, &signInData{
 			Identifier:       identifier,
 			Error:            "Credentials don't match.",
 			ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
@@ -355,7 +333,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *UserController) Authenticate(identifier, password, ipAddress string, humanScore float32) (*UserAccount, *SignInAttempt) {
+func (uc *UserController) authenticate(identifier, password, ipAddress string, humanScore float32) (*UserAccount, *SignInAttempt) {
 	if TooManySignInAttempts(ipAddress, uc.DB) {
 		log.Printf("Too many sign in attempts made by: %v", identifier)
 		return nil, nil
@@ -410,8 +388,6 @@ func (uc *UserController) Authenticate(identifier, password, ipAddress string, h
 	return userAccount, &signInAttempt
 }
 
-// SignOut
-// get: /auth/signout/
 func (uc *UserController) SignOut(res http.ResponseWriter, req *http.Request) {
 	username := storage.GetSessionEntryValue(req, "profile", "username")
 	role := storage.GetSessionEntryValue(req, "profile", "role")
@@ -431,7 +407,6 @@ func (uc *UserController) SignOut(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
 
-/* Implements the reCaptcha verification service. */
 func getReCaptchaScore(reCaptchaResponse string) float32 {
 	reCaptchaSecretKey := config.GetConfiguration().GetString(config.RecaptchaSecretKey)
 	reqBody := url.Values{
@@ -469,8 +444,6 @@ func isUsernameValid(username string) bool {
 	return len(username) >= 2 && usernameRegex.MatchString(username)
 }
 
-// SaveEmailSettings
-// put: /to/:username/email
 func (uc *UserController) SaveEmailSettings(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {

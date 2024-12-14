@@ -48,7 +48,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &HomeViewContext{
+	ctx := &homeViewData{
 		Username:            storage.GetSessionEntryValue(req, "profile", "username"),
 		QuoteOfTheDay:       quoteOfTheDay,
 		Articles:            articles,
@@ -97,7 +97,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &SitemapViewContext{
+	ctx := &sitemapViewData{
 		Articles:        articles,
 		AcceptedCookies: storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
@@ -114,7 +114,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 }
 
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
-	ctx := &NotFoundViewContext{
+	ctx := &notFoundViewData{
 		BaseTemplateContext: wc.BaseTemplateContext,
 		AcceptedCookies:     true,
 	}
