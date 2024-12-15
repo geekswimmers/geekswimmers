@@ -99,6 +99,8 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	userAccount := &UserAccount{
 		Email:        context.Email,
+		FirstName:    context.FirstName,
+		LastName:     context.LastName,
 		HumanScore:   reCaptchaScore,
 		Confirmation: &confirmation,
 	}
