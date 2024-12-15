@@ -11,15 +11,12 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-
-var usernameRegex = regexp.MustCompile("^[a-zA-Z0-9]{2,30}$")
 
 type UserController struct {
 	DB                  storage.Database
@@ -30,9 +27,10 @@ func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request)
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 
 	html := utils.GetTemplate("base", "signup")
-	err := html.Execute(res, &signUpViewData{
-		ReCaptchaSiteKey:    reCaptchaSiteKey,
+	err := html.Execute(res, &signUpData{
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 		BaseTemplateContext: uc.BaseTemplateContext,
+		ReCaptchaSiteKey:    reCaptchaSiteKey,
 	})
 	if err != nil {
 		log.Print(err)
@@ -46,23 +44,27 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	var html *template.Template
-	context := &signUpData{}
-	context.BaseTemplateContext = uc.BaseTemplateContext
+	context := &signUpData{
+		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		BaseTemplateContext: uc.BaseTemplateContext,
+		Email:               strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
+		FirstName:           strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:            strings.TrimSpace(req.PostForm.Get("lastName")),
+	}
 
-	// Validates username
-	context.UsernameSignUp = strings.TrimSpace(req.PostForm.Get("username"))
-	if !isUsernameValid(context.UsernameSignUp) {
-		log.Printf("Invalid username: %v", context.UsernameSignUp)
-		context.ErrorUsername = "Invalid username. Avoid characters such as: . , / ? ! @ # $ % ^ & * ( ) + - : ; etc."
-	} else {
-		userAccount := FindUserAccountByUsername(context.UsernameSignUp, uc.DB)
-		if userAccount != nil {
-			context.ErrorUsername = "This username is already in use. Please, try another one."
-		}
+	// Validates firstName
+	if context.FirstName == "" {
+		log.Printf("Invalid first name: %v", context.FirstName)
+		context.ErrorFirstName = "First Name is empty."
+	}
+
+	// Validates lastName
+	if context.LastName == "" {
+		log.Printf("Invalid last name: %v", context.LastName)
+		context.ErrorLastName = "Last Name is empty."
 	}
 
 	// Validates email
-	context.Email = strings.ToLower(strings.TrimSpace(req.PostForm.Get("email")))
 	if !messaging.IsEmailAddressValid(context.Email) {
 		log.Printf("Invalid email address: %v", context.Email)
 		context.ErrorEmail = "Invalid email address."
@@ -80,7 +82,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Back to the signup page in case of error.
-	if len(context.ErrorEmail) > 0 || len(context.ErrorUsername) > 0 || len(context.ErrorAgreed) > 0 {
+	if context.errorHappened() {
 		html = utils.GetTemplateWithFunctions("base", "signup", template.FuncMap{"html": utils.ToHTML})
 		log.Printf("Back to signup page with errors.")
 		context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
@@ -97,7 +99,6 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	userAccount := &UserAccount{
 		Email:        context.Email,
-		Username:     context.UsernameSignUp,
 		HumanScore:   reCaptchaScore,
 		Confirmation: &confirmation,
 	}
@@ -116,20 +117,16 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Cleans the username so it doesn't reach the template and behaves like the user is authenticated.
-	context.UsernameSignUp = ""
-
 	// Do not send email in case the interaction is more likely done by a bot. The record remains to avoid
 	// reattempts and it will be purged by a job after a while.
 	if userAccount.HumanScore > 0.5 {
 		body := messaging.GetEmailTemplate("signup", &messaging.EmailContext{
-			Username:     userAccount.Username,
 			CurrentEmail: userAccount.Email,
 			ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
 			Confirmation: *userAccount.Confirmation,
 		})
 
-		go messaging.SendMessage(userAccount.Email, userAccount.Username, "Welcome to followinsteps.com!", body, uc.DB)
+		go messaging.SendMessage(userAccount.Email, "Welcome to followinsteps.com!", body, uc.DB)
 	}
 
 	html = utils.GetTemplate("base", "signup-ok")
@@ -146,7 +143,12 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 	if userAccount != nil {
 		html := utils.GetTemplate("base", "password")
 
-		err := html.Execute(res, &passwordViewData{Email: userAccount.Email, Confirmation: confirmation})
+		err := html.Execute(res, &passwordViewData{
+			AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			BaseTemplateContext: uc.BaseTemplateContext,
+			Email:               userAccount.Email,
+			Confirmation:        confirmation,
+		})
 		if err != nil {
 			log.Print(err)
 		}
@@ -169,7 +171,13 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	if userAccount == nil {
 		html := utils.GetTemplate("base", "password")
 
-		err = html.Execute(res, &setNewPasswordData{Email: email, Confirmation: confirmation, Error: "Error setting a new password. User doesn't match."})
+		err = html.Execute(res, &setNewPasswordData{
+			AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			BaseTemplateContext: uc.BaseTemplateContext,
+			Email:               email,
+			Confirmation:        confirmation,
+			Error:               "Error setting a new password. User doesn't match.",
+		})
 		if err != nil {
 			log.Print(err)
 		}
@@ -190,7 +198,7 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	}
 
 	body := messaging.GetEmailTemplate("reset-password-ok", nil)
-	go messaging.SendMessage(userAccount.Email, userAccount.Username, "Your new password on followinsteps.com has been set!", body, uc.DB)
+	go messaging.SendMessage(userAccount.Email, "Your new password on followinsteps.com has been set!", body, uc.DB)
 
 	http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 }
@@ -223,7 +231,7 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 				Confirmation: *userAccount.Confirmation,
 			})
 
-			go messaging.SendMessage(userAccount.Email, userAccount.Username, "Reset your password on geekswimmers.com", body, uc.DB)
+			go messaging.SendMessage(userAccount.Email, "Reset your password on geekswimmers.com", body, uc.DB)
 		}
 	}
 
@@ -258,18 +266,18 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		log.Print(err)
 	}
 
-	identifier := strings.TrimSpace(req.PostForm.Get("identifier"))
+	email := strings.TrimSpace(req.PostForm.Get("identifier"))
 	password := req.PostForm.Get("password")
 
 	reCaptcha := req.PostForm.Get("g-recaptcha-response")
 	humanScore := getReCaptchaScore(reCaptcha)
 
-	userAccount, signInAttempt := uc.authenticate(identifier, password, utils.GetIP(req), humanScore)
+	userAccount, signInAttempt := uc.authenticate(email, password, utils.GetIP(req), humanScore)
 
 	if signInAttempt == nil {
 		html := utils.GetTemplateWithFunctions("base", "signin", template.FuncMap{"html": utils.ToHTML})
 		err = html.Execute(res, &signInData{
-			Identifier:       identifier,
+			Identifier:       email,
 			Error:            "Too many attempts to sign in. Please, try again after an hour from now.",
 			ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
 			Lock:             true,
@@ -284,7 +292,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		if signInAttempt.Status == StatusSucceed {
 			userAccount.Roles = FindUserRoles(userAccount, uc.DB)
 
-			if err = uc.addUserToSession(userAccount.Username, userAccount.Roles, res, req); err != nil {
+			if err = uc.addUserToSession(userAccount.Email, userAccount.Roles, res, req); err != nil {
 				http.Error(res, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -304,11 +312,11 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			http.Redirect(res, req, "/to/"+userAccount.Username+"/", http.StatusSeeOther)
+			http.Redirect(res, req, "/", http.StatusSeeOther)
 		} else {
 			html := utils.GetTemplateWithFunctions("base", "signin", template.FuncMap{"html": utils.ToHTML})
 			err = html.Execute(res, &signInData{
-				Identifier:       identifier,
+				Identifier:       email,
 				Error:            "Your credentials don't match. Did you <a href='/auth/password/reset/'>forget your password</a>?",
 				ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
 				Lock:             false,
@@ -320,9 +328,9 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	} else {
 		html := utils.GetTemplate("base", "signin")
 
-		log.Printf("Fail to login: %v", identifier)
+		log.Printf("Fail to login: %v", email)
 		err = html.Execute(res, &signInData{
-			Identifier:       identifier,
+			Identifier:       email,
 			Error:            "Credentials don't match.",
 			ReCaptchaSiteKey: config.GetConfiguration().GetString(config.RecaptchaSiteKey),
 			Lock:             false,
@@ -333,28 +341,24 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *UserController) authenticate(identifier, password, ipAddress string, humanScore float32) (*UserAccount, *SignInAttempt) {
+func (uc *UserController) authenticate(email, password, ipAddress string, humanScore float32) (*UserAccount, *SignInAttempt) {
 	if TooManySignInAttempts(ipAddress, uc.DB) {
-		log.Printf("Too many sign in attempts made by: %v", identifier)
+		log.Printf("Too many sign in attempts made by: %v", email)
 		return nil, nil
 	}
 
 	var userAccount *UserAccount
 	signInAttempt := SignInAttempt{
-		Identifier: identifier,
+		Identifier: email,
 		HumanScore: humanScore,
 		IPAddress:  ipAddress,
 	}
 
-	if messaging.IsEmailAddress(identifier) {
-		userAccount = FindUserAccountByEmail(strings.ToLower(identifier), uc.DB)
-	} else if isUsernameValid(identifier) {
-		userAccount = FindUserAccountByUsername(identifier, uc.DB)
-	}
+	userAccount = FindUserAccountByEmail(strings.ToLower(email), uc.DB)
 
 	if userAccount != nil {
 		if err := bcrypt.CompareHashAndPassword(userAccount.Password, []byte(password)); err != nil {
-			log.Printf("Fail to login: %v", identifier)
+			log.Printf("Fail to login: %v", email)
 			signInAttempt.Status = StatusFailed
 			signInAttempt.FailedMatch = FailedMatchPassword
 		} else {
@@ -362,17 +366,17 @@ func (uc *UserController) authenticate(identifier, password, ipAddress string, h
 				if err = ResetUserAccountSignOffPeriod(userAccount, uc.DB); err != nil {
 					log.Printf("Error reseting sign-off period: %v", err)
 				} else {
-					log.Printf("User %v reset sign off", identifier)
+					log.Printf("User %v reset sign off", email)
 				}
 			}
 
 			signInAttempt.Status = StatusSucceed
-			log.Printf("User %v authenticated", identifier)
+			log.Printf("User %v authenticated", email)
 		}
 	} else {
 		signInAttempt.Status = StatusFailed
 		signInAttempt.FailedMatch = FailedMatchIdentifier
-		log.Printf("User with identifier %v not found", identifier)
+		log.Printf("User with identifier %v not found", email)
 	}
 
 	if humanScore < 0.5 {
@@ -389,20 +393,20 @@ func (uc *UserController) authenticate(identifier, password, ipAddress string, h
 }
 
 func (uc *UserController) SignOut(res http.ResponseWriter, req *http.Request) {
-	username := storage.GetSessionEntryValue(req, "profile", "username")
+	email := storage.GetSessionEntryValue(req, "profile", "email")
 	role := storage.GetSessionEntryValue(req, "profile", "role")
 
-	if err := storage.RemoveSessionEntry(res, req, "profile", "username"); err != nil {
-		log.Printf("Error signing out the user %v: %v", username, err)
+	if err := storage.RemoveSessionEntry(res, req, "profile", "email"); err != nil {
+		log.Printf("Error signing out the user %v: %v", email, err)
 		return
 	}
 
 	if err := storage.RemoveSessionEntry(res, req, "profile", "role"); err != nil {
-		log.Printf("Error signing out the user %v with role %v: %v", username, role, err)
+		log.Printf("Error signing out the user %v with role %v: %v", email, role, err)
 		return
 	}
 
-	log.Printf("User %v signed out.", username)
+	log.Printf("User %v signed out.", email)
 
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
@@ -417,17 +421,21 @@ func getReCaptchaScore(reCaptchaResponse string) float32 {
 	if err != nil {
 		log.Printf("Error calling reCaptcha API: %v", err)
 	}
-	defer reCaptchaRes.Body.Close()
-	var reCaptchaResBody map[string]interface{}
-	json.NewDecoder(reCaptchaRes.Body).Decode(&reCaptchaResBody)
-	reCaptchaScore, _ := strconv.ParseFloat(fmt.Sprintf("%v", reCaptchaResBody["score"]), 32)
+	if reCaptchaRes != nil {
+		defer reCaptchaRes.Body.Close()
 
-	log.Printf("Success: %v, Score: %v", reCaptchaResBody["success"], reCaptchaResBody["score"])
-	return float32(reCaptchaScore)
+		var reCaptchaResBody map[string]interface{}
+		json.NewDecoder(reCaptchaRes.Body).Decode(&reCaptchaResBody)
+		reCaptchaScore, _ := strconv.ParseFloat(fmt.Sprintf("%v", reCaptchaResBody["score"]), 32)
+
+		log.Printf("Success: %v, Score: %v", reCaptchaResBody["success"], reCaptchaResBody["score"])
+		return float32(reCaptchaScore)
+	}
+	return 0
 }
 
-func (uc *UserController) addUserToSession(username string, roles []*UserRole, res http.ResponseWriter, req *http.Request) error {
-	if err := storage.AddSessionEntry(res, req, "profile", "username", username); err != nil {
+func (uc *UserController) addUserToSession(email string, roles []*UserRole, res http.ResponseWriter, req *http.Request) error {
+	if err := storage.AddSessionEntry(res, req, "profile", "email", email); err != nil {
 		return err
 	}
 
@@ -440,18 +448,14 @@ func (uc *UserController) addUserToSession(username string, roles []*UserRole, r
 	return nil
 }
 
-func isUsernameValid(username string) bool {
-	return len(username) >= 2 && usernameRegex.MatchString(username)
-}
-
 func (uc *UserController) SaveEmailSettings(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
 	}
 
-	username := storage.GetSessionEntryValue(req, "profile", "username")
-	user := FindUserAccountByUsername(username, uc.DB)
+	email := storage.GetSessionEntryValue(req, "profile", "email")
+	user := FindUserAccountByEmail(email, uc.DB)
 
 	user.PromotionalMsg, err = strconv.ParseBool(req.PostForm.Get("notification_promo"))
 	if err != nil {

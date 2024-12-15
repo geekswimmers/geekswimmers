@@ -11,18 +11,18 @@ import (
 )
 
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
-	stmt := `insert into user_account (email, username, human_score, confirmation) 
-             values ($1, $2, $3, $4) returning id`
+	stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation) 
+             values ($1, $2, $3, $4, $5) returning id`
 
 	var lastInsertId int64
 	err := db.QueryRow(context.Background(), stmt,
 		userAccount.Email,
-		userAccount.Username,
+		userAccount.FirstName,
+		userAccount.LastName,
 		userAccount.HumanScore,
 		userAccount.Confirmation).Scan(&lastInsertId)
 	if err != nil {
-		return 0, fmt.Errorf("user.InsertUserAccount(%v, %v, %v, %v): %v", userAccount.Email, userAccount.Username,
-			userAccount.HumanScore, userAccount.Confirmation, err)
+		return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
 	}
 
 	return lastInsertId, nil
@@ -115,7 +115,7 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, username, first_name, last_name, password, sign_off, promotional_msg
+	stmt := `select id, email, first_name, last_name, password, sign_off, promotional_msg
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
@@ -124,7 +124,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	row := db.QueryRow(context.Background(), stmt, email)
 
 	userAccount := &UserAccount{}
-	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.Username,
+	err := row.Scan(&userAccount.ID, &userAccount.Email,
 		&userAccount.FirstName, &userAccount.LastName, &userAccount.Password,
 		&userAccount.SignOff, &userAccount.PromotionalMsg)
 	if err != nil {
@@ -135,26 +135,8 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	return userAccount
 }
 
-func FindUserAccountByUsername(username string, db storage.Database) *UserAccount {
-	stmt := `select ua.id, ua.email, ua.username, ua.first_name, ua.last_name, ua.password, ua.sign_off, ua.promotional_msg
-			 from user_account ua
-			 where ua.username = $1`
-
-	row := db.QueryRow(context.Background(), stmt, username)
-
-	userAccount := &UserAccount{}
-	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.Username, &userAccount.FirstName,
-		&userAccount.LastName, &userAccount.Password, &userAccount.SignOff, &userAccount.PromotionalMsg)
-	if err != nil {
-		log.Printf("user.FindUserAccountByUsername(%v): %v", username, err)
-		return nil
-	}
-
-	return userAccount
-}
-
 func FindUserAccountByConfirmation(confirmation, email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, username, first_name, last_name, confirmation 
+	stmt := `select id, email, first_name, last_name, confirmation 
              from user_account where confirmation = $1`
 
 	var row pgx.Row
@@ -167,7 +149,7 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 	}
 
 	userAccount := &UserAccount{}
-	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.Username, &userAccount.FirstName,
+	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.FirstName,
 		&userAccount.LastName, &userAccount.Confirmation)
 	if err != nil {
 		log.Printf("user.FindUserAccountByConfirmation(%v, %v): %v", confirmation, email, err)

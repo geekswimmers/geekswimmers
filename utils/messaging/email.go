@@ -32,7 +32,7 @@ type EmailContext struct {
 }
 
 // SendMessage uses SMTP to send an email to the recipient with the message in the body.
-func SendMessage(to, username, subject, body string, db storage.Database) {
+func SendMessage(to, subject, body string, db storage.Database) {
 	user := config.GetConfiguration().GetString(config.EmailUsername)
 	password := config.GetConfiguration().GetString(config.EmailPassword)
 	server := config.GetConfiguration().GetString(config.EmailServer)
@@ -49,13 +49,12 @@ func SendMessage(to, username, subject, body string, db storage.Database) {
 
 	emailMessageSent := &EmailMessageSent{
 		Recipient: to,
-		Username:  username,
 		Subject:   subject,
 		Body:      body,
 	}
 
 	if err := emailMessageSent.Insert(db); err != nil {
-		log.Printf("utils.SendMessage(%v, %v, %v, %v) -> %v", to, username, subject, body, err)
+		log.Printf("utils.SendMessage(%v, %v, %v) -> %v", to, subject, body, err)
 	} else {
 		log.Printf("Email '%v' sent to %v", subject, to)
 	}
@@ -121,7 +120,12 @@ func IsEmailAddressValid(addr string) bool {
 
 	parts := strings.Split(addr, "@")
 	mx, err := net.LookupMX(parts[1])
-	if err != nil || len(mx) == 0 {
+	if err != nil {
+		log.Printf("Error validating email: %v", err)
+		return true
+	}
+
+	if len(mx) == 0 {
 		return false
 	}
 
