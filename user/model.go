@@ -23,7 +23,6 @@ const (
 type UserAccount struct {
 	ID              int64
 	Email           string
-	Username        string
 	Password        []byte
 	FirstName       string
 	LastName        string
@@ -73,20 +72,21 @@ type SignInAttempt struct {
 	FailedMatch string
 }
 
-type signUpViewData struct {
-	ReCaptchaSiteKey    string
-	BaseTemplateContext *utils.BaseTemplateContext
-}
-
 type signUpData struct {
+	AcceptedCookies     bool
+	BaseTemplateContext *utils.BaseTemplateContext
 	Email               string
 	ErrorAgreed         string
 	ErrorEmail          string
-	ErrorUsername       string
-	UsernameSignUp      string
+	ErrorFirstName      string
+	ErrorLastName       string
+	FirstName           string
+	LastName            string
 	ReCaptchaSiteKey    string
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+}
+
+func (sud *signUpData) errorHappened() bool {
+	return len(sud.ErrorEmail) > 0 || len(sud.ErrorEmail) > 0 || len(sud.ErrorAgreed) > 0
 }
 
 type passwordViewData struct {

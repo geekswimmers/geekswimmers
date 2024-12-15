@@ -8,7 +8,7 @@ import (
 )
 
 type homeViewData struct {
-	Username            string
+	Email               string
 	Articles            []*content.Article
 	Updates             []*content.ServiceUpdate
 	Jurisdictions       []*times.Jurisdiction

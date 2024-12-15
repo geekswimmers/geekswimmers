@@ -49,7 +49,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := &homeViewData{
-		Username:            storage.GetSessionEntryValue(req, "profile", "username"),
+		Email:               storage.GetSessionEntryValue(req, "profile", "email"),
 		QuoteOfTheDay:       quoteOfTheDay,
 		Articles:            articles,
 		Updates:             updates,
