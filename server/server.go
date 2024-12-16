@@ -26,7 +26,7 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s.DB = db
 	s.Router = pat.New()
 
-	btc := utils.BaseTemplateContext{
+	btc := utils.BaseTemplateData{
 		FeedbackForm:              c.GetString(config.FeedbackForm),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
 	}
@@ -40,40 +40,40 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 	}
 }
 
-func (s *Server) Routes(btc utils.BaseTemplateContext) {
+func (s *Server) Routes(btc utils.BaseTemplateData) {
 	userController := &user.UserController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	webController := &web.WebController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	contentController := &content.ContentController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	benchmarkController := &times.BenchmarkController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	standardsController := &times.StandardsController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	recordsController := &times.RecordsController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	meetController := &swimming.MeetController{
-		DB:                  s.DB,
-		BaseTemplateContext: &btc,
+		DB:               s.DB,
+		BaseTemplateData: &btc,
 	}
 
 	// The order here must be absolutely respected.

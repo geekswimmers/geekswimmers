@@ -73,51 +73,52 @@ type SignInAttempt struct {
 }
 
 type signUpData struct {
-	AcceptedCookies     bool
-	BaseTemplateContext *utils.BaseTemplateContext
-	Email               string
-	ErrorAgreed         string
-	ErrorEmail          string
-	ErrorFirstName      string
-	ErrorLastName       string
-	FirstName           string
-	LastName            string
-	ReCaptchaSiteKey    string
+	AcceptedCookies  bool
+	BaseTemplateData *utils.BaseTemplateData
+	Email            string
+	ErrorAgreed      string
+	ErrorEmail       string
+	ErrorFirstName   string
+	ErrorLastName    string
+	FirstName        string
+	LastName         string
+	ReCaptchaSiteKey string
 }
 
 func (sud *signUpData) errorHappened() bool {
-	return len(sud.ErrorEmail) > 0 || len(sud.ErrorEmail) > 0 || len(sud.ErrorAgreed) > 0
+	return len(sud.ErrorEmail) > 0 || len(sud.ErrorFirstName) > 0 || len(sud.ErrorLastName) > 0 || len(sud.ErrorAgreed) > 0
 }
 
 type passwordViewData struct {
-	Confirmation        string
-	Email               string
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Confirmation     string
+	Email            string
+	Error            string
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type setNewPasswordData struct {
-	Confirmation        string
-	Email               string
-	Error               string
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Confirmation     string
+	Email            string
+	Error            string
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type resetPasswordData struct {
-	Email               string
-	BaseTemplateContext *utils.BaseTemplateContext
+	Email            string
+	BaseTemplateData *utils.BaseTemplateData
 }
 
 type signInViewData struct {
-	ReCaptchaSiteKey    string
-	BaseTemplateContext *utils.BaseTemplateContext
+	ReCaptchaSiteKey string
+	BaseTemplateData *utils.BaseTemplateData
 }
 
 type signInData struct {
-	Identifier          string
-	Error               string
-	ReCaptchaSiteKey    string
-	Lock                bool
-	BaseTemplateContext *utils.BaseTemplateContext
+	Identifier       string
+	Error            string
+	ReCaptchaSiteKey string
+	Lock             bool
+	BaseTemplateData *utils.BaseTemplateData
 }
