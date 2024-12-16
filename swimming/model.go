@@ -22,16 +22,16 @@ type Event struct {
 }
 
 type swimStylesViewData struct {
-	Styles              []*Style
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Styles           []*Style
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type swimStyleViewData struct {
-	Instructions        []*Instruction
-	Style               *Style
-	PreviousStyle       *Style
-	NextStyle           *Style
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Instructions     []*Instruction
+	Style            *Style
+	PreviousStyle    *Style
+	NextStyle        *Style
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }

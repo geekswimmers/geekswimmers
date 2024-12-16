@@ -19,8 +19,8 @@ import (
 )
 
 type UserController struct {
-	DB                  storage.Database
-	BaseTemplateContext *utils.BaseTemplateContext
+	DB               storage.Database
+	BaseTemplateData *utils.BaseTemplateData
 }
 
 func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request) {
@@ -28,9 +28,9 @@ func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request)
 
 	html := utils.GetTemplate("base", "signup")
 	err := html.Execute(res, &signUpData{
-		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
-		BaseTemplateContext: uc.BaseTemplateContext,
-		ReCaptchaSiteKey:    reCaptchaSiteKey,
+		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		BaseTemplateData: uc.BaseTemplateData,
+		ReCaptchaSiteKey: reCaptchaSiteKey,
 	})
 	if err != nil {
 		log.Print(err)
@@ -45,11 +45,11 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	var html *template.Template
 	context := &signUpData{
-		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
-		BaseTemplateContext: uc.BaseTemplateContext,
-		Email:               strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
-		FirstName:           strings.TrimSpace(req.PostForm.Get("firstName")),
-		LastName:            strings.TrimSpace(req.PostForm.Get("lastName")),
+		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		BaseTemplateData: uc.BaseTemplateData,
+		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
+		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
 	}
 
 	// Validates firstName
@@ -146,10 +146,10 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 		html := utils.GetTemplate("base", "password")
 
 		err := html.Execute(res, &passwordViewData{
-			AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
-			BaseTemplateContext: uc.BaseTemplateContext,
-			Email:               userAccount.Email,
-			Confirmation:        confirmation,
+			AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			BaseTemplateData: uc.BaseTemplateData,
+			Email:            userAccount.Email,
+			Confirmation:     confirmation,
 		})
 		if err != nil {
 			log.Print(err)
@@ -174,11 +174,11 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 		html := utils.GetTemplate("base", "password")
 
 		err = html.Execute(res, &setNewPasswordData{
-			AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
-			BaseTemplateContext: uc.BaseTemplateContext,
-			Email:               email,
-			Confirmation:        confirmation,
-			Error:               "Error setting a new password. User doesn't match.",
+			AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			BaseTemplateData: uc.BaseTemplateData,
+			Email:            email,
+			Confirmation:     confirmation,
+			Error:            "Error setting a new password. User doesn't match.",
 		})
 		if err != nil {
 			log.Print(err)
@@ -240,8 +240,8 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 	html := utils.GetTemplate("base", "password-reset-ok")
 
 	err = html.Execute(res, &resetPasswordData{
-		Email:               email,
-		BaseTemplateContext: uc.BaseTemplateContext,
+		Email:            email,
+		BaseTemplateData: uc.BaseTemplateData,
 	})
 	if err != nil {
 		log.Print(err)
@@ -254,8 +254,8 @@ func (uc *UserController) SignInView(res http.ResponseWriter, req *http.Request)
 	html := utils.GetTemplate("base", "signin")
 
 	err := html.Execute(res, &signInViewData{
-		ReCaptchaSiteKey:    reCaptchaSiteKey,
-		BaseTemplateContext: uc.BaseTemplateContext,
+		ReCaptchaSiteKey: reCaptchaSiteKey,
+		BaseTemplateData: uc.BaseTemplateData,
 	})
 	if err != nil {
 		log.Print(err)

@@ -13,8 +13,8 @@ import (
 )
 
 type WebController struct {
-	DB                  storage.Database
-	BaseTemplateContext *utils.BaseTemplateContext
+	DB               storage.Database
+	BaseTemplateData *utils.BaseTemplateData
 }
 
 func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
@@ -49,22 +49,22 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := &homeViewData{
-		Email:               storage.GetSessionEntryValue(req, "profile", "email"),
-		QuoteOfTheDay:       quoteOfTheDay,
-		Articles:            articles,
-		Updates:             updates,
-		Jurisdictions:       jurisdictions,
-		Events:              events,
-		Jurisdiction:        storage.GetSessionEntryValue(req, "profile", "jurisdiction"),
-		BirthDate:           storage.GetSessionEntryValue(req, "profile", "birthDate"),
-		Gender:              storage.GetSessionEntryValue(req, "profile", "gender"),
-		Course:              storage.GetSessionEntryValue(req, "profile", "course"),
-		Event:               storage.GetSessionEntryValue(req, "profile", "event"),
-		Minute:              storage.GetSessionEntryValue(req, "profile", "minute"),
-		Second:              storage.GetSessionEntryValue(req, "profile", "second"),
-		Millisecond:         storage.GetSessionEntryValue(req, "profile", "millisecond"),
-		BaseTemplateContext: wc.BaseTemplateContext,
-		AcceptedCookies:     storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		Email:            storage.GetSessionEntryValue(req, "profile", "email"),
+		QuoteOfTheDay:    quoteOfTheDay,
+		Articles:         articles,
+		Updates:          updates,
+		Jurisdictions:    jurisdictions,
+		Events:           events,
+		Jurisdiction:     storage.GetSessionEntryValue(req, "profile", "jurisdiction"),
+		BirthDate:        storage.GetSessionEntryValue(req, "profile", "birthDate"),
+		Gender:           storage.GetSessionEntryValue(req, "profile", "gender"),
+		Course:           storage.GetSessionEntryValue(req, "profile", "course"),
+		Event:            storage.GetSessionEntryValue(req, "profile", "event"),
+		Minute:           storage.GetSessionEntryValue(req, "profile", "minute"),
+		Second:           storage.GetSessionEntryValue(req, "profile", "second"),
+		Millisecond:      storage.GetSessionEntryValue(req, "profile", "millisecond"),
+		BaseTemplateData: wc.BaseTemplateData,
+		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{
@@ -115,8 +115,8 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
 	ctx := &notFoundViewData{
-		BaseTemplateContext: wc.BaseTemplateContext,
-		AcceptedCookies:     true,
+		BaseTemplateData: wc.BaseTemplateData,
+		AcceptedCookies:  true,
 	}
 
 	utils.ErrorHandler(res, req, ctx, http.StatusNotFound)

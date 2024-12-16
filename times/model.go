@@ -195,74 +195,74 @@ func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
 }
 
 type benchmaskTimeViewData struct {
-	Distance            int64
-	Course              string
-	Style               string
-	Meets               []*Meet
-	FormatedTime        string
-	Records             []Record
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Distance         int64
+	Course           string
+	Style            string
+	Meets            []*Meet
+	FormatedTime     string
+	Records          []Record
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type timeStandardsViewData struct {
-	SwimSeason          *SwimSeason
-	SwimSeasons         []*SwimSeason
-	TimeStandards       []*TimeStandard
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	SwimSeason       *SwimSeason
+	SwimSeasons      []*SwimSeason
+	TimeStandards    []*TimeStandard
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type timeStandardViewData struct {
-	Age                 int64
-	Gender              string
-	Course              string
-	TimeStandard        *TimeStandard
-	StandardTimes       []*StandardTime
-	Ages                []int64
-	LatestTimeStandard  *TimeStandard
-	Meets               []*Meet
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Age                int64
+	Gender             string
+	Course             string
+	TimeStandard       *TimeStandard
+	StandardTimes      []*StandardTime
+	Ages               []int64
+	LatestTimeStandard *TimeStandard
+	Meets              []*Meet
+	BaseTemplateData   *utils.BaseTemplateData
+	AcceptedCookies    bool
 }
 
 type recordsListViewData struct {
-	RecordSets          []*RecordSet
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	RecordSets       []*RecordSet
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type recordsViewData struct {
-	Age                 int64
-	AgeRange            string
-	AgeRanges           []*RecordDefinition
-	Gender              string
-	Course              string
-	RecordSet           *RecordSet
-	RecordDefinition    RecordDefinition
-	Records             []Record
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Age              int64
+	AgeRange         string
+	AgeRanges        []*RecordDefinition
+	Gender           string
+	Course           string
+	RecordSet        *RecordSet
+	RecordDefinition RecordDefinition
+	Records          []Record
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type recordHistoryViewData struct {
-	RecordDefinition    *RecordDefinition
-	RecordSet           RecordSet
-	Records             []*Record
-	Jurisdiction        Jurisdiction
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	RecordDefinition *RecordDefinition
+	RecordSet        RecordSet
+	Records          []*Record
+	Jurisdiction     Jurisdiction
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }
 
 type standardsEventViewData struct {
-	Age                 int64
-	Ages                []int64
-	Course              string
-	Distance            int64
-	Event               string
-	Gender              string
-	Style               string
-	StandardTimes       []*StandardTime
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Age              int64
+	Ages             []int64
+	Course           string
+	Distance         int64
+	Event            string
+	Gender           string
+	Style            string
+	StandardTimes    []*StandardTime
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }

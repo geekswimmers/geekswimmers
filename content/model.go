@@ -30,8 +30,8 @@ type ServiceUpdate struct {
 }
 
 type articleViewData struct {
-	Article             *Article
-	OtherArticles       []*Article
-	BaseTemplateContext *utils.BaseTemplateContext
-	AcceptedCookies     bool
+	Article          *Article
+	OtherArticles    []*Article
+	BaseTemplateData *utils.BaseTemplateData
+	AcceptedCookies  bool
 }

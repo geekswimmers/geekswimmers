@@ -9,13 +9,13 @@ import (
 )
 
 type ContentController struct {
-	DB                  storage.Database
-	BaseTemplateContext *utils.BaseTemplateContext
+	DB               storage.Database
+	BaseTemplateData *utils.BaseTemplateData
 }
 
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
 	ctx := &articleViewData{
-		BaseTemplateContext: wc.BaseTemplateContext,
+		BaseTemplateData: wc.BaseTemplateData,
 	}
 
 	reference := req.URL.Query().Get(":reference")

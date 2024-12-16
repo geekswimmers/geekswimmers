@@ -16,9 +16,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Gafata&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="/static/css/main.css">
 
-        {{if .BaseTemplateContext.MonitoringGoogleAnalytics }}
+        {{if .BaseTemplateData.MonitoringGoogleAnalytics }}
             <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id={{.BaseTemplateContext.MonitoringGoogleAnalytics}}"></script>
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{.BaseTemplateData.MonitoringGoogleAnalytics}}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
 
@@ -27,7 +27,7 @@
                 }
 
                 gtag('js', new Date());
-                gtag('config', '{{.BaseTemplateContext.MonitoringGoogleAnalytics}}');
+                gtag('config', '{{.BaseTemplateData.MonitoringGoogleAnalytics}}');
             </script>
         {{end}}
 
@@ -70,11 +70,11 @@
                 </div>
 
                 <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
-                    {{if .Email }}
+                    {{if .BaseTemplateData.Email }}
                         <ul class="navbar-nav text-right">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    @{{.Email}}
+                                    @{{.BaseTemplateData.Email}}
                                     <svg class="bi bi-people-circle" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 008 15a6.987 6.987 0 005.468-2.63z"/>
                                         <path fill-rule="evenodd" d="M8 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -82,8 +82,8 @@
                                     </svg>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="/to/{{.Email}}/">Profile</a>
-                                    <a class="dropdown-item" href="/to/{{.Email}}/settings">Settings</a>
+                                    <a class="dropdown-item" href="/to/{{.BaseTemplateData.Email}}/">Profile</a>
+                                    <a class="dropdown-item" href="/to/{{.BaseTemplateData.Email}}/settings">Settings</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/auth/signout/">Sign Out</a>
                                 </div>
@@ -151,8 +151,8 @@
             <nav class="navbar fixed-bottom navbar-light bg-light">
                 <div class="container">
                     <span class="text-muted">
-                        {{if .BaseTemplateContext.FeedbackForm }}
-                            <a href="{{.BaseTemplateContext.FeedbackForm}}" target="_blank" rel="noopener noreferrer"></a>
+                        {{if .BaseTemplateData.FeedbackForm }}
+                            <a href="{{.BaseTemplateData.FeedbackForm}}" target="_blank" rel="noopener noreferrer"></a>
                                 Please, give feedback!
                             </a>
                         {{end}}
@@ -162,6 +162,7 @@
             </nav>
         </footer>
 
+        {{template "scripts" .}}
         <script src="/static/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/main.js"></script>
 
