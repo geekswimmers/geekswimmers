@@ -1,6 +1,7 @@
 package content
 
 import (
+	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"time"
 )
@@ -33,5 +34,5 @@ type articleViewData struct {
 	Article          *Article
 	OtherArticles    []*Article
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }

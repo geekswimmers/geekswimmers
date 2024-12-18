@@ -2,6 +2,7 @@ package times
 
 import (
 	"fmt"
+	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"time"
 )
@@ -202,7 +203,7 @@ type benchmaskTimeViewData struct {
 	FormatedTime     string
 	Records          []Record
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type timeStandardsViewData struct {
@@ -210,7 +211,7 @@ type timeStandardsViewData struct {
 	SwimSeasons      []*SwimSeason
 	TimeStandards    []*TimeStandard
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type timeStandardViewData struct {
@@ -223,13 +224,13 @@ type timeStandardViewData struct {
 	LatestTimeStandard *TimeStandard
 	Meets              []*Meet
 	BaseTemplateData   *utils.BaseTemplateData
-	AcceptedCookies    bool
+	SessionData        *storage.SessionData
 }
 
 type recordsListViewData struct {
 	RecordSets       []*RecordSet
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type recordsViewData struct {
@@ -242,7 +243,7 @@ type recordsViewData struct {
 	RecordDefinition RecordDefinition
 	Records          []Record
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type recordHistoryViewData struct {
@@ -251,7 +252,7 @@ type recordHistoryViewData struct {
 	Records          []*Record
 	Jurisdiction     Jurisdiction
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type standardsEventViewData struct {
@@ -264,5 +265,5 @@ type standardsEventViewData struct {
 	Style            string
 	StandardTimes    []*StandardTime
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }

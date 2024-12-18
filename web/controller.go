@@ -48,23 +48,15 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	sessionData := storage.NewSessionData(req)
 	ctx := &homeViewData{
-		Email:            storage.GetSessionEntryValue(req, "profile", "email"),
 		QuoteOfTheDay:    quoteOfTheDay,
 		Articles:         articles,
 		Updates:          updates,
 		Jurisdictions:    jurisdictions,
 		Events:           events,
-		Jurisdiction:     storage.GetSessionEntryValue(req, "profile", "jurisdiction"),
-		BirthDate:        storage.GetSessionEntryValue(req, "profile", "birthDate"),
-		Gender:           storage.GetSessionEntryValue(req, "profile", "gender"),
-		Course:           storage.GetSessionEntryValue(req, "profile", "course"),
-		Event:            storage.GetSessionEntryValue(req, "profile", "event"),
-		Minute:           storage.GetSessionEntryValue(req, "profile", "minute"),
-		Second:           storage.GetSessionEntryValue(req, "profile", "second"),
-		Millisecond:      storage.GetSessionEntryValue(req, "profile", "millisecond"),
 		BaseTemplateData: wc.BaseTemplateData,
-		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		SessionData:      sessionData,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{
@@ -97,9 +89,10 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	sessionData := storage.NewSessionData(req)
 	ctx := &sitemapViewData{
-		Articles:        articles,
-		AcceptedCookies: storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		Articles:    articles,
+		SessionData: sessionData,
 	}
 
 	txt, err := template.ParseFiles("web/templates/sitemap.xml")
@@ -114,9 +107,10 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 }
 
 func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
 	ctx := &notFoundViewData{
 		BaseTemplateData: wc.BaseTemplateData,
-		AcceptedCookies:  true,
+		SessionData:      sessionData,
 	}
 
 	utils.ErrorHandler(res, req, ctx, http.StatusNotFound)

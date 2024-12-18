@@ -25,10 +25,11 @@ type UserController struct {
 
 func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+	sessionData := storage.NewSessionData(req)
 
 	html := utils.GetTemplate("base", "signup")
 	err := html.Execute(res, &signUpData{
-		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		ReCaptchaSiteKey: reCaptchaSiteKey,
 	})
@@ -43,9 +44,10 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		log.Print(err)
 	}
 
+	sessionData := storage.NewSessionData(req)
 	var html *template.Template
 	context := &signUpData{
-		AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
 		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
@@ -143,10 +145,10 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 	userAccount := FindUserAccountByConfirmation(confirmation, "", uc.DB)
 
 	if userAccount != nil {
+		sessionData := storage.NewSessionData(req)
 		html := utils.GetTemplate("base", "password")
-
 		err := html.Execute(res, &passwordViewData{
-			AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			SessionData:      sessionData,
 			BaseTemplateData: uc.BaseTemplateData,
 			Email:            userAccount.Email,
 			Confirmation:     confirmation,
@@ -173,8 +175,9 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	if userAccount == nil {
 		html := utils.GetTemplate("base", "password")
 
+		sessionData := storage.NewSessionData(req)
 		err = html.Execute(res, &setNewPasswordData{
-			AcceptedCookies:  storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+			SessionData:      sessionData,
 			BaseTemplateData: uc.BaseTemplateData,
 			Email:            email,
 			Confirmation:     confirmation,

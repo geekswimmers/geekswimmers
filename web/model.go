@@ -2,13 +2,13 @@ package web
 
 import (
 	"geekswimmers/content"
+	"geekswimmers/storage"
 	"geekswimmers/swimming"
 	"geekswimmers/times"
 	"geekswimmers/utils"
 )
 
 type homeViewData struct {
-	Email            string
 	Articles         []*content.Article
 	Updates          []*content.ServiceUpdate
 	Jurisdictions    []*times.Jurisdiction
@@ -22,16 +22,16 @@ type homeViewData struct {
 	Second           string
 	Millisecond      string
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
 	QuoteOfTheDay    *content.Quote
+	SessionData      *storage.SessionData
 }
 
 type sitemapViewData struct {
-	Articles        []*content.Article
-	AcceptedCookies bool
+	Articles    []*content.Article
+	SessionData *storage.SessionData
 }
 
 type notFoundViewData struct {
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }

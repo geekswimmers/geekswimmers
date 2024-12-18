@@ -1,6 +1,9 @@
 package swimming
 
-import "geekswimmers/utils"
+import (
+	"geekswimmers/storage"
+	"geekswimmers/utils"
+)
 
 type Style struct {
 	ID          int64
@@ -24,7 +27,7 @@ type Event struct {
 type swimStylesViewData struct {
 	Styles           []*Style
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type swimStyleViewData struct {
@@ -33,5 +36,5 @@ type swimStyleViewData struct {
 	PreviousStyle    *Style
 	NextStyle        *Style
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
