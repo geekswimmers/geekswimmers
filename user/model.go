@@ -1,6 +1,7 @@
 package user
 
 import (
+	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"time"
 )
@@ -73,7 +74,6 @@ type SignInAttempt struct {
 }
 
 type signUpData struct {
-	AcceptedCookies  bool
 	BaseTemplateData *utils.BaseTemplateData
 	Email            string
 	ErrorAgreed      string
@@ -83,6 +83,7 @@ type signUpData struct {
 	FirstName        string
 	LastName         string
 	ReCaptchaSiteKey string
+	SessionData      *storage.SessionData
 }
 
 func (sud *signUpData) errorHappened() bool {
@@ -94,7 +95,7 @@ type passwordViewData struct {
 	Email            string
 	Error            string
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type setNewPasswordData struct {
@@ -102,7 +103,7 @@ type setNewPasswordData struct {
 	Email            string
 	Error            string
 	BaseTemplateData *utils.BaseTemplateData
-	AcceptedCookies  bool
+	SessionData      *storage.SessionData
 }
 
 type resetPasswordData struct {

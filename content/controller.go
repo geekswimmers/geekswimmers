@@ -14,8 +14,11 @@ type ContentController struct {
 }
 
 func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
 	ctx := &articleViewData{
 		BaseTemplateData: wc.BaseTemplateData,
+		SessionData:      sessionData,
 	}
 
 	reference := req.URL.Query().Get(":reference")
@@ -35,7 +38,6 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 
 	ctx.Article = article
 	ctx.OtherArticles = otherArticles
-	ctx.AcceptedCookies = storage.GetSessionEntryValue(req, "profile", "acceptedCookies") == "true"
 
 	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.ToHTML})
 	err = html.Execute(res, ctx)

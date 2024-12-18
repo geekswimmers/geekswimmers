@@ -70,11 +70,11 @@
                 </div>
 
                 <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
-                    {{if .BaseTemplateData.Email }}
+                    {{if .SessionData.Email }}
                         <ul class="navbar-nav text-right">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    @{{.BaseTemplateData.Email}}
+                                    @{{.SessionData.Email}}
                                     <svg class="bi bi-people-circle" width="2em" height="2em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 008 15a6.987 6.987 0 005.468-2.63z"/>
                                         <path fill-rule="evenodd" d="M8 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -127,7 +127,7 @@
             {{template "content" .}}
         </main>
 
-        {{if not .AcceptedCookies}}
+        {{if not .SessionData.AcceptedCookies}}
             <div class="modal fade" id="cookieModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -166,7 +166,7 @@
         <script src="/static/js/bootstrap.bundle.min.js"></script>
         <script src="/static/js/main.js"></script>
 
-        {{if not .AcceptedCookies}}
+        {{if not .SessionData.AcceptedCookies}}
             <script type="text/javascript">
                 const modalElement = document.getElementById('cookieModal');
                 const cookieModal = new bootstrap.Modal(modalElement, {

@@ -12,6 +12,36 @@ import (
 
 var sessionStore *sessions.CookieStore
 
+type SessionData struct {
+	AcceptedCookies bool
+	BirthDate       string
+	Confirmation    string
+	Course          string
+	Email           string
+	Event           string
+	Gender          string
+	Jurisdiction    string
+	Millisecond     string
+	Minute          string
+	Roles           []string
+	Second          string
+}
+
+func NewSessionData(req *http.Request) *SessionData {
+	return &SessionData{
+		AcceptedCookies: GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",
+		Jurisdiction:    GetSessionEntryValue(req, "profile", "jurisdiction"),
+		BirthDate:       GetSessionEntryValue(req, "profile", "birthDate"),
+		Email:           GetSessionEntryValue(req, "profile", "email"),
+		Gender:          GetSessionEntryValue(req, "profile", "gender"),
+		Course:          GetSessionEntryValue(req, "profile", "course"),
+		Event:           GetSessionEntryValue(req, "profile", "event"),
+		Minute:          GetSessionEntryValue(req, "profile", "minute"),
+		Second:          GetSessionEntryValue(req, "profile", "second"),
+		Millisecond:     GetSessionEntryValue(req, "profile", "millisecond"),
+	}
+}
+
 func InitSessionStore(c config.Config) error {
 	sessionKey := c.GetString(config.ServerSessionKey)
 	decodedKey, err := base32.StdEncoding.DecodeString(sessionKey)
