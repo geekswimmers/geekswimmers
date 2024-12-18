@@ -7,6 +7,10 @@ connmaxlifetime = 30 # minutes
 port = 8080
 sessionkey = ""
 
+[recaptcha]
+sitekey = ""
+secretkey = ""
+
 [monitoring]
 googleanalytics = ""
 
