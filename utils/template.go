@@ -68,8 +68,12 @@ func Lowercase(str string) string {
 	return strings.ToLower(str)
 }
 
-// ToHTML Given a markdown content, converts it to HTML and unescape special characters.
 func ToHTML(s string) template.HTML {
+	return template.HTML(s)
+}
+
+// MarkdownToHTML Given a markdown content, converts it to HTML and unescape special characters.
+func MarkdownToHTML(s string) template.HTML {
 	var html bytes.Buffer
 	if err := goldmark.Convert([]byte(s), &html); err != nil {
 		log.Printf("Error converting markdown to HTML: %v", err)

@@ -39,7 +39,7 @@ func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Requ
 	ctx.Article = article
 	ctx.OtherArticles = otherArticles
 
-	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.ToHTML})
+	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.MarkdownToHTML})
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Print(err)

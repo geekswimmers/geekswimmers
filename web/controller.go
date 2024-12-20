@@ -61,7 +61,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 
 	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{
 		"Title":    utils.Title,
-		"markdown": utils.ToHTML,
+		"markdown": utils.MarkdownToHTML,
 	})
 
 	err = html.Execute(res, ctx)
