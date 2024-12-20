@@ -162,10 +162,9 @@
             </nav>
         </footer>
 
-        {{template "scripts" .}}
         <script src="/static/js/bootstrap.bundle.min.js"></script>
+        {{template "scripts" .}}
         <script src="/static/js/main.js"></script>
-
         {{if not .SessionData.AcceptedCookies}}
             <script type="text/javascript">
                 const modalElement = document.getElementById('cookieModal');

@@ -44,13 +44,23 @@
                     <br><span class="error">{{.ErrorAgreed}}</span>
                 </div>
                 
-                <button class="btn btn-primary g-recaptcha" data-sitekey="{{.ReCaptchaSiteKey}}" data-callback='onSubmit' data-action='submit'>
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
-                        <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
-                        <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg> Sign Up
-                </button>
+                {{if .ReCaptchaSiteKey}}
+                    <button class="btn btn-primary g-recaptcha" data-sitekey="{{.ReCaptchaSiteKey}}" data-callback='onSubmit' data-action='submit'>
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                            <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                            <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg> Sign Up
+                    </button>
+                {{else}}
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                            <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                            <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg> Sign Up
+                    </button>
+                {{end}}
                 <a class="btn btn-secondary" href="/" role="button">Cancel</a>
                 <br><br><p>Already have an account? <a href="/auth/signin/">Sign in</a>.</p>
             </form>
@@ -59,11 +69,12 @@
 {{end}}
 
 {{define "scripts"}}
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script src="/static/js/auth.js"></script>
-    <script>
-        function onSubmit(token) {
-            document.getElementById("signup-form").submit();
-        }
-    </script>
+    {{if .ReCaptchaSiteKey}}
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script>
+            function onSubmit(token) {
+                document.getElementById("signup-form").submit();
+            }
+        </script>
+    {{end}}
 {{end}}
