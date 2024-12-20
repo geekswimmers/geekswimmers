@@ -82,9 +82,9 @@ func TestToHTML(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			actual := ToHTML(tc.input)
+			actual := MarkdownToHTML(tc.input)
 			if actual != tc.expected {
-				t.Errorf("ToHTML(%q) = %q, want %q", tc.input, actual, tc.expected)
+				t.Errorf("MarkdownToHTML(%q) = %q, want %q", tc.input, actual, tc.expected)
 			}
 		})
 	}
