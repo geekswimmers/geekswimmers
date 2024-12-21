@@ -96,7 +96,12 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	reCaptcha := req.PostForm.Get("g-recaptcha-response")
-	reCaptchaScore := getReCaptchaScore(reCaptcha)
+	var reCaptchaScore float32
+	if reCaptcha != "" {
+		reCaptchaScore = getReCaptchaScore(reCaptcha)
+	} else {
+		reCaptchaScore = -1 // ReCaptcha not used
+	}
 	confirmation := uuid.New().String()
 
 	userAccount := &UserAccount{
@@ -107,12 +112,15 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		Confirmation: &confirmation,
 	}
 
-	// Creates a new user even before checking if the reCaptchaScore is high. It helps to prevent new registrations with
-	// the same email address.
+	// Creates a new user even before checking if the reCaptchaScore is high.
+	// It helps to prevent new registrations with the same email address.
 	_, err = InsertUserAccount(userAccount, uc.DB)
 	if err != nil {
 		log.Printf("Error saving the user: %v", err)
 		html = utils.GetTemplate("base", "signup")
+		context.Error = `Due to an internal error, it was not possible to create
+			your account at this moment. Please, trying again later. 
+			Thank you for your undestanding.`
 		context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 		err = html.Execute(res, context)
 		if err != nil {
@@ -121,22 +129,26 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Do not send email in case the interaction is more likely done by a bot. The record remains to avoid
-	// reattempts and it will be purged by a job after a while.
-	if userAccount.HumanScore > 0.5 {
-		body := messaging.GetEmailTemplate("signup", &messaging.EmailContext{
-			CurrentEmail: userAccount.Email,
-			ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
-			Confirmation: *userAccount.Confirmation,
-		})
+	if config.GetConfiguration().GetString(config.EmailServer) != "" {
+		// Do not send email in case the interaction is more likely done by a bot. The record remains to avoid
+		// reattempts and it will be purged by a job after a while.
+		if userAccount.HumanScore > 0.5 {
+			body := messaging.GetEmailTemplate("signup", &messaging.EmailContext{
+				CurrentEmail: userAccount.Email,
+				ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
+				Confirmation: *userAccount.Confirmation,
+			})
 
-		go messaging.SendMessage(userAccount.Email, "Welcome to followinsteps.com!", body, uc.DB)
-	}
+			go messaging.SendMessage(userAccount.Email, "Welcome to Geek Swimmers!", body, uc.DB)
+		}
 
-	html = utils.GetTemplate("base", "signup-ok")
-	err = html.Execute(res, context)
-	if err != nil {
-		log.Print(err)
+		html = utils.GetTemplate("base", "signup-ok")
+		err = html.Execute(res, context)
+		if err != nil {
+			log.Print(err)
+		}
+	} else {
+		http.Redirect(res, req, "/auth/confirm/"+confirmation, http.StatusSeeOther)
 	}
 }
 
@@ -203,7 +215,7 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	}
 
 	body := messaging.GetEmailTemplate("reset-password-ok", nil)
-	go messaging.SendMessage(userAccount.Email, "Your new password on followinsteps.com has been set!", body, uc.DB)
+	go messaging.SendMessage(userAccount.Email, "Your new password on Geek Swimmers has been set!", body, uc.DB)
 
 	http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 }
