@@ -11,8 +11,7 @@ const (
 	GenderFemale = "FEMALE"
 	GenderMale   = "MALE"
 
-	CourseShort = "SHORT"
-	CourseLong  = "LONG"
+	DefaultCourse = "SHORT"
 
 	JurisdictionLevelCountry  = "COUNTRY"
 	JurisdictionLevelProvince = "PROVINCE"

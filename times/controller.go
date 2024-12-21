@@ -231,7 +231,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = CourseLong
+		course = DefaultCourse
 	}
 
 	example := StandardTime{
@@ -355,7 +355,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = CourseLong
+		course = DefaultCourse
 	}
 
 	definition := RecordDefinition{
@@ -481,7 +481,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = CourseLong
+		course = DefaultCourse
 	}
 	ctx.Course = course
 
