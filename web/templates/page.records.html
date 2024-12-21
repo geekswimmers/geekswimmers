@@ -55,13 +55,13 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="course">Course</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG"  onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "LONG"}} checked{{end}}>
-                                <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
-                            </div>
                             <div class="form-check form-check-inline" style="padding-top: 8px;">
                                 <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "SHORT"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG"  onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "LONG"}} checked{{end}}>
+                                <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                             </div>
                         </div>
                     </div>
