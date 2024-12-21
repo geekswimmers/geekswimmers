@@ -76,6 +76,7 @@ type SignInAttempt struct {
 type signUpData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	Email            string
+	Error            string
 	ErrorAgreed      string
 	ErrorEmail       string
 	ErrorFirstName   string

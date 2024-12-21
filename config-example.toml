@@ -7,6 +7,14 @@ connmaxlifetime = 30 # minutes
 port = 8080
 sessionkey = ""
 
+[email]
+server = ""
+port = 521
+transport = "TLS"
+username = ""
+password = ""
+from = ""
+
 [recaptcha]
 sitekey = ""
 secretkey = ""
