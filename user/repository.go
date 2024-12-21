@@ -63,7 +63,7 @@ func UpdateUserAccount(userAccount *UserAccount, db storage.Database) error {
 }
 
 func setUserAccountNewPassword(userAccount *UserAccount, db storage.Database) error {
-	stmt := `update user_account set password = $1, confirmation = null 
+	stmt := `update user_account set password = $1, confirmation = null
              where email = $2 and confirmation = $3`
 
 	_, err := db.Exec(context.Background(), stmt, userAccount.Password, userAccount.Email, userAccount.Confirmation)
@@ -136,7 +136,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 }
 
 func FindUserAccountByConfirmation(confirmation, email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, confirmation 
+	stmt := `select id, email, first_name, last_name 
              from user_account where confirmation = $1`
 
 	var row pgx.Row
@@ -148,9 +148,10 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 		row = db.QueryRow(context.Background(), stmt, confirmation)
 	}
 
-	userAccount := &UserAccount{}
-	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.FirstName,
-		&userAccount.LastName, &userAccount.Confirmation)
+	userAccount := &UserAccount{
+		Confirmation: &confirmation,
+	}
+	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.FirstName, &userAccount.LastName)
 	if err != nil {
 		log.Printf("user.FindUserAccountByConfirmation(%v, %v): %v", confirmation, email, err)
 		return nil

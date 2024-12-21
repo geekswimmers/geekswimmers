@@ -193,7 +193,7 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 			BaseTemplateData: uc.BaseTemplateData,
 			Email:            email,
 			Confirmation:     confirmation,
-			Error:            "Error setting a new password. User doesn't match.",
+			Error:            "Error setting a new password. User confirmation not found.",
 		})
 		if err != nil {
 			log.Print(err)
