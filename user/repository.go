@@ -11,8 +11,8 @@ import (
 )
 
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
-	stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation) 
-             values ($1, $2, $3, $4, $5) returning id`
+	stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
+             values ($1, $2, $3, $4, $5, $6) returning id`
 
 	var lastInsertId int64
 	err := db.QueryRow(context.Background(), stmt,
@@ -20,7 +20,8 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 		userAccount.FirstName,
 		userAccount.LastName,
 		userAccount.HumanScore,
-		userAccount.Confirmation).Scan(&lastInsertId)
+		userAccount.Confirmation,
+		userAccount.Role).Scan(&lastInsertId)
 	if err != nil {
 		return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
 	}
@@ -115,7 +116,7 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, password, sign_off, promotional_msg
+	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
@@ -125,7 +126,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email,
-		&userAccount.FirstName, &userAccount.LastName, &userAccount.Password,
+		&userAccount.FirstName, &userAccount.LastName, &userAccount.Role, &userAccount.Password,
 		&userAccount.SignOff, &userAccount.PromotionalMsg)
 	if err != nil {
 		log.Printf("user.FindUserAccountByEmail(%v) : %v", email, err)
@@ -136,7 +137,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 }
 
 func FindUserAccountByConfirmation(confirmation, email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name 
+	stmt := `select id, email, first_name, last_name, access_role 
              from user_account where confirmation = $1`
 
 	var row pgx.Row
@@ -151,37 +152,12 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 	userAccount := &UserAccount{
 		Confirmation: &confirmation,
 	}
-	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.FirstName, &userAccount.LastName)
+	err := row.Scan(&userAccount.ID, &userAccount.Email, &userAccount.FirstName, &userAccount.LastName, &userAccount.Role)
 	if err != nil {
 		log.Printf("user.FindUserAccountByConfirmation(%v, %v): %v", confirmation, email, err)
 		return nil
 	}
 	return userAccount
-}
-
-func FindUserRoles(userAccount *UserAccount, db storage.Database) []*UserRole {
-	stmt := `select id, role from user_role where user_account_id = $1`
-
-	rows, err := db.Query(context.Background(), stmt, userAccount.ID)
-	if err != nil {
-		log.Printf("user.FindUserRoles(%v): %v", userAccount.ID, err)
-		return nil
-	}
-	defer rows.Close()
-
-	roles := make([]*UserRole, 0)
-	for rows.Next() {
-		role := &UserRole{}
-		err = rows.Scan(&role.ID, &role.Role)
-		if err != nil {
-			log.Printf("user.FindUserRoles(%v): %v", userAccount.ID, err)
-			return nil
-		}
-		role.UserAccount = *userAccount
-		roles = append(roles, role)
-	}
-
-	return roles
 }
 
 func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
@@ -199,9 +175,5 @@ func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
 	}
 	log.Printf("Number of failed attempts: %v", numFailedAttempts)
 
-	if numFailedAttempts > 10 {
-		return true
-	}
-
-	return false
+	return numFailedAttempts > 10
 }
