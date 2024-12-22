@@ -77,7 +77,6 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	}
 
 	// The order here must be absolutely respected.
-	s.Router = pat.New()
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
 
@@ -88,7 +87,6 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/auth/password/reset/", http.HandlerFunc(userController.ResetPasswordView))
 	s.Router.Post("/auth/password/reset/", s.handleRequest(userController.ResetPassword))
 	s.Router.Post("/auth/password/", s.handleRequest(userController.SetNewPassword))
-
 	s.Router.Get("/auth/signout/", http.HandlerFunc(userController.SignOut))
 	s.Router.Get("/auth/signin/", http.HandlerFunc(userController.SignInView))
 	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
