@@ -13,6 +13,7 @@ const (
 
 	RoleAdmin    = "ADMIN"
 	RoleAthlete  = "ATHLETE"
+	RoleClub     = "CLUB"
 	RoleCoach    = "COACH"
 	RoleOfficial = "OFFICIAL"
 	RoleParent   = "PARENT"
@@ -36,15 +37,7 @@ type UserAccount struct {
 	SignOff         *time.Time
 	SignOffFeedback *string
 	PromotionalMsg  bool
-
-	// Transient
-	Roles []*UserRole
-}
-
-type UserRole struct {
-	ID          int64
-	UserAccount UserAccount
-	Role        string
+	Role            string
 }
 
 type Family struct {
@@ -112,15 +105,11 @@ type resetPasswordData struct {
 	BaseTemplateData *utils.BaseTemplateData
 }
 
-type signInViewData struct {
-	ReCaptchaSiteKey string
-	BaseTemplateData *utils.BaseTemplateData
-}
-
 type signInData struct {
-	Identifier       string
-	Error            string
-	ReCaptchaSiteKey string
-	Lock             bool
 	BaseTemplateData *utils.BaseTemplateData
+	Error            string
+	Identifier       string
+	Lock             bool
+	ReCaptchaSiteKey string
+	SessionData      *storage.SessionData
 }

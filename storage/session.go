@@ -19,6 +19,8 @@ type SessionData struct {
 	Course          string
 	Email           string
 	Event           string
+	FirstName       string
+	LastName        string
 	Gender          string
 	Jurisdiction    string
 	Millisecond     string
@@ -33,6 +35,8 @@ func NewSessionData(req *http.Request) *SessionData {
 		Jurisdiction:    GetSessionEntryValue(req, "profile", "jurisdiction"),
 		BirthDate:       GetSessionEntryValue(req, "profile", "birthDate"),
 		Email:           GetSessionEntryValue(req, "profile", "email"),
+		FirstName:       GetSessionEntryValue(req, "profile", "firstName"),
+		LastName:        GetSessionEntryValue(req, "profile", "lastName"),
 		Gender:          GetSessionEntryValue(req, "profile", "gender"),
 		Course:          GetSessionEntryValue(req, "profile", "course"),
 		Event:           GetSessionEntryValue(req, "profile", "event"),
