@@ -529,5 +529,9 @@ func (uc *UserController) SaveEmailSettings(res http.ResponseWriter, req *http.R
 		return
 	}
 
-	UpdateUserAccount(user, uc.DB)
+	if err := UpdateUserAccount(user, uc.DB); err != nil {
+		log.Printf("Error updating user account: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
