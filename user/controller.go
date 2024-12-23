@@ -362,14 +362,18 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	confirmationLink := storage.GetSessionEntryValue(req, "profile", "confirmation")
 	if len(confirmationLink) > 0 {
 		http.Redirect(res, req, confirmationLink, http.StatusSeeOther)
-		storage.RemoveSessionEntry(res, req, "profile", "confirmation")
+		if err := storage.RemoveSessionEntry(res, req, "profile", "confirmation"); err != nil {
+			log.Printf("Error removing session entry: %v", err)
+		}
 		return
 	}
 
 	redirect := storage.GetSessionEntryValue(req, "profile", "redirect")
 	if len(redirect) > 0 {
 		http.Redirect(res, req, redirect, http.StatusSeeOther)
-		storage.RemoveSessionEntry(res, req, "profile", "redirect")
+		if err := storage.RemoveSessionEntry(res, req, "profile", "redirect"); err != nil {
+			log.Printf("Error removing session entry: %v", err)
+		}
 		return
 	}
 
