@@ -482,7 +482,10 @@ func getReCaptchaScore(reCaptchaResponse string) float32 {
 		if err := decoder.Decode(&reCaptchaResBody); err != nil {
 			log.Printf("Error decoding reCaptcha response: %v", err)
 		}
-		reCaptchaScore, _ := strconv.ParseFloat(fmt.Sprintf("%v", reCaptchaResBody["score"]), 32)
+		reCaptchaScore, err := strconv.ParseFloat(fmt.Sprintf("%v", reCaptchaResBody["score"]), 32)
+		if err != nil {
+			log.Printf("Error parsing reCaptcha score: %v", err)
+		}
 
 		log.Printf("Success: %v, Score: %v", reCaptchaResBody["success"], reCaptchaResBody["score"])
 		return float32(reCaptchaScore)
