@@ -7,9 +7,10 @@ import (
 )
 
 const (
-	FailedMatchIdentifier = "IDENTIFIER"
-	FailedMatchPassword   = "PASSWORD"
-	FailedMatchHumanScore = "HUMAN_SCORE"
+	FailedMatchIdentifier       = "IDENTIFIER"
+	FailedMatchPassword         = "PASSWORD"
+	FailedMatchHumanScore       = "HUMAN_SCORE"
+	FailedMatchAttemptsExceeded = "ATTEMPTS_EXCEEDED"
 
 	RoleAdmin    = "ADMIN"
 	RoleAthlete  = "ATHLETE"
