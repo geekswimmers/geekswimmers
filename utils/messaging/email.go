@@ -67,7 +67,9 @@ func GetEmailTemplate(name string, context *EmailContext) string {
 	}
 
 	var bodyContent bytes.Buffer
-	err = emailBody.Execute(&bodyContent, context)
+	if err := emailBody.Execute(&bodyContent, context); err != nil {
+		log.Print(err)
+	}
 	return bodyContent.String()
 }
 
