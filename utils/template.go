@@ -30,7 +30,9 @@ func GetTemplate(layout, page string) *template.Template {
 }
 
 func GetTemplateWithFunctions(layout, page string, funcMap template.FuncMap) *template.Template {
-	html, err := template.New(fmt.Sprintf("page.%s.html", page)).Funcs(funcMap).
+	html, err := template.
+		New(fmt.Sprintf("page.%s.html", page)).
+		Funcs(funcMap).
 		ParseFiles(applyLayout(layout, page)...)
 	if err != nil {
 		log.Fatalf("utils.GetTemplateWithFunctions(%v, %v): %v", layout, page, err)

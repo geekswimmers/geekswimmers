@@ -59,7 +59,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		SessionData:      sessionData,
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "home", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("home", "home", template.FuncMap{
 		"Title":    utils.Title,
 		"markdown": utils.MarkdownToHTML,
 	})
