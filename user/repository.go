@@ -164,7 +164,7 @@ func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
 	stmt := `select count(id) 
 			 from sign_in_attempt
              where status = $1 and ip_address = $2  and created >= (current_timestamp - interval '1 HOURS') 
-             limit 5`
+             limit 10`
 
 	row := db.QueryRow(context.Background(), stmt, StatusFailed, ipAddress)
 
@@ -175,5 +175,5 @@ func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
 	}
 	log.Printf("Number of failed attempts: %v", numFailedAttempts)
 
-	return numFailedAttempts > 10
+	return numFailedAttempts > 5
 }

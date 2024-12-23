@@ -20,53 +20,66 @@ function checkStrength(password) {
     }
 }
 
-document.getElementById("password").addEventListener("keyup", function () {
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password").value;
-    let submitBtn = document.getElementById("submitBtn");
-
-    if (password === confirmPassword) {
-        submitBtn.disabled = false;
-    } else {
-        submitBtn.disabled = true;
-    }
-
-    checkStrength(password);
-});
-
-document.getElementById("confirm-password").addEventListener("keyup", function () {
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirm-password");
-    let submitBtn = document.getElementById("submitBtn");
-
-    if (password === confirmPassword.value) {
-        confirmPassword.classList.add("is-valid");
-        submitBtn.disabled = false;
-    } else {
-        confirmPassword.classList.remove("is-valid");
-        submitBtn.disabled = true;
-    }
-});
-
-document.getElementById("btn-signoff").addEventListener("click", function () {
-    if (confirm("Are you sure you want to sign-off?")) {
-        return true;
-    }
-    return false;
-});
-
-document.getElementById("promotional-notification").addEventListener("click", function () {
-    let xhr = new XMLHttpRequest();
-    xhr.open("PUT", "", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            let successMsg = document.getElementById("notifications-saved");
-            successMsg.innerHTML = "&nbsp;Choices saved!";
-            setTimeout(function () {
-                successMsg.innerHTML = "&nbsp;";
-            }, 5000);
+let passwordField = document.getElementById("password");
+if (passwordField) {
+    passwordField.addEventListener("keyup", function () {
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirm-password").value;
+        let submitBtn = document.getElementById("submitBtn");
+    
+        if (password === confirmPassword) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
         }
-    };
-    xhr.send("notification_promo=" + document.getElementById("promotional-notification").checked);
-});
+    
+        checkStrength(password);
+    });
+    checkStrength(passwordField.value);
+}
+
+let confirmPasswordField = document.getElementById("confirm-password");
+if (confirmPasswordField) {
+    confirmPasswordField.addEventListener("keyup", function () {
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirm-password");
+        let submitBtn = document.getElementById("submitBtn");
+    
+        if (password === confirmPassword.value) {
+            confirmPassword.classList.add("is-valid");
+            submitBtn.disabled = false;
+        } else {
+            confirmPassword.classList.remove("is-valid");
+            submitBtn.disabled = true;
+        }
+    });
+}
+
+let btnSignoff = document.getElementById("btn-signoff");
+if (btnSignoff) {
+    btnSignoff.addEventListener("click", function () {
+        if (confirm("Are you sure you want to sign-off?")) {
+            return true;
+        }
+        return false;
+    });
+}
+
+let chkPromotionalNotification = document.getElementById("promotional-notification");
+if (chkPromotionalNotification) {
+    chkPromotionalNotification.addEventListener("click", function () {
+        let xhr = new XMLHttpRequest();
+        xhr.open("PUT", "", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let successMsg = document.getElementById("notifications-saved");
+                successMsg.innerHTML = "&nbsp;Choices saved!";
+                setTimeout(function () {
+                    successMsg.innerHTML = "&nbsp;";
+                }, 5000);
+            }
+        };
+        xhr.send("notification_promo=" + chkPromotionalNotification.checked);
+    });
+}
