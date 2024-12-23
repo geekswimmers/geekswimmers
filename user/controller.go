@@ -478,7 +478,8 @@ func getReCaptchaScore(reCaptchaResponse string) float32 {
 		defer reCaptchaRes.Body.Close()
 
 		var reCaptchaResBody map[string]interface{}
-		json.NewDecoder(reCaptchaRes.Body).Decode(&reCaptchaResBody)
+		decoder := json.NewDecoder(reCaptchaRes.Body)
+		decoder.Decode(&reCaptchaResBody)
 		reCaptchaScore, _ := strconv.ParseFloat(fmt.Sprintf("%v", reCaptchaResBody["score"]), 32)
 
 		log.Printf("Success: %v, Score: %v", reCaptchaResBody["success"], reCaptchaResBody["score"])
