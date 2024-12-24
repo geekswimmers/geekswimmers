@@ -69,20 +69,32 @@ type SignInAttempt struct {
 
 type signUpData struct {
 	BaseTemplateData *utils.BaseTemplateData
+	BirthDate        string
 	Email            string
 	Error            string
 	ErrorAgreed      string
+	ErrorBirthDate   string
 	ErrorEmail       string
 	ErrorFirstName   string
+	ErrorGender      string
 	ErrorLastName    string
+	ErrorRole        string
 	FirstName        string
+	Gender           string
 	LastName         string
 	ReCaptchaSiteKey string
+	Role             string
 	SessionData      *storage.SessionData
 }
 
 func (sud *signUpData) errorHappened() bool {
-	return len(sud.ErrorEmail) > 0 || len(sud.ErrorFirstName) > 0 || len(sud.ErrorLastName) > 0 || len(sud.ErrorAgreed) > 0
+	return len(sud.ErrorEmail) > 0 ||
+		len(sud.ErrorFirstName) > 0 ||
+		len(sud.ErrorLastName) > 0 ||
+		len(sud.ErrorAgreed) > 0 ||
+		len(sud.ErrorRole) > 0 ||
+		len(sud.ErrorBirthDate) > 0 ||
+		len(sud.ErrorGender) > 0
 }
 
 type passwordViewData struct {

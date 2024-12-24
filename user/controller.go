@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/storage"
+	"geekswimmers/times"
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
 	"html/template"
@@ -13,6 +14,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -52,6 +54,9 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
 		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
 		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
+		Role:             req.PostForm.Get("role"),
+		BirthDate:        req.PostForm.Get("birthDate"),
+		Gender:           req.PostForm.Get("gender"),
 	}
 
 	// Validates firstName
@@ -74,6 +79,54 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		userAccount := FindUserAccountByEmail(context.Email, uc.DB)
 		if userAccount != nil {
 			context.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
+		}
+	}
+
+	// Validates role
+	if context.Role == "" || (context.Role != "PARENT" && context.Role != "ATHLETE") {
+		log.Printf("Invalid role: %v", context.Role)
+		context.ErrorRole = "Select a role."
+	}
+
+	userAccount := &UserAccount{
+		Email:     context.Email,
+		FirstName: context.FirstName,
+		LastName:  context.LastName,
+		Role:      context.Role,
+	}
+
+	if context.Role == "ATHLETE" {
+		// Validates birthDate
+		if context.BirthDate == "" {
+			log.Printf("Birth date is required.")
+			context.ErrorBirthDate = "Birth date is required."
+		}
+		if context.BirthDate != "" {
+			birthDate, err := time.Parse("2006-01-02", context.BirthDate)
+			if err != nil {
+				log.Printf("Invalid birth date: %v", context.BirthDate)
+				context.ErrorBirthDate = "Invalid birth date."
+			} else {
+				userAccount.BirthDate = birthDate
+			}
+
+			// Validates age
+			swimmer := times.Swimmer{
+				BirthDate: birthDate,
+			}
+			age := swimmer.AgeAt(time.Now())
+			if age < 13 {
+				log.Printf("Invalid age: %v", age)
+				context.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
+			}
+		}
+
+		// Validates gender
+		if (context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE")) && context.Role == "ATHLETE" {
+			log.Printf("Invalid Gender: %v", context.Gender)
+			context.ErrorGender = "Select your gender."
+		} else {
+			userAccount.Gender = context.Gender
 		}
 	}
 
@@ -103,14 +156,8 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		reCaptchaScore = -1 // ReCaptcha not used
 	}
 	confirmation := uuid.New().String()
-
-	userAccount := &UserAccount{
-		Email:        context.Email,
-		FirstName:    context.FirstName,
-		LastName:     context.LastName,
-		HumanScore:   reCaptchaScore,
-		Confirmation: &confirmation,
-	}
+	userAccount.HumanScore = reCaptchaScore
+	userAccount.Confirmation = &confirmation
 
 	// Creates a new user even before checking if the reCaptchaScore is high.
 	// It helps to prevent new registrations with the same email address.

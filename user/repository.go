@@ -11,19 +11,38 @@ import (
 )
 
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
-	stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
-             values ($1, $2, $3, $4, $5, $6) returning id`
-
 	var lastInsertId int64
-	err := db.QueryRow(context.Background(), stmt,
-		userAccount.Email,
-		userAccount.FirstName,
-		userAccount.LastName,
-		userAccount.HumanScore,
-		userAccount.Confirmation,
-		userAccount.Role).Scan(&lastInsertId)
-	if err != nil {
-		return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
+
+	if userAccount.Role == "PARENT" {
+		stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
+		values ($1, $2, $3, $4, $5, $6) returning id`
+
+		err := db.QueryRow(context.Background(), stmt,
+			userAccount.Email,
+			userAccount.FirstName,
+			userAccount.LastName,
+			userAccount.HumanScore,
+			userAccount.Confirmation,
+			userAccount.Role).Scan(&lastInsertId)
+		if err != nil {
+			return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
+		}
+	} else {
+		stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role, birth_date, gender)
+		values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
+
+		err := db.QueryRow(context.Background(), stmt,
+			userAccount.Email,
+			userAccount.FirstName,
+			userAccount.LastName,
+			userAccount.HumanScore,
+			userAccount.Confirmation,
+			userAccount.Role,
+			userAccount.BirthDate,
+			userAccount.Gender).Scan(&lastInsertId)
+		if err != nil {
+			return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
+		}
 	}
 
 	return lastInsertId, nil
