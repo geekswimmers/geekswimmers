@@ -3,6 +3,7 @@ package user
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"strings"
 	"time"
 )
 
@@ -39,6 +40,13 @@ type UserAccount struct {
 	SignOffFeedback *string
 	PromotionalMsg  bool
 	Role            string
+}
+
+func (ua *UserAccount) CleanEmail() string {
+	email := ua.Email
+	email = strings.ToLower(email)
+	email = strings.TrimSpace(email)
+	return email
 }
 
 type Family struct {

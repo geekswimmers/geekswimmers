@@ -87,6 +87,9 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		log.Printf("Invalid role: %v", context.Role)
 		context.ErrorRole = "Select a role."
 	}
+	if !UserAccountExists(uc.DB) {
+		context.Role = "ADMIN"
+	}
 
 	userAccount := &UserAccount{
 		Email:     context.Email,
