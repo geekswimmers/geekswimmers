@@ -10,10 +10,11 @@
 {{end}} 
 
 {{define "content"}}
-    <h1 class="display-6">Record History</h1>
+    <h3>Record History</h3>
 
-    <h3>{{.Jurisdiction.Title}}</h3>
+    <h4>{{.Jurisdiction.Title}}</h4>
     <p class="lead">{{.Jurisdiction.SubTitle}}</p>
+    <h3 class="display-6">{{.RecordDefinition.Distance}} {{.RecordDefinition.Style | Title}}</h3>
 
     <div class="card">
         <div class="card-header">
@@ -50,7 +51,6 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Event</th>
                     <th scope="col">Record</th>
                     <th scope="col">Holder</th>
                     <th scope="col">When</th>
@@ -59,7 +59,6 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{$.RecordDefinition.Distance}} {{$.RecordDefinition.Style | Title}}</td>
                         <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{.Holder}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
