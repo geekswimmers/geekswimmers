@@ -83,7 +83,7 @@ func MarkdownToHTML(s string) template.HTML {
 	}
 
 	// Adds target="_blank" to all URLs
-	pattern := regexp.MustCompile(`(a href="[^"]+")`)
+	pattern := regexp.MustCompile(`(a href="http[^"]+")`)
 	htmlWithTargetedUrls := pattern.ReplaceAllString(html.String(), "${1} target=\"_blank\" rel=\"noopener noreferrer\"")
 
 	// Makes all images responsive.
