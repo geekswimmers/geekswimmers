@@ -1,6 +1,7 @@
 package user
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"geekswimmers/config"
@@ -110,7 +111,9 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 				log.Printf("Invalid birth date: %v", context.BirthDate)
 				context.ErrorBirthDate = "Invalid birth date."
 			} else {
-				userAccount.BirthDate = birthDate
+				userAccount.BirthDate = sql.NullTime{
+					Time: birthDate,
+				}
 			}
 
 			// Validates age
@@ -129,7 +132,9 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
-			userAccount.Gender = context.Gender
+			userAccount.Gender = sql.NullString{
+				String: context.Gender,
+			}
 		}
 	}
 
@@ -561,11 +566,11 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 	}
 
 	if userAccount.Role == "ATHLETE" {
-		if err := storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender); err != nil {
+		if err := storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender.String); err != nil {
 			return err
 		}
 
-		if err := storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Format("2006-01-02")); err != nil {
+		if err := storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Time.Format("2006-01-02")); err != nil {
 			return err
 		}
 	}

@@ -24,8 +24,8 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 			userAccount.HumanScore,
 			userAccount.Confirmation,
 			userAccount.Role,
-			userAccount.BirthDate,
-			userAccount.Gender).Scan(&lastInsertId)
+			userAccount.BirthDate.Time,
+			userAccount.Gender.String).Scan(&lastInsertId)
 		if err != nil {
 			return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
 		}

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"database/sql"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"strings"
@@ -30,8 +31,8 @@ type UserAccount struct {
 	Password        []byte
 	FirstName       string
 	LastName        string
-	Gender          string
-	BirthDate       time.Time
+	Gender          sql.NullString
+	BirthDate       sql.NullTime
 	HumanScore      float32
 	Confirmation    *string
 	Created         time.Time
