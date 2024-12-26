@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"geekswimmers/utils/reporting"
 	"html/template"
 	"log"
 	"net/http"
@@ -423,6 +424,15 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordHistoryView: %v", err)
+	}
+}
+
+func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
+	report := reporting.GetReportTemplate("records-club-poster")
+	res.Header().Set("Content-Type", "image/svg+xml")
+	err := report.Execute(res, nil)
+	if err != nil {
+		log.Printf("times.RecordPosterView: %v", err)
 	}
 }
 
