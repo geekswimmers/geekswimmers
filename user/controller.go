@@ -183,7 +183,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		// Do not send email in case the interaction is more likely done by a bot. The record remains to avoid
 		// reattempts and it will be purged by a job after a while.
 		if userAccount.HumanScore > 0.5 {
-			body := messaging.GetEmailTemplate("signup", &messaging.EmailContext{
+			body := messaging.GetEmailTemplate("signup", &messaging.EmailData{
 				CurrentEmail: userAccount.Email,
 				ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
 				Confirmation: *userAccount.Confirmation,
@@ -295,7 +295,7 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 		userAccount.Confirmation = &confirmation
 		err = UpdateUserAccount(userAccount, uc.DB)
 		if err == nil {
-			body := messaging.GetEmailTemplate("reset-password", &messaging.EmailContext{
+			body := messaging.GetEmailTemplate("reset-password", &messaging.EmailData{
 				ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
 				Confirmation: *userAccount.Confirmation,
 			})

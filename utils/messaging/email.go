@@ -6,30 +6,16 @@ import (
 	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/storage"
-	"html/template"
 	"log"
 	"net"
 	"net/mail"
 	"net/smtp"
 	"regexp"
 	"strings"
+	"text/template"
 )
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
-
-type EmailContext struct {
-	ServerUrl    string
-	Username     string
-	CurrentEmail string
-	NewEmail     string
-	Confirmation string
-	Name         string
-	Recipe       string
-	Step         string
-	Summary      string
-	Message      string
-	ID           int64
-}
 
 // SendMessage uses SMTP to send an email to the recipient with the message in the body.
 func SendMessage(to, subject, body string, db storage.Database) {
@@ -60,14 +46,14 @@ func SendMessage(to, subject, body string, db storage.Database) {
 	}
 }
 
-func GetEmailTemplate(name string, context *EmailContext) string {
+func GetEmailTemplate(name string, data *EmailData) string {
 	emailBody, err := template.ParseFiles(fmt.Sprintf("web/templates/messages/%s.txt", name))
 	if err != nil {
 		log.Print(err)
 	}
 
 	var bodyContent bytes.Buffer
-	if err := emailBody.Execute(&bodyContent, context); err != nil {
+	if err := emailBody.Execute(&bodyContent, data); err != nil {
 		log.Print(err)
 	}
 	return bodyContent.String()
