@@ -560,6 +560,11 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 		return err
 	}
 
+	if userAccount.Role == "ATHLETE" {
+		storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender)
+		storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Format("2006-01-02"))
+	}
+
 	return nil
 }
 

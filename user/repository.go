@@ -142,7 +142,7 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
+	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg, birth_date, gender
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
@@ -153,7 +153,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email,
 		&userAccount.FirstName, &userAccount.LastName, &userAccount.Role, &userAccount.Password,
-		&userAccount.SignOff, &userAccount.PromotionalMsg)
+		&userAccount.SignOff, &userAccount.PromotionalMsg, &userAccount.BirthDate, &userAccount.Gender)
 	if err != nil {
 		log.Printf("user.FindUserAccountByEmail(%v) : %v", email, err)
 		return nil
