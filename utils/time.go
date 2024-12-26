@@ -23,7 +23,7 @@ func FormatMiliseconds(milliseconds int64) string {
 }
 
 func FormatTime(min, sec, milisec int) string {
-	return fmt.Sprintf("%s:%s:%s", fmt.Sprintf("%02d", min), fmt.Sprintf("%02d", sec), fmt.Sprintf("%02d", milisec))
+	return fmt.Sprintf("%s:%s.%s", fmt.Sprintf("%02d", min), fmt.Sprintf("%02d", sec), fmt.Sprintf("%02d", milisec))
 }
 
 func MonthName(month int64) string {
