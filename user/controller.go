@@ -561,8 +561,13 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 	}
 
 	if userAccount.Role == "ATHLETE" {
-		storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender)
-		storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Format("2006-01-02"))
+		if err := storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender); err != nil {
+			return err
+		}
+
+		if err := storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Format("2006-01-02")); err != nil {
+			return err
+		}
 	}
 
 	return nil
