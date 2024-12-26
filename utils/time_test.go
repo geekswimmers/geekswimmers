@@ -8,7 +8,7 @@ func TestFormatMiliseconds(t *testing.T) {
 		milliseconds int64
 		want         string
 	}{
-		{"milliseconds should be 96", 100960, "01:40:96"},
+		{"milliseconds should be 96", 100960, "01:40.96"},
 	}
 
 	for _, tt := range tests {
@@ -25,7 +25,7 @@ func TestFormatTime(t *testing.T) {
 
 	// Happy path
 	min, sec, milisec := 1, 2, 3
-	want := "01:02:03"
+	want := "01:02.03"
 	got := FormatTime(min, sec, milisec)
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
@@ -36,8 +36,8 @@ func TestFormatTime(t *testing.T) {
 		min, sec, milisec int
 		want              string
 	}{
-		{0, 0, 0, "00:00:00"},
-		{59, 59, 99, "59:59:99"},
+		{0, 0, 0, "00:00.00"},
+		{59, 59, 99, "59:59.99"},
 	}
 
 	for _, c := range cases {
