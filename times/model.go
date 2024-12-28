@@ -181,6 +181,15 @@ func (record *Record) MonthName() string {
 	return utils.MonthName(*record.Month)
 }
 
+type RecordPoster struct {
+	Placeholder string
+	Field       string
+	Holder      string
+	Time        int64
+	CoordX      int64
+	CoordY      int64
+}
+
 type Swimmer struct {
 	BirthDate time.Time
 	Gender    string
@@ -265,4 +274,8 @@ type standardsEventViewData struct {
 	StandardTimes    []*StandardTime
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
+}
+
+type clubRecordsReportData struct {
+	Records []*RecordPoster
 }

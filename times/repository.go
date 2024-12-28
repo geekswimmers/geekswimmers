@@ -212,6 +212,31 @@ func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 	return records, nil
 }
 
+func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoster, error) {
+	sql := `select rm.placeholder, rp.field, r.holder, r.record_time, rm.coord_x, rm.coord_y
+            from record r
+                join record_poster rp on rp.record = r.id
+                join report_mapping rm on rm.id = rp.mapping
+            where r.record_set = $1`
+	rows, err := db.Query(context.Background(), sql, recordSet.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordsPoster: %v", err)
+	}
+	defer rows.Close()
+
+	var records []*RecordPoster
+	for rows.Next() {
+		record := &RecordPoster{}
+		err = rows.Scan(&record.Placeholder, &record.Field, &record.Holder, &record.Time, &record.CoordX, &record.CoordY)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordsPoster: %v", err)
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
+}
+
 func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDefinition, error) {
 	sql := `select distinct rd.min_age, rd.max_age
 			from record_definition rd

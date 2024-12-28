@@ -430,7 +430,22 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
 	report := reporting.GetReportTemplate("records-club-poster")
 	res.Header().Set("Content-Type", "image/svg+xml")
-	err := report.Execute(res, nil)
+
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	resultSet := RecordSet{
+		ID: id,
+	}
+	records, err := findRecordsPoster(resultSet, sc.DB)
+	if err != nil {
+		log.Printf("times.RecordPosterView: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	reportData := clubRecordsReportData{
+		Records: records,
+	}
+
+	err = report.Execute(res, reportData)
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
 	}

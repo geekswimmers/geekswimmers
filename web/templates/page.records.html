@@ -79,8 +79,8 @@
             <thead>
                 <tr>
                     <th scope="col">Event</th>
-                    <th scope="col">Record</th>
                     <th scope="col">Holder</th>
+                    <th scope="col">Record</th>                    
                     <th scope="col">When</th>
                 </tr>
             </thead>
@@ -99,8 +99,8 @@
                                 {{.Definition.Distance}} {{.Definition.Style | Title}}
                             {{end}}
                         </td>
-                        <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{.Holder}}</td>
+                        <td>{{.Time | FormatMiliseconds}}</td>
                         <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
                     </tr>
                 {{end}}
