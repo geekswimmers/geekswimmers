@@ -4,6 +4,16 @@
 
     $ go run main.go
 
+## Tests
+
+To run all tests:
+
+    $ go test ./...
+
+To run the tests of an specific package:
+
+    $ go test geekswimmers/utils
+
 ## Upgrading Go
 
 To upgrade the version of Go, we have to increment it in the following files:
