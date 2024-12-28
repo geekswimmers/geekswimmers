@@ -442,7 +442,8 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 	}
 
 	reportData := clubRecordsReportData{
-		Records: records,
+		Records:    records,
+		LastUpdate: time.Now(),
 	}
 
 	err = report.Execute(res, reportData)

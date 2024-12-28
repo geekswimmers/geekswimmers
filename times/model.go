@@ -277,5 +277,6 @@ type standardsEventViewData struct {
 }
 
 type clubRecordsReportData struct {
-	Records []*RecordPoster
+	Records    []*RecordPoster
+	LastUpdate time.Time
 }

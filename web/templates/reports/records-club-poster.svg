@@ -2079,5 +2079,19 @@
             id="{{.Placeholder}}">{{.Time | FormatMiliseconds}}</text>
       {{end}}
    {{end}}
+
+   <text
+      xml:space="preserve"
+      style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000"
+      x="79.21875"
+      y="2213.1562"
+      id="text32-2">Last Update: {{.LastUpdate.Format "Jan 02, 2006"}}</text>
+
+   <text
+      xml:space="preserve"
+      style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000"
+      x="2440.0002"
+      y="2213.3333"
+      id="text32">* This is a summary of what is published online. For more details, including historical records, visit https://www.geekswimmers.com/times/records</text>
   </g>
 </svg>
