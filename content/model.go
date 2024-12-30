@@ -1,8 +1,6 @@
 package content
 
 import (
-	"geekswimmers/storage"
-	"geekswimmers/utils"
 	"time"
 )
 
@@ -28,11 +26,4 @@ type ServiceUpdate struct {
 	Title     string
 	Content   string
 	Published time.Time
-}
-
-type articleViewData struct {
-	Article          *Article
-	OtherArticles    []*Article
-	BaseTemplateData *utils.BaseTemplateData
-	SessionData      *storage.SessionData
 }
