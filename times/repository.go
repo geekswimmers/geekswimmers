@@ -213,7 +213,7 @@ func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 }
 
 func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoster, error) {
-	sql := `select rm.placeholder, rp.field, r.holder, r.record_time, rm.coord_x, rm.coord_y
+	sql := `select rm.placeholder, rp.field, r.holder, r.record_time, r.year, rm.coord_x, rm.coord_y
             from record r
                 join record_poster rp on rp.record = r.id
                 join report_mapping rm on rm.id = rp.mapping
@@ -227,7 +227,7 @@ func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoste
 	var records []*RecordPoster
 	for rows.Next() {
 		record := &RecordPoster{}
-		err = rows.Scan(&record.Placeholder, &record.Field, &record.Holder, &record.Time, &record.CoordX, &record.CoordY)
+		err = rows.Scan(&record.Placeholder, &record.Field, &record.Holder, &record.Time, &record.Year, &record.CoordX, &record.CoordY)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsPoster: %v", err)
 		}

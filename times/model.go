@@ -1,6 +1,7 @@
 package times
 
 import (
+	"database/sql"
 	"fmt"
 	"geekswimmers/utils"
 	"time"
@@ -185,6 +186,7 @@ type RecordPoster struct {
 	Field       string
 	Holder      string
 	Time        int64
+	Year        sql.NullInt64
 	CoordX      int64
 	CoordY      int64
 }

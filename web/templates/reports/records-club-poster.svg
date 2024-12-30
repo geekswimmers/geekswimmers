@@ -2070,13 +2070,20 @@
             y="{{.CoordY}}"
             id="{{.Placeholder}}"
             inkscape:label="{{.Placeholder}}">{{.Holder}}</text>
-      {{else}}
+      {{else if eq .Field "TIME"}}
          <text
             xml:space="preserve"
             style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
             x="{{.CoordX}}"
             y="{{.CoordY}}"
             id="{{.Placeholder}}">{{.Time | FormatMiliseconds}}</text>
+      {{else if .Year.Valid}}
+         <text
+            xml:space="preserve"
+            style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+            x="{{.CoordX}}"
+            y="{{.CoordY}}"
+            id="{{.Placeholder}}">{{.Year.Int64}}</text>
       {{end}}
    {{end}}
 
