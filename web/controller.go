@@ -6,8 +6,9 @@ import (
 	"geekswimmers/swimming"
 	"geekswimmers/times"
 	"geekswimmers/utils"
-	"html/template"
+	htemplate "html/template"
 	"net/http"
+	ttemplate "text/template"
 
 	"log"
 )
@@ -59,7 +60,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 		SessionData:      sessionData,
 	}
 
-	html := utils.GetTemplateWithFunctions("home", "home", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("home", "home", htemplate.FuncMap{
 		"Title":    utils.Title,
 		"markdown": utils.MarkdownToHTML,
 	})
@@ -71,7 +72,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 }
 
 func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request) {
-	txt, err := template.ParseFiles("web/templates/robots.txt")
+	txt, err := ttemplate.ParseFiles("web/templates/robots.txt")
 	if err != nil {
 		log.Printf("html.template.ParseFiles: %v", err)
 	}
@@ -95,7 +96,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 		SessionData: sessionData,
 	}
 
-	txt, err := template.ParseFiles("web/templates/sitemap.xml")
+	txt, err := ttemplate.ParseFiles("web/templates/sitemap.xml")
 	if err != nil {
 		log.Printf("html.template.ParseFiles: %v", err)
 	}
