@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <script>
-            if (location.protocol != "https:" && location.hostname != "localhost") {
+            if (location.protocol !== "https:" && location.hostname !== "localhost") {
                 window.location.replace("https://www.geekswimmers.com");
             }
         </script>
@@ -47,9 +47,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Times
-                            </a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Times</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/#time-benchmark">Benchmark</a></li>
                                 <li><hr class="dropdown-divider"></li>
@@ -58,9 +56,7 @@
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Swimming
-                            </a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Swimming</a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/swimming/styles">Styles</a></li>
                             </ul>
@@ -77,6 +73,8 @@
                                     </svg> &nbsp;{{.SessionData.FirstName}} {{.SessionData.LastName}}
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="/profile/">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/auth/signout/">Sign Out</a></li>
                                 </ul>
                             </li>

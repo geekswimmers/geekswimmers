@@ -435,6 +435,23 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
 
+func (wc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	user := FindUserAccountByEmail(sessionData.Email, wc.DB)
+
+	data := &profileData{
+		BaseTemplateData: wc.BaseTemplateData,
+		SessionData:      sessionData,
+		UserAccount:      *user,
+	}
+
+	html := utils.GetTemplate("base", "profile")
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the user prodile: %v", err)
+	}
+}
+
 func (uc *UserController) authenticate(email, password, ipAddress string, humanScore float32) (*UserAccount, SignInAttempt) {
 	signInAttempt := SignInAttempt{
 		Identifier: email,

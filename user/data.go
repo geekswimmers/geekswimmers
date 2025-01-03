@@ -43,6 +43,12 @@ type passwordViewData struct {
 	SessionData      *storage.SessionData
 }
 
+type profileData struct {
+	BaseTemplateData *utils.BaseTemplateData
+	SessionData      *storage.SessionData
+	UserAccount      UserAccount
+}
+
 type setNewPasswordData struct {
 	Confirmation     string
 	Email            string
