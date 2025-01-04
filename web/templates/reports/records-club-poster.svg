@@ -420,163 +420,195 @@
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5"
+      id="RECT_FEMALE_SHORT_8"
       width="387.29837"
       height="402.19012"
-      x="287.31049"
-      y="396.98862" />
+      x="287"
+      y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71"
+      id="RECT_FEMALE_SHORT_9_10"
       width="387.29837"
       height="402.19012"
-      x="721.9187"
-      y="396.06204" />
+      x="721"
+      y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-7"
-      width="387.29837"
-      height="402.19012"
-      x="720.26575"
-      y="1315.7844" />
-
-   <rect
-      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-1"
+      id="RECT_FEMALE_SHORT_11_12"
       width="386.5282"
       height="402.19049"
-      x="1155.3495"
-      y="396.07202" />
+      x="1155"
+      y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-4"
+      id="RECT_FEMALE_SHORT_13_14"
       width="387.29837"
       height="402.19012"
-      x="287.19717"
-      y="841.50476" />
+      x="287"
+      y="840" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_FEMALE_SHORT_15_16"
+      width="387.29837"
+      height="402.19012"
+      x="721"
+      y="840" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_FEMALE_SHORT_17"
+      width="387.29837"
+      height="402.19012"
+      x="1155"
+      y="840" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_FEMALE_LONG_8"
+      width="387.29837"
+      height="402.19012"
+      x="285"
+      y="1315" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_FEMALE_LONG_9_10"
+      width="387.29837"
+      height="402.19012"
+      x="720"
+      y="1315" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_FEMALE_LONG_11_12"
+      width="386.5282"
+      height="402.19049"
+      x="1153"
+      y="1315" />
 
     <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-2"
+      id="RECT_FEMALE_LONG_13_14"
       width="387.29837"
       height="402.19012"
-      x="721.80542"
-      y="840.57819" />
-
-    <rect
-      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-12"
-      width="387.29837"
-      height="402.19012"
-      x="285.1813"
-      y="1754.1079" />
+      x="285"
+      y="1753" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-2-7"
+      id="RECT_FEMALE_LONG_15_16"
       width="387.29837"
       height="402.19012"
-      x="2234.2974"
-      y="838.96808" />
+      x="720"
+      y="1753" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-4-0"
+      id="RECT_FEMALE_LONG_17"
       width="387.29837"
       height="402.19012"
-      x="1799.6891"
-      y="839.89465" />
+      x="1153"
+      y="1753" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-1-6"
+      id="RECT_MALE_SHORT_8"
+      width="387.29837"
+      height="402.19012"
+      x="1799"
+      y="395" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_MALE_SHORT_9_10"
+      width="387.29837"
+      height="402.19012"
+      x="2234"
+      y="394" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_MALE_SHORT_11_12"
       width="386.5282"
       height="402.19049"
-      x="1153.6965"
-      y="1315.7944" />
+      x="2667"
+      y="394" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-36"
+      id="RECT_MALE_SHORT_13_14"
       width="387.29837"
       height="402.19012"
-      x="285.6575"
-      y="1316.7111" />
+      x="1799"
+      y="839" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-36-3"
+      id="RECT_MALE_SHORT_15_16"
       width="387.29837"
       height="402.19012"
-      x="1798.1494"
-      y="1315.1011" />
+      x="2234"
+      y="838" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_MALE_SHORT_17"
+      width="387.29837"
+      height="402.19012"
+      x="2667"
+      y="838" />
+
+   <rect
+      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
+      id="RECT_MALE_LONG_8"
+      width="387.29837"
+      height="402.19012"
+      x="1798"
+      y="1315" />
   
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-7-2"
+      id="RECT_MALE_LONG_9_10"
       width="387.29837"
       height="402.19012"
-      x="2232.7576"
-      y="1314.1744" />
+      x="2232"
+      y="1314" />
   
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-1-6-0"
+      id="RECT_MALE_LONG_11_12"
       width="386.5282"
       height="402.19049"
-      x="2666.1885"
-      y="1314.1844" />
+      x="2666"
+      y="1314" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-12-6"
+      id="RECT_MALE_LONG_13_14"
       width="387.29837"
       height="402.19012"
-      x="1797.6732"
-      y="1752.4979" />
+      x="1797"
+      y="1752" />
  
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-4-8"
+      id="RECT_MALE_LONG_15_16"
       width="387.29837"
       height="402.19012"
-      x="2232.2815"
-      y="1751.5714" />
+      x="2232"
+      y="1751" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-4"
+      id="RECT_MALE_LONG_17"
       width="387.29837"
       height="402.19012"
-      x="719.78955"
-      y="1753.1814" />
-
-   <rect
-      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-2"
-      width="387.29837"
-      height="402.19012"
-      x="1799.8024"
-      y="395.37854" />
-
-   <rect
-      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-71-8"
-      width="387.29837"
-      height="402.19012"
-      x="2234.4106"
-      y="394.45197" />
-
-   <rect
-      style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
-      id="rect5-1-9"
-      width="386.5282"
-      height="402.19049"
-      x="2667.8413"
-      y="394.46194" />
+      x="2666"
+      y="1751" />
    
     <text
        xml:space="preserve"
@@ -942,116 +974,154 @@
          y="2150.137"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan22-8-3-1">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
-       x="291.47913"
-       y="388.008"
-       id="text22"><tspan
-         sodipodi:role="line"
-         id="tspan22"
-         x="291.47913"
-         y="388.008"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';stroke-width:1.00157;stroke-dasharray:none">8 &amp; Under</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1157.9578"
-       y="388.76938"
-       id="text22-0"><tspan
-         sodipodi:role="line"
-         id="tspan22-87"
-         x="1157.9578"
-         y="388.76938"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">11 - 12</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="725.78015"
-       y="834.09967"
-       id="text22-08"><tspan
-         sodipodi:role="line"
-         id="tspan22-0"
-         x="725.78015"
-         y="834.09967"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">15 &amp; Over</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="291.82269"
-       y="835.64099"
-       id="text22-3"><tspan
-         sodipodi:role="line"
-         id="tspan22-5"
-         x="291.82269"
-         y="835.64099"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">13 - 14</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="726.44006"
-       y="388.55609"
-       id="text22-1"><tspan
-         sodipodi:role="line"
-         id="tspan22-50"
-         x="726.44006"
-         y="388.55609"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">9 - 10</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
-       x="290.47256"
-       y="1310.2228"
-       id="text22-06"><tspan
-         sodipodi:role="line"
-         id="tspan22-51"
-         x="290.47256"
-         y="1310.2228"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';stroke-width:1.00157;stroke-dasharray:none">8 &amp; Under</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1156.9512"
-       y="1310.9843"
-       id="text22-0-9"><tspan
-         sodipodi:role="line"
-         id="tspan22-87-4"
-         x="1156.9512"
-         y="1310.9843"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">11 - 12</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="724.77356"
-       y="1746.3145"
-       id="text22-08-4"><tspan
-         sodipodi:role="line"
-         id="tspan22-0-6"
-         x="724.77356"
-         y="1746.3145"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">15 &amp; Over</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="290.81613"
-       y="1747.8558"
-       id="text22-3-8"><tspan
-         sodipodi:role="line"
-         id="tspan22-5-1"
-         x="290.81613"
-         y="1747.8558"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">13 - 14</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="725.43347"
-       y="1310.7709"
-       id="text22-1-0"><tspan
-         sodipodi:role="line"
-         id="tspan22-50-8"
-         x="725.43347"
-         y="1310.7709"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">9 - 10</tspan></text>
+    
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="291"
+      y="388"
+      id="text22">8 &amp; Under</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="726"
+      y="388"
+      id="text22-1">9 - 10</text>   
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1157"
+      y="388"
+      id="text22-0">11 - 12</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="291"
+      y="835"
+      id="text22-3">13 - 14</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="725"
+      y="834"
+      id="text22-08">15 - 16</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1157"
+      y="834"
+      id="text22-08">17 &amp; Over</text>
+   
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="290"
+      y="1310"
+      id="text22-06">8 &amp; Under</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="725"
+      y="1310"
+      id="text22-1-0">9 - 10</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1156"
+      y="1310"
+      id="text22-0-9">11 - 12</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="290"
+      y="1747"
+      id="text22-3-8">13 - 14</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="724"
+      y="1746"
+      id="text22-08-4">15 - 16</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1156"
+      y="1746"
+      id="text22-08-4">17 &amp; Over</text>
+
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1803"
+      y="386"
+      id="text22-9">8 &amp; Under</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2238"
+      y="386"
+      id="text22-1-05">9 - 10</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2670"
+      y="387"
+      id="text22-0-3">11 - 12</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1804"
+      y="834"
+      id="text22-3-0">13 - 14</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2238"
+      y="832"
+      id="text22-08-8">15 - 16</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2670"
+      y="832"
+      id="text22-08-8">17 &amp; Over</text>
+   
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1802"
+      y="1308"
+      id="text22-06-0">8 &amp; Under</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2237"
+      y="1309"
+      id="text22-1-0-8">9 - 10</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2669"
+      y="1309"
+      id="text22-0-9-1">11 - 12</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="1803"
+      y="1746"
+      id="text22-3-8-7">13 - 14</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2237"
+      y="1744"
+      id="text22-08-4-2">15 - 16</text>
+   <text
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
+      x="2669"
+      y="1744"
+      id="text22-08-4-2">17 &amp; Over</text>
     
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1695,116 +1765,7 @@
          y="2148.5269"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan22-8-3-1-7">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
-       x="1803.9711"
-       y="386.39792"
-       id="text22-9"><tspan
-         sodipodi:role="line"
-         id="tspan22-9"
-         x="1803.9711"
-         y="386.39792"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';stroke-width:1.00157;stroke-dasharray:none">8 &amp; Under</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2670.4497"
-       y="387.1593"
-       id="text22-0-3"><tspan
-         sodipodi:role="line"
-         id="tspan22-87-9"
-         x="2670.4497"
-         y="387.1593"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">11 - 12</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2238.272"
-       y="832.48956"
-       id="text22-08-8"><tspan
-         sodipodi:role="line"
-         id="tspan22-0-4"
-         x="2238.272"
-         y="832.48956"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">15 &amp; Over</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1804.3146"
-       y="834.03088"
-       id="text22-3-0"><tspan
-         sodipodi:role="line"
-         id="tspan22-5-8"
-         x="1804.3146"
-         y="834.03088"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">13 - 14</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2238.9319"
-       y="386.94601"
-       id="text22-1-05"><tspan
-         sodipodi:role="line"
-         id="tspan22-50-9"
-         x="2238.9319"
-         y="386.94601"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">9 - 10</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
-       x="1802.9645"
-       y="1308.6128"
-       id="text22-06-0"><tspan
-         sodipodi:role="line"
-         id="tspan22-51-9"
-         x="1802.9645"
-         y="1308.6128"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';stroke-width:1.00157;stroke-dasharray:none">8 &amp; Under</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2669.4431"
-       y="1309.3743"
-       id="text22-0-9-1"><tspan
-         sodipodi:role="line"
-         id="tspan22-87-4-8"
-         x="2669.4431"
-         y="1309.3743"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">11 - 12</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2237.2654"
-       y="1744.7045"
-       id="text22-08-4-2"><tspan
-         sodipodi:role="line"
-         id="tspan22-0-6-8"
-         x="2237.2654"
-         y="1744.7045"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">15 &amp; Over</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1803.308"
-       y="1746.2458"
-       id="text22-3-8-7"><tspan
-         sodipodi:role="line"
-         id="tspan22-5-1-6"
-         x="1803.308"
-         y="1746.2458"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">13 - 14</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="2237.9253"
-       y="1309.1609"
-       id="text22-1-0-8"><tspan
-         sodipodi:role="line"
-         id="tspan22-50-8-4"
-         x="2237.9253"
-         y="1309.1609"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.6667px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold'">9 - 10</tspan></text>
+    
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1612.8223,419.74915 1456.3107,0.97088"
@@ -2090,15 +2051,15 @@
    <text
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000"
-      x="79.21875"
-      y="2213.1562"
+      x="79"
+      y="2213"
       id="text32-2">Last Update: {{.LastUpdate.Format "Jan 02, 2006"}}</text>
 
    <text
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000"
-      x="2440.0002"
-      y="2213.3333"
-      id="text32">* This is a summary of what is published online. For more details, including historical records, visit https://www.geekswimmers.com/times/records</text>
+      x="2540"
+      y="2213"
+      id="text32">* This is a summary of what is published online. For historical records, visit https://www.geekswimmers.com/times/records</text>
   </g>
 </svg>
