@@ -2,8 +2,8 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="841mm"
-   height="594mm"
+   width="840mm"
+   height="627mm"
    viewBox="0 0 3178.5828 2245.0393"
    version="1.1"
    id="svg1"
@@ -362,25 +362,27 @@
 
    <rect
       style="fill:#ececec;stroke-width:0.990858"
-      id="rect1"
-      width="3022.261"
-      height="1903.2056"
-      x="77.910088"
-      y="286.4397" />
+      id="GREY_BACKGROUND"
+      width="3022"
+      height="1951"
+      x="77"
+      y="286" />
+
+   <rect
+      style="fill:#a1d0f2;fill-opacity:1;stroke:#000000;stroke-width:0.992937;stroke-opacity:1"
+      id="FEMALE_AREA"
+      width="1473"
+      height="1914"
+      x="97"
+      y="306" />
+
     <rect
       style="fill:#a1d0f2;fill-opacity:1;stroke:#000000;stroke-width:0.993232;stroke-opacity:1"
-      id="rect4-5"
-      width="1473.3745"
-      height="1867.6705"
-      x="1611.1918"
-      y="305.4234" />
-    <rect
-      style="fill:#a1d0f2;fill-opacity:1;stroke:#000000;stroke-width:0.992937;stroke-opacity:1"
-      id="rect4"
-      width="1473.3749"
-      height="1866.5598"
-      x="97.184319"
-      y="306.56415" />
+      id="MALE_AREA"
+      width="1473"
+      height="1914"
+      x="1611"
+      y="306" />
    
    <text
       xml:space="preserve"
@@ -414,566 +416,953 @@
     <text
       xml:space="preserve"
       style="font-weight:bold;font-size:29.3333px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-      x="108.82191"
-      y="1279.9689"
-      id="text4-0">Long Course</text>
+      x="108"
+      y="1326"
+      id="FEMALE_LONG_LABEL">Long Course</text>
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_8"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="287"
       y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_9_10"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="721"
       y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_11_12"
-      width="386.5282"
-      height="402.19049"
+      width="386"
+      height="426"
       x="1155"
       y="396" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_13_14"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="287"
-      y="840" />
+      y="864" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_15_16"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="721"
-      y="840" />
+      y="864" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_SHORT_17"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="1155"
-      y="840" />
+      y="864" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_8"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="285"
-      y="1315" />
+      y="1364" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_9_10"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="720"
-      y="1315" />
+      y="1364" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_11_12"
-      width="386.5282"
-      height="402.19049"
+      width="386"
+      height="402"
       x="1153"
-      y="1315" />
+      y="1364" />
 
     <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_13_14"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="285"
-      y="1753" />
+      y="1802" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_15_16"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="720"
-      y="1753" />
+      y="1802" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_FEMALE_LONG_17"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="1153"
-      y="1753" />
+      y="1802" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_8"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="1799"
       y="395" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_9_10"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="2234"
       y="394" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_11_12"
-      width="386.5282"
-      height="402.19049"
+      width="386"
+      height="426"
       x="2667"
       y="394" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_13_14"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="1799"
-      y="839" />
+      y="863" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_15_16"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="2234"
-      y="838" />
+      y="863" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_SHORT_17"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="426"
       x="2667"
-      y="838" />
+      y="863" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_8"
-      width="387.29837"
-      height="402.19012"
+      width="387" 
+      height="402"
       x="1798"
-      y="1315" />
+      y="1363" />
   
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_9_10"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="2232"
-      y="1314" />
+      y="1363" />
   
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_11_12"
-      width="386.5282"
-      height="402.19049"
+      width="386"
+      height="402"
       x="2666"
-      y="1314" />
+      y="1363" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_13_14"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="1797"
-      y="1752" />
+      y="1800" />
  
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_15_16"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="2232"
-      y="1751" />
+      y="1800" />
 
    <rect
       style="fill:#e8f5fc;fill-opacity:1;stroke:#000000;stroke-width:0.36226;stroke-opacity:1"
       id="RECT_MALE_LONG_17"
-      width="387.29837"
-      height="402.19012"
+      width="387"
+      height="402"
       x="2666"
-      y="1751" />
+      y="1800" />
    
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="116.14903"
-       y="857.7959"
-       id="text6-7-3"><tspan
+   <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="415"
+      id="FEMALE_SHORT_EVENTS">
+      <tspan sodipodi:role="line"
+         id="tspan6-4-1-5"
+         x="116"
+         y="415">50 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="439"
+         id="tspan7-5-4-3">100 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="462"
+         id="tspan8-2-9-8">200 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="486"
+         id="tspan9-5-2-8">400 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="509">800 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="533"
+         id="tspan20-6-1">1500 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="556"
+         id="tspan10-4-8-8">50 Backstroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="579"
+         id="tspan11-7-9-9">100 Backstrokke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="603"
+         id="tspan12-4-2-6">200 Backstroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="626"
+         id="tspan13-4-6-4">50 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="650"
+         id="tspan14-3-6-3">100 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="673"
+         id="tspan15-0-4-3">200 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="697"
+         id="tspan16-7-9-3">50 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="720"
+         id="tspan17-8-5-86">100 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="744"
+         id="tspan21-0-0">200 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="767"
+         id="tspan18-6-4-4">100 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="791"
+         id="tspan18-6-4-4">200 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="116"
+         y="815"
+         id="tspan22-8-8">400 Medley</tspan>
+   </text>
+   <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="881"
+      id="FEMALE_SHORT_EVENTS_2">
+      <tspan
          sodipodi:role="line"
          id="tspan6-4-1"
-         x="116.14903"
-         y="857.7959"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
+         x="116"
+         y="881">50 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="881.26263"
-         id="tspan7-5-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
+         x="116"
+         y="904"
+         id="tspan7-5-4">100 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="904.72937"
-         id="tspan8-2-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
+         x="116"
+         y="928"
+         id="tspan8-2-9">200 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="928.19604"
-         id="tspan9-5-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
+         x="116"
+         y="951"
+         id="tspan9-5-2">400 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="951.66278"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan19-0">800 Freestyle</tspan><tspan
+         x="116"
+         y="975"
+         id="tspan19-0">800 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="975.12952"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan20-6">1500 Freestyle</tspan><tspan
+         x="116"
+         y="998"
+         id="tspan20-6">1500 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="998.59625"
-         id="tspan10-4-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
+         x="116"
+         y="1022"
+         id="tspan10-4-8">50 Backstroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1022.0629"
-         id="tspan11-7-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
+         x="116"
+         y="1045"
+         id="tspan11-7-9">100 Backstrokke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1045.5297"
-         id="tspan12-4-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
+         x="116"
+         y="1068"
+         id="tspan12-4-2">200 Backstroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1068.9963"
-         id="tspan13-4-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
+         x="116"
+         y="1092"
+         id="tspan13-4-6">50 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1092.4631"
-         id="tspan14-3-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
+         x="116"
+         y="1115"
+         id="tspan14-3-6">100 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1115.9298"
-         id="tspan15-0-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
+         x="116"
+         y="1139"
+         id="tspan15-0-4">200 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1139.3966"
-         id="tspan16-7-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
+         x="116"
+         y="1162"
+         id="tspan16-7-9">50 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1162.8633"
-         id="tspan17-8-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
+         x="116"
+         y="1186"
+         id="tspan17-8-5">100 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1186.33"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan21-0">200 Butterfly</tspan><tspan
+         x="116"
+         y="1209"
+         id="tspan21-0">200 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1209.7968"
-         id="tspan18-6-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
+         x="116"
+         y="1233"
+         id="tspan18-6-4">100 Medley</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.14903"
-         y="1233.2634"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan22-8">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="116.65364"
-       y="415.66925"
-       id="text6-7-3-7"><tspan
+         x="116"
+         y="1257"
+         id="tspan18-6-4">200 Medley</tspan>
+      <tspan
          sodipodi:role="line"
-         id="tspan6-4-1-5"
-         x="116.65364"
-         y="415.66925"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Freestyle</tspan><tspan
+         x="116"
+         y="1281"
+         id="tspan22-8">400 Medley</tspan>
+   </text>
+   <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="1629"
+      y="414"
+      id="MALE_SHORT_EVENTS">
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="439.13599"
-         id="tspan7-5-4-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Freestyle</tspan><tspan
+         id="tspan6-4-1-5-1"
+         x="1629"
+         y="414">50 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="462.60269"
-         id="tspan8-2-9-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Freestyle</tspan><tspan
+         x="1629"
+         y="437"
+         id="tspan7-5-4-3-6">100 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="486.06943"
-         id="tspan9-5-2-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">400 Freestyle</tspan><tspan
+         x="1629"
+         y="460"
+         id="tspan8-2-9-8-1">200 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="509.53613"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan19-0-3">800 Freestyle</tspan><tspan
+         x="1629"
+         y="484"
+         id="tspan9-5-2-8-9">400 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="533.00287"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan20-6-1">1500 Freestyle</tspan><tspan
+         x="1629"
+         y="507"
+         id="tspan19-0-3-4">800 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="556.4696"
-         id="tspan10-4-8-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Backstroke</tspan><tspan
+         x="1629"
+         y="531"
+         id="tspan20-6-1-9">1500 Freestyle</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="579.93628"
-         id="tspan11-7-9-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Backstrokke</tspan><tspan
+         x="1629"
+         y="554"
+         id="tspan10-4-8-8-9">50 Backstroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="603.40302"
-         id="tspan12-4-2-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Backstroke</tspan><tspan
+         x="1629"
+         y="578"
+         id="tspan11-7-9-9-6">100 Backstrokke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="626.86975"
-         id="tspan13-4-6-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Breaststroke</tspan><tspan
+         x="1629"
+         y="601"
+         id="tspan12-4-2-6-9">200 Backstroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="650.33649"
-         id="tspan14-3-6-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Breaststroke</tspan><tspan
+         x="1629"
+         y="625"
+         id="tspan13-4-6-4-4">50 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="673.80316"
-         id="tspan15-0-4-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Breaststroke</tspan><tspan
+         x="1629"
+         y="648"
+         id="tspan14-3-6-3-2">100 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="697.2699"
-         id="tspan16-7-9-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Butterfly</tspan><tspan
+         x="1629"
+         y="672"
+         id="tspan15-0-4-3-0">200 Breaststroke</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="720.73663"
-         id="tspan17-8-5-86"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Butterfly</tspan><tspan
+         x="1629"
+         y="695"
+         id="tspan16-7-9-3-2">50 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="744.20337"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan21-0-0">200 Butterfly</tspan><tspan
+         x="1629"
+         y="719"
+         id="tspan17-8-5-86-3">100 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="767.67004"
-         id="tspan18-6-4-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Medley</tspan><tspan
+         x="1629"
+         y="742"
+         id="tspan21-0-0-6">200 Butterfly</tspan>
+      <tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="791.13678"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan22-8-8">400 Medley</tspan></text>
-    <text
+         x="1629"
+         y="766"
+         id="tspan18-6-4-4-8">100 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1629"
+         y="789"
+         id="tspan18-6-4-4-8">200 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1629"
+         y="813"
+         id="tspan22-8-8-9">400 Medley</tspan>
+   </text>
+   <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="1628"
+      y="881"
+      id="MALE_SHORT_EVENTS_2">
+      <tspan
+         sodipodi:role="line"
+         id="tspan6-4-1-2"
+         x="1628"
+         y="881">50 Freestyles</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="904"
+         id="tspan7-5-4-4">100 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="928"
+         id="tspan8-2-9-9">200 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="951"
+         id="tspan9-5-2-81">400 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="975"
+         id="tspan19-0-5">800 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="998"
+         id="tspan20-6-6">1500 Freestyle</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1022"
+         id="tspan10-4-8-4">50 Backstroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1045"
+         id="tspan11-7-9-6">100 Backstrokke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1068"
+         id="tspan12-4-2-8">200 Backstroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1092"
+         id="tspan13-4-6-6">50 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1115"
+         id="tspan14-3-6-35">100 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1139"
+         id="tspan15-0-4-7">200 Breaststroke</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1162"
+         id="tspan16-7-9-42">50 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1186"
+         id="tspan17-8-5-4">100 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1209"
+         id="tspan21-0-02">200 Butterfly</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1233"
+         id="tspan18-6-4-7">100 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1257"
+         id="tspan18-6-4-7">200 Medley</tspan>
+      <tspan
+         sodipodi:role="line"
+         x="1628"
+         y="1281"
+         id="tspan22-8-2">400 Medley</tspan>
+   </text>
+   <text
        xml:space="preserve"
        style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="116.65364"
-       y="1335.6693"
-       id="text6-7-3-5"><tspan
+       x="116"
+       y="1383"
+       id="FEMALE_LONG_EVENTS"><tspan
          sodipodi:role="line"
          id="tspan6-4-1-0"
-         x="116.65364"
-         y="1335.6693"
+         x="116"
+         y="1383"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1359.136"
+         x="116"
+         y="1406"
          id="tspan7-5-4-9"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1382.6028"
+         x="116"
+         y="1429"
          id="tspan8-2-9-6"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1406.0695"
+         x="116"
+         y="1453"
          id="tspan9-5-2-3"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1429.5363"
+         x="116"
+         y="1476"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan19-0-8">800 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1453.0029"
+         x="116"
+         y="1499"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan20-6-5">1500 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1476.4696"
+         x="116"
+         y="1523"
          id="tspan10-4-8-6"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1499.9364"
+         x="116"
+         y="1546"
          id="tspan11-7-9-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1523.4031"
+         x="116"
+         y="1570"
          id="tspan12-4-2-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1546.8698"
+         x="116"
+         y="1593"
          id="tspan13-4-6-5"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1570.3365"
+         x="116"
+         y="1617"
          id="tspan14-3-6-9"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1593.8032"
+         x="116"
+         y="1640"
          id="tspan15-0-4-8"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1617.27"
+         x="116"
+         y="1664"
          id="tspan16-7-9-4"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1640.7367"
+         x="116"
+         y="1687"
          id="tspan17-8-5-8"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1664.2034"
+         x="116"
+         y="1711"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan21-0-1">200 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1687.6702"
+         x="116"
+         y="1735"
          id="tspan18-6-4-0"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
          sodipodi:role="line"
-         x="116.65364"
-         y="1711.1368"
+         x="116"
+         y="1759"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan22-8-3">400 Medley</tspan></text>
     <text
        xml:space="preserve"
        style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="116.65366"
-       y="1774.6693"
-       id="text6-7-3-5-4"><tspan
+       x="116"
+       y="1822"
+       id="FEMALE_LONG_EVENTS_2"><tspan
          sodipodi:role="line"
          id="tspan6-4-1-0-4"
-         x="116.65366"
-         y="1774.6693"
+         x="116"
+         y="1822"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1798.136"
+         x="116"
+         y="1846"
          id="tspan7-5-4-9-7"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1821.6028"
+         x="116"
+         y="1869"
          id="tspan8-2-9-6-6"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1845.0695"
+         x="116"
+         y="1892"
          id="tspan9-5-2-3-3"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1868.5363"
+         x="116"
+         y="1916"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan19-0-8-1">800 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1892.0029"
+         x="116"
+         y="1938"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan20-6-5-7">1500 Freestyle</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1915.4696"
+         x="116"
+         y="1963"
          id="tspan10-4-8-6-5"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1938.9364"
+         x="116"
+         y="1986"
          id="tspan11-7-9-1-9"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1962.4031"
+         x="116"
+         y="2010"
          id="tspan12-4-2-1-6"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="1985.8698"
+         x="116"
+         y="2032"
          id="tspan13-4-6-5-2"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2009.3365"
+         x="116"
+         y="2056"
          id="tspan14-3-6-9-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2032.8032"
+         x="116"
+         y="2080"
          id="tspan15-0-4-8-7"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2056.27"
+         x="116"
+         y="2104"
          id="tspan16-7-9-4-8"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2079.7366"
+         x="116"
+         y="2128"
          id="tspan17-8-5-8-5"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2103.2034"
+         x="116"
+         y="2150"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan21-0-1-7">200 Butterfly</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2126.6702"
+         x="116"
+         y="2174"
          id="tspan18-6-4-0-4"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
          sodipodi:role="line"
-         x="116.65366"
-         y="2150.137"
+         x="116"
+         y="2196"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
          id="tspan22-8-3-1">400 Medley</tspan></text>
+   <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       x="1629"
+       y="1383"
+       id="MALE_LONG_EVENTS"><tspan
+         sodipodi:role="line"
+         id="tspan6-4-1-0-8"
+         x="1629"
+         y="1383"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1406"
+         id="tspan7-5-4-9-6"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1429"
+         id="tspan8-2-9-6-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1453"
+         id="tspan9-5-2-3-35"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1476"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan19-0-8-3">800 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1499"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan20-6-5-5">1500 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1523"
+         id="tspan10-4-8-6-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1546"
+         id="tspan11-7-9-1-5"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1570"
+         id="tspan12-4-2-1-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1593"
+         id="tspan13-4-6-5-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1617"
+         id="tspan14-3-6-9-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1640"
+         id="tspan15-0-4-8-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1664"
+         id="tspan16-7-9-4-0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1687"
+         id="tspan17-8-5-8-52"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1711"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan21-0-1-1">200 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1735"
+         id="tspan18-6-4-0-0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1759"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan22-8-3-2">400 Medley</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       x="1629"
+       y="1822"
+       id="text6-7-3-5-4-0"><tspan
+         sodipodi:role="line"
+         id="tspan6-4-1-0-4-6"
+         x="1629"
+         y="1822"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1846"
+         id="tspan7-5-4-9-7-3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1869"
+         id="tspan8-2-9-6-6-6"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1892"
+         id="tspan9-5-2-3-3-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1916"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan19-0-8-1-4">800 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1938"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan20-6-5-7-8">1500 Freestyle</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1963"
+         id="tspan10-4-8-6-5-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="1986"
+         id="tspan11-7-9-1-9-0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2010"
+         id="tspan12-4-2-1-6-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2032"
+         id="tspan13-4-6-5-2-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2056"
+         id="tspan14-3-6-9-1-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2080"
+         id="tspan15-0-4-8-7-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2104"
+         id="tspan16-7-9-4-8-2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2128"
+         id="tspan17-8-5-8-5-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2150"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan21-0-1-7-2">200 Butterfly</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2174"
+         id="tspan18-6-4-0-4-7"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
+         sodipodi:role="line"
+         x="1629"
+         y="2196"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
+         id="tspan22-8-3-1-7">400 Medley</tspan>
+   </text>
     
    <text
       xml:space="preserve"
@@ -997,56 +1386,56 @@
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="291"
-      y="835"
+      y="855"
       id="text22-3">13 - 14</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="725"
-      y="834"
+      y="855"
       id="text22-08">15 - 16</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1157"
-      y="834"
+      y="855"
       id="text22-08">17 &amp; Over</text>
    
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="290"
-      y="1310"
+      y="1358"
       id="text22-06">8 &amp; Under</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="725"
-      y="1310"
+      y="1358"
       id="text22-1-0">9 - 10</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1156"
-      y="1310"
+      y="1358"
       id="text22-0-9">11 - 12</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="290"
-      y="1747"
+      y="1795"
       id="text22-3-8">13 - 14</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="724"
-      y="1746"
+      y="1795"
       id="text22-08-4">15 - 16</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1156"
-      y="1746"
+      y="1795"
       id="text22-08-4">17 &amp; Over</text>
 
    <text
@@ -1071,56 +1460,56 @@
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1804"
-      y="834"
+      y="856"
       id="text22-3-0">13 - 14</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2238"
-      y="832"
+      y="856"
       id="text22-08-8">15 - 16</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2670"
-      y="832"
+      y="856"
       id="text22-08-8">17 &amp; Over</text>
    
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1802"
-      y="1308"
+      y="1357"
       id="text22-06-0">8 &amp; Under</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2237"
-      y="1309"
+      y="1357"
       id="text22-1-0-8">9 - 10</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2669"
-      y="1309"
+      y="1357"
       id="text22-0-9-1">11 - 12</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="1803"
-      y="1746"
+      y="1794"
       id="text22-3-8-7">13 - 14</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2237"
-      y="1744"
+      y="1794"
       id="text22-08-4-2">15 - 16</text>
    <text
       xml:space="preserve"
       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-opacity:1"
       x="2669"
-      y="1744"
+      y="1794"
       id="text22-08-4-2">17 &amp; Over</text>
     
     <path
@@ -1129,11 +1518,11 @@
        id="path22" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,444.82589 1456.31067,0.97088"
+       d="m 100.33043,444.82589 1456.31067,1"
        id="path22-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,468.29256 1456.31067,0.97088"
+       d="m 100.33043,468.29256 1456.31067,1"
        id="path22-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1141,59 +1530,59 @@
        id="path22-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,515.22589 1456.31067,0.97088"
+       d="m 100.33043,515.22589 1456.31067,1"
        id="path22-5-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,538.69256 1456.31067,0.97088"
+       d="m 100.33043,538.69256 1456.31067,1"
        id="path22-7-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,562.15923 1456.31067,0.97088"
+       d="m 100.33043,562.15923 1456.31067,1"
        id="path22-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,585.62589 1456.31067,0.97088"
+       d="m 100.33043,585.62589 1456.31067,1"
        id="path22-5-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,609.09256 1456.31067,0.97088"
+       d="m 100.33043,609.09256 1456.31067,1"
        id="path22-7-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,632.55923 1456.31067,0.97088"
+       d="m 100.33043,632.55923 1456.31067,1"
        id="path22-6-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,656.02589 1456.31067,0.97088"
+       d="m 100.33043,656.02589 1456.31067,1"
        id="path22-5-1-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,679.49256 1456.31067,0.97088"
+       d="m 100.33043,679.49256 1456.31067,1"
        id="path22-7-5-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,702.95923 1456.31067,0.97088"
+       d="m 100.33043,702.95923 1456.31067,1"
        id="path22-7-1-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,726.4259 1456.31067,0.97088"
+       d="m 100.33043,726.4259 1456.31067,1"
        id="path22-6-2-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,749.89256 1456.31067,0.97088"
+       d="m 100.33043,749.89256 1456.31067,1"
        id="path22-5-1-2-7" />
+   <path
+      style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+      d="m 100, 773 1456, 1"
+      id="path22-7-5-6-4" />
+   <path
+      style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+      d="m 100, 797 1456, 1"
+      id="path22-7-5-6-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.33043,773.35923 1456.31067,0.97088"
-       id="path22-7-5-6-4" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,864.45238 1456.31064,0.97088"
-       id="path22-02" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,887.91905 1456.31064,0.97088"
+       d="m 100.57176,887.91905 1456.31064,1"
        id="path22-5-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1201,11 +1590,11 @@
        id="path22-7-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,934.85238 1456.31064,0.97088"
+       d="m 100.57176,934.85238 1456.31064,1"
        id="path22-6-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,958.31905 1456.31064,0.97088"
+       d="m 100.57176,958.31905 1456.31064,1"
        id="path22-5-1-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1213,172 +1602,181 @@
        id="path22-7-5-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1005.2524 1456.31064,0.9709"
+       d="m 100.57176,1005.2524 1456.31064,1"
        id="path22-0-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1028.7191 1456.31064,0.9708"
+       d="m 100.57176,1028.7191 1456.31064,1"
        id="path22-5-8-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1052.1857 1456.31064,0.9709"
+       d="m 100.57176,1052.1857 1456.31064,1"
        id="path22-7-1-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1075.6524 1456.31064,0.9709"
+       d="m 100.57176,1075.6524 1456.31064,1"
        id="path22-6-2-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1099.1191 1456.31064,0.9708"
+       d="m 100.57176,1099.1191 1456.31064,1"
        id="path22-5-1-2-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1122.5857 1456.31064,0.9709"
+       d="m 100.57176,1122.5857 1456.31064,1"
        id="path22-7-5-6-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1146.0524 1456.31064,0.9709"
+       d="m 100.57176,1146.0524 1456.31064,1"
        id="path22-7-1-4-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1169.5191 1456.31064,0.9708"
+       d="m 100.57176,1169.5191 1456.31064,1"
        id="path22-6-2-2-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1192.9857 1456.31064,0.9709"
+       d="m 100.57176,1192.9857 1456.31064,1"
        id="path22-5-1-2-7-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.57176,1216.4524 1456.31064,0.9709"
+       d="m 100,1216 1456,1"
        id="path22-7-5-6-4-0" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 100,1240 1456,1"
+       id="path22-02" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 100,1264 1456,1"
+       id="path22-02e" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1340.9921 1456.3107,0.9708"
-       id="path22-4" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1364.4588 1456.3107,0.9708"
-       id="path22-5-73" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1387.9254 1456.3107,0.9709"
+       d="m 100.0797,1387.9254 1456.3107,1"
        id="path22-7-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1411.3921 1456.3107,0.9709"
+       d="m 100.0797,1411.3921 1456.3107,1"
        id="path22-6-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1434.8588 1456.3107,0.9709"
+       d="m 100.0797,1434.8588 1456.3107,1"
        id="path22-5-1-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1458.3254 1456.3107,0.9709"
+       d="m 100.0797,1458.3254 1456.3107,1"
        id="path22-7-5-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1481.7921 1456.3107,0.9709"
+       d="m 100.0797,1481.7921 1456.3107,1"
        id="path22-0-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1505.2588 1456.3107,0.9708"
+       d="m 100.0797,1505.2588 1456.3107,1"
        id="path22-5-8-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1528.7254 1456.3107,0.9709"
+       d="m 100.0797,1528.7254 1456.3107,1"
        id="path22-7-1-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1552.1921 1456.3107,0.9709"
+       d="m 100.0797,1552.1921 1456.3107,1"
        id="path22-6-2-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1575.6588 1456.3107,0.9709"
+       d="m 100.0797,1575.6588 1456.3107,1"
        id="path22-5-1-2-90" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1599.1254 1456.3107,0.9709"
+       d="m 100.0797,1599.1254 1456.3107,1"
        id="path22-7-5-6-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1622.5921 1456.3107,0.9709"
+       d="m 100.0797,1622.5921 1456.3107,1"
        id="path22-7-1-4-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1646.0588 1456.3107,0.9709"
+       d="m 100.0797,1646.0588 1456.3107,1"
        id="path22-6-2-2-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1669.5254 1456.3107,0.9709"
+       d="m 100.0797,1669.5254 1456.3107,1"
        id="path22-5-1-2-7-31" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 100.0797,1692.9921 1456.3107,0.9709"
+       d="m 100,1692 1456,1"
        id="path22-7-5-6-4-03" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 100,1716 1456,1"
+       id="path22-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1780.373 1456.31063,0.9709"
-       id="path22-2" />
+       d="m 100,1740 1456,1"
+       id="path22-5-73" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1803.8397 1456.31063,0.9709"
-       id="path22-5-2" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1827.3064 1456.31063,0.9708"
+       d="m 98.33367,1827.3064 1456.31063,1"
        id="path22-7-15" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1850.773 1456.31063,0.9709"
+       d="m 98.33367,1850.773 1456.31063,1"
        id="path22-6-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1874.2397 1456.31063,0.9709"
+       d="m 98.33367,1874.2397 1456.31063,1"
        id="path22-5-1-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1897.7064 1456.31063,0.9708"
+       d="m 98.33367,1897.7064 1456.31063,1"
        id="path22-7-5-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1921.173 1456.31063,0.9709"
+       d="m 98.33367,1921.173 1456.31063,1"
        id="path22-0-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1944.6397 1456.31063,0.9709"
+       d="m 98.33367,1944.6397 1456.31063,1"
        id="path22-5-8-85" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1968.1064 1456.31063,0.9708"
+       d="m 98.33367,1968.1064 1456.31063,1"
        id="path22-7-1-80" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,1991.573 1456.31063,0.9709"
+       d="m 98.33367,1991.573 1456.31063,1"
        id="path22-6-2-86" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2015.0397 1456.31063,0.9709"
+       d="m 98.33367,2015.0397 1456.31063,1"
        id="path22-5-1-2-93" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2038.5064 1456.31063,0.9708"
+       d="m 98.33367,2038.5064 1456.31063,1"
        id="path22-7-5-6-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2061.973 1456.31063,0.9709"
+       d="m 98.33367,2061.973 1456.31063,1"
        id="path22-7-1-4-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2085.4397 1456.31063,0.9709"
+       d="m 98.33367,2085.4397 1456.31063,1"
        id="path22-6-2-2-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2108.9064 1456.31063,0.9708"
+       d="m 98,2108 1456,1"
        id="path22-5-1-2-7-37" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 98.33367,2132.373 1456.31063,0.9709"
+       d="m 98,2132 1456,1"
        id="path22-7-5-6-4-1" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 98,2156 1456,1"
+       id="path22-2" />
+    <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 98,2180 1456,1"
+       id="path22-5-2" />
+
     <text
        xml:space="preserve"
        style="font-weight:bold;font-size:29.3333px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
@@ -1390,385 +1788,16 @@
          x="1622.0541"
          y="354.10681"
          style="font-size:29.3333px;fill:#1a1a1a">Short Course</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:29.3333px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1621.3138"
-       y="1278.3589"
-       id="text4-0-6"><tspan
-         sodipodi:role="line"
-         id="tspan4-3-8"
-         x="1621.3138"
-         y="1278.3589"
-         style="font-size:29.3333px;fill:#1a1a1a">Long Course</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1628.6409"
-       y="856.18579"
-       id="text6-7-3-0"><tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-2"
-         x="1628.6409"
-         y="856.18579"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="879.65253"
-         id="tspan7-5-4-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="903.11926"
-         id="tspan8-2-9-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="926.58594"
-         id="tspan9-5-2-81"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="950.05267"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan19-0-5">800 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="973.51941"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan20-6-6">1500 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="996.98615"
-         id="tspan10-4-8-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1020.4528"
-         id="tspan11-7-9-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1043.9196"
-         id="tspan12-4-2-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1067.3862"
-         id="tspan13-4-6-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1090.853"
-         id="tspan14-3-6-35"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1114.3197"
-         id="tspan15-0-4-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1137.7865"
-         id="tspan16-7-9-42"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1161.2532"
-         id="tspan17-8-5-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1184.7198"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan21-0-02">200 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1208.1866"
-         id="tspan18-6-4-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
-         sodipodi:role="line"
-         x="1628.6409"
-         y="1231.6533"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan22-8-2">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1629.1455"
-       y="414.05917"
-       id="text6-7-3-7-0"><tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-5-1"
-         x="1629.1455"
-         y="414.05917"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="437.52591"
-         id="tspan7-5-4-3-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="460.99261"
-         id="tspan8-2-9-8-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="484.45935"
-         id="tspan9-5-2-8-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">400 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="507.92606"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan19-0-3-4">800 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="531.39276"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan20-6-1-9">1500 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="554.8595"
-         id="tspan10-4-8-8-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="578.32623"
-         id="tspan11-7-9-9-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Backstrokke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="601.79297"
-         id="tspan12-4-2-6-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="625.25964"
-         id="tspan13-4-6-4-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="648.72638"
-         id="tspan14-3-6-3-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="672.19312"
-         id="tspan15-0-4-3-0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="695.65985"
-         id="tspan16-7-9-3-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">50 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="719.12653"
-         id="tspan17-8-5-86-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">100 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="742.59326"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan21-0-0-6">200 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="766.06"
-         id="tspan18-6-4-4-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1">200 Medley</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="789.52673"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#1a1a1a;fill-opacity:1"
-         id="tspan22-8-8-9">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1629.1455"
-       y="1334.0593"
-       id="text6-7-3-5-2"><tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-0-8"
-         x="1629.1455"
-         y="1334.0593"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1357.526"
-         id="tspan7-5-4-9-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1380.9928"
-         id="tspan8-2-9-6-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1404.4595"
-         id="tspan9-5-2-3-35"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1427.9263"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan19-0-8-3">800 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1451.3929"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan20-6-5-5">1500 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1474.8596"
-         id="tspan10-4-8-6-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1498.3264"
-         id="tspan11-7-9-1-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1521.7931"
-         id="tspan12-4-2-1-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1545.2598"
-         id="tspan13-4-6-5-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1568.7266"
-         id="tspan14-3-6-9-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1592.1932"
-         id="tspan15-0-4-8-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1615.66"
-         id="tspan16-7-9-4-0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1639.1267"
-         id="tspan17-8-5-8-52"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1662.5934"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan21-0-1-1">200 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1686.0602"
-         id="tspan18-6-4-0-0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1709.5269"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan22-8-3-2">400 Medley</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
-       x="1629.1455"
-       y="1773.0593"
-       id="text6-7-3-5-4-0"><tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-0-4-6"
-         x="1629.1455"
-         y="1773.0593"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1796.526"
-         id="tspan7-5-4-9-7-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1819.9928"
-         id="tspan8-2-9-6-6-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1843.4595"
-         id="tspan9-5-2-3-3-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">400 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1866.9263"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan19-0-8-1-4">800 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1890.3929"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan20-6-5-7-8">1500 Freestyle</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1913.8596"
-         id="tspan10-4-8-6-5-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1937.3264"
-         id="tspan11-7-9-1-9-0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Backstrokke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1960.7931"
-         id="tspan12-4-2-1-6-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Backstroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="1984.2598"
-         id="tspan13-4-6-5-2-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2007.7266"
-         id="tspan14-3-6-9-1-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2031.1932"
-         id="tspan15-0-4-8-7-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Breaststroke</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2054.6599"
-         id="tspan16-7-9-4-8-2"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">50 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2078.1267"
-         id="tspan17-8-5-8-5-4"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">100 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2101.5935"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan21-0-1-7-2">200 Butterfly</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2125.0601"
-         id="tspan18-6-4-0-4-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1">200 Medley</tspan><tspan
-         sodipodi:role="line"
-         x="1629.1455"
-         y="2148.5269"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#000000;fill-opacity:1"
-         id="tspan22-8-3-1-7">400 Medley</tspan></text>
+   <text
+      xml:space="preserve"
+      style="font-weight:bold;font-size:29.3333px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="1621"
+      y="1326"
+      id="MALE_LONG_LABEL">Long Course</text>
     
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,419.74915 1456.3107,0.97088"
+       d="m 1612.8223,419.74915 1456.3107,1"
        id="path22-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1776,11 +1805,11 @@
        id="path22-5-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,466.68249 1456.3107,0.97088"
+       d="m 1612.8223,466.68249 1456.3107,1"
        id="path22-7-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,490.14915 1456.3107,0.97088"
+       d="m 1612.8223,490.14915 1456.3107,1"
        id="path22-6-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1788,11 +1817,11 @@
        id="path22-5-1-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,537.08249 1456.3107,0.97088"
+       d="m 1612.8223,537.08249 1456.3107,1"
        id="path22-7-5-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,560.54916 1456.3107,0.97088"
+       d="m 1612.8223,560.54916 1456.3107,1"
        id="path22-0-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1800,11 +1829,11 @@
        id="path22-5-8-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,607.48249 1456.3107,0.97088"
+       d="m 1612.8223,607.48249 1456.3107,1"
        id="path22-7-1-30" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,630.94916 1456.3107,0.97088"
+       d="m 1612.8223,630.94916 1456.3107,1"
        id="path22-6-2-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
@@ -1812,216 +1841,224 @@
        id="path22-5-1-2-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,677.88249 1456.3107,0.97088"
+       d="m 1612.8223,677.88249 1456.3107,1"
        id="path22-7-5-6-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,701.34916 1456.3107,0.97088"
+       d="m 1612.8223,701.34916 1456.3107,1"
        id="path22-7-1-4-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,724.81583 1456.3107,0.97088"
+       d="m 1612.8223,724.81583 1456.3107,1"
        id="path22-6-2-2-66" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,748.28249 1456.3107,0.97088"
+       d="m 1612.8223,748.28249 1456.3107,1"
        id="path22-5-1-2-7-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.8223,771.74916 1456.3107,0.97088"
+       d="m 1612.8223,771.74916 1456.3107,1"
+       id="path22-7-5-6-4-17" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1612,795 1456,1"
        id="path22-7-5-6-4-17" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,862.84231 1456.3106,0.97088"
-       id="path22-02-8" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,886.30898 1456.3106,0.97088"
+       d="m 1613.0637,886.30898 1456.3106,1"
        id="path22-5-7-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,909.77565 1456.3106,0.97088"
+       d="m 1613.0637,909.77565 1456.3106,1"
        id="path22-7-9-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,933.24231 1456.3106,0.97088"
+       d="m 1613.0637,933.24231 1456.3106,1"
        id="path22-6-9-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,956.70898 1456.3106,0.97088"
+       d="m 1613.0637,956.70898 1456.3106,1"
        id="path22-5-1-5-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,980.1757 1456.3106,0.9708"
+       d="m 1613.0637,980.1757 1456.3106,1"
        id="path22-7-5-2-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1003.6423 1456.3106,0.9709"
+       d="m 1613.0637,1003.6423 1456.3106,1"
        id="path22-0-0-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1027.109 1456.3106,0.9708"
+       d="m 1613.0637,1027.109 1456.3106,1"
        id="path22-5-8-8-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1050.5756 1456.3106,0.9709"
+       d="m 1613.0637,1050.5756 1456.3106,1"
        id="path22-7-1-3-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1074.0423 1456.3106,0.9709"
+       d="m 1613.0637,1074.0423 1456.3106,1"
        id="path22-6-2-5-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1097.509 1456.3106,0.9708"
+       d="m 1613.0637,1097.509 1456.3106,1"
        id="path22-5-1-2-9-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1120.9756 1456.3106,0.9709"
+       d="m 1613.0637,1120.9756 1456.3106,1"
        id="path22-7-5-6-6-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1144.4423 1456.3106,0.9709"
+       d="m 1613.0637,1144.4423 1456.3106,1"
        id="path22-7-1-4-5-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1167.909 1456.3106,0.9708"
+       d="m 1613.0637,1167.909 1456.3106,1"
        id="path22-6-2-2-6-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1191.3756 1456.3106,0.9709"
+       d="m 1613.0637,1191.3756 1456.3106,1"
        id="path22-5-1-2-7-3-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1613.0637,1214.8423 1456.3106,0.9709"
+       d="m 1613,1214 1456,1"
        id="path22-7-5-6-4-0-0" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1613,1238 1456,1"
+       id="path22-02-8" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1613,1262 1456,1"
+       id="path22-02-d8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1339.382 1456.3107,0.9708"
-       id="path22-4-6" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1362.8487 1456.3107,0.9708"
-       id="path22-5-73-8" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1386.3153 1456.3107,0.9709"
+       d="m 1612.5716,1386.3153 1456.3107,1"
        id="path22-7-0-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1409.782 1456.3107,0.9709"
+       d="m 1612.5716,1409.782 1456.3107,1"
        id="path22-6-1-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1433.2487 1456.3107,0.9709"
+       d="m 1612.5716,1433.2487 1456.3107,1"
        id="path22-5-1-6-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1456.7153 1456.3107,0.9709"
+       d="m 1612.5716,1456.7153 1456.3107,1"
        id="path22-7-5-7-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1480.182 1456.3107,0.9709"
+       d="m 1612.5716,1480.182 1456.3107,1"
        id="path22-0-5-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1503.6487 1456.3107,0.9708"
+       d="m 1612.5716,1503.6487 1456.3107,1"
        id="path22-5-8-7-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1527.1153 1456.3107,0.9709"
+       d="m 1612.5716,1527.1153 1456.3107,1"
        id="path22-7-1-8-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1550.582 1456.3107,0.9709"
+       d="m 1612.5716,1550.582 1456.3107,1"
        id="path22-6-2-8-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1574.0487 1456.3107,0.9709"
+       d="m 1612.5716,1574.0487 1456.3107,1"
        id="path22-5-1-2-90-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1597.5153 1456.3107,0.9709"
+       d="m 1612.5716,1597.5153 1456.3107,1"
        id="path22-7-5-6-7-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1620.982 1456.3107,0.9709"
+       d="m 1612.5716,1620.982 1456.3107,1"
        id="path22-7-1-4-8-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1644.4487 1456.3107,0.9709"
+       d="m 1612.5716,1644.4487 1456.3107,1"
        id="path22-6-2-2-0-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1667.9153 1456.3107,0.9709"
+       d="m 1612.5716,1667.9153 1456.3107,1"
        id="path22-5-1-2-7-31-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1612.5716,1691.382 1456.3107,0.9709"
+       d="m 1612,1691 1456,1"
        id="path22-7-5-6-4-03-9" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1612,1715 1456,1"
+       id="path22-4-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1778.7629 1456.3106,0.9709"
-       id="path22-2-1" />
+       d="m 1612,1739 1456,1"
+       id="path22-5-73-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1802.2296 1456.3106,0.9709"
-       id="path22-5-2-2" />
-    <path
-       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1825.6963 1456.3106,0.9708"
+       d="m 1610.8256,1825.6963 1456.3106,1"
        id="path22-7-15-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1849.1629 1456.3106,0.9709"
+       d="m 1610.8256,1849.1629 1456.3106,1"
        id="path22-6-3-2" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1872.6296 1456.3106,0.9709"
+       d="m 1610.8256,1872.6296 1456.3106,1"
        id="path22-5-1-3-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1896.0963 1456.3106,0.9708"
+       d="m 1610.8256,1896.0963 1456.3106,1"
        id="path22-7-5-8-6" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1919.5629 1456.3106,0.9709"
+       d="m 1610.8256,1919.5629 1456.3106,1"
        id="path22-0-2-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1943.0296 1456.3106,0.9709"
+       d="m 1610.8256,1943.0296 1456.3106,1"
        id="path22-5-8-85-0" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1966.4963 1456.3106,0.9708"
+       d="m 1610.8256,1966.4963 1456.3106,1"
        id="path22-7-1-80-5" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,1989.9629 1456.3106,0.9709"
+       d="m 1610.8256,1989.9629 1456.3106,1"
        id="path22-6-2-86-4" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2013.4296 1456.3106,0.9709"
+       d="m 1610.8256,2013.4296 1456.3106,1"
        id="path22-5-1-2-93-3" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2036.8963 1456.3106,0.9708"
+       d="m 1610.8256,2036.8963 1456.3106,1"
        id="path22-7-5-6-3-1" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2060.3629 1456.3106,0.9709"
+       d="m 1610.8256,2060.3629 1456.3106,1"
        id="path22-7-1-4-7-9" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2083.8296 1456.3106,0.9709"
+       d="m 1610.8256,2083.8296 1456.3106,1"
        id="path22-6-2-2-4-8" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2107.2963 1456.3106,0.9708"
+       d="m 1610,2107 1456,1"
        id="path22-5-1-2-7-37-7" />
     <path
        style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 1610.8256,2130.7629 1456.3106,0.9709"
+       d="m 1610,2131 1456,1"
        id="path22-7-5-6-4-1-7" />
+   <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1610,2155 1456,1"
+       id="path22-2-1" />
+    <path
+       style="fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-dasharray:1, 3;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1610,2179 1456,1"
+       id="path22-5-2-2" />
    {{range .Records}}
       {{if eq .Field "HOLDER"}}
          <text
@@ -2052,14 +2089,14 @@
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000"
       x="79"
-      y="2213"
+      y="2261"
       id="text32-2">Last Update: {{.LastUpdate.Format "Jan 02, 2006"}}</text>
 
    <text
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000"
       x="2540"
-      y="2213"
+      y="2261"
       id="text32">* This is a summary of what is published online. For historical records, visit https://www.geekswimmers.com/times/records</text>
   </g>
 </svg>

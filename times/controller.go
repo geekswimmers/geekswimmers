@@ -5,12 +5,13 @@ import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"geekswimmers/utils/reporting"
-	"html/template"
+	htemplate "html/template"
 	"log"
 	"net/http"
 	"sort"
 	"strconv"
 	"strings"
+	ttemplate "text/template"
 	"time"
 )
 
@@ -149,7 +150,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		SessionData:      sessionData,
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "benchmark", htemplate.FuncMap{
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 		"Abs":               utils.Abs,
@@ -271,7 +272,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 	ctx.Meets = meets
 
-	html := utils.GetTemplateWithFunctions("base", "timestandard", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "timestandard", htemplate.FuncMap{
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 	})
@@ -378,7 +379,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	ctx.RecordDefinition = definition
 	ctx.Records = groupedRecords
 
-	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "records", htemplate.FuncMap{
 		"Title":             utils.Title,
 		"Lowercase":         utils.Lowercase,
 		"FormatMiliseconds": utils.FormatMiliseconds,
@@ -417,7 +418,7 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 		ctx.Jurisdiction = records[0].RecordSet.Jurisdiction
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "record-history", htemplate.FuncMap{
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 	})
@@ -428,7 +429,8 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 }
 
 func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
-	report := reporting.GetReportTemplate("records-club-poster")
+	var report *ttemplate.Template
+	report = reporting.GetReportTemplate("records-club-poster")
 	res.Header().Set("Content-Type", "image/svg+xml")
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -527,7 +529,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	ctx.StandardTimes = standardsEvent
 
-	html := utils.GetTemplateWithFunctions("base", "standards-event", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "standards-event", htemplate.FuncMap{
 		"Title":             utils.Title,
 		"Lowercase":         utils.Lowercase,
 		"FormatMiliseconds": utils.FormatMiliseconds,
