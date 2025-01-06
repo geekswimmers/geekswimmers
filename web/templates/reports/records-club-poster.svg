@@ -612,392 +612,420 @@
       x="2666"
       y="1800" />
    
-   <text
-      xml:space="preserve"
+   <text xml:space="preserve"
       style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
       x="116"
       y="415"
-      id="FEMALE_SHORT_EVENTS">
-      <tspan sodipodi:role="line"
-         id="tspan6-4-1-5"
-         x="116"
-         y="415">50 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="439"
-         id="tspan7-5-4-3">100 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="462"
-         id="tspan8-2-9-8">200 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="486"
-         id="tspan9-5-2-8">400 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="509">800 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="533"
-         id="tspan20-6-1">1500 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="556"
-         id="tspan10-4-8-8">50 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="579"
-         id="tspan11-7-9-9">100 Backstrokke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="603"
-         id="tspan12-4-2-6">200 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="626"
-         id="tspan13-4-6-4">50 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="650"
-         id="tspan14-3-6-3">100 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="673"
-         id="tspan15-0-4-3">200 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="697"
-         id="tspan16-7-9-3">50 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="720"
-         id="tspan17-8-5-86">100 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="744"
-         id="tspan21-0-0">200 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="767"
-         id="tspan18-6-4-4">100 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="791"
-         id="tspan18-6-4-4">200 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
-         x="116"
-         y="815"
-         id="tspan22-8-8">400 Medley</tspan>
-   </text>
+      id="FEMALE_SHORT_EVENTS">50 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="439"
+      id="tspan7-5-4-3">100 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="462"
+      id="tspan8-2-9-8">200 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="486"
+      id="tspan9-5-2-8">400 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="509">800 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="533"
+      id="tspan20-6-1">1500 Freestyle</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="556"
+      id="tspan10-4-8-8">50 Backstroke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="579"
+      id="tspan11-7-9-9">100 Backstrokke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="603"
+      id="tspan12-4-2-6">200 Backstroke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="626"
+      id="tspan13-4-6-4">50 Breaststroke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="650"
+      id="tspan14-3-6-3">100 Breaststroke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="673"
+      id="tspan15-0-4-3">200 Breaststroke</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="697"
+      id="tspan16-7-9-3">50 Butterfly</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="720"
+      id="tspan17-8-5-86">100 Butterfly</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="744"
+      id="tspan21-0-0">200 Butterfly</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="767"
+      id="tspan18-6-4-4">100 Medley</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="791"
+      id="tspan18-6-4-4">200 Medley</text>
+   <text xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+      x="116"
+      y="815"
+      id="tspan22-8-8">400 Medley</text>
+
    <text
       xml:space="preserve"
       style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
       x="116"
       y="881"
-      id="FEMALE_SHORT_EVENTS_2">
-      <tspan
-         sodipodi:role="line"
-         id="tspan6-4-1"
-         x="116"
-         y="881">50 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+      id="FEMALE_SHORT_EVENTS_2">50 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="904"
-         id="tspan7-5-4">100 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan7-5-4">100 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="928"
-         id="tspan8-2-9">200 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan8-2-9">200 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="951"
-         id="tspan9-5-2">400 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan9-5-2">400 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="975"
-         id="tspan19-0">800 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan19-0">800 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="998"
-         id="tspan20-6">1500 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan20-6">1500 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1022"
-         id="tspan10-4-8">50 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan10-4-8">50 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1045"
-         id="tspan11-7-9">100 Backstrokke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan11-7-9">100 Backstrokke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1068"
-         id="tspan12-4-2">200 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan12-4-2">200 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1092"
-         id="tspan13-4-6">50 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan13-4-6">50 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1115"
-         id="tspan14-3-6">100 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan14-3-6">100 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1139"
-         id="tspan15-0-4">200 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan15-0-4">200 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1162"
-         id="tspan16-7-9">50 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan16-7-9">50 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1186"
-         id="tspan17-8-5">100 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan17-8-5">100 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1209"
-         id="tspan21-0">200 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan21-0">200 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1233"
-         id="tspan18-6-4">100 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4">100 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1257"
-         id="tspan18-6-4">200 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4">200 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="116"
          y="1281"
-         id="tspan22-8">400 Medley</tspan>
-   </text>
+         id="tspan22-8">400 Medley</text>
    <text
       xml:space="preserve"
       style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
       x="1629"
       y="414"
-      id="MALE_SHORT_EVENTS">
-      <tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-5-1"
-         x="1629"
-         y="414">50 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+      id="MALE_SHORT_EVENTS">50 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="437"
-         id="tspan7-5-4-3-6">100 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan7-5-4-3-6">100 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="460"
-         id="tspan8-2-9-8-1">200 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan8-2-9-8-1">200 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="484"
-         id="tspan9-5-2-8-9">400 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan9-5-2-8-9">400 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="507"
-         id="tspan19-0-3-4">800 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan19-0-3-4">800 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="531"
-         id="tspan20-6-1-9">1500 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan20-6-1-9">1500 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="554"
-         id="tspan10-4-8-8-9">50 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan10-4-8-8-9">50 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="578"
-         id="tspan11-7-9-9-6">100 Backstrokke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan11-7-9-9-6">100 Backstrokke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="601"
-         id="tspan12-4-2-6-9">200 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan12-4-2-6-9">200 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="625"
-         id="tspan13-4-6-4-4">50 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan13-4-6-4-4">50 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="648"
-         id="tspan14-3-6-3-2">100 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan14-3-6-3-2">100 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="672"
-         id="tspan15-0-4-3-0">200 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan15-0-4-3-0">200 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="695"
-         id="tspan16-7-9-3-2">50 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan16-7-9-3-2">50 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="719"
-         id="tspan17-8-5-86-3">100 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan17-8-5-86-3">100 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="742"
-         id="tspan21-0-0-6">200 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan21-0-0-6">200 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="766"
-         id="tspan18-6-4-4-8">100 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4-4-8">100 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="789"
-         id="tspan18-6-4-4-8">200 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4-4-8">200 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1629"
          y="813"
-         id="tspan22-8-8-9">400 Medley</tspan>
-   </text>
+         id="tspan22-8-8-9">400 Medley</text>
    <text
       xml:space="preserve"
       style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
       x="1628"
       y="881"
-      id="MALE_SHORT_EVENTS_2">
-      <tspan
-         sodipodi:role="line"
-         id="tspan6-4-1-2"
-         x="1628"
-         y="881">50 Freestyles</tspan>
-      <tspan
-         sodipodi:role="line"
+      id="MALE_SHORT_EVENTS_2">50 Freestyles</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="904"
-         id="tspan7-5-4-4">100 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan7-5-4-4">100 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="928"
-         id="tspan8-2-9-9">200 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan8-2-9-9">200 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="951"
-         id="tspan9-5-2-81">400 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan9-5-2-81">400 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="975"
-         id="tspan19-0-5">800 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan19-0-5">800 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="998"
-         id="tspan20-6-6">1500 Freestyle</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan20-6-6">1500 Freestyle</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1022"
-         id="tspan10-4-8-4">50 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan10-4-8-4">50 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1045"
-         id="tspan11-7-9-6">100 Backstrokke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan11-7-9-6">100 Backstrokke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1068"
-         id="tspan12-4-2-8">200 Backstroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan12-4-2-8">200 Backstroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1092"
-         id="tspan13-4-6-6">50 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan13-4-6-6">50 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1115"
-         id="tspan14-3-6-35">100 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan14-3-6-35">100 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1139"
-         id="tspan15-0-4-7">200 Breaststroke</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan15-0-4-7">200 Breaststroke</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1162"
-         id="tspan16-7-9-42">50 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan16-7-9-42">50 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1186"
-         id="tspan17-8-5-4">100 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan17-8-5-4">100 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1209"
-         id="tspan21-0-02">200 Butterfly</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan21-0-02">200 Butterfly</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1233"
-         id="tspan18-6-4-7">100 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4-7">100 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1257"
-         id="tspan18-6-4-7">200 Medley</tspan>
-      <tspan
-         sodipodi:role="line"
+         id="tspan18-6-4-7">200 Medley</text>
+      <text
+      xml:space="preserve"
+      style="font-weight:normal;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-opacity:1"
          x="1628"
          y="1281"
-         id="tspan22-8-2">400 Medley</tspan>
-   </text>
+         id="tspan22-8-2">400 Medley</text>
    <text
        xml:space="preserve"
        style="font-weight:bold;font-size:14.6667px;line-height:1.6;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#d5f6ff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
@@ -2088,15 +2116,17 @@
    <text
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000"
-      x="79"
-      y="2261"
-      id="text32-2">Last Update: {{.LastUpdate.Format "Jan 02, 2006"}}</text>
+      x="-2216"
+      y="1596"
+      id="text32-2"
+      transform="rotate(-90)">Last Update: {{.LastUpdate.Format "Jan 02, 2006"}}</text>
 
    <text
       xml:space="preserve"
       style="font-weight:bold;font-size:16px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000"
-      x="2540"
-      y="2261"
-      id="text32">* This is a summary of what is published online. For historical records, visit https://www.geekswimmers.com/times/records</text>
+      x="-862.32758"
+      y="1595.2267"
+      id="text32"
+      transform="rotate(-90)">* This is a summary of what is published online. For historical records, visit https://www.geekswimmers.com/times/records</text>
   </g>
 </svg>
