@@ -13,36 +13,37 @@ import (
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	if userAccount.Role == "ATHLETE" {
-		stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role, birth_date, gender)
-		values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
+	sql := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
+			values ($1, $2, $3, $4, $5, $6) returning id`
 
-		err := db.QueryRow(context.Background(), stmt,
-			userAccount.CleanEmail(),
-			userAccount.FirstName,
-			userAccount.LastName,
-			userAccount.HumanScore,
-			userAccount.Confirmation,
-			userAccount.Role,
-			userAccount.BirthDate.Time,
-			userAccount.Gender.String).Scan(&lastInsertId)
-		if err != nil {
-			return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
-		}
-	} else {
-		stmt := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
-		values ($1, $2, $3, $4, $5, $6) returning id`
+	err := db.QueryRow(context.Background(), sql,
+		userAccount.CleanEmail(),
+		userAccount.FirstName,
+		userAccount.LastName,
+		userAccount.HumanScore,
+		userAccount.Confirmation,
+		userAccount.Role).Scan(&lastInsertId)
+	if err != nil {
+		return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
+	}
 
-		err := db.QueryRow(context.Background(), stmt,
-			userAccount.CleanEmail(),
-			userAccount.FirstName,
-			userAccount.LastName,
-			userAccount.HumanScore,
-			userAccount.Confirmation,
-			userAccount.Role).Scan(&lastInsertId)
-		if err != nil {
-			return 0, fmt.Errorf("user.InsertUserAccount(%v): %v", userAccount.Email, err)
-		}
+	return lastInsertId, nil
+}
+
+func InsertAthlete(athlete *Athlete, db storage.Database) (int64, error) {
+	var lastInsertId int64
+
+	sql := `insert into athlete (first_name, last_name, birth_date, gender, user_account)
+			values ($1, $2, $3, $4, $5) returning id`
+
+	err := db.QueryRow(context.Background(), sql,
+		athlete.FirstName,
+		athlete.LastName,
+		athlete.BirthDate.Time,
+		athlete.Gender.String,
+		athlete.UserAccount.ID).Scan(&lastInsertId)
+	if err != nil {
+		return 0, fmt.Errorf("user.InsertAthlete(%v %v): %v", athlete.FirstName, athlete.LastName, err)
 	}
 
 	return lastInsertId, nil
@@ -142,7 +143,7 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg, birth_date, gender
+	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
@@ -153,7 +154,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email,
 		&userAccount.FirstName, &userAccount.LastName, &userAccount.Role, &userAccount.Password,
-		&userAccount.SignOff, &userAccount.PromotionalMsg, &userAccount.BirthDate, &userAccount.Gender)
+		&userAccount.SignOff, &userAccount.PromotionalMsg)
 	if err != nil {
 		log.Printf("user.FindUserAccountByEmail(%v) : %v", email, err)
 		return nil
@@ -184,6 +185,25 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 		return nil
 	}
 	return userAccount
+}
+
+func FindAthleteByUserAccount(userAccount *UserAccount, db storage.Database) *Athlete {
+	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
+			from athlete a
+			where a.user_account = $1`
+
+	row := db.QueryRow(context.Background(), sql, userAccount.ID)
+
+	athlete := &Athlete{
+		UserAccount: userAccount,
+	}
+	err := row.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender)
+	if err != nil {
+		log.Printf("user.FindAthleteByUserAccount(%v): %v", userAccount.ID, err)
+		return nil
+	}
+
+	return athlete
 }
 
 func UserAccountExists(db storage.Database) bool {
@@ -217,4 +237,29 @@ func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
 	log.Printf("Number of failed attempts: %v", numFailedAttempts)
 
 	return numFailedAttempts > 5
+}
+
+func FindAthletesParent(parent *UserAccount, db storage.Database) ([]*Athlete, error) {
+	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
+			from athlete a
+			    join parent_athlete pa on a.id = pa.athlete
+			where pa.parent = $1`
+
+	rows, err := db.Query(context.Background(), sql, parent.ID)
+	if err != nil {
+		return nil, fmt.Errorf("FindAthletesParent: %v", err)
+	}
+	defer rows.Close()
+
+	var athletes []*Athlete
+	for rows.Next() {
+		athlete := &Athlete{}
+		err = rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("FindAthletesParent: %v", err)
+		}
+		athletes = append(athletes, athlete)
+	}
+
+	return athletes, nil
 }

@@ -29,8 +29,6 @@ type UserAccount struct {
 	Password        []byte
 	FirstName       string
 	LastName        string
-	Gender          sql.NullString
-	BirthDate       sql.NullTime
 	HumanScore      float32
 	Confirmation    *string
 	Created         time.Time
@@ -48,11 +46,13 @@ func (ua *UserAccount) CleanEmail() string {
 	return email
 }
 
-type Family struct {
-	ID     int64
-	Member int64
-	Main   bool
-	Name   *string
+type Athlete struct {
+	ID          int64
+	FirstName   string
+	LastName    string
+	Gender      sql.NullString
+	BirthDate   sql.NullTime
+	UserAccount *UserAccount
 }
 
 type EmailMessage struct {

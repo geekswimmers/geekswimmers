@@ -47,6 +47,7 @@ type profileData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
 	UserAccount      UserAccount
+	Athletes         []*Athlete
 }
 
 type setNewPasswordData struct {

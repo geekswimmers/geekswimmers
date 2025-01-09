@@ -99,7 +99,14 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		Role:      context.Role,
 	}
 
-	if context.Role == "ATHLETE" {
+	var athlete *Athlete
+
+	if userAccount.Role == "ATHLETE" {
+		athlete = &Athlete{
+			FirstName: context.FirstName,
+			LastName:  context.LastName,
+		}
+
 		// Validates birthDate
 		if context.BirthDate == "" {
 			log.Printf("Birth date is required.")
@@ -111,7 +118,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 				log.Printf("Invalid birth date: %v", context.BirthDate)
 				context.ErrorBirthDate = "Invalid birth date."
 			} else {
-				userAccount.BirthDate = sql.NullTime{
+				athlete.BirthDate = sql.NullTime{
 					Time: birthDate,
 				}
 			}
@@ -132,7 +139,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
-			userAccount.Gender = sql.NullString{
+			athlete.Gender = sql.NullString{
 				String: context.Gender,
 			}
 		}
@@ -169,7 +176,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	// Creates a new user even before checking if the reCaptchaScore is high.
 	// It helps to prevent new registrations with the same email address.
-	_, err = InsertUserAccount(userAccount, uc.DB)
+	userAccount.ID, err = InsertUserAccount(userAccount, uc.DB)
 	if err != nil {
 		log.Printf("Error saving the user: %v", err)
 		html = utils.GetTemplate("base", "signup")
@@ -182,6 +189,24 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 			log.Print(err)
 		}
 		return
+	}
+
+	if userAccount.Role == "ATHLETE" {
+		athlete.UserAccount = userAccount
+		_, err = InsertAthlete(athlete, uc.DB)
+		if err != nil {
+			log.Printf("Error saving the athlete: %v", err)
+			html = utils.GetTemplate("base", "signup")
+			context.Error = `Due to an internal error, it was not possible to create
+				your account at this moment. Please, trying again later. 
+				Thank you for your undestanding.`
+			context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+			err = html.Execute(res, context)
+			if err != nil {
+				log.Print(err)
+			}
+			return
+		}
 	}
 
 	if config.GetConfiguration().GetString(config.EmailServer) != "" {
@@ -408,6 +433,19 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if userAccount.Role == "ATHLETE" {
+		athlete := FindAthleteByUserAccount(userAccount, uc.DB)
+		if err = uc.addAthleteToSession(athlete, res, req); err != nil {
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if err = uc.addAthleteToSession(athlete, res, req); err != nil {
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
 	if err = uc.addUserToSession(userAccount, res, req); err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
@@ -439,14 +477,19 @@ func (wc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	sessionData := storage.NewSessionData(req)
 
 	user := FindUserAccountByEmail(sessionData.Email, wc.DB)
+	athletes, err := FindAthletesParent(user, wc.DB)
+	if err != nil {
+		log.Printf("Error finding athletes: %v", err)
+	}
 
 	data := &profileData{
 		BaseTemplateData: wc.BaseTemplateData,
 		SessionData:      sessionData,
 		UserAccount:      *user,
+		Athletes:         athletes,
 	}
 
-	html := utils.GetTemplate("base", "profile")
+	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the user prodile: %v", err)
 	}
@@ -582,14 +625,16 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 		return err
 	}
 
-	if userAccount.Role == "ATHLETE" {
-		if err := storage.AddSessionEntry(res, req, "profile", "gender", userAccount.Gender.String); err != nil {
-			return err
-		}
+	return nil
+}
 
-		if err := storage.AddSessionEntry(res, req, "profile", "birthDate", userAccount.BirthDate.Time.Format("2006-01-02")); err != nil {
-			return err
-		}
+func (uc *UserController) addAthleteToSession(athlete *Athlete, res http.ResponseWriter, req *http.Request) error {
+	if err := storage.AddSessionEntry(res, req, "profile", "gender", athlete.Gender.String); err != nil {
+		return err
+	}
+
+	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", athlete.BirthDate.Time.Format("2006-01-02")); err != nil {
+		return err
 	}
 
 	return nil
