@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"geekswimmers/storage"
 	"log"
@@ -33,20 +34,41 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 func InsertAthlete(athlete *Athlete, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	sql := `insert into athlete (first_name, last_name, birth_date, gender, user_account)
+	stm := `insert into athlete (first_name, last_name, birth_date, gender, user_account)
 			values ($1, $2, $3, $4, $5) returning id`
 
-	err := db.QueryRow(context.Background(), sql,
+	var userAccountId sql.NullInt64
+	if athlete.UserAccount != nil {
+		userAccountId = sql.NullInt64{
+			Int64: athlete.UserAccount.ID,
+			Valid: true,
+		}
+	} else {
+		userAccountId = sql.NullInt64{}
+	}
+
+	err := db.QueryRow(context.Background(), stm,
 		athlete.FirstName,
 		athlete.LastName,
 		athlete.BirthDate.Time,
 		athlete.Gender.String,
-		athlete.UserAccount.ID).Scan(&lastInsertId)
+		userAccountId).Scan(&lastInsertId)
 	if err != nil {
 		return 0, fmt.Errorf("user.InsertAthlete(%v %v): %v", athlete.FirstName, athlete.LastName, err)
 	}
 
 	return lastInsertId, nil
+}
+
+func linkAthleteToParent(parent *UserAccount, athlete *Athlete, db storage.Database) error {
+	stmt := `insert into parent_athlete (parent, athlete) values ($1, $2)`
+
+	_, err := db.Exec(context.Background(), stmt, parent.ID, athlete.ID)
+	if err != nil {
+		return fmt.Errorf("user.linkAthleteToParent(%v, %v): %v", parent.ID, athlete.ID, err)
+	}
+
+	return nil
 }
 
 func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {

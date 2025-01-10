@@ -50,6 +50,27 @@ type profileData struct {
 	Athletes         []*Athlete
 }
 
+type athleteData struct {
+	BaseTemplateData *utils.BaseTemplateData
+	BirthDate        string
+	Error            string
+	ErrorBirthDate   string
+	ErrorFirstName   string
+	ErrorGender      string
+	ErrorLastName    string
+	FirstName        string
+	Gender           string
+	LastName         string
+	SessionData      *storage.SessionData
+}
+
+func (ad *athleteData) errorHappened() bool {
+	return len(ad.ErrorFirstName) > 0 ||
+		len(ad.ErrorLastName) > 0 ||
+		len(ad.ErrorBirthDate) > 0 ||
+		len(ad.ErrorGender) > 0
+}
+
 type setNewPasswordData struct {
 	Confirmation     string
 	Email            string

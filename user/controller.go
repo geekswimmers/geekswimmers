@@ -473,17 +473,17 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
 
-func (wc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 
-	user := FindUserAccountByEmail(sessionData.Email, wc.DB)
-	athletes, err := FindAthletesParent(user, wc.DB)
+	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	athletes, err := FindAthletesParent(user, uc.DB)
 	if err != nil {
 		log.Printf("Error finding athletes: %v", err)
 	}
 
 	data := &profileData{
-		BaseTemplateData: wc.BaseTemplateData,
+		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		UserAccount:      *user,
 		Athletes:         athletes,
@@ -493,6 +493,120 @@ func (wc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the user prodile: %v", err)
 	}
+}
+
+func (uc *UserController) AthleteFormView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	html := utils.GetTemplate("base", "athlete-form")
+	if err := html.Execute(res, &athleteData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+	}); err != nil {
+		log.Printf("Error loading the athlete form: %v", err)
+	}
+}
+
+func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	sessionData := storage.NewSessionData(req)
+	var html *template.Template
+	context := &athleteData{
+		SessionData:      sessionData,
+		BaseTemplateData: uc.BaseTemplateData,
+		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
+		BirthDate:        req.PostForm.Get("birthDate"),
+		Gender:           req.PostForm.Get("gender"),
+	}
+
+	// Validates firstName
+	if context.FirstName == "" {
+		log.Printf("Invalid first name: %v", context.FirstName)
+		context.ErrorFirstName = "First Name is empty."
+	}
+
+	// Validates lastName
+	if context.LastName == "" {
+		log.Printf("Invalid last name: %v", context.LastName)
+		context.ErrorLastName = "Last Name is empty."
+	}
+
+	athlete := &Athlete{
+		FirstName: context.FirstName,
+		LastName:  context.LastName,
+	}
+
+	// Validates birthDate
+	if context.BirthDate == "" {
+		log.Printf("Birth date is required.")
+		context.ErrorBirthDate = "Birth date is required."
+	} else {
+		birthDate, err := time.Parse("2006-01-02", context.BirthDate)
+		if err != nil {
+			log.Printf("Invalid birth date: %v", context.BirthDate)
+			context.ErrorBirthDate = "Invalid birth date."
+		} else {
+			athlete.BirthDate = sql.NullTime{
+				Time: birthDate,
+			}
+		}
+	}
+
+	// Validates gender
+	if context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE") {
+		log.Printf("Invalid Gender: %v", context.Gender)
+		context.ErrorGender = "Select your gender."
+	} else {
+		athlete.Gender = sql.NullString{
+			String: context.Gender,
+		}
+	}
+
+	// Back to the signup page in case of error.
+	if context.errorHappened() {
+		html = utils.GetTemplate("base", "athlete-form")
+		log.Printf("Back to athlete form with errors.")
+		err = html.Execute(res, context)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	athlete.ID, err = InsertAthlete(athlete, uc.DB)
+	if err != nil {
+		log.Printf("Error saving the athlete: %v", err)
+		html = utils.GetTemplate("base", "athlete-form")
+		context.Error = `Due to an internal error, it was not possible to create
+			your account at this moment. Please, trying again later. 
+			Thank you for your undestanding.`
+		err = html.Execute(res, context)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	if err := linkAthleteToParent(parent, athlete, uc.DB); err != nil {
+		log.Printf("Error linking athlete to parent: %v", err)
+		html = utils.GetTemplate("base", "athlete-form")
+		context.Error = `Due to an internal error, it was not possible to create
+			your account at this moment. Please, trying again later. 
+			Thank you for your undestanding.`
+		err = html.Execute(res, context)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
 func (uc *UserController) authenticate(email, password, ipAddress string, humanScore float32) (*UserAccount, SignInAttempt) {
