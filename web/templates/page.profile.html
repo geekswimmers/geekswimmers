@@ -28,8 +28,8 @@
                 {{range .Athletes}}
                     <tr>
                         <td>{{.FirstName}} {{.LastName}}</td>
-                        <td>{{.BirthDate}}</td>
-                        <td>{{.Gender}}</td>
+                        <td>{{.BirthDate.Time.Format "Jan 02, 2006"}}</td>
+                        <td>{{.Gender.String | Title}}</td>
                     </tr>
                 {{else}}
                     <tr>

@@ -489,7 +489,7 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 		Athletes:         athletes,
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"title": utils.Title})
+	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"Title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the user prodile: %v", err)
 	}
