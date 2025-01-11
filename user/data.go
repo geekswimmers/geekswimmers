@@ -53,12 +53,15 @@ type profileData struct {
 type athleteData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
+	Email            string
 	Error            string
 	ErrorBirthDate   string
+	ErrorEmail       string
 	ErrorFirstName   string
 	ErrorGender      string
 	ErrorLastName    string
 	FirstName        string
+	FoundAthlete     *Athlete
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData

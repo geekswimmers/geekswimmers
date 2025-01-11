@@ -1,0 +1,1 @@
+alter table parent_athlete add approved boolean not null default false;

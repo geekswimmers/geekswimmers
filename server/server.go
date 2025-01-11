@@ -91,6 +91,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/auth/signin/", http.HandlerFunc(userController.SignInView))
 	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
 
+	s.Router.Post("/profile/athletes/form/search/", s.handleRequest(userController.AthleteFormSearch))
+	s.Router.Post("/profile/athletes/form/link/", s.handleRequest(userController.AthleteFormLink))
 	s.Router.Get("/profile/athletes/form/", s.handleRequest(userController.AthleteFormView))
 	s.Router.Post("/profile/athletes/form/", s.handleRequest(userController.AthleteForm))
 	s.Router.Get("/profile/", s.handleRequest(userController.ProfileView))

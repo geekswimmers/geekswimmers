@@ -7,7 +7,63 @@
 {{define "content"}}
     <h1 class="display-6">Athlete</h1>
 
+    <br>
     <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Link Existing Athlete</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                Swimmers 13 & over can create their own account. If your swimmer already have one, 
+                you can follow them by linking their account with yours.</h6>
+        </div>
+        <div class="card-body">
+            <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/search/" method="post">
+                <div class="col-9">
+                    <label class="visually-hidden" for="inlineFormSelectPref">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{.Email}}" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" required>
+                </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+
+        {{if .FoundAthlete}}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    {{.FoundAthlete.FirstName}} {{.FoundAthlete.LastName}} ({{.FoundAthlete.UserAccount.Email}})
+                </li>
+            </ul>
+        {{else}}
+            <p class="card-text">No swimmer found.</p>
+        {{end}}
+
+        <div class="card-body">
+            <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/link/" method="post">
+                {{if .FoundAthlete}}
+                    <input type="hidden" name="athleteId" value="{{.FoundAthlete.ID}}">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary">Link</button>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        {{.FoundAthlete.FirstName}} {{.FoundAthlete.LastName}} has to confirm the link before 
+                        {{if eq .FoundAthlete.Gender.String "FEMALE"}}she{{else}}he{{end}} appears in your profile.
+                    </div>
+                {{else}}
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary" disabled>Link</button>
+                    </div>
+                {{end}}
+            </form>
+        </div>
+    </div>
+
+    <br>
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">New Athlete</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                Swimmers 12 & under can not create their own account, but you can create and manage their swimmer's profile for them.</h6>
+        </div>
         <div class="card-body">
             <form id="athlete-form" method="post" action="/profile/athletes/form/">
                 {{if .Error }}

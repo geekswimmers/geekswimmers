@@ -228,6 +228,26 @@ func FindAthleteByUserAccount(userAccount *UserAccount, db storage.Database) *At
 	return athlete
 }
 
+func findLinkableAthleteByEmail(email string, db storage.Database) *Athlete {
+	stm := `select a.id, a.first_name, a.last_name, a.gender, ua.email
+			from athlete a
+				join user_account ua on a.user_account = ua.id
+			where ua.email = $1
+				and a.id not in (select athlete from parent_athlete where approved = true)`
+
+	row := db.QueryRow(context.Background(), stm, email)
+
+	athlete := &Athlete{
+		UserAccount: &UserAccount{},
+	}
+	if err := row.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil {
+		log.Printf("user.findAthleteByEmail(%v): %v", email, err)
+		return nil
+	}
+
+	return athlete
+}
+
 func UserAccountExists(db storage.Database) bool {
 	stmt := `select count(id) from user_account`
 
@@ -265,7 +285,8 @@ func FindAthletesParent(parent *UserAccount, db storage.Database) ([]*Athlete, e
 	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
 			from athlete a
 			    join parent_athlete pa on a.id = pa.athlete
-			where pa.parent = $1`
+			where pa.parent = $1
+			order by a.first_name`
 
 	rows, err := db.Query(context.Background(), sql, parent.ID)
 	if err != nil {

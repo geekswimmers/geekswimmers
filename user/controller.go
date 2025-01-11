@@ -507,6 +507,68 @@ func (uc *UserController) AthleteFormView(res http.ResponseWriter, req *http.Req
 	}
 }
 
+func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	context := &athleteData{
+		SessionData:      sessionData,
+		BaseTemplateData: uc.BaseTemplateData,
+		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
+	}
+
+	// Validates email
+	if !messaging.IsEmailAddressValid(context.Email) {
+		log.Printf("Invalid email address: %v", context.Email)
+		context.ErrorEmail = "Invalid email address."
+	}
+
+	context.FoundAthlete = findLinkableAthleteByEmail(context.Email, uc.DB)
+
+	html := utils.GetTemplate("base", "athlete-form")
+	if err := html.Execute(res, context); err != nil {
+		log.Printf("Error loading the athlete form: %v", err)
+	}
+}
+
+func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	sessionData := storage.NewSessionData(req)
+	athleteID, err := strconv.ParseInt(req.PostForm.Get("athleteId"), 10, 64)
+	if err != nil {
+		log.Printf("Invalid athlete ID: %v", req.PostForm.Get("athleteId"))
+	}
+
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	context := &athleteData{
+		FoundAthlete:     &Athlete{ID: athleteID},
+		SessionData:      sessionData,
+		BaseTemplateData: uc.BaseTemplateData,
+	}
+
+	if err := linkAthleteToParent(parent, context.FoundAthlete, uc.DB); err != nil {
+		log.Printf("Error saving the athlete: %v", err)
+		html := utils.GetTemplate("base", "athlete-form")
+		context.Error = `Due to an internal error, it was not possible to link
+			the athlete wity your account at this moment. Please, trying again later.`
+		err = html.Execute(res, context)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+}
+
 func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
