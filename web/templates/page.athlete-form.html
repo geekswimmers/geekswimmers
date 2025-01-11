@@ -1,20 +1,20 @@
 {{template "base-layout" .}}
 
-{{define "title"}}Athlete{{end}}
+{{define "title"}}Linking Swimmer{{end}}
 
 {{define "breadcrumb"}}
     <li class="breadcrumb-item"><a href="/profile/">Profile</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Linking Athlete</li>
+    <li class="breadcrumb-item active" aria-current="page">Linking Swimmer</li>
 {{end}}
 
 {{define "content"}}
-    <h1 class="display-6">Athlete</h1>
+    <h1 class="display-6">Swimmer</h1>
 
     <br>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Link Existing Athlete</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">You may want to link an athlete to your profile when:
+            <h5 class="card-title">Link Existing Swimmer</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">You may want to link a swimmer to your profile when:
                 <ul>
                     <li>If the swimmer is 13 or older and created their own account, use the swimmer's email.</li>
                     <li>If the swimmer is already linked to another parent, use the parent's email.</li>
@@ -36,7 +36,7 @@
             <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/link/" method="post">
                 {{if .FoundAthletes}}
                     <fieldset>
-                    {{range .FoundAthletes}}    
+                    {{range .FoundAthletes}}
                         <div class="mb-3 form-check">
                             <input class="form-check-input" type="checkbox" value="{{.ID}}" name="athletes" id="athletes{{.ID}}" checked>
                             <label class="form-check-label" for="athletes{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
@@ -47,7 +47,7 @@
                         <button type="submit" class="btn btn-primary">Link</button>
                     </div>
                     <div class="alert alert-info" role="alert">
-                        Athletes have to confirm the link before they appear in your profile.
+                        Swimmers have to confirm the link before they appear in your profile.
                     </div>
                 {{else}}
                     <p class="card-text">Swimmer not found or already linked to your profile.</p>
@@ -62,7 +62,7 @@
     <br>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">New Athlete</h5>
+            <h5 class="card-title">New Swimmer</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">
                 Swimmers 12 & under can not create their own account, but you can create and manage their swimmer's profile for them.</h6>
         </div>
