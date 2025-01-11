@@ -9,46 +9,48 @@
 {{define "content"}}
     <h2>Profile</h2>
     <h1 class="display-6">{{.UserAccount.FirstName}} {{.UserAccount.LastName}}</h1>
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">My Athletes</h3>
-            <h6 class="card-subtitle mb-2 text-body-secondary">I'm a parent or a care giver of the following athletes:</h6>
-        </div>
+    {{if ne .UserAccount.Role "ATHLETE"}}
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">My Athletes</h3>
+                <h6 class="card-subtitle mb-2 text-body-secondary">I'm a parent or a care giver of the following athletes:</h6>
+            </div>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Date of Birth</th>
-                    <th scope="col">Gender</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{range .Athletes}}
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{.FirstName}} {{.LastName}}</td>
-                        <td>{{.BirthDate.Time.Format "Jan 02, 2006"}}</td>
-                        <td>{{.Gender.String | Title}}</td>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Date of Birth</th>
+                        <th scope="col">Gender</th>
                     </tr>
-                {{else}}
-                    <tr>
-                        <td colspan="3">No athletes listed yet.</td>
-                    </tr>
-                {{end}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{range .Athletes}}
+                        <tr>
+                            <td>{{.FirstName}} {{.LastName}}</td>
+                            <td>{{.BirthDate.Time.Format "Jan 02, 2006"}}</td>
+                            <td>{{.Gender.String | Title}}</td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="3">No athletes listed yet.</td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
 
-        <div class="card-body">
-            <a class="btn btn-secondary" href="/profile/athletes/form/">
-                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
-                    <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
-                    <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                </svg> New Athlete
-            </a>
+            <div class="card-body">
+                <a class="btn btn-secondary" href="/profile/athletes/form/">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                        <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                        <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg> New Athlete
+                </a>
+            </div>
         </div>
-    </div> 
+    {{end}}
 {{end}}
 
 {{define "scripts"}}{{end}}

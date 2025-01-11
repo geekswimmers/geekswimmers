@@ -61,7 +61,7 @@ type athleteData struct {
 	ErrorGender      string
 	ErrorLastName    string
 	FirstName        string
-	FoundAthlete     *Athlete
+	FoundAthletes    []*Athlete
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData

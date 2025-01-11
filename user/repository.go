@@ -60,17 +60,6 @@ func InsertAthlete(athlete *Athlete, db storage.Database) (int64, error) {
 	return lastInsertId, nil
 }
 
-func linkAthleteToParent(parent *UserAccount, athlete *Athlete, db storage.Database) error {
-	stmt := `insert into parent_athlete (parent, athlete) values ($1, $2)`
-
-	_, err := db.Exec(context.Background(), stmt, parent.ID, athlete.ID)
-	if err != nil {
-		return fmt.Errorf("user.linkAthleteToParent(%v, %v): %v", parent.ID, athlete.ID, err)
-	}
-
-	return nil
-}
-
 func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {
 	stmt := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
              values ($1, $2, $3, $4, $5)`
@@ -228,24 +217,71 @@ func FindAthleteByUserAccount(userAccount *UserAccount, db storage.Database) *At
 	return athlete
 }
 
-func findLinkableAthleteByEmail(email string, db storage.Database) *Athlete {
+func findLinkableAthleteByEmail(email string, parent *UserAccount, db storage.Database) ([]*Athlete, error) {
+	// First, it checks if there is an athlete with a user account
 	stm := `select a.id, a.first_name, a.last_name, a.gender, ua.email
 			from athlete a
 				join user_account ua on a.user_account = ua.id
 			where ua.email = $1
-				and a.id not in (select athlete from parent_athlete where approved = true)`
+				and a.id not in (select athlete from parent_athlete where parent = $2)`
 
-	row := db.QueryRow(context.Background(), stm, email)
-
-	athlete := &Athlete{
-		UserAccount: &UserAccount{},
+	rows, err := db.Query(context.Background(), stm, email, parent.ID)
+	if err != nil {
+		return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
 	}
-	if err := row.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil {
-		log.Printf("user.findAthleteByEmail(%v): %v", email, err)
-		return nil
+	defer rows.Close()
+
+	var athletes []*Athlete
+	for rows.Next() {
+		athlete := &Athlete{
+			UserAccount: &UserAccount{},
+		}
+		if err := rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+		}
+		athletes = append(athletes, athlete)
 	}
 
-	return athlete
+	// If no athlete is found, it checks if the email belongs to a parent and, if yes, then it
+	// returns all the athletes linked to that parent.
+	if len(athletes) == 0 {
+		stm = `select a.id, a.first_name, a.last_name, a.gender, ua.email
+			   from parent_athlete pa
+				   join athlete a on pa.athlete = a.id
+				   join user_account ua on pa.parent = ua.id
+			   where ua.email = $1
+			   	   and a.id not in (select athlete from parent_athlete where parent = $2)`
+		rows, err := db.Query(context.Background(), stm, email, parent.ID)
+		if err != nil {
+			return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			athlete := &Athlete{
+				UserAccount: &UserAccount{},
+			}
+			if err := rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
+				return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+			}
+			athletes = append(athletes, athlete)
+		}
+	}
+
+	return athletes, nil
+}
+
+func linkAthletesToParent(parent *UserAccount, athletes []*Athlete, db storage.Database) error {
+	stmt := `insert into parent_athlete (parent, athlete) values ($1, $2)`
+
+	for _, athlete := range athletes {
+		_, err := db.Exec(context.Background(), stmt, parent.ID, athlete.ID)
+		if err != nil {
+			return fmt.Errorf("user.linkAthletesToParent(%v, %v): %v", parent.ID, athlete.ID, err)
+		}
+	}
+
+	return nil
 }
 
 func UserAccountExists(db storage.Database) bool {

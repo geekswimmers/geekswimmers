@@ -527,7 +527,11 @@ func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.R
 		context.ErrorEmail = "Invalid email address."
 	}
 
-	context.FoundAthlete = findLinkableAthleteByEmail(context.Email, uc.DB)
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	context.FoundAthletes, err = findLinkableAthleteByEmail(context.Email, parent, uc.DB)
+	if err != nil {
+		log.Printf("Error finding athletes: %v", err)
+	}
 
 	html := utils.GetTemplate("base", "athlete-form")
 	if err := html.Execute(res, context); err != nil {
@@ -542,19 +546,25 @@ func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Req
 	}
 
 	sessionData := storage.NewSessionData(req)
-	athleteID, err := strconv.ParseInt(req.PostForm.Get("athleteId"), 10, 64)
-	if err != nil {
-		log.Printf("Invalid athlete ID: %v", req.PostForm.Get("athleteId"))
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+
+	selectedAthletes := req.Form["athletes"]
+	var athletes []*Athlete
+	for _, athleteIDStr := range selectedAthletes {
+		athleteID, err := strconv.ParseInt(athleteIDStr, 10, 64)
+		if err != nil {
+			log.Printf("Invalid athlete ID: %v", req.PostForm.Get("athleteId"))
+		}
+		athletes = append(athletes, &Athlete{ID: athleteID})
 	}
 
-	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	context := &athleteData{
-		FoundAthlete:     &Athlete{ID: athleteID},
+		FoundAthletes:    athletes,
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 	}
 
-	if err := linkAthleteToParent(parent, context.FoundAthlete, uc.DB); err != nil {
+	if err := linkAthletesToParent(parent, context.FoundAthletes, uc.DB); err != nil {
 		log.Printf("Error saving the athlete: %v", err)
 		html := utils.GetTemplate("base", "athlete-form")
 		context.Error = `Due to an internal error, it was not possible to link
@@ -655,7 +665,8 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 	}
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	if err := linkAthleteToParent(parent, athlete, uc.DB); err != nil {
+	athletes := []*Athlete{athlete}
+	if err := linkAthletesToParent(parent, athletes, uc.DB); err != nil {
 		log.Printf("Error linking athlete to parent: %v", err)
 		html = utils.GetTemplate("base", "athlete-form")
 		context.Error = `Due to an internal error, it was not possible to create

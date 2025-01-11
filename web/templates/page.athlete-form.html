@@ -2,7 +2,10 @@
 
 {{define "title"}}Athlete{{end}}
 
-{{define "breadcrumb"}}{{end}}
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/profile/">Profile</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Linking Athlete</li>
+{{end}}
 
 {{define "content"}}
     <h1 class="display-6">Athlete</h1>
@@ -11,9 +14,11 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">Link Existing Athlete</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">
-                Swimmers 13 & over can create their own account. If your swimmer already have one, 
-                you can follow them by linking their account with yours.</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondary">You may want to link an athlete to your profile when:
+                <ul>
+                    <li>If the swimmer is 13 or older and created their own account, use the swimmer's email.</li>
+                    <li>If the swimmer is already linked to another parent, use the parent's email.</li>
+                </ul></h6>
         </div>
         <div class="card-body">
             <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/search/" method="post">
@@ -27,28 +32,25 @@
             </form>
         </div>
 
-        {{if .FoundAthlete}}
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    {{.FoundAthlete.FirstName}} {{.FoundAthlete.LastName}} ({{.FoundAthlete.UserAccount.Email}})
-                </li>
-            </ul>
-        {{else}}
-            <p class="card-text">No swimmer found.</p>
-        {{end}}
-
         <div class="card-body">
             <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/link/" method="post">
-                {{if .FoundAthlete}}
-                    <input type="hidden" name="athleteId" value="{{.FoundAthlete.ID}}">
+                {{if .FoundAthletes}}
+                    <fieldset>
+                    {{range .FoundAthletes}}    
+                        <div class="mb-3 form-check">
+                            <input class="form-check-input" type="checkbox" value="{{.ID}}" name="athletes" id="athletes{{.ID}}" checked>
+                            <label class="form-check-label" for="athletes{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
+                        </div>
+                    {{end}}
+                    </fieldset>
                     <div class="col-3">
                         <button type="submit" class="btn btn-primary">Link</button>
                     </div>
                     <div class="alert alert-info" role="alert">
-                        {{.FoundAthlete.FirstName}} {{.FoundAthlete.LastName}} has to confirm the link before 
-                        {{if eq .FoundAthlete.Gender.String "FEMALE"}}she{{else}}he{{end}} appears in your profile.
+                        Athletes have to confirm the link before they appear in your profile.
                     </div>
                 {{else}}
+                    <p class="card-text">Swimmer not found or already linked to your profile.</p>
                     <div class="col-3">
                         <button type="submit" class="btn btn-primary" disabled>Link</button>
                     </div>
