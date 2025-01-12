@@ -1,0 +1,15 @@
+{{template "base-layout" .}}
+
+{{define "title"}}{{.Athlete.FirstName}} {{.Athlete.LastName}}{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item"><a href="/profile/">Profile</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Swimmer</li>
+{{end}}
+
+{{define "content"}}
+    <h2>Swimmer</h2>
+    <h1 class="display-6">{{.Athlete.FirstName}} {{.Athlete.LastName}}</h1>
+{{end}}
+
+{{define "scripts"}}{{end}}

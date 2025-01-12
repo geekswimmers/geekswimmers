@@ -28,7 +28,11 @@
                 <tbody>
                     {{range .Athletes}}
                         <tr>
-                            <td>{{.FirstName}} {{.LastName}}</td>
+                            <td>{{if .LinkApproved}}
+                                    <a href="/profile/athletes/{{.ID}}">{{.FirstName}} {{.LastName}}</a>
+                                {{else}}
+                                    {{.FirstName}} {{.LastName}}
+                                {{end}}</td>
                             <td>{{.BirthDate.Time.Format "Jan 02, 2006"}}</td>
                             <td>{{.Gender.String | Title}}</td>
                         </tr>
