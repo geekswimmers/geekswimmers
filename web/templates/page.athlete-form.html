@@ -8,124 +8,145 @@
 {{end}}
 
 {{define "content"}}
-    <h1 class="display-6">Swimmer</h1>
+    <h1 class="display-6">Linking Swimmer</h1>
 
-    <br>
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Link Existing Swimmer</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">You may want to link a swimmer to your profile when:
-                <ul>
-                    <li>If the swimmer is 13 or older and created their own account, use the swimmer's email.</li>
-                    <li>If the swimmer is already linked to another parent, use the parent's email.</li>
-                </ul></h6>
-        </div>
-        <div class="card-body">
-            <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/search/" method="post">
-                <div class="col-9">
-                    <label class="visually-hidden" for="inlineFormSelectPref">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{.Email}}" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" required>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Link Existing Swimmer</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">You may want to link a swimmer to your profile when:
+                        <ul>
+                            <li>If the swimmer is 13 or older and created their own account, use the swimmer's email.</li>
+                            <li>If the swimmer is already linked to another parent, use the parent's email.</li>
+                        </ul></h6>
                 </div>
-                <div class="col-3">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="card-body">
-            <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/link/" method="post">
-                {{if .FoundAthletes}}
-                    <fieldset>
-                    {{range .FoundAthletes}}
-                        <div class="mb-3 form-check">
-                            <input class="form-check-input" type="checkbox" value="{{.ID}}" name="athletes" id="athletes{{.ID}}" checked>
-                            <label class="form-check-label" for="athletes{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
+                <div class="card-body">
+                    <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/search/" method="post">
+                        <div class="col-9">
+                            <label class="visually-hidden" for="inlineFormSelectPref">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{.Email}}" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" required>
                         </div>
-                    {{end}}
-                    </fieldset>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary">Link</button>
-                    </div>
-                    <div class="alert alert-info" role="alert">
-                        Swimmers have to confirm the link before they appear in your profile.
-                    </div>
-                {{else}}
-                    <p class="card-text">Swimmer not found or already linked to your profile.</p>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary" disabled>Link</button>
-                    </div>
-                {{end}}
-            </form>
-        </div>
-    </div>
-
-    <br>
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">New Swimmer</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">
-                Swimmers 12 & under can not create their own account, but you can create and manage their swimmer's profile for them.</h6>
-        </div>
-        <div class="card-body">
-            <form id="athlete-form" method="post" action="/profile/athletes/form/">
-                {{if .Error }}
-                    <div class="alert alert-warning" role="alert">
-                        {{html .Error}}
-                    </div>
-                {{end}}
-                
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
-                            <span class="error">{{.ErrorFirstName}}</span>
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary">Search</button>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
-                            <span class="error">{{.ErrorLastName}}</span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="birthDate" class="form-label">Date of Birth</label>
-                            <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
-                            <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at a specific date, such as a championship start date.</small>
-                            <span class="error">{{.ErrorBirthDate}}</span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Gender</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}} required>
-                                <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
+                <div class="card-body">
+                    <form action="/profile/athletes/form/link/" method="post">
+                        {{if .FoundAthletes}}
+                            <fieldset>
+                            {{range .FoundAthletes}}
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" type="checkbox" value="{{.ID}}" name="athletes" id="athletes{{.ID}}" checked>
+                                    <label class="form-check-label" for="athletes{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
+                                </div>
+                            {{end}}
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                </svg> Link</button>
+                            <a class="btn btn-secondary" href="/profile/" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg> Cancel</a>
+                            <br><br>
+                            <div class="alert alert-info" role="alert">
+                                Swimmers have to confirm the link before they appear in your profile.
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}} required>
-                                <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
-                            </div>
-                            <br>
-                            <small class="text-body-secondary">World Aquatics use two genders to categorize time standards and records.</small>
-                            <span class="error">{{.ErrorGender}}</span>
-                        </div>
-                    </div>
+                        {{else}}
+                            {{if .Email}}
+                                <p class="card-text">Swimmer not found or already linked to your profile.</p>
+                            {{end}}
+                            <button type="submit" class="btn btn-primary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                </svg> Link</button>
+                            <a class="btn btn-secondary" href="/profile/" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg> Cancel</a>
+                        {{end}}
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
-                        <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
-                        <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg> Save
-                </button>
-                <a class="btn btn-secondary" href="/profile/" role="button">Cancel</a>
-            </form>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Link New Swimmer</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                        Swimmers 12 & under can not create their own account, but you can create and manage their swimmer's profile for them.</h6>
+                </div>
+                <div class="card-body">
+                    <form id="athlete-form" method="post" action="/profile/athletes/form/">
+                        {{if .Error }}
+                            <div class="alert alert-warning" role="alert">
+                                {{html .Error}}
+                            </div>
+                        {{end}}
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
+                                    <span class="error">{{.ErrorFirstName}}</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
+                                    <span class="error">{{.ErrorLastName}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="birthDate" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
+                                    <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at a specific date, such as a championship start date.</small>
+                                    <span class="error">{{.ErrorBirthDate}}</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label">Gender</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}} required>
+                                        <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}} required>
+                                        <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
+                                    </div>
+                                    <br>
+                                    <small class="text-body-secondary">World Aquatics use two genders to categorize time standards and records.</small>
+                                    <span class="error">{{.ErrorGender}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                                <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                                <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            </svg> Save
+                        </button>
+                        <a class="btn btn-secondary" href="/profile/" role="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg> Cancel</a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {{end}}
