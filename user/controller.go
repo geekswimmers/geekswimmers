@@ -553,9 +553,10 @@ func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Req
 	for _, athleteIDStr := range selectedAthletes {
 		athleteID, err := strconv.ParseInt(athleteIDStr, 10, 64)
 		if err != nil {
-			log.Printf("Invalid athlete ID: %v", req.PostForm.Get("athleteId"))
+			log.Printf("Invalid athlete ID: %v", athleteID)
 		}
-		athletes = append(athletes, &Athlete{ID: athleteID})
+		athlete := FindAthleteByID(athleteID, uc.DB)
+		athletes = append(athletes, athlete)
 	}
 
 	context := &athleteData{

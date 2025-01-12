@@ -47,12 +47,13 @@ func (ua *UserAccount) CleanEmail() string {
 }
 
 type Athlete struct {
-	ID          int64
-	FirstName   string
-	LastName    string
-	Gender      sql.NullString
-	BirthDate   sql.NullTime
-	UserAccount *UserAccount
+	ID            int64
+	FirstName     string
+	LastName      string
+	Gender        sql.NullString
+	BirthDate     sql.NullTime
+	UserAccount   *UserAccount
+	UserAccountID sql.NullInt64
 }
 
 type EmailMessage struct {
