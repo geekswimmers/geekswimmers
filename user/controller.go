@@ -475,6 +475,10 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 
 func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
 
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	athletes, err := FindAthletesParent(user, uc.DB)
@@ -491,12 +495,39 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 
 	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"Title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
-		log.Printf("Error loading the user prodile: %v", err)
+		log.Printf("Error loading the user's profile: %v", err)
+	}
+}
+
+func (uc *UserController) ProfileAthleteView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	athleteId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+
+	athlete := FindAthleteByID(athleteId, uc.DB)
+
+	data := &athleteData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		Athlete:          athlete,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "profile-athlete", template.FuncMap{"Title": utils.Title})
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the athlete's profile: %v", err)
 	}
 }
 
 func (uc *UserController) AthleteFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
 
 	html := utils.GetTemplate("base", "athlete-form")
 	if err := html.Execute(res, &athleteData{
@@ -509,6 +540,10 @@ func (uc *UserController) AthleteFormView(res http.ResponseWriter, req *http.Req
 
 func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
 
 	err := req.ParseForm()
 	if err != nil {
@@ -540,12 +575,17 @@ func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.R
 }
 
 func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
 	}
 
-	sessionData := storage.NewSessionData(req)
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
 
 	selectedAthletes := req.Form["athletes"]
@@ -581,12 +621,17 @@ func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Req
 }
 
 func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
 	}
 
-	sessionData := storage.NewSessionData(req)
 	var html *template.Template
 	context := &athleteData{
 		SessionData:      sessionData,

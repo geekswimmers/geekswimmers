@@ -51,6 +51,7 @@ type profileData struct {
 }
 
 type athleteData struct {
+	Athlete          *Athlete
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
 	Email            string

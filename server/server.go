@@ -95,6 +95,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/profile/athletes/form/link/", s.handleRequest(userController.AthleteFormLink))
 	s.Router.Get("/profile/athletes/form/", s.handleRequest(userController.AthleteFormView))
 	s.Router.Post("/profile/athletes/form/", s.handleRequest(userController.AthleteForm))
+	s.Router.Get("/profile/athletes/:id/", s.handleRequest(userController.ProfileAthleteView))
 	s.Router.Get("/profile/", s.handleRequest(userController.ProfileView))
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))

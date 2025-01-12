@@ -307,7 +307,7 @@ func linkAthletesToParent(parent *UserAccount, athletes []*Athlete, db storage.D
 }
 
 func FindAthletesParent(parent *UserAccount, db storage.Database) ([]*Athlete, error) {
-	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
+	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
 			from athlete a
 			    join parent_athlete pa on a.id = pa.athlete
 			where pa.parent = $1
@@ -322,7 +322,7 @@ func FindAthletesParent(parent *UserAccount, db storage.Database) ([]*Athlete, e
 	var athletes []*Athlete
 	for rows.Next() {
 		athlete := &Athlete{}
-		err = rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender)
+		err = rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender, &athlete.LinkApproved)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("FindAthletesParent: %v", err)
 		}

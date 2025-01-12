@@ -29,6 +29,10 @@ type SessionData struct {
 	Second          string
 }
 
+func (sd *SessionData) IsAuthenticated() bool {
+	return len(sd.Email) > 0
+}
+
 func NewSessionData(req *http.Request) *SessionData {
 	return &SessionData{
 		AcceptedCookies: GetSessionEntryValue(req, "profile", "acceptedCookies") == "true",

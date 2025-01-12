@@ -54,6 +54,9 @@ type Athlete struct {
 	BirthDate     sql.NullTime
 	UserAccount   *UserAccount
 	UserAccountID sql.NullInt64
+
+	// Transient
+	LinkApproved bool
 }
 
 type EmailMessage struct {
