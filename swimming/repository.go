@@ -49,7 +49,7 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 
 func FindEvents(db storage.Database) ([]*Event, error) {
 	stmt := `select ssd.distance , ss.stroke 
-			 from swim_style_distance ssd 
+			 from swim_event ssd 
 				join swim_style ss on ssd.style = ss.id
 			 order by ss.sequence`
 	rows, err := db.Query(context.Background(), stmt)

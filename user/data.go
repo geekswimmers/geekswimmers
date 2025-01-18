@@ -3,6 +3,7 @@ package user
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"time"
 )
 
 type signUpData struct {
@@ -45,8 +46,19 @@ type passwordViewData struct {
 
 type profileData struct {
 	BaseTemplateData *utils.BaseTemplateData
+	BirthDate        *time.Time
+	Email            string
+	Error            string
+	ErrorBirthDate   string
+	ErrorEmail       string
+	ErrorFirstName   string
+	ErrorGender      string
+	ErrorLastName    string
+	FirstName        string
+	Gender           string
+	LastName         string
+	Role             string
 	SessionData      *storage.SessionData
-	UserAccount      UserAccount
 	Athletes         []*Athlete
 }
 

@@ -470,7 +470,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	http.Redirect(res, req, "/", http.StatusSeeOther)
+	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
 func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
@@ -489,11 +489,49 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	data := &profileData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
-		UserAccount:      *user,
+		FirstName:        user.FirstName,
+		LastName:         user.LastName,
+		Email:            user.Email,
+		Role:             user.Role,
 		Athletes:         athletes,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"Title": utils.Title})
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the user's profile: %v", err)
+	}
+}
+
+func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	athlete := FindAthleteByUserAccount(user, uc.DB)
+
+	var birthDate *time.Time
+	var gender string
+
+	if athlete != nil {
+		birthDate = &athlete.BirthDate.Time
+		gender = athlete.Gender.String
+	}
+
+	data := &profileData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		FirstName:        user.FirstName,
+		LastName:         user.LastName,
+		Email:            user.Email,
+		BirthDate:        birthDate,
+		Gender:           gender,
+		Role:             user.Role,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the user's profile: %v", err)
 	}
