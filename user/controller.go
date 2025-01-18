@@ -84,12 +84,12 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Validates role
-	if context.Role == "" || (context.Role != "PARENT" && context.Role != "SWIMMER") {
+	if context.Role == "" || (context.Role != RoleParent && context.Role != RoleSwimmer) {
 		log.Printf("Invalid role: %v", context.Role)
 		context.ErrorRole = "Select a role."
 	}
 	if !UserAccountExists(uc.DB) {
-		context.Role = "ADMIN"
+		context.Role = RoleAdmin
 	}
 
 	userAccount := &UserAccount{
@@ -101,7 +101,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	var swimmer *Swimmer
 
-	if userAccount.Role == "SWIMMER" {
+	if userAccount.Role == RoleSwimmer {
 		swimmer = &Swimmer{
 			FirstName: context.FirstName,
 			LastName:  context.LastName,
@@ -135,7 +135,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// Validates gender
-		if (context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE")) && context.Role == "SWIMMER" {
+		if (context.Gender == "" || (context.Gender != times.GenderFemale && context.Gender != times.GenderMale)) && context.Role == RoleSwimmer {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
@@ -191,7 +191,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if userAccount.Role == "SWIMMER" {
+	if userAccount.Role == RoleSwimmer {
 		swimmer.UserAccount = userAccount
 		_, err = InsertSwimmer(swimmer, uc.DB)
 		if err != nil {
@@ -433,7 +433,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if userAccount.Role == "SWIMMER" {
+	if userAccount.Role == RoleSwimmer {
 		swimmer := FindSwimmerByUserAccount(userAccount, uc.DB)
 		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -714,7 +714,7 @@ func (uc *UserController) SwimmerForm(res http.ResponseWriter, req *http.Request
 	}
 
 	// Validates gender
-	if context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE") {
+	if context.Gender == "" || (context.Gender != times.GenderFemale && context.Gender != times.GenderMale) {
 		log.Printf("Invalid Gender: %v", context.Gender)
 		context.ErrorGender = "Select your gender."
 	} else {
