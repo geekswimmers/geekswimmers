@@ -59,11 +59,11 @@ type profileData struct {
 	LastName         string
 	Role             string
 	SessionData      *storage.SessionData
-	Athletes         []*Athlete
+	Swimmers         []*Swimmer
 }
 
-type athleteData struct {
-	Athlete          *Athlete
+type swimmerData struct {
+	Swimmer          *Swimmer
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
 	Email            string
@@ -74,13 +74,13 @@ type athleteData struct {
 	ErrorGender      string
 	ErrorLastName    string
 	FirstName        string
-	FoundAthletes    []*Athlete
+	FoundSwimmers    []*Swimmer
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData
 }
 
-func (ad *athleteData) errorHappened() bool {
+func (ad *swimmerData) errorHappened() bool {
 	return len(ad.ErrorFirstName) > 0 ||
 		len(ad.ErrorLastName) > 0 ||
 		len(ad.ErrorBirthDate) > 0 ||

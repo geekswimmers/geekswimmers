@@ -3,4 +3,5 @@ geekswimmers
 .vscode/settings.json
 *.bkp
 
+.idea/
 test/

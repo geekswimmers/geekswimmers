@@ -22,7 +22,7 @@
                         </ul></h6>
                 </div>
                 <div class="card-body">
-                    <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/athletes/form/search/" method="post">
+                    <form class="row row-cols-lg-auto g-3 align-items-center" action="/profile/swimmers/form/search/" method="post">
                         <div class="col-9">
                             <label class="visually-hidden" for="inlineFormSelectPref">Email</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{.Email}}" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" required>
@@ -34,13 +34,13 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="/profile/athletes/form/link/" method="post">
-                        {{if .FoundAthletes}}
+                    <form action="/profile/swimmers/form/link/" method="post">
+                        {{if .FoundSwimmers}}
                             <fieldset>
-                            {{range .FoundAthletes}}
+                            {{range .FoundSwimmers}}
                                 <div class="mb-3 form-check">
-                                    <input class="form-check-input" type="checkbox" value="{{.ID}}" name="athletes" id="athletes{{.ID}}" checked>
-                                    <label class="form-check-label" for="athletes{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
+                                    <input class="form-check-input" type="checkbox" value="{{.ID}}" name="swimmers" id="swimmers{{.ID}}" checked>
+                                    <label class="form-check-label" for="swimmers{{.ID}}">{{.FirstName}} {{.LastName}} ({{.UserAccount.Email}})</label>
                                 </div>
                             {{end}}
                             </fieldset>
@@ -83,7 +83,7 @@
                         Swimmers 12 & under can not create their own account, but you can create and manage their swimmer's profile for them.</h6>
                 </div>
                 <div class="card-body">
-                    <form id="athlete-form" method="post" action="/profile/athletes/form/">
+                    <form id="swimmer-form" method="post" action="/profile/swimmers/form/">
                         {{if .Error }}
                             <div class="alert alert-warning" role="alert">
                                 {{html .Error}}

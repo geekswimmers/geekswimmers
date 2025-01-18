@@ -13,7 +13,7 @@ const (
 	FailedMatchAttemptsExceeded = "ATTEMPTS_EXCEEDED"
 
 	RoleAdmin    = "ADMIN"
-	RoleAthlete  = "ATHLETE"
+	RoleSwimmer  = "SWIMMER"
 	RoleClub     = "CLUB"
 	RoleCoach    = "COACH"
 	RoleOfficial = "OFFICIAL"
@@ -46,7 +46,7 @@ func (ua *UserAccount) CleanEmail() string {
 	return email
 }
 
-type Athlete struct {
+type Swimmer struct {
 	ID            int64
 	FirstName     string
 	LastName      string

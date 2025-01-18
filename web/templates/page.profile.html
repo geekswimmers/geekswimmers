@@ -29,7 +29,7 @@
     </div>
     <h1 class="display-6">{{.FirstName}} {{.LastName}}</h1>
 
-    {{if ne .Role "ATHLETE"}}
+    {{if ne .Role "SWIMMER"}}
         <br>
         <div class="card">
             <div class="card-body">
@@ -46,10 +46,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{range .Athletes}}
+                    {{range .Swimmers}}
                         <tr>
                             <td>{{if .LinkApproved}}
-                                    <a href="/profile/athletes/{{.ID}}">{{.FirstName}} {{.LastName}}</a>
+                                    <a href="/profile/swimmers/{{.ID}}">{{.FirstName}} {{.LastName}}</a>
                                 {{else}}
                                     {{.FirstName}} {{.LastName}}
                                 {{end}}</td>
@@ -65,7 +65,7 @@
             </table>
 
             <div class="card-body">
-                <a class="btn btn-secondary" href="/profile/athletes/form/">
+                <a class="btn btn-secondary" href="/profile/swimmers/form/">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
                         <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>

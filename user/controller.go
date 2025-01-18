@@ -84,7 +84,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Validates role
-	if context.Role == "" || (context.Role != "PARENT" && context.Role != "ATHLETE") {
+	if context.Role == "" || (context.Role != "PARENT" && context.Role != "SWIMMER") {
 		log.Printf("Invalid role: %v", context.Role)
 		context.ErrorRole = "Select a role."
 	}
@@ -99,10 +99,10 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		Role:      context.Role,
 	}
 
-	var athlete *Athlete
+	var swimmer *Swimmer
 
-	if userAccount.Role == "ATHLETE" {
-		athlete = &Athlete{
+	if userAccount.Role == "SWIMMER" {
+		swimmer = &Swimmer{
 			FirstName: context.FirstName,
 			LastName:  context.LastName,
 		}
@@ -118,7 +118,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 				log.Printf("Invalid birth date: %v", context.BirthDate)
 				context.ErrorBirthDate = "Invalid birth date."
 			} else {
-				athlete.BirthDate = sql.NullTime{
+				swimmer.BirthDate = sql.NullTime{
 					Time: birthDate,
 				}
 			}
@@ -135,11 +135,11 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// Validates gender
-		if (context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE")) && context.Role == "ATHLETE" {
+		if (context.Gender == "" || (context.Gender != "FEMALE" && context.Gender != "MALE")) && context.Role == "SWIMMER" {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
-			athlete.Gender = sql.NullString{
+			swimmer.Gender = sql.NullString{
 				String: context.Gender,
 			}
 		}
@@ -191,11 +191,11 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if userAccount.Role == "ATHLETE" {
-		athlete.UserAccount = userAccount
-		_, err = InsertAthlete(athlete, uc.DB)
+	if userAccount.Role == "SWIMMER" {
+		swimmer.UserAccount = userAccount
+		_, err = InsertSwimmer(swimmer, uc.DB)
 		if err != nil {
-			log.Printf("Error saving the athlete: %v", err)
+			log.Printf("Error saving the swimmer: %v", err)
 			html = utils.GetTemplate("base", "signup")
 			context.Error = `Due to an internal error, it was not possible to create
 				your account at this moment. Please, trying again later. 
@@ -433,14 +433,14 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if userAccount.Role == "ATHLETE" {
-		athlete := FindAthleteByUserAccount(userAccount, uc.DB)
-		if err = uc.addAthleteToSession(athlete, res, req); err != nil {
+	if userAccount.Role == "SWIMMER" {
+		swimmer := FindSwimmerByUserAccount(userAccount, uc.DB)
+		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		if err = uc.addAthleteToSession(athlete, res, req); err != nil {
+		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -481,9 +481,9 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	}
 
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	athletes, err := FindAthletesParent(user, uc.DB)
+	swimmers, err := FindSwimmersParent(user, uc.DB)
 	if err != nil {
-		log.Printf("Error finding athletes: %v", err)
+		log.Printf("Error finding swimmers: %v", err)
 	}
 
 	data := &profileData{
@@ -493,7 +493,7 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 		LastName:         user.LastName,
 		Email:            user.Email,
 		Role:             user.Role,
-		Athletes:         athletes,
+		Swimmers:         swimmers,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile", template.FuncMap{"Title": utils.Title})
@@ -510,14 +510,14 @@ func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Req
 	}
 
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	athlete := FindAthleteByUserAccount(user, uc.DB)
+	swimmer := FindSwimmerByUserAccount(user, uc.DB)
 
 	var birthDate *time.Time
 	var gender string
 
-	if athlete != nil {
-		birthDate = &athlete.BirthDate.Time
-		gender = athlete.Gender.String
+	if swimmer != nil {
+		birthDate = &swimmer.BirthDate.Time
+		gender = swimmer.Gender.String
 	}
 
 	data := &profileData{
@@ -537,46 +537,46 @@ func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Req
 	}
 }
 
-func (uc *UserController) ProfileAthleteView(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 		return
 	}
 
-	athleteId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	swimmerId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 
-	athlete := FindAthleteByID(athleteId, uc.DB)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
-	data := &athleteData{
+	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
-		Athlete:          athlete,
+		Swimmer:          swimmer,
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "profile-athlete", template.FuncMap{"Title": utils.Title})
+	html := utils.GetTemplateWithFunctions("base", "profile-swimmer", template.FuncMap{"Title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
-		log.Printf("Error loading the athlete's profile: %v", err)
+		log.Printf("Error loading the swimmer's profile: %v", err)
 	}
 }
 
-func (uc *UserController) AthleteFormView(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) SwimmerFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 		return
 	}
 
-	html := utils.GetTemplate("base", "athlete-form")
-	if err := html.Execute(res, &athleteData{
+	html := utils.GetTemplate("base", "swimmer-form")
+	if err := html.Execute(res, &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 	}); err != nil {
-		log.Printf("Error loading the athlete form: %v", err)
+		log.Printf("Error loading the swimmer form: %v", err)
 	}
 }
 
-func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) SwimmerFormSearch(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -588,7 +588,7 @@ func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.R
 		log.Print(err)
 	}
 
-	context := &athleteData{
+	context := &swimmerData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
@@ -601,18 +601,18 @@ func (uc *UserController) AthleteFormSearch(res http.ResponseWriter, req *http.R
 	}
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	context.FoundAthletes, err = findLinkableAthleteByEmail(context.Email, parent, uc.DB)
+	context.FoundSwimmers, err = findLinkableSwimmerByEmail(context.Email, parent, uc.DB)
 	if err != nil {
-		log.Printf("Error finding athletes: %v", err)
+		log.Printf("Error finding swimmers: %v", err)
 	}
 
-	html := utils.GetTemplate("base", "athlete-form")
+	html := utils.GetTemplate("base", "swimmer-form")
 	if err := html.Execute(res, context); err != nil {
-		log.Printf("Error loading the athlete form: %v", err)
+		log.Printf("Error loading the swimmer form: %v", err)
 	}
 }
 
-func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) SwimmerFormLink(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -626,28 +626,28 @@ func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Req
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
 
-	selectedAthletes := req.Form["athletes"]
-	var athletes []*Athlete
-	for _, athleteIDStr := range selectedAthletes {
-		athleteID, err := strconv.ParseInt(athleteIDStr, 10, 64)
+	selectedSwimmers := req.Form["swimmers"]
+	var swimmers []*Swimmer
+	for _, swimmerIDStr := range selectedSwimmers {
+		swimmerID, err := strconv.ParseInt(swimmerIDStr, 10, 64)
 		if err != nil {
-			log.Printf("Invalid athlete ID: %v", athleteID)
+			log.Printf("Invalid swimmer ID: %v", swimmerID)
 		}
-		athlete := FindAthleteByID(athleteID, uc.DB)
-		athletes = append(athletes, athlete)
+		swimmer := FindSwimmerByID(swimmerID, uc.DB)
+		swimmers = append(swimmers, swimmer)
 	}
 
-	context := &athleteData{
-		FoundAthletes:    athletes,
+	context := &swimmerData{
+		FoundSwimmers:    swimmers,
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 	}
 
-	if err := linkAthletesToParent(parent, context.FoundAthletes, uc.DB); err != nil {
-		log.Printf("Error saving the athlete: %v", err)
-		html := utils.GetTemplate("base", "athlete-form")
+	if err := linkSwimmersToParent(parent, context.FoundSwimmers, uc.DB); err != nil {
+		log.Printf("Error saving the swimmer: %v", err)
+		html := utils.GetTemplate("base", "swimmer-form")
 		context.Error = `Due to an internal error, it was not possible to link
-			the athlete wity your account at this moment. Please, trying again later.`
+			the swimmer wity your account at this moment. Please, trying again later.`
 		err = html.Execute(res, context)
 		if err != nil {
 			log.Print(err)
@@ -658,7 +658,7 @@ func (uc *UserController) AthleteFormLink(res http.ResponseWriter, req *http.Req
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request) {
+func (uc *UserController) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -671,7 +671,7 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 	}
 
 	var html *template.Template
-	context := &athleteData{
+	context := &swimmerData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
@@ -692,7 +692,7 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 		context.ErrorLastName = "Last Name is empty."
 	}
 
-	athlete := &Athlete{
+	swimmer := &Swimmer{
 		FirstName: context.FirstName,
 		LastName:  context.LastName,
 	}
@@ -707,7 +707,7 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 			log.Printf("Invalid birth date: %v", context.BirthDate)
 			context.ErrorBirthDate = "Invalid birth date."
 		} else {
-			athlete.BirthDate = sql.NullTime{
+			swimmer.BirthDate = sql.NullTime{
 				Time: birthDate,
 			}
 		}
@@ -718,15 +718,15 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 		log.Printf("Invalid Gender: %v", context.Gender)
 		context.ErrorGender = "Select your gender."
 	} else {
-		athlete.Gender = sql.NullString{
+		swimmer.Gender = sql.NullString{
 			String: context.Gender,
 		}
 	}
 
 	// Back to the signup page in case of error.
 	if context.errorHappened() {
-		html = utils.GetTemplate("base", "athlete-form")
-		log.Printf("Back to athlete form with errors.")
+		html = utils.GetTemplate("base", "swimmer-form")
+		log.Printf("Back to swimmer form with errors.")
 		err = html.Execute(res, context)
 		if err != nil {
 			log.Print(err)
@@ -734,10 +734,10 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 		return
 	}
 
-	athlete.ID, err = InsertAthlete(athlete, uc.DB)
+	swimmer.ID, err = InsertSwimmer(swimmer, uc.DB)
 	if err != nil {
-		log.Printf("Error saving the athlete: %v", err)
-		html = utils.GetTemplate("base", "athlete-form")
+		log.Printf("Error saving the swimmer: %v", err)
+		html = utils.GetTemplate("base", "swimmer-form")
 		context.Error = `Due to an internal error, it was not possible to create
 			your account at this moment. Please, trying again later. 
 			Thank you for your undestanding.`
@@ -749,10 +749,10 @@ func (uc *UserController) AthleteForm(res http.ResponseWriter, req *http.Request
 	}
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	athletes := []*Athlete{athlete}
-	if err := linkAthletesToParent(parent, athletes, uc.DB); err != nil {
-		log.Printf("Error linking athlete to parent: %v", err)
-		html = utils.GetTemplate("base", "athlete-form")
+	swimmers := []*Swimmer{swimmer}
+	if err := linkSwimmersToParent(parent, swimmers, uc.DB); err != nil {
+		log.Printf("Error linking swimmer to parent: %v", err)
+		html = utils.GetTemplate("base", "swimmer-form")
 		context.Error = `Due to an internal error, it was not possible to create
 			your account at this moment. Please, trying again later. 
 			Thank you for your undestanding.`
@@ -899,12 +899,12 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 	return nil
 }
 
-func (uc *UserController) addAthleteToSession(athlete *Athlete, res http.ResponseWriter, req *http.Request) error {
-	if err := storage.AddSessionEntry(res, req, "profile", "gender", athlete.Gender.String); err != nil {
+func (uc *UserController) addSwimmerToSession(swimmer *Swimmer, res http.ResponseWriter, req *http.Request) error {
+	if err := storage.AddSessionEntry(res, req, "profile", "gender", swimmer.Gender.String); err != nil {
 		return err
 	}
 
-	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", athlete.BirthDate.Time.Format("2006-01-02")); err != nil {
+	if err := storage.AddSessionEntry(res, req, "profile", "birthDate", swimmer.BirthDate.Time.Format("2006-01-02")); err != nil {
 		return err
 	}
 

@@ -42,17 +42,17 @@
                 <div class="mb-3">
                     <label for="role" class="form-label">Community Role</label><br>
                     <div class="form-check form-check-inline" style="padding-top: 8px;">
-                        <input class="form-check-input" type="radio" name="role" id="roleParent" value="PARENT" required{{if eq .Role "PARENT"}} checked{{end}} onclick="document.getElementById('forRoleAthlete').style.display = 'none';">
+                        <input class="form-check-input" type="radio" name="role" id="roleParent" value="PARENT" required{{if eq .Role "PARENT"}} checked{{end}} onclick="document.getElementById('forRoleSwimmer').style.display = 'none';">
                         <label class="form-check-label" style="font-weight: normal;" for="roleParent">I'm a Swimmer's Parent</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="role" id="roleAthlete" value="ATHLETE" required{{if eq .Role "ATHLETE"}} checked{{end}}  onclick="document.getElementById('forRoleAthlete').style.display = 'block';">
-                        <label class="form-check-label" style="font-weight: normal;" for="roleAthlete">I'm a Swimmer</label>
+                        <input class="form-check-input" type="radio" name="role" id="roleSwimmer" value="SWIMMER" required{{if eq .Role "SWIMMER"}} checked{{end}}  onclick="document.getElementById('forRoleSwimmer').style.display = 'block';">
+                        <label class="form-check-label" style="font-weight: normal;" for="roleSwimmer">I'm a Swimmer</label>
                     </div>
                     <span class="error">{{.ErrorRole}}</span>
                 </div>
 
-                <div id="forRoleAthlete" style="display: none;">
+                <div id="forRoleSwimmer" style="display: none;">
                     <div class="mb-3">
                         <label for="birthDate" class="form-label">Date of Birth</label>
                         <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
@@ -120,8 +120,8 @@
     {{if .ReCaptchaSiteKey}}
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>
-            if (document.getElementById("roleAthlete").checked) {
-                document.getElementById('forRoleAthlete').style.display = 'block';
+            if (document.getElementById("roleSwimmer").checked) {
+                document.getElementById('forRoleSwimmer').style.display = 'block';
             }
 
             function onSubmit(token) {

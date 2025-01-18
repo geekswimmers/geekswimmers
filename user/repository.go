@@ -31,16 +31,16 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 	return lastInsertId, nil
 }
 
-func InsertAthlete(athlete *Athlete, db storage.Database) (int64, error) {
+func InsertSwimmer(swimmer *Swimmer, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	stm := `insert into athlete (first_name, last_name, birth_date, gender, user_account)
+	stm := `insert into swimmer (first_name, last_name, birth_date, gender, user_account)
 			values ($1, $2, $3, $4, $5) returning id`
 
 	var userAccountId sql.NullInt64
-	if athlete.UserAccount != nil {
+	if swimmer.UserAccount != nil {
 		userAccountId = sql.NullInt64{
-			Int64: athlete.UserAccount.ID,
+			Int64: swimmer.UserAccount.ID,
 			Valid: true,
 		}
 	} else {
@@ -48,13 +48,13 @@ func InsertAthlete(athlete *Athlete, db storage.Database) (int64, error) {
 	}
 
 	err := db.QueryRow(context.Background(), stm,
-		athlete.FirstName,
-		athlete.LastName,
-		athlete.BirthDate.Time,
-		athlete.Gender.String,
+		swimmer.FirstName,
+		swimmer.LastName,
+		swimmer.BirthDate.Time,
+		swimmer.Gender.String,
 		userAccountId).Scan(&lastInsertId)
 	if err != nil {
-		return 0, fmt.Errorf("user.InsertAthlete(%v %v): %v", athlete.FirstName, athlete.LastName, err)
+		return 0, fmt.Errorf("user.InsertSwimmer(%v %v): %v", swimmer.FirstName, swimmer.LastName, err)
 	}
 
 	return lastInsertId, nil
@@ -198,138 +198,138 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 	return userAccount
 }
 
-func FindAthleteByUserAccount(userAccount *UserAccount, db storage.Database) *Athlete {
+func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *Swimmer {
 	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
-			from athlete a
+			from swimmer a
 			where a.user_account = $1`
 
 	row := db.QueryRow(context.Background(), sql, userAccount.ID)
 
-	athlete := &Athlete{
+	swimmer := &Swimmer{
 		UserAccount: userAccount,
 	}
-	err := row.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender)
+	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.BirthDate, &swimmer.Gender)
 	if err != nil {
-		log.Printf("user.FindAthleteByUserAccount(%v): %v", userAccount.ID, err)
+		log.Printf("user.FindSwimmerByUserAccount(%v): %v", userAccount.ID, err)
 		return nil
 	}
 
-	return athlete
+	return swimmer
 }
 
-func FindAthleteByID(id int64, db storage.Database) *Athlete {
+func FindSwimmerByID(id int64, db storage.Database) *Swimmer {
 	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, a.user_account
-			from athlete a
+			from swimmer a
 			where a.id = $1`
 
 	row := db.QueryRow(context.Background(), sql, id)
 
-	athlete := &Athlete{}
-	err := row.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender, &athlete.UserAccountID)
+	swimmer := &Swimmer{}
+	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.BirthDate, &swimmer.Gender, &swimmer.UserAccountID)
 	if err != nil {
-		log.Printf("user.FindAthleteByID(%v): %v", id, err)
+		log.Printf("user.FindSwimmerByID(%v): %v", id, err)
 		return nil
 	}
 
-	return athlete
+	return swimmer
 }
 
-func findLinkableAthleteByEmail(email string, parent *UserAccount, db storage.Database) ([]*Athlete, error) {
-	// First, it checks if there is an athlete with a user account
+func findLinkableSwimmerByEmail(email string, parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
+	// First, it checks if there is an swimmer with a user account
 	stm := `select a.id, a.first_name, a.last_name, a.gender, ua.email
-			from athlete a
+			from swimmer a
 				join user_account ua on a.user_account = ua.id
 			where ua.email = $1
-				and a.id not in (select athlete from parent_athlete where parent = $2)`
+				and a.id not in (select swimmer from parent_swimmer where parent = $2)`
 
 	rows, err := db.Query(context.Background(), stm, email, parent.ID)
 	if err != nil {
-		return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+		return nil, fmt.Errorf("user.findLinkableSwimmerByEmail(%v, %v): %v", email, parent.ID, err)
 	}
 	defer rows.Close()
 
-	var athletes []*Athlete
+	var swimmers []*Swimmer
 	for rows.Next() {
-		athlete := &Athlete{
+		swimmer := &Swimmer{
 			UserAccount: &UserAccount{},
 		}
-		if err := rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+		if err := rows.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.Gender, &swimmer.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("user.findLinkableSwimmerByEmail(%v, %v): %v", email, parent.ID, err)
 		}
-		athletes = append(athletes, athlete)
+		swimmers = append(swimmers, swimmer)
 	}
 
-	// If no athlete is found, it checks if the email belongs to a parent and, if yes, then it
-	// returns all the athletes linked to that parent.
-	if len(athletes) == 0 {
+	// If no swimmer is found, it checks if the email belongs to a parent and, if yes, then it
+	// returns all the swimmers linked to that parent.
+	if len(swimmers) == 0 {
 		stm = `select a.id, a.first_name, a.last_name, a.gender, ua.email
-			   from parent_athlete pa
-				   join athlete a on pa.athlete = a.id
+			   from parent_swimmer pa
+				   join swimmer a on pa.swimmer = a.id
 				   join user_account ua on pa.parent = ua.id
 			   where ua.email = $1
-			   	   and a.id not in (select athlete from parent_athlete where parent = $2)`
+			   	   and a.id not in (select swimmer from parent_swimmer where parent = $2)`
 		rows, err := db.Query(context.Background(), stm, email, parent.ID)
 		if err != nil {
-			return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+			return nil, fmt.Errorf("user.findLinkableSwimmerByEmail(%v, %v): %v", email, parent.ID, err)
 		}
 		defer rows.Close()
 
 		for rows.Next() {
-			athlete := &Athlete{
+			swimmer := &Swimmer{
 				UserAccount: &UserAccount{},
 			}
-			if err := rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.Gender, &athlete.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
-				return nil, fmt.Errorf("user.findLinkableAthleteByEmail(%v, %v): %v", email, parent.ID, err)
+			if err := rows.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.Gender, &swimmer.UserAccount.Email); err != nil && err.Error() != storage.ErrNoRows {
+				return nil, fmt.Errorf("user.findLinkableSwimmerByEmail(%v, %v): %v", email, parent.ID, err)
 			}
-			athletes = append(athletes, athlete)
+			swimmers = append(swimmers, swimmer)
 		}
 	}
 
-	return athletes, nil
+	return swimmers, nil
 }
 
-func linkAthletesToParent(parent *UserAccount, athletes []*Athlete, db storage.Database) error {
-	stmt := `insert into parent_athlete (parent, athlete, approved) values ($1, $2, $3)`
+func linkSwimmersToParent(parent *UserAccount, swimmers []*Swimmer, db storage.Database) error {
+	stmt := `insert into parent_swimmer (parent, swimmer, approved) values ($1, $2, $3)`
 
-	for _, athlete := range athletes {
+	for _, swimmer := range swimmers {
 		approved := false
-		if !athlete.UserAccountID.Valid {
+		if !swimmer.UserAccountID.Valid {
 			approved = true
 		}
 
-		_, err := db.Exec(context.Background(), stmt, parent.ID, athlete.ID, approved)
+		_, err := db.Exec(context.Background(), stmt, parent.ID, swimmer.ID, approved)
 		if err != nil {
-			return fmt.Errorf("user.linkAthletesToParent(%v, %v): %v", parent.ID, athlete.ID, err)
+			return fmt.Errorf("user.linkSwimmersToParent(%v, %v): %v", parent.ID, swimmer.ID, err)
 		}
 	}
 
 	return nil
 }
 
-func FindAthletesParent(parent *UserAccount, db storage.Database) ([]*Athlete, error) {
+func FindSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
 	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
-			from athlete a
-			    join parent_athlete pa on a.id = pa.athlete
+			from swimmer a
+			    join parent_swimmer pa on a.id = pa.swimmer
 			where pa.parent = $1
 			order by a.first_name`
 
 	rows, err := db.Query(context.Background(), sql, parent.ID)
 	if err != nil {
-		return nil, fmt.Errorf("FindAthletesParent: %v", err)
+		return nil, fmt.Errorf("FindSwimmersParent: %v", err)
 	}
 	defer rows.Close()
 
-	var athletes []*Athlete
+	var swimmers []*Swimmer
 	for rows.Next() {
-		athlete := &Athlete{}
-		err = rows.Scan(&athlete.ID, &athlete.FirstName, &athlete.LastName, &athlete.BirthDate, &athlete.Gender, &athlete.LinkApproved)
+		swimmer := &Swimmer{}
+		err = rows.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.BirthDate, &swimmer.Gender, &swimmer.LinkApproved)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("FindAthletesParent: %v", err)
+			return nil, fmt.Errorf("FindSwimmersParent: %v", err)
 		}
-		athletes = append(athletes, athlete)
+		swimmers = append(swimmers, swimmer)
 	}
 
-	return athletes, nil
+	return swimmers, nil
 }
 
 func UserAccountExists(db storage.Database) bool {
