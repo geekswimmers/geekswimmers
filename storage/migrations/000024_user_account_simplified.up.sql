@@ -1,0 +1,1 @@
+alter table user_account drop column birth_date;
