@@ -55,13 +55,13 @@
                 <div id="forRoleSwimmer" style="display: none;">
                     <div class="mb-3">
                         <label for="birthDate" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
+                        <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}">
                         <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at the date specified by each championship.</small>
                         <span class="error">{{.ErrorBirthDate}}</span>
                     </div>
     
                     <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label>
+                        <label class="form-label">Gender</label>
                         <a href="#" data-bs-toggle="tooltip" data-bs-title="Swim Canada and Swim Ontario use only two genders to categorize time standards.">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -70,11 +70,11 @@
                         </a>
                         <br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}} required>
+                            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}}>
                             <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}} required>
+                            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}}>
                             <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
                         </div>
                         <span class="error">{{.ErrorGender}}</span>
@@ -120,13 +120,14 @@
     {{if .ReCaptchaSiteKey}}
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>
-            if (document.getElementById("roleSwimmer").checked) {
-                document.getElementById('forRoleSwimmer').style.display = 'block';
-            }
-
             function onSubmit(token) {
                 document.getElementById("signup-form").submit();
             }
         </script>
     {{end}}
+    <script>
+        if (document.getElementById("roleSwimmer").checked) {
+            document.getElementById('forRoleSwimmer').style.display = 'block';
+        }
+    </script>
 {{end}}
