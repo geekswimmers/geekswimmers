@@ -14,10 +14,10 @@ import (
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	sql := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
+	stm := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
 			values ($1, $2, $3, $4, $5, $6) returning id`
 
-	err := db.QueryRow(context.Background(), sql,
+	err := db.QueryRow(context.Background(), stm,
 		userAccount.CleanEmail(),
 		userAccount.FirstName,
 		userAccount.LastName,
@@ -61,10 +61,10 @@ func InsertSwimmer(swimmer *Swimmer, db storage.Database) (int64, error) {
 }
 
 func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {
-	stmt := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
+	stm := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
              values ($1, $2, $3, $4, $5)`
 
-	_, err := db.Exec(context.Background(), stmt,
+	_, err := db.Exec(context.Background(), stm,
 		signInAttempt.Identifier,
 		signInAttempt.HumanScore,
 		signInAttempt.Status,
@@ -78,14 +78,14 @@ func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error
 }
 
 func UpdateUserAccount(userAccount *UserAccount, db storage.Database) error {
-	stmt := `update user_account set confirmation = $1, 
+	stm := `update user_account set confirmation = $1, 
                                      modified = current_timestamp,
                                      first_name = $2,
                        	             last_name = $3,
                        	             promotional_msg = $4
              where id = $5`
 
-	_, err := db.Exec(context.Background(), stmt, userAccount.Confirmation, userAccount.FirstName, userAccount.LastName, userAccount.PromotionalMsg, userAccount.ID)
+	_, err := db.Exec(context.Background(), stm, userAccount.Confirmation, userAccount.FirstName, userAccount.LastName, userAccount.PromotionalMsg, userAccount.ID)
 	if err != nil {
 		return fmt.Errorf("user.UpdateUserAccount(%v, %v, %v, %v, %v): %v", userAccount.Confirmation, userAccount.FirstName,
 			userAccount.LastName, userAccount.PromotionalMsg, userAccount.ID, err)
@@ -95,12 +95,12 @@ func UpdateUserAccount(userAccount *UserAccount, db storage.Database) error {
 }
 
 func setUserAccountNewPassword(userAccount *UserAccount, db storage.Database) error {
-	stmt := `update user_account set password = $1, 
+	stm := `update user_account set password = $1, 
 	                                 confirmation = null, 
 									 modified = current_timestamp
              where email = $2 and confirmation = $3`
 
-	_, err := db.Exec(context.Background(), stmt, userAccount.Password, userAccount.Email, userAccount.Confirmation)
+	_, err := db.Exec(context.Background(), stm, userAccount.Password, userAccount.Email, userAccount.Confirmation)
 	if err != nil {
 		return fmt.Errorf("user.setUserAccountNewPassword(%v, %v): %v", userAccount.Email, userAccount.Confirmation, err)
 	}
@@ -109,7 +109,7 @@ func setUserAccountNewPassword(userAccount *UserAccount, db storage.Database) er
 }
 
 func SetUserAccountNewEmail(userAccount *UserAccount, newEmail string, db storage.Database) error {
-	stmt := `update user_account set email = $1,
+	stm := `update user_account set email = $1,
 									 confirmation = null, 
 									 modified = current_timestamp
              where email = $2 and confirmation = $3`
@@ -117,7 +117,7 @@ func SetUserAccountNewEmail(userAccount *UserAccount, newEmail string, db storag
 	currentEmail := userAccount.Email
 	userAccount.Email = newEmail
 
-	_, err := db.Exec(context.Background(), stmt, userAccount.CleanEmail(), currentEmail, userAccount.Confirmation)
+	_, err := db.Exec(context.Background(), stm, userAccount.CleanEmail(), currentEmail, userAccount.Confirmation)
 	if err != nil {
 		return fmt.Errorf("user.SetUserAccountNewEmail(%v, %v, %v): %v", newEmail, userAccount.Email, userAccount.Confirmation, err)
 	}
@@ -126,12 +126,12 @@ func SetUserAccountNewEmail(userAccount *UserAccount, newEmail string, db storag
 }
 
 func StartUserAccountSignOffPeriod(userAccount *UserAccount, feedback string, db storage.Database) error {
-	stmt := `update user_account set modified = current_timestamp,
+	stm := `update user_account set modified = current_timestamp,
                                      sign_off = current_timestamp,
                                      sign_off_feedback = $1
              where id = $2`
 
-	_, err := db.Exec(context.Background(), stmt, feedback, userAccount.ID)
+	_, err := db.Exec(context.Background(), stm, feedback, userAccount.ID)
 	if err != nil {
 		return fmt.Errorf("user.StartUserAccountSignOffPeriod(%v, %v): %v", userAccount.ID, feedback, err)
 	}
@@ -140,12 +140,12 @@ func StartUserAccountSignOffPeriod(userAccount *UserAccount, feedback string, db
 }
 
 func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database) error {
-	stmt := `update user_account set modified = current_timestamp,
+	stm := `update user_account set modified = current_timestamp,
                                      sign_off = null,
                                      sign_off_feedback = null
              where id = $1`
 
-	_, err := db.Exec(context.Background(), stmt, userAccount.ID)
+	_, err := db.Exec(context.Background(), stm, userAccount.ID)
 	if err != nil {
 		return fmt.Errorf("user.ResetUserAccountSignOffPeriod(%v): %v", userAccount.ID, err)
 	}
@@ -154,13 +154,13 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 }
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
+	stm := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
              from user_account where email = $1`
 
 	email = strings.ToLower(email)
 	email = strings.TrimSpace(email)
 
-	row := db.QueryRow(context.Background(), stmt, email)
+	row := db.QueryRow(context.Background(), stm, email)
 
 	userAccount := &UserAccount{}
 	err := row.Scan(&userAccount.ID, &userAccount.Email,
@@ -175,16 +175,16 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 }
 
 func FindUserAccountByConfirmation(confirmation, email string, db storage.Database) *UserAccount {
-	stmt := `select id, email, first_name, last_name, access_role 
+	stm := `select id, email, first_name, last_name, access_role 
              from user_account where confirmation = $1`
 
 	var row pgx.Row
 
 	if len(email) > 0 {
-		stmt = fmt.Sprintf("%s and email = $2", stmt)
-		row = db.QueryRow(context.Background(), stmt, confirmation, email)
+		stm = fmt.Sprintf("%s and email = $2", stm)
+		row = db.QueryRow(context.Background(), stm, confirmation, email)
 	} else {
-		row = db.QueryRow(context.Background(), stmt, confirmation)
+		row = db.QueryRow(context.Background(), stm, confirmation)
 	}
 
 	userAccount := &UserAccount{
@@ -199,11 +199,11 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 }
 
 func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *Swimmer {
-	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
+	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
 			from swimmer a
 			where a.user_account = $1`
 
-	row := db.QueryRow(context.Background(), sql, userAccount.ID)
+	row := db.QueryRow(context.Background(), stm, userAccount.ID)
 
 	swimmer := &Swimmer{
 		UserAccount: userAccount,
@@ -218,11 +218,11 @@ func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *Sw
 }
 
 func FindSwimmerByID(id int64, db storage.Database) *Swimmer {
-	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, a.user_account
+	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, a.user_account
 			from swimmer a
 			where a.id = $1`
 
-	row := db.QueryRow(context.Background(), sql, id)
+	row := db.QueryRow(context.Background(), stm, id)
 
 	swimmer := &Swimmer{}
 	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.BirthDate, &swimmer.Gender, &swimmer.UserAccountID)
@@ -289,7 +289,7 @@ func findLinkableSwimmerByEmail(email string, parent *UserAccount, db storage.Da
 }
 
 func linkSwimmersToParent(parent *UserAccount, swimmers []*Swimmer, db storage.Database) error {
-	stmt := `insert into parent_swimmer (parent, swimmer, approved) values ($1, $2, $3)`
+	stm := `insert into parent_swimmer (parent, swimmer, approved) values ($1, $2, $3)`
 
 	for _, swimmer := range swimmers {
 		approved := false
@@ -297,7 +297,7 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*Swimmer, db storage.D
 			approved = true
 		}
 
-		_, err := db.Exec(context.Background(), stmt, parent.ID, swimmer.ID, approved)
+		_, err := db.Exec(context.Background(), stm, parent.ID, swimmer.ID, approved)
 		if err != nil {
 			return fmt.Errorf("user.linkSwimmersToParent(%v, %v): %v", parent.ID, swimmer.ID, err)
 		}
@@ -307,13 +307,13 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*Swimmer, db storage.D
 }
 
 func FindSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
-	sql := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
+	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
 			from swimmer a
 			    join parent_swimmer pa on a.id = pa.swimmer
 			where pa.parent = $1
 			order by a.first_name`
 
-	rows, err := db.Query(context.Background(), sql, parent.ID)
+	rows, err := db.Query(context.Background(), stm, parent.ID)
 	if err != nil {
 		return nil, fmt.Errorf("FindSwimmersParent: %v", err)
 	}
@@ -333,9 +333,9 @@ func FindSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, e
 }
 
 func UserAccountExists(db storage.Database) bool {
-	stmt := `select count(id) from user_account`
+	stm := `select count(id) from user_account`
 
-	row := db.QueryRow(context.Background(), stmt)
+	row := db.QueryRow(context.Background(), stm)
 
 	var count int
 	err := row.Scan(&count)
@@ -348,12 +348,12 @@ func UserAccountExists(db storage.Database) bool {
 }
 
 func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
-	stmt := `select count(id) 
+	stm := `select count(id) 
 			 from sign_in_attempt
              where status = $1 and ip_address = $2  and created >= (current_timestamp - interval '1 HOURS') 
              limit 10`
 
-	row := db.QueryRow(context.Background(), stmt, StatusFailed, ipAddress)
+	row := db.QueryRow(context.Background(), stm, StatusFailed, ipAddress)
 
 	var numFailedAttempts int
 	err := row.Scan(&numFailedAttempts)

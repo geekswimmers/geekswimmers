@@ -7,10 +7,10 @@ import (
 )
 
 func findStyles(db storage.Database) ([]*Style, error) {
-	stmt := `select m.stroke, m.description
+	stm := `select m.stroke, m.description
 			 from swim_style m
 			 order by m.sequence`
-	rows, err := db.Query(context.Background(), stmt)
+	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findStyles: %v", err)
 	}
@@ -30,11 +30,11 @@ func findStyles(db storage.Database) ([]*Style, error) {
 }
 
 func findStyle(stroke string, db storage.Database) (*Style, error) {
-	stmt := `select m.id, m.description, m.sequence 
+	stm := `select m.id, m.description, m.sequence 
 			 from swim_style m 
 	         where m.stroke = $1`
 
-	row := db.QueryRow(context.Background(), stmt, stroke)
+	row := db.QueryRow(context.Background(), stm, stroke)
 
 	style := &Style{
 		Stroke: stroke,
@@ -48,11 +48,11 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 }
 
 func FindEvents(db storage.Database) ([]*Event, error) {
-	stmt := `select ssd.distance , ss.stroke 
+	stm := `select ssd.distance , ss.stroke 
 			 from swim_event ssd 
 				join swim_style ss on ssd.style = ss.id
 			 order by ss.sequence`
-	rows, err := db.Query(context.Background(), stmt)
+	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findEvents: %v", err)
 	}
@@ -72,10 +72,10 @@ func FindEvents(db storage.Database) ([]*Event, error) {
 }
 
 func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
-	sql := `select id, stroke
+	stm := `select id, stroke
 			from swim_style
 			where sequence = $1`
-	row := db.QueryRow(context.Background(), sql, sequence)
+	row := db.QueryRow(context.Background(), stm, sequence)
 
 	style := &Style{}
 	err := row.Scan(&style.ID, &style.Stroke)
@@ -86,11 +86,11 @@ func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
 }
 
 func findInstructions(style *Style, db storage.Database) ([]*Instruction, error) {
-	stmt := `select i.instruction, i.sequence
+	stm := `select i.instruction, i.sequence
 			 from swim_style_instruction i
 			 where i.style = $1
 			 order by i.sequence`
-	rows, err := db.Query(context.Background(), stmt, style.ID)
+	rows, err := db.Query(context.Background(), stm, style.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findInstructions: %v", err)
 	}

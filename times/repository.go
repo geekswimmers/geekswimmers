@@ -9,10 +9,10 @@ import (
 )
 
 func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
-	stmt := `select ss.id, ss.name, ss.start_date, ss.end_date
+	stm := `select ss.id, ss.name, ss.start_date, ss.end_date
 	         from swim_season ss
 			 order by ss.start_date desc`
-	rows, err := db.Query(context.Background(), stmt)
+	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findSwimSeasons: %v", err)
 	}
@@ -32,27 +32,27 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 }
 
 func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdiction, error) {
-	stmt := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
+	stm := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
 	         from jurisdiction j`
 
 	if level == JurisdictionLevelMeet {
-		stmt = fmt.Sprintf("%v where j.meet is not null", stmt)
+		stm = fmt.Sprintf("%v where j.meet is not null", stm)
 	} else if level == JurisdictionLevelClub {
-		stmt = fmt.Sprintf("%v where j.club is not null and j.meet is null", stmt)
+		stm = fmt.Sprintf("%v where j.club is not null and j.meet is null", stm)
 	} else if level == JurisdictionLevelCity {
-		stmt = fmt.Sprintf("%v where j.city is not null and j.club is null", stmt)
+		stm = fmt.Sprintf("%v where j.city is not null and j.club is null", stm)
 	} else if level == JurisdictionLevelRegion {
-		stmt = fmt.Sprintf("%v where j.region is not null and j.city is null", stmt)
+		stm = fmt.Sprintf("%v where j.region is not null and j.city is null", stm)
 	} else if level == JurisdictionLevelProvince {
-		stmt = fmt.Sprintf("%v where j.province is not null and j.region is null", stmt)
+		stm = fmt.Sprintf("%v where j.province is not null and j.region is null", stm)
 	} else if level == JurisdictionLevelCountry {
-		stmt = fmt.Sprintf("%v where j.country is not null and j.province is null", stmt)
+		stm = fmt.Sprintf("%v where j.country is not null and j.province is null", stm)
 	} else {
 		return []*Jurisdiction{}, nil
 	}
-	stmt = fmt.Sprintf("%v order by country, province, region, city, club, meet", stmt)
+	stm = fmt.Sprintf("%v order by country, province, region, city, club, meet", stm)
 
-	rows, err := db.Query(context.Background(), stmt)
+	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findJurisdictionsByLevel: %v", err)
 	}
@@ -74,11 +74,11 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 }
 
 func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, error) {
-	sql := `select rd.gender, rd.course, rd.style, rd.distance, rd.min_age, rd.max_age
+	stm := `select rd.gender, rd.course, rd.style, rd.distance, rd.min_age, rd.max_age
 			from record_definition rd
 			where rd.id = $1`
 
-	row := db.QueryRow(context.Background(), sql, id)
+	row := db.QueryRow(context.Background(), stm, id)
 
 	recordDefinition := &RecordDefinition{
 		ID: id,
@@ -93,7 +93,7 @@ func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, erro
 }
 
 func findRecordsByDefinition(definition RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
+	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
 				rs.id, coalesce(rs.source_title, ''), coalesce(rs.source_link, ''),
 				coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet
 			from record r
@@ -101,7 +101,7 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
                 left join jurisdiction j on j.id = rs.jurisdiction
             where r.definition = $1
             order by r.record_time asc`
-	rows, err := db.Query(context.Background(), sql, definition.ID)
+	rows, err := db.Query(context.Background(), stm, definition.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
 	}
@@ -126,7 +126,7 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 }
 
 func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
+	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
 	            coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet,
 				rd.min_age, rd.max_age
 			from record r
@@ -141,7 +141,7 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
                 rd.style = $4 and
                 rd.distance = $5
             order by r.record_time desc`
-	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Style, example.Distance)
+	rows, err := db.Query(context.Background(), stm, example.Age, example.Gender, example.Course, example.Style, example.Distance)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByExample: %v", err)
 	}
@@ -171,7 +171,7 @@ func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 }
 
 func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
+	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 			from record r
                 join record_definition rd on rd.id = r.definition
@@ -184,7 +184,7 @@ func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
                 rd.gender = $3 and
                 rd.course = $4
             order by ss.sequence asc, rd.distance asc`
-	rows, err := db.Query(context.Background(), sql, recordSet.ID, example.Age, example.Gender, example.Course)
+	rows, err := db.Query(context.Background(), stm, recordSet.ID, example.Age, example.Gender, example.Course)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByRecordSet: %v", err)
 	}
@@ -213,12 +213,12 @@ func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 }
 
 func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoster, error) {
-	sql := `select rm.placeholder, rp.field, r.holder, r.record_time, r.year, rm.coord_x, rm.coord_y
+	stm := `select rm.placeholder, rp.field, r.holder, r.record_time, r.year, rm.coord_x, rm.coord_y
             from record r
                 join record_poster rp on rp.record = r.id
                 join report_mapping rm on rm.id = rp.mapping
             where r.record_set = $1`
-	rows, err := db.Query(context.Background(), sql, recordSet.ID)
+	rows, err := db.Query(context.Background(), stm, recordSet.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsPoster: %v", err)
 	}
@@ -238,13 +238,13 @@ func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoste
 }
 
 func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDefinition, error) {
-	sql := `select distinct rd.min_age, rd.max_age
+	stm := `select distinct rd.min_age, rd.max_age
 			from record_definition rd
 				join record r on r.definition = rd.id
 			where r.record_set = $1
 			order by rd.max_age, rd.min_age`
 
-	rows, err := db.Query(context.Background(), sql, recordSet.ID)
+	rows, err := db.Query(context.Background(), stm, recordSet.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsAgeRanges: %v", err)
 	}
@@ -265,12 +265,12 @@ func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDe
 }
 
 func findRecordSets(db storage.Database) ([]*RecordSet, error) {
-	sql := `select rs.id, rs.jurisdiction,
+	stm := `select rs.id, rs.jurisdiction,
 	               j.country, j.province, j.region, j.city, j.club, j.meet
 			from record_set rs
 			    join jurisdiction j on j.id = rs.jurisdiction
 			order by j.country, j.province, j.region, j.city, j.club, j.meet`
-	rows, err := db.Query(context.Background(), sql)
+	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordSets: %v", err)
 	}
@@ -295,12 +295,12 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 }
 
 func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
-	sql := `select rs.jurisdiction, rs.source_title, rs.source_link, 
+	stm := `select rs.jurisdiction, rs.source_title, rs.source_link, 
 	               j.country, j.province, j.region, j.city, j.club, j.meet
 			from record_set rs
 			    join jurisdiction j on j.id = rs.jurisdiction
 			where rs.id = $1`
-	row := db.QueryRow(context.Background(), sql, id)
+	row := db.QueryRow(context.Background(), stm, id)
 
 	recordSet := &RecordSet{
 		ID: id,
@@ -317,11 +317,11 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 }
 
 func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
-	sql := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
+	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
 	        from time_standard ts
 			where ts.season = $1
 			order by ts.name`
-	rows, err := db.Query(context.Background(), sql, season.ID)
+	rows, err := db.Query(context.Background(), stm, season.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findTimeStandards: %v", err)
 	}
@@ -343,12 +343,12 @@ func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard,
 }
 
 func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
-	sql := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#'), coalesce(ts.previous, 0)
+	stm := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#'), coalesce(ts.previous, 0)
 			from time_standard ts
 			 	join swim_season ss on ss.id = ts.season
 	        where ts.id = $1`
 
-	row := db.QueryRow(context.Background(), sql, id)
+	row := db.QueryRow(context.Background(), stm, id)
 
 	timeStandard := &TimeStandard{
 		ID:       id,
@@ -364,11 +364,11 @@ func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 }
 
 func findLatestTimeStandard(previousId int64, db storage.Database) (*TimeStandard, error) {
-	sql := `select ts.id, ts.name
+	stm := `select ts.id, ts.name
 			from time_standard ts
 	        where ts.previous = $1`
 
-	row := db.QueryRow(context.Background(), sql, previousId)
+	row := db.QueryRow(context.Background(), stm, previousId)
 
 	timeStandard := &TimeStandard{}
 	if err := row.Scan(&timeStandard.ID, &timeStandard.Name); err != nil {
@@ -384,7 +384,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
-		sql := `select st.style, st.distance, st.standard
+		stm := `select st.style, st.distance, st.standard
 			 	from standard_time st
 			     	join swim_style ss on ss.stroke = st.style
 			 	where st.age between $1 and $2
@@ -395,21 +395,21 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 		minAge, maxAge := getStandardAgeInterval(example.Age, example.TimeStandard)
 
-		rows, err = db.Query(context.Background(), sql, minAge, maxAge, example.Gender, example.Course, example.TimeStandard.ID)
+		rows, err = db.Query(context.Background(), stm, minAge, maxAge, example.Gender, example.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
 		defer rows.Close()
 	} else {
 		// Open
-		sql := `select st.style, st.distance, st.standard
+		stm := `select st.style, st.distance, st.standard
 				from standard_time st
 				where st.gender = $1
 		  			and st.course = $2
 		  			and st.time_standard = $3
 				order by st.style, st.standard asc`
 
-		rows, err = db.Query(context.Background(), sql, example.Gender, example.Course, example.TimeStandard.ID)
+		rows, err = db.Query(context.Background(), stm, example.Gender, example.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
@@ -435,7 +435,7 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
-		sql := `select ts.id, ts.name, st.standard
+		stm := `select ts.id, ts.name, st.standard
 				from standard_time st
 					join time_standard ts on ts.id = st.time_standard
 					join swim_season ss on ss.id = ts.season
@@ -449,10 +449,10 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 
 		minAge, maxAge := getStandardAgeInterval(example.Age, example.TimeStandard)
 
-		row = db.QueryRow(context.Background(), sql,
+		row = db.QueryRow(context.Background(), stm,
 			season.ID, example.TimeStandard.ID, minAge, maxAge, example.Gender, example.Course, example.Style, example.Distance)
 	} else {
-		sql := `select ts.id, ts.name, st.standard
+		stm := `select ts.id, ts.name, st.standard
 				from standard_time st
 					join time_standard ts on ts.id = st.time_standard
 					join swim_season ss on ss.id = ts.season
@@ -463,7 +463,7 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 					and st.style = $5
 					and st.distance = $6`
 
-		row = db.QueryRow(context.Background(), sql,
+		row = db.QueryRow(context.Background(), stm,
 			season.ID, example.TimeStandard.ID, example.Gender, example.Course, example.Style, example.Distance)
 	}
 
@@ -483,14 +483,14 @@ func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 }
 
 func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {
-	sql := `select ts.id , ts.name, st.standard, ss.id, ss.name
+	stm := `select ts.id , ts.name, st.standard, ss.id, ss.name
 			from standard_time st
 				join time_standard ts on ts.id = st.time_standard
 				join swim_season ss on ts.season = ss.id
 			where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.style = $5
 			order by ss.name desc, st.standard desc`
 
-	rows, err := db.Query(context.Background(), sql, example.Age, example.Gender, example.Course, example.Distance, example.Style)
+	rows, err := db.Query(context.Background(), stm, example.Age, example.Gender, example.Course, example.Distance, example.Style)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("findStandardsEvent: %v", err)
 	}
@@ -513,9 +513,9 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 }
 
 func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
-	sql := `select min(age) as min_age, max(age) as max_age from standard_time`
+	stm := `select min(age) as min_age, max(age) as max_age from standard_time`
 
-	row := db.QueryRow(context.Background(), sql)
+	row := db.QueryRow(context.Background(), stm)
 
 	var minAge, maxAge int64
 	if err := row.Scan(&minAge, &maxAge); err != nil {
@@ -526,7 +526,7 @@ func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 }
 
 func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, error) {
-	sql := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
+	stm := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
 	            ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			from meet m
 			    join swim_season ss on ss.id = m.season
@@ -539,7 +539,7 @@ func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, er
 				and m.age_date is not null
 				and ts.benchmark = true
 			order by m.age_date`
-	rows, err := db.Query(context.Background(), sql, jurisdictionId)
+	rows, err := db.Query(context.Background(), stm, jurisdictionId)
 	if err != nil {
 		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
 	}
@@ -560,11 +560,11 @@ func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, er
 }
 
 func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
-	sql := `select m.id, m.name, m.course
+	stm := `select m.id, m.name, m.course
 			from meet m
 			where m.time_standard = $1
 			order by m.name`
-	rows, err := db.Query(context.Background(), sql, timeStandard.ID)
+	rows, err := db.Query(context.Background(), stm, timeStandard.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findStandardChampionshipMeets: %v", err)
 	}
