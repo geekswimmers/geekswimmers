@@ -332,7 +332,7 @@ func FindSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, e
 	return swimmers, nil
 }
 
-func UserAccountExists(db storage.Database) bool {
+func userAccountExists(db storage.Database) bool {
 	stm := `select count(id) from user_account`
 
 	row := db.QueryRow(context.Background(), stm)

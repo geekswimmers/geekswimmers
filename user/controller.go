@@ -30,12 +30,18 @@ func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request)
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 	sessionData := storage.NewSessionData(req)
 
-	html := utils.GetTemplate("base", "signup")
-	err := html.Execute(res, &signUpData{
+	data := &signUpData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		ReCaptchaSiteKey: reCaptchaSiteKey,
-	})
+	}
+
+	if !userAccountExists(uc.DB) {
+		data.Error = "You'll become the first Geek Swimmers' user. You will be automatically assigned to an admin role."
+	}
+
+	html := utils.GetTemplate("base", "signup")
+	err := html.Execute(res, data)
 	if err != nil {
 		log.Print(err)
 	}
@@ -88,7 +94,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		log.Printf("Invalid role: %v", context.Role)
 		context.ErrorRole = "Select a role."
 	}
-	if !UserAccountExists(uc.DB) {
+	if !userAccountExists(uc.DB) {
 		context.Role = RoleAdmin
 	}
 
@@ -347,6 +353,11 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 
 func (uc *UserController) SignInView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+
+	if !userAccountExists(uc.DB) {
+		http.Redirect(res, req, "/signup/", http.StatusSeeOther)
+		return
+	}
 
 	html := utils.GetTemplate("base", "signin")
 
