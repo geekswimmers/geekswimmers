@@ -3,7 +3,6 @@ package user
 import (
 	"geekswimmers/storage"
 	"geekswimmers/utils"
-	"time"
 )
 
 type signUpData struct {
@@ -46,7 +45,7 @@ type passwordViewData struct {
 
 type profileData struct {
 	BaseTemplateData *utils.BaseTemplateData
-	BirthDate        *time.Time
+	BirthDate        string
 	Email            string
 	Error            string
 	ErrorBirthDate   string
@@ -60,6 +59,15 @@ type profileData struct {
 	Role             string
 	SessionData      *storage.SessionData
 	Swimmers         []*Swimmer
+}
+
+func (sud *profileData) errorHappened() bool {
+	return len(sud.ErrorEmail) > 0 ||
+		len(sud.ErrorFirstName) > 0 ||
+		len(sud.ErrorLastName) > 0 ||
+		len(sud.Error) > 0 ||
+		len(sud.ErrorBirthDate) > 0 ||
+		len(sud.ErrorGender) > 0
 }
 
 type swimmerData struct {

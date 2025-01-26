@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/storage"
-	"geekswimmers/times"
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
 	"html/template"
@@ -130,9 +129,6 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 			}
 
 			// Validates age
-			swimmer := times.Swimmer{
-				BirthDate: birthDate,
-			}
 			age := swimmer.AgeAt(time.Now())
 			if age < 13 {
 				log.Printf("Invalid age: %v", age)
@@ -141,7 +137,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// Validates gender
-		if (context.Gender == "" || (context.Gender != times.GenderFemale && context.Gender != times.GenderMale)) && context.Role == RoleSwimmer {
+		if (context.Gender == "" || (context.Gender != GenderFemale && context.Gender != GenderMale)) && context.Role == RoleSwimmer {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
@@ -329,7 +325,7 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 	if userAccount != nil {
 		confirmation := uuid.New().String()
 		userAccount.Confirmation = &confirmation
-		err = UpdateUserAccount(userAccount, uc.DB)
+		err = updateUserAccount(userAccount, uc.DB)
 		if err == nil {
 			body := messaging.GetEmailTemplate("reset-password", &messaging.EmailData{
 				ServerUrl:    config.GetConfiguration().GetString(config.ServerURL),
@@ -492,7 +488,7 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	}
 
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	swimmers, err := FindSwimmersParent(user, uc.DB)
+	swimmers, err := findSwimmersParent(user, uc.DB)
 	if err != nil {
 		log.Printf("Error finding swimmers: %v", err)
 	}
@@ -523,29 +519,169 @@ func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Req
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmer := FindSwimmerByUserAccount(user, uc.DB)
 
-	var birthDate *time.Time
-	var gender string
-
-	if swimmer != nil {
-		birthDate = &swimmer.BirthDate.Time
-		gender = swimmer.Gender.String
-	}
-
 	data := &profileData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		FirstName:        user.FirstName,
 		LastName:         user.LastName,
 		Email:            user.Email,
-		BirthDate:        birthDate,
-		Gender:           gender,
 		Role:             user.Role,
+	}
+
+	if swimmer != nil {
+		birthDate := &swimmer.BirthDate.Time
+		gender := swimmer.Gender.String
+		data.BirthDate = birthDate.Format("2006-01-02")
+		data.Gender = gender
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the user's profile: %v", err)
 	}
+}
+
+func (uc *UserController) ProfileEditSave(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	data := &profileData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
+		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
+		BirthDate:        req.PostForm.Get("birthDate"),
+		Gender:           req.PostForm.Get("gender"),
+	}
+
+	currentUser := FindUserAccountByEmail(sessionData.Email, uc.DB)
+
+	// Validates firstName
+	if data.FirstName == "" {
+		log.Printf("Invalid first name: %v", data.FirstName)
+		data.ErrorFirstName = "First Name is empty."
+	} else {
+		currentUser.FirstName = data.FirstName
+	}
+
+	// Validates lastName
+	if data.LastName == "" {
+		log.Printf("Invalid last name: %v", data.LastName)
+		data.ErrorLastName = "Last Name is empty."
+	} else {
+		currentUser.LastName = data.LastName
+	}
+
+	// Validates email
+	if !messaging.IsEmailAddressValid(data.Email) {
+		log.Printf("Invalid email address: %v", data.Email)
+		data.ErrorEmail = "Invalid email address."
+	} else {
+		if currentUser.Email != data.Email {
+			existingUser := FindUserAccountByEmail(data.Email, uc.DB)
+			if existingUser != nil {
+				data.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
+			} else {
+				currentUser.Email = data.Email
+			}
+		}
+	}
+
+	swimmer := FindSwimmerByUserAccount(currentUser, uc.DB)
+	if currentUser.Role == RoleSwimmer && swimmer != nil {
+		swimmer.FirstName = data.FirstName
+		swimmer.LastName = data.LastName
+
+		// Validates birthDate
+		if data.BirthDate == "" {
+			log.Printf("Birth date is required.")
+			data.ErrorBirthDate = "Birth date is required."
+		} else {
+			birthDate, err := time.Parse("2006-01-02", data.BirthDate)
+			if err != nil {
+				log.Printf("Invalid birth date: %v", data.BirthDate)
+				data.ErrorBirthDate = "Invalid birth date."
+			} else {
+				swimmer.BirthDate = sql.NullTime{
+					Time: birthDate,
+				}
+			}
+
+			// Validates age
+			age := swimmer.AgeAt(time.Now())
+			if age < 13 {
+				log.Printf("Invalid age: %v", age)
+				data.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
+			}
+		}
+
+		// Validates gender
+		if data.Gender == "" || (data.Gender != GenderFemale && data.Gender != GenderMale) {
+			log.Printf("Invalid Gender: %v", data.Gender)
+			data.ErrorGender = "Select your gender."
+		} else {
+			swimmer.Gender = sql.NullString{
+				String: data.Gender,
+			}
+		}
+	}
+
+	// Back to the profile form in case of error.
+	if data.errorHappened() {
+		html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
+		log.Printf("Back to profile page with errors.")
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	if currentUser.Role == RoleSwimmer && swimmer != nil {
+		if err := updateSwimmerProfile(currentUser, swimmer, uc.DB); err != nil {
+			log.Printf("Error saving the swimmers' profile: %v", err)
+			html := utils.GetTemplate("base", "profile-form")
+			data.Error = `Due to an internal error, it was not possible to save
+			your account at this moment. Please, trying again later. 
+			Thank you for your understanding.`
+			err = html.Execute(res, data)
+			if err != nil {
+				log.Print(err)
+			}
+			return
+		}
+		if err := uc.addSwimmerToSession(swimmer, res, req); err != nil {
+			log.Printf("Error adding swimmer to session: %v", err)
+		}
+	} else {
+		if err := updateProfile(currentUser, uc.DB); err != nil {
+			log.Printf("Error saving the profile: %v", err)
+			html := utils.GetTemplate("base", "profile-form")
+			data.Error = `Due to an internal error, it was not possible to save
+			your profile at this moment. Please, trying again later. 
+			Thank you for your understanding.`
+			err = html.Execute(res, data)
+			if err != nil {
+				log.Print(err)
+			}
+			return
+		}
+	}
+
+	if err := uc.addUserToSession(currentUser, res, req); err != nil {
+		log.Printf("Error adding user to session: %v", err)
+	}
+
+	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
 func (uc *UserController) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
@@ -725,7 +861,7 @@ func (uc *UserController) SwimmerForm(res http.ResponseWriter, req *http.Request
 	}
 
 	// Validates gender
-	if context.Gender == "" || (context.Gender != times.GenderFemale && context.Gender != times.GenderMale) {
+	if context.Gender == "" || (context.Gender != GenderFemale && context.Gender != GenderMale) {
 		log.Printf("Invalid Gender: %v", context.Gender)
 		context.ErrorGender = "Select your gender."
 	} else {
@@ -938,7 +1074,7 @@ func (uc *UserController) SaveEmailSettings(res http.ResponseWriter, req *http.R
 		return
 	}
 
-	if err := UpdateUserAccount(user, uc.DB); err != nil {
+	if err := updateUserAccount(user, uc.DB); err != nil {
 		log.Printf("Error updating user account: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return

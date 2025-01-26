@@ -8,9 +8,6 @@ import (
 )
 
 const (
-	GenderFemale = "FEMALE"
-	GenderMale   = "MALE"
-
 	DefaultCourse = "SHORT"
 
 	JurisdictionLevelCountry  = "COUNTRY"
@@ -189,17 +186,4 @@ type RecordPoster struct {
 	Year        sql.NullInt64
 	CoordX      int64
 	CoordY      int64
-}
-
-type Swimmer struct {
-	BirthDate time.Time
-	Gender    string
-}
-
-func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
-	age := date.Year() - swimmer.BirthDate.Year()
-	if date.YearDay() < swimmer.BirthDate.YearDay() {
-		age--
-	}
-	return int64(age)
 }

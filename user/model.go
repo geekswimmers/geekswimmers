@@ -7,6 +7,9 @@ import (
 )
 
 const (
+	GenderFemale = "FEMALE"
+	GenderMale   = "MALE"
+
 	FailedMatchIdentifier       = "IDENTIFIER"
 	FailedMatchPassword         = "PASSWORD"
 	FailedMatchHumanScore       = "HUMAN_SCORE"
@@ -57,6 +60,14 @@ type Swimmer struct {
 
 	// Transient
 	LinkApproved bool
+}
+
+func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
+	age := date.Year() - swimmer.BirthDate.Time.Year()
+	if date.YearDay() < swimmer.BirthDate.Time.YearDay() {
+		age--
+	}
+	return int64(age)
 }
 
 type EmailMessage struct {

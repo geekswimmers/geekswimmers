@@ -1,8 +1,10 @@
 package times
 
 import (
+	"database/sql"
 	"fmt"
 	"geekswimmers/storage"
+	"geekswimmers/user"
 	"geekswimmers/utils"
 	"geekswimmers/utils/reporting"
 	"log"
@@ -61,9 +63,13 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		log.Printf("times.%v", err)
 	}
 
-	swimmer := &Swimmer{
-		BirthDate: birthDate,
-		Gender:    gender,
+	swimmer := &user.Swimmer{
+		BirthDate: sql.NullTime{
+			Time: birthDate,
+		},
+		Gender: sql.NullString{
+			String: gender,
+		},
 	}
 
 	var foundMeets []*Meet
@@ -228,7 +234,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = GenderFemale
+		gender = user.GenderFemale
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
@@ -352,7 +358,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = GenderFemale
+		gender = user.GenderFemale
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
@@ -501,7 +507,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = GenderFemale
+		gender = user.GenderFemale
 	}
 	ctx.Gender = gender
 

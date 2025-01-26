@@ -31,6 +31,23 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 	return lastInsertId, nil
 }
 
+func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {
+	stm := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
+             values ($1, $2, $3, $4, $5)`
+
+	_, err := db.Exec(context.Background(), stm,
+		signInAttempt.Identifier,
+		signInAttempt.HumanScore,
+		signInAttempt.Status,
+		signInAttempt.IPAddress,
+		signInAttempt.FailedMatch)
+	if err != nil {
+		return fmt.Errorf("user.InsertSignInAttempt(%v, %v, %v, %v, %v): %v", signInAttempt.Identifier,
+			signInAttempt.HumanScore, signInAttempt.Status, signInAttempt.IPAddress, signInAttempt.FailedMatch, err)
+	}
+	return nil
+}
+
 func InsertSwimmer(swimmer *Swimmer, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
@@ -60,24 +77,43 @@ func InsertSwimmer(swimmer *Swimmer, db storage.Database) (int64, error) {
 	return lastInsertId, nil
 }
 
-func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {
-	stm := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
-             values ($1, $2, $3, $4, $5)`
+func updateProfile(userAccount *UserAccount, db storage.Database) error {
+	stm := `update user_account 
+			set first_name = $1,
+                last_name = $2,
+                email = $3
+            where id = $4`
 
-	_, err := db.Exec(context.Background(), stm,
-		signInAttempt.Identifier,
-		signInAttempt.HumanScore,
-		signInAttempt.Status,
-		signInAttempt.IPAddress,
-		signInAttempt.FailedMatch)
+	_, err := db.Exec(context.Background(), stm, userAccount.FirstName, userAccount.LastName, userAccount.Email, userAccount.ID)
 	if err != nil {
-		return fmt.Errorf("user.InsertSignInAttempt(%v, %v, %v, %v, %v): %v", signInAttempt.Identifier,
-			signInAttempt.HumanScore, signInAttempt.Status, signInAttempt.IPAddress, signInAttempt.FailedMatch, err)
+		return fmt.Errorf("user.updateProfile(%v): %v", userAccount.ID, err)
 	}
+
 	return nil
 }
 
-func UpdateUserAccount(userAccount *UserAccount, db storage.Database) error {
+func updateSwimmerProfile(userAccount *UserAccount, swimmer *Swimmer, db storage.Database) error {
+	err := updateProfile(userAccount, db)
+	if err != nil {
+		return fmt.Errorf("user.updateSwimmerProfile(%v): %v", userAccount.Email, err)
+	}
+
+	stm := `update swimmer 
+			set first_name = $1,
+                last_name = $2,
+                birth_date = $3, 
+                gender = $4
+             where id = $5`
+
+	_, err = db.Exec(context.Background(), stm, swimmer.FirstName, swimmer.LastName, swimmer.BirthDate.Time, swimmer.Gender.String, swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.updateSwimmerProfile(%v): %v", swimmer.ID, err)
+	}
+
+	return nil
+}
+
+func updateUserAccount(userAccount *UserAccount, db storage.Database) error {
 	stm := `update user_account set confirmation = $1, 
                                      modified = current_timestamp,
                                      first_name = $2,
@@ -306,7 +342,7 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*Swimmer, db storage.D
 	return nil
 }
 
-func FindSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
+func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
 	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
 			from swimmer a
 			    join parent_swimmer pa on a.id = pa.swimmer
