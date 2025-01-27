@@ -9,6 +9,7 @@ import (
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -442,11 +443,6 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 
 	if userAccount.Role == RoleSwimmer {
 		swimmer := FindSwimmerByUserAccount(userAccount, uc.DB)
-		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
-			http.Error(res, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
 		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
