@@ -2,7 +2,7 @@ package times
 
 import (
 	"database/sql"
-	"geekswimmers/user"
+	"geekswimmers/modules/user"
 	"testing"
 	"time"
 )

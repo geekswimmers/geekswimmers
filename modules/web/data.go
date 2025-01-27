@@ -1,10 +1,10 @@
 package web
 
 import (
-	"geekswimmers/content"
+	"geekswimmers/modules/content"
+	"geekswimmers/modules/swimming"
+	"geekswimmers/modules/times"
 	"geekswimmers/storage"
-	"geekswimmers/swimming"
-	"geekswimmers/times"
 	"geekswimmers/utils"
 )
 

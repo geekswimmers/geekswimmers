@@ -2,13 +2,13 @@ package server
 
 import (
 	"geekswimmers/config"
-	"geekswimmers/content"
+	"geekswimmers/modules/content"
+	"geekswimmers/modules/swimming"
+	"geekswimmers/modules/times"
+	"geekswimmers/modules/user"
+	"geekswimmers/modules/web"
 	"geekswimmers/storage"
-	"geekswimmers/swimming"
-	"geekswimmers/times"
-	"geekswimmers/user"
 	"geekswimmers/utils"
-	"geekswimmers/web"
 	"net/http"
 
 	"github.com/bmizerany/pat"

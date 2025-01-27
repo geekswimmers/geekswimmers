@@ -3,8 +3,8 @@ package times
 import (
 	"database/sql"
 	"fmt"
+	"geekswimmers/modules/user"
 	"geekswimmers/storage"
-	"geekswimmers/user"
 	"geekswimmers/utils"
 	"geekswimmers/utils/reporting"
 	"log"
