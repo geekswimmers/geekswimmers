@@ -270,6 +270,24 @@ func FindSwimmerByID(id int64, db storage.Database) *Swimmer {
 	return swimmer
 }
 
+func FindSwimmerByEmail(email string, db storage.Database) *Swimmer {
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender 
+            from swimmer s
+    			join user_account ua on ua.id = s.user_account 
+			where ua.email = $1`
+
+	row := db.QueryRow(context.Background(), stm, email)
+
+	swimmer := &Swimmer{}
+	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.BirthDate, &swimmer.Gender)
+	if err != nil {
+		log.Printf("user.FindSwimmerByEmail(%v) : %v", email, err)
+		return nil
+	}
+
+	return swimmer
+}
+
 func findLinkableSwimmerByEmail(email string, parent *UserAccount, db storage.Database) ([]*Swimmer, error) {
 	// First, it checks if there is an swimmer with a user account
 	stm := `select a.id, a.first_name, a.last_name, a.gender, ua.email
@@ -366,6 +384,34 @@ func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*Swimmer, e
 	}
 
 	return swimmers, nil
+}
+
+func findSwimmerBestTimes(swimmer *Swimmer, db storage.Database) ([]*SwimmerBestTime, error) {
+	stm := `select sbt.id, course, best_time, updated,
+				ss.stroke,
+    			se.distance
+			from swimmer_best_time sbt 
+				left join swim_event se on sbt.event = se.id
+				left join swim_style ss on se.style = ss.id
+			where sbt.swimmer = $1
+			order by ss.sequence`
+	rows, err := db.Query(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
+	}
+	defer rows.Close()
+
+	var bestTimes []*SwimmerBestTime
+	for rows.Next() {
+		bestTime := &SwimmerBestTime{}
+		err := rows.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated, &bestTime.Event.Stroke, &bestTime.Event.Distance)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
+		}
+		bestTimes = append(bestTimes, bestTime)
+	}
+
+	return bestTimes, nil
 }
 
 func userAccountExists(db storage.Database) bool {

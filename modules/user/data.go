@@ -83,6 +83,7 @@ type swimmerData struct {
 	ErrorLastName    string
 	FirstName        string
 	FoundSwimmers    []*Swimmer
+	BestTimes        []*SwimmerBestTime
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData

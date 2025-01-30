@@ -9,7 +9,6 @@ import (
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -687,17 +686,32 @@ func (uc *UserController) ProfileSwimmerView(res http.ResponseWriter, req *http.
 		return
 	}
 
-	swimmerId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	var swimmer *Swimmer
+	if sessionData.Role == RoleSwimmer {
+		swimmer = FindSwimmerByEmail(sessionData.Email, uc.DB)
+	} else {
+		id := req.URL.Query().Get(":id")
+		swimmerId, _ := strconv.ParseInt(id, 10, 64)
+		swimmer = FindSwimmerByID(swimmerId, uc.DB)
+	}
 
-	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+	bestTimes, err := findSwimmerBestTimes(swimmer, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmerView: %v", err)
+	}
 
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		Swimmer:          swimmer,
+		BestTimes:        bestTimes,
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "profile-swimmer", template.FuncMap{"Title": utils.Title})
+	html := utils.GetTemplateWithFunctions("base", "profile-swimmer",
+		template.FuncMap{
+			"Title":             utils.Title,
+			"FormatMiliseconds": utils.FormatMiliseconds,
+		})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer's profile: %v", err)
 	}

@@ -3,13 +3,55 @@
 {{define "title"}}{{.Swimmer.FirstName}} {{.Swimmer.LastName}}{{end}}
 
 {{define "breadcrumb"}}
-    <li class="breadcrumb-item"><a href="/profile/">Profile</a></li>
+    {{if ne .SessionData.Role "SWIMMER"}}
+        <li class="breadcrumb-item"><a href="/profile/">Profile</a></li>
+    {{end}}
     <li class="breadcrumb-item active" aria-current="page">Swimmer</li>
 {{end}}
 
 {{define "content"}}
     <h2>Swimmer</h2>
     <h1 class="display-6">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</h1>
+
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Best Times</h3>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Recent best times to compare against standards and records.</h6>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Event</th>
+                <th scope="col">Time</th>
+                <th scope="col">Target</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range .BestTimes}}
+                <tr>
+                    <td>{{.Event.Distance}} {{.Event.Stroke | Title}}</td>
+                    <td>{{.BestTime}}</td>
+                    <td>{{.Course}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="3">No best time listed yet.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+
+        <div class="card-body">
+            <a class="btn btn-secondary" href="/profile/swimmers/form/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-stopwatch" viewBox="0 0 16 16">
+                    <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
+                    <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
+                </svg> Add Best Time
+            </a>
+        </div>
+    </div>
 {{end}}
 
 {{define "scripts"}}{{end}}

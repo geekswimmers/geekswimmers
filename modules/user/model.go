@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"geekswimmers/modules/swimming"
 	"strings"
 	"time"
 )
@@ -68,6 +69,14 @@ func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
 		age--
 	}
 	return int64(age)
+}
+
+type SwimmerBestTime struct {
+	ID       int64
+	Event    swimming.Event
+	Course   string
+	BestTime int64
+	Updated  time.Time
 }
 
 type EmailMessage struct {
