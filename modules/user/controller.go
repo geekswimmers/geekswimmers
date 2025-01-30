@@ -733,6 +733,35 @@ func (uc *UserController) SwimmerFormView(res http.ResponseWriter, req *http.Req
 	}
 }
 
+func (uc *UserController) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	html := utils.GetTemplate("base", "swimmer-besttime-form")
+	if err := html.Execute(res, &swimmerData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+	}); err != nil {
+		log.Printf("Error loading the swimmer best time form: %v", err)
+	}
+}
+
+func (uc *UserController) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+}
+
 func (uc *UserController) SwimmerFormSearch(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
