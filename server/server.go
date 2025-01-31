@@ -41,17 +41,17 @@ func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 }
 
 func (s *Server) Routes(btc utils.BaseTemplateData) {
-	userController := &user.UserController{
+	userController := &user.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
 
-	webController := &web.WebController{
+	webController := &web.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
 
-	contentController := &content.ContentController{
+	contentController := &content.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
@@ -71,7 +71,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 		BaseTemplateData: &btc,
 	}
 
-	meetController := &swimming.MeetController{
+	meetController := &swimming.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}

@@ -9,12 +9,12 @@ import (
 	"strings"
 )
 
-type MeetController struct {
+type Controller struct {
 	DB               storage.Database
 	BaseTemplateData *utils.BaseTemplateData
 }
 
-func (mc *MeetController) SwimStylesView(res http.ResponseWriter, req *http.Request) {
+func (mc *Controller) SwimStylesView(res http.ResponseWriter, req *http.Request) {
 	styles, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
@@ -38,7 +38,7 @@ func (mc *MeetController) SwimStylesView(res http.ResponseWriter, req *http.Requ
 	}
 }
 
-func (mc *MeetController) SwimStyleView(res http.ResponseWriter, req *http.Request) {
+func (mc *Controller) SwimStyleView(res http.ResponseWriter, req *http.Request) {
 	stroke := req.URL.Query().Get(":stroke")
 
 	style, err := findStyle(strings.ToUpper(stroke), mc.DB)

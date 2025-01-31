@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
-type ContentController struct {
+type Controller struct {
 	DB               storage.Database
 	BaseTemplateData *utils.BaseTemplateData
 }
 
-func (wc *ContentController) ArticleView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 
 	ctx := &articleViewData{

@@ -20,12 +20,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserController struct {
+type Controller struct {
 	DB               storage.Database
 	BaseTemplateData *utils.BaseTemplateData
 }
 
-func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 	sessionData := storage.NewSessionData(req)
 
@@ -46,7 +46,7 @@ func (uc *UserController) SignUpView(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -234,7 +234,7 @@ func (uc *UserController) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) PasswordView(res http.ResponseWriter, req *http.Request) {
 	confirmation := req.URL.Query().Get(":confirmation")
 	userAccount := FindUserAccountByConfirmation(confirmation, "", uc.DB)
 
@@ -255,7 +255,7 @@ func (uc *UserController) PasswordView(res http.ResponseWriter, req *http.Reques
 	}
 }
 
-func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SetNewPassword(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -304,7 +304,7 @@ func (uc *UserController) SetNewPassword(res http.ResponseWriter, req *http.Requ
 	http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 }
 
-func (uc *UserController) ResetPasswordView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ResetPasswordView(res http.ResponseWriter, req *http.Request) {
 	html := utils.GetTemplate("base", "password-reset")
 
 	err := html.Execute(res, nil)
@@ -313,7 +313,7 @@ func (uc *UserController) ResetPasswordView(res http.ResponseWriter, req *http.R
 	}
 }
 
-func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ResetPassword(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -347,7 +347,7 @@ func (uc *UserController) ResetPassword(res http.ResponseWriter, req *http.Reque
 	}
 }
 
-func (uc *UserController) SignInView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SignInView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 
 	if !userAccountExists(uc.DB) {
@@ -367,7 +367,7 @@ func (uc *UserController) SignInView(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SignIn(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -475,7 +475,7 @@ func (uc *UserController) SignIn(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -504,7 +504,7 @@ func (uc *UserController) ProfileView(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -536,7 +536,7 @@ func (uc *UserController) ProfileEditView(res http.ResponseWriter, req *http.Req
 	}
 }
 
-func (uc *UserController) ProfileEditSave(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -679,7 +679,7 @@ func (uc *UserController) ProfileEditSave(res http.ResponseWriter, req *http.Req
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *UserController) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -717,7 +717,7 @@ func (uc *UserController) ProfileSwimmerView(res http.ResponseWriter, req *http.
 	}
 }
 
-func (uc *UserController) SwimmerFormView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -733,7 +733,7 @@ func (uc *UserController) SwimmerFormView(res http.ResponseWriter, req *http.Req
 	}
 }
 
-func (uc *UserController) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -749,7 +749,7 @@ func (uc *UserController) SwimmerBestTimeFormView(res http.ResponseWriter, req *
 	}
 }
 
-func (uc *UserController) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -762,7 +762,7 @@ func (uc *UserController) SwimmerBestTimeForm(res http.ResponseWriter, req *http
 	}
 }
 
-func (uc *UserController) SwimmerFormSearch(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -798,7 +798,7 @@ func (uc *UserController) SwimmerFormSearch(res http.ResponseWriter, req *http.R
 	}
 }
 
-func (uc *UserController) SwimmerFormLink(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -844,7 +844,7 @@ func (uc *UserController) SwimmerFormLink(res http.ResponseWriter, req *http.Req
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *UserController) SwimmerForm(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
@@ -952,7 +952,7 @@ func (uc *UserController) SwimmerForm(res http.ResponseWriter, req *http.Request
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *UserController) authenticate(email, password, ipAddress string, humanScore float32) (*UserAccount, SignInAttempt) {
+func (uc *Controller) authenticate(email, password, ipAddress string, humanScore float32) (*UserAccount, SignInAttempt) {
 	signInAttempt := SignInAttempt{
 		Identifier: email,
 		HumanScore: humanScore,
@@ -1005,7 +1005,7 @@ func (uc *UserController) authenticate(email, password, ipAddress string, humanS
 	return userAccount, signInAttempt
 }
 
-func (uc *UserController) SignOut(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SignOut(res http.ResponseWriter, req *http.Request) {
 	email := storage.GetSessionEntryValue(req, "profile", "email")
 	role := storage.GetSessionEntryValue(req, "profile", "role")
 	firstName := storage.GetSessionEntryValue(req, "profile", "firstName")
@@ -1065,7 +1065,7 @@ func getReCaptchaScore(reCaptchaResponse string) float32 {
 	return 0
 }
 
-func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.ResponseWriter, req *http.Request) error {
+func (uc *Controller) addUserToSession(userAccount *UserAccount, res http.ResponseWriter, req *http.Request) error {
 	if err := storage.AddSessionEntry(res, req, "profile", "email", userAccount.Email); err != nil {
 		return err
 	}
@@ -1085,7 +1085,7 @@ func (uc *UserController) addUserToSession(userAccount *UserAccount, res http.Re
 	return nil
 }
 
-func (uc *UserController) addSwimmerToSession(swimmer *Swimmer, res http.ResponseWriter, req *http.Request) error {
+func (uc *Controller) addSwimmerToSession(swimmer *Swimmer, res http.ResponseWriter, req *http.Request) error {
 	if err := storage.AddSessionEntry(res, req, "profile", "gender", swimmer.Gender.String); err != nil {
 		return err
 	}
@@ -1097,7 +1097,7 @@ func (uc *UserController) addSwimmerToSession(swimmer *Swimmer, res http.Respons
 	return nil
 }
 
-func (uc *UserController) SaveEmailSettings(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) SaveEmailSettings(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)

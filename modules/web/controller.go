@@ -3,7 +3,7 @@ package web
 import (
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
-	times2 "geekswimmers/modules/times"
+	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	htemplate "html/template"
@@ -13,19 +13,19 @@ import (
 	"log"
 )
 
-type WebController struct {
+type Controller struct {
 	DB               storage.Database
 	BaseTemplateData *utils.BaseTemplateData
 }
 
-func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
 		log.Printf("home.quoteOfTheDay.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	jurisdictions, err := times2.FindJurisdictionsByLevel(times2.JurisdictionLevelRegion, wc.DB)
+	jurisdictions, err := times.FindJurisdictionsByLevel(times.JurisdictionLevelRegion, wc.DB)
 	if err != nil {
 		log.Printf("home.jurisdictions.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -71,7 +71,7 @@ func (wc *WebController) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) CrawlerView(res http.ResponseWriter, req *http.Request) {
 	txt, err := ttemplate.ParseFiles("web/templates/robots.txt")
 	if err != nil {
 		log.Printf("html.template.ParseFiles: %v", err)
@@ -83,7 +83,7 @@ func (wc *WebController) CrawlerView(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) SitemapView(res http.ResponseWriter, req *http.Request) {
 	articles, err := content.FindArticlesExcept("", wc.DB)
 	if err != nil {
 		log.Printf("home.Articles.%v", err)
@@ -107,7 +107,7 @@ func (wc *WebController) SitemapView(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) NotFoundView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	ctx := &notFoundViewData{
 		BaseTemplateData: wc.BaseTemplateData,
@@ -117,7 +117,7 @@ func (wc *WebController) NotFoundView(res http.ResponseWriter, req *http.Request
 	utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 }
 
-func (wc *WebController) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) ActivateCookieSession(res http.ResponseWriter, req *http.Request) {
 	if storage.SessionStoreAvailable() {
 		if err := storage.AddSessionEntry(res, req, "profile", "acceptedCookies", "true"); err != nil {
 			log.Printf("storage.%v", err)
