@@ -159,7 +159,6 @@
                 function acceptCookies() {
                     fetch("/api/accepted-cookies").then(() => {
                         cookieModal.hide()
-                        window.location.reload(true)
                     }).catch(err => {
                         console.log(err)
                     })
