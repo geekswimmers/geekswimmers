@@ -1,6 +1,7 @@
 package user
 
 import (
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 )
@@ -82,6 +83,7 @@ type swimmerData struct {
 	ErrorGender      string
 	ErrorLastName    string
 	FirstName        string
+	Events           []*swimming.Event
 	FoundSwimmers    []*Swimmer
 	BestTimes        []*SwimmerBestTime
 	Gender           string
@@ -94,6 +96,52 @@ func (ad *swimmerData) errorHappened() bool {
 		len(ad.ErrorLastName) > 0 ||
 		len(ad.ErrorBirthDate) > 0 ||
 		len(ad.ErrorGender) > 0
+}
+
+type swimmerBestTimeData struct {
+	BaseTemplateData *utils.BaseTemplateData
+	Course           string
+	Error            string
+	ErrorCourse      string
+	ErrorEvent       string
+	ErrorMinute      string
+	ErrorSecond      string
+	ErrorMillisecond string
+	Event            string
+	Minute           string
+	Second           string
+	Millisecond      string
+	Swimmer          *Swimmer
+	Events           []*swimming.Event
+	SessionData      *storage.SessionData
+}
+
+func (sbt *swimmerBestTimeData) valid() bool {
+	if len(sbt.Course) == 0 {
+		sbt.ErrorCourse = "Course is required"
+		return false
+	}
+	if len(sbt.Event) == 0 {
+		sbt.ErrorEvent = "Event is required"
+		return false
+	}
+
+	if len(sbt.Minute) == 0 {
+		sbt.ErrorMinute = "Minute is required"
+		return false
+	}
+
+	if len(sbt.Second) == 0 {
+		sbt.ErrorSecond = "Second is required"
+		return false
+	}
+
+	if len(sbt.Millisecond) == 0 {
+		sbt.ErrorMillisecond = "Millisecond is required"
+		return false
+	}
+
+	return true
 }
 
 type setNewPasswordData struct {

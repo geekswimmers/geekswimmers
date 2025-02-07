@@ -73,6 +73,7 @@ func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
 
 type SwimmerBestTime struct {
 	ID       int64
+	Swimmer  *Swimmer
 	Event    swimming.Event
 	Course   string
 	BestTime int64

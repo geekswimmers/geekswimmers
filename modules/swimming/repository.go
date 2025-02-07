@@ -47,6 +47,22 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 	return style, nil
 }
 
+func FindEventByExample(event Event, db storage.Database) (*Event, error) {
+	stm := `select ssd.id, ssd.distance, ss.stroke
+			 from swim_event ssd
+			 join swim_style ss on ssd.style = ss.id
+			 where ssd.distance = $1 and ss.stroke = $2`
+	row := db.QueryRow(context.Background(), stm, event.Distance, event.Style.Stroke)
+
+	ev := &Event{}
+	err := row.Scan(&ev.ID, &ev.Distance, &ev.Style.Stroke)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, fmt.Errorf("findEventByExample: %v", err)
+	}
+
+	return ev, nil
+}
+
 func FindEvents(db storage.Database) ([]*Event, error) {
 	stm := `select ssd.distance , ss.stroke 
 			 from swim_event ssd 
@@ -61,7 +77,7 @@ func FindEvents(db storage.Database) ([]*Event, error) {
 	var events []*Event
 	for rows.Next() {
 		event := &Event{}
-		err = rows.Scan(&event.Distance, &event.Stroke)
+		err = rows.Scan(&event.Distance, &event.Style.Stroke)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findEvents: %v", err)
 		}

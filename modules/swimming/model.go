@@ -15,6 +15,7 @@ type Instruction struct {
 }
 
 type Event struct {
+	ID       int64
 	Distance int64
-	Stroke   string
+	Style    Style
 }

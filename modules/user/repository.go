@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"log"
 	"strings"
@@ -72,6 +73,31 @@ func InsertSwimmer(swimmer *Swimmer, db storage.Database) (int64, error) {
 		userAccountId).Scan(&lastInsertId)
 	if err != nil {
 		return 0, fmt.Errorf("user.InsertSwimmer(%v %v): %v", swimmer.FirstName, swimmer.LastName, err)
+	}
+
+	return lastInsertId, nil
+}
+
+func insertSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64, error) {
+	var lastInsertId int64
+
+	event, err := swimming.FindEventByExample(bestTime.Event, db)
+	if err != nil {
+		return 0, fmt.Errorf("user.InsertSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Event.Style.Stroke,
+			bestTime.Event.Distance, bestTime.Course, bestTime.BestTime, err)
+	}
+
+	stm := `insert into swimmer_best_time (swimmer, event, course, best_time, updated) 
+			values ($1, $2, $3, $4, current_timestamp) returning id`
+
+	err = db.QueryRow(context.Background(), stm,
+		bestTime.Swimmer.ID,
+		event.ID,
+		bestTime.Course,
+		bestTime.BestTime).Scan(&lastInsertId)
+	if err != nil {
+		return 0, fmt.Errorf("user.InsertSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Swimmer.ID,
+			bestTime.Event.ID, bestTime.Course, bestTime.BestTime, err)
 	}
 
 	return lastInsertId, nil
@@ -394,7 +420,7 @@ func findSwimmerBestTimes(swimmer *Swimmer, db storage.Database) ([]*SwimmerBest
 				left join swim_event se on sbt.event = se.id
 				left join swim_style ss on se.style = ss.id
 			where sbt.swimmer = $1
-			order by ss.sequence`
+			order by course, ss.sequence`
 	rows, err := db.Query(context.Background(), stm, swimmer.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
@@ -404,7 +430,7 @@ func findSwimmerBestTimes(swimmer *Swimmer, db storage.Database) ([]*SwimmerBest
 	var bestTimes []*SwimmerBestTime
 	for rows.Next() {
 		bestTime := &SwimmerBestTime{}
-		err := rows.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated, &bestTime.Event.Stroke, &bestTime.Event.Distance)
+		err := rows.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated, &bestTime.Event.Style.Stroke, &bestTime.Event.Distance)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
 		}

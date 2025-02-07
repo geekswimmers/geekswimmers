@@ -15,66 +15,52 @@
 
     <div class="card">
         <div class="card-body">
-            <form id="signup-form" method="post" action="/profile/swimmers//edit/">
+            <form id="signup-form" method="post" action="/profile/swimmers/{{.Swimmer.ID}}/besttimes/form/">
                 {{if .Error }}
                     <div class="alert alert-warning" role="alert">
                         {{html .Error}}
                     </div>
                 {{end}}
 
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
-                            <span class="error">{{.ErrorFirstName}}</span>
-                        </div>
+                <div class="mb-3">
+                    <label>Course</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" {{if eq .Course "SHORT"}}checked{{end}} required>
+                        <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
                     </div>
-                    <div class="col">
-                        <div class="mb-3">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
-                            <span class="error">{{.ErrorLastName}}</span>
-                        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" {{if eq .Course "LONG"}}checked{{end}} required>
+                        <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" value="{{.Email}}" required>
-                    <span class="error">{{html .ErrorEmail}}</span>
+                    <label for="event">Event</label>
+                    <select id="event" name="event" class="form-select" required>
+                        <option value="">Select...</option>
+                        {{range .Events}}
+                            {{$eventValue := printf "%d-%s" .Distance .Style.Stroke}}
+                            <option value="{{$eventValue}}" {{if eq $eventValue $.Event}}selected{{end}}>{{.Distance}}m {{.Style.Stroke | Title}}</option>
+                        {{end}}
+                    </select>
                 </div>
 
-                <div class="row">
-                    {{if .BirthDate }}
+                <div class="mb-3">
+                    <label>Your Time</label><br>
+                    <div class="row">
                         <div class="col">
-                            <div class="mb-3">
-                                <label for="birthDate" class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
-                                <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at the date specified by each championship.</small>
-                                <span class="error">{{.ErrorBirthDate}}</span>
-                            </div>
+                            <label for="minute">Minutes</label><br>
+                            <input type="number" class="form-control" id="minute" name="minute" min="0" max="59" size="3" value="{{.Minute}}" required>
                         </div>
-                    {{end}}
-                    {{if .Gender}}
                         <div class="col">
-                            <div class="mb-3">
-                                <label class="form-label">Gender</label>
-                                <br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}} required>
-                                    <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}} required>
-                                    <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
-                                </div>
-                                <br>
-                                <small class="text-body-secondary">Swim Canada uses two genders to categorize time standards and records.</small>
-                                <span class="error">{{.ErrorGender}}</span>
-                            </div>
+                            <label for="second">Seconds</label><br>
+                            <input type="number" class="form-control" id="second" name="second" min="0" max="59" size="3" value="{{.Second}}" required>
                         </div>
-                    {{end}}
+                        <div class="col">
+                            <label for="millisecond">Milliseconds</label><br>
+                            <input type="number" class="form-control" id="millisecond" name="millisecond" min="0" max="99" size="3" value="{{.Millisecond}}" required>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
@@ -84,7 +70,7 @@
                         <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                     </svg> Save
                 </button>
-                <a class="btn btn-secondary" href="/profile/" role="button">Cancel</a>
+                <a class="btn btn-secondary" href="/profile/{{if eq .SessionData.Role "SWIMMER"}}swimmers/{{end}}" role="button">Cancel</a>
             </form>
         </div>
     </div>

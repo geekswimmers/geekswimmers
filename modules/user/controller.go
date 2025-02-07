@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"geekswimmers/config"
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
@@ -537,15 +538,15 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 }
 
 func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	if err != nil {
-		log.Print(err)
-	}
-
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
 		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
 		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
 	}
 
 	data := &profileData{
@@ -740,10 +741,24 @@ func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http
 		return
 	}
 
-	html := utils.GetTemplate("base", "swimmer-besttime-form")
-	if err := html.Execute(res, &swimmerData{
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	events, err := swimming.FindEvents(uc.DB)
+	if err != nil {
+		log.Printf("home.events.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime-form", template.FuncMap{
+		"Title": utils.Title,
+	})
+	if err := html.Execute(res, &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
+		Events:           events,
+		Swimmer:          swimmer,
 	}); err != nil {
 		log.Printf("Error loading the swimmer best time form: %v", err)
 	}
@@ -759,6 +774,73 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
+	}
+
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	data := &swimmerBestTimeData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		Event:            req.PostForm.Get("event"),
+		Course:           req.PostForm.Get("course"),
+		Minute:           req.PostForm.Get("minute"),
+		Second:           req.PostForm.Get("second"),
+		Millisecond:      req.PostForm.Get("millisecond"),
+		Swimmer:          swimmer,
+	}
+
+	if !data.valid() {
+		log.Printf("Error saving the best time: %v", err)
+		html := utils.GetTemplate("base", "swimmer-besttime-form")
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	event := strings.Split(data.Event, "-")
+	distance, _ := strconv.ParseInt(event[0], 10, 64)
+	stroke := event[1]
+	ev := swimming.Event{
+		Style: swimming.Style{
+			Stroke: stroke,
+		},
+		Distance: distance,
+	}
+
+	minute, _ := strconv.Atoi(data.Minute)
+	second, _ := strconv.Atoi(data.Second)
+	millisecond, _ := strconv.Atoi(data.Millisecond)
+	bestTime := utils.ToMiliseconds(minute, second, millisecond)
+
+	swimmerBestTime := &SwimmerBestTime{
+		Swimmer:  data.Swimmer,
+		Event:    ev,
+		Course:   data.Course,
+		BestTime: bestTime,
+	}
+
+	_, err = insertSwimmerBestTime(swimmerBestTime, uc.DB)
+	if err != nil {
+		log.Printf("Error saving the best time: %v", err)
+		html := utils.GetTemplate("base", "swimmer-besttime-form")
+		data.Error = `Due to an internal error, it was not possible to save
+			your best time at this moment. Please, trying again later. 
+			Thank you for your understanding.`
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	if sessionData.Role == "SWIMMER" {
+		http.Redirect(res, req, "/profile/swimmers/", http.StatusSeeOther)
+	} else {
+		http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 	}
 }
 
