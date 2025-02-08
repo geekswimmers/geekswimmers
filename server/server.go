@@ -71,7 +71,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 		BaseTemplateData: &btc,
 	}
 
-	meetController := &swimming.Controller{
+	swimmingController := &swimming.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
@@ -114,12 +114,14 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))
 
-	s.Router.Get("/swimming/styles", s.handleRequest(meetController.SwimStylesView))
-	s.Router.Get("/swimming/styles/:stroke/", s.handleRequest(meetController.SwimStyleView))
+	s.Router.Get("/swimming/styles", s.handleRequest(swimmingController.SwimStylesView))
+	s.Router.Get("/swimming/styles/:stroke/", s.handleRequest(swimmingController.SwimStyleView))
 
 	s.Router.Get("/robots.txt", http.HandlerFunc(webController.CrawlerView))
 	s.Router.Get("/sitemap.xml", http.HandlerFunc(webController.SitemapView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
+
+	s.Router.Get("/api/events/", s.handleRequest(userController.EventsResource))
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }

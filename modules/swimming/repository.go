@@ -48,11 +48,11 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 }
 
 func FindEventByExample(event Event, db storage.Database) (*Event, error) {
-	stm := `select ssd.id, ssd.distance, ss.stroke
-			 from swim_event ssd
-			 join swim_style ss on ssd.style = ss.id
-			 where ssd.distance = $1 and ss.stroke = $2`
-	row := db.QueryRow(context.Background(), stm, event.Distance, event.Style.Stroke)
+	stm := `select se.id, se.distance, ss.stroke
+			 from swim_event se
+			 join swim_style ss on se.style = ss.id
+			 where se.distance = $1 and ss.stroke = $2 and se.course = $3`
+	row := db.QueryRow(context.Background(), stm, event.Distance, event.Style.Stroke, event.Course)
 
 	ev := &Event{}
 	err := row.Scan(&ev.ID, &ev.Distance, &ev.Style.Stroke)
@@ -63,12 +63,13 @@ func FindEventByExample(event Event, db storage.Database) (*Event, error) {
 	return ev, nil
 }
 
-func FindEvents(db storage.Database) ([]*Event, error) {
-	stm := `select ssd.distance , ss.stroke 
-			 from swim_event ssd 
-				join swim_style ss on ssd.style = ss.id
-			 order by ss.sequence`
-	rows, err := db.Query(context.Background(), stm)
+func FindEvents(course string, db storage.Database) ([]*Event, error) {
+	stm := `select se.distance , ss.stroke 
+			 from swim_event se 
+				join swim_style ss on se.style = ss.id
+			 where se.course = $1
+			 order by ss.sequence asc, se.distance asc`
+	rows, err := db.Query(context.Background(), stm, course)
 	if err != nil {
 		return nil, fmt.Errorf("findEvents: %v", err)
 	}

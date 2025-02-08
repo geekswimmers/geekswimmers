@@ -105,12 +105,14 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		Role:      context.Role,
 	}
 
-	var swimmer *Swimmer
+	var swimmer *UserSwimmer
 
 	if userAccount.Role == RoleSwimmer {
-		swimmer = &Swimmer{
-			FirstName: context.FirstName,
-			LastName:  context.LastName,
+		swimmer = &UserSwimmer{
+			Swimmer: &swimming.Swimmer{
+				FirstName: context.FirstName,
+				LastName:  context.LastName,
+			},
 		}
 
 		// Validates birthDate
@@ -124,13 +126,13 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 				log.Printf("Invalid birth date: %v", context.BirthDate)
 				context.ErrorBirthDate = "Invalid birth date."
 			} else {
-				swimmer.BirthDate = sql.NullTime{
+				swimmer.Swimmer.BirthDate = sql.NullTime{
 					Time: birthDate,
 				}
 			}
 
 			// Validates age
-			age := swimmer.AgeAt(time.Now())
+			age := swimmer.Swimmer.AgeAt(time.Now())
 			if age < 13 {
 				log.Printf("Invalid age: %v", age)
 				context.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
@@ -138,11 +140,11 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// Validates gender
-		if (context.Gender == "" || (context.Gender != GenderFemale && context.Gender != GenderMale)) && context.Role == RoleSwimmer {
+		if (context.Gender == "" || (context.Gender != swimming.GenderFemale && context.Gender != swimming.GenderMale)) && context.Role == RoleSwimmer {
 			log.Printf("Invalid Gender: %v", context.Gender)
 			context.ErrorGender = "Select your gender."
 		} else {
-			swimmer.Gender = sql.NullString{
+			swimmer.Swimmer.Gender = sql.NullString{
 				String: context.Gender,
 			}
 		}
@@ -443,7 +445,7 @@ func (uc *Controller) SignIn(res http.ResponseWriter, req *http.Request) {
 
 	if userAccount.Role == RoleSwimmer {
 		swimmer := FindSwimmerByUserAccount(userAccount, uc.DB)
-		if err = uc.addSwimmerToSession(swimmer, res, req); err != nil {
+		if err = uc.addSwimmerToSession(swimmer.Swimmer, res, req); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -525,8 +527,8 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 	}
 
 	if swimmer != nil {
-		birthDate := &swimmer.BirthDate.Time
-		gender := swimmer.Gender.String
+		birthDate := &swimmer.Swimmer.BirthDate.Time
+		gender := swimmer.Swimmer.Gender.String
 		data.BirthDate = birthDate.Format("2006-01-02")
 		data.Gender = gender
 	}
@@ -594,8 +596,8 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 
 	swimmer := FindSwimmerByUserAccount(currentUser, uc.DB)
 	if currentUser.Role == RoleSwimmer && swimmer != nil {
-		swimmer.FirstName = data.FirstName
-		swimmer.LastName = data.LastName
+		swimmer.Swimmer.FirstName = data.FirstName
+		swimmer.Swimmer.LastName = data.LastName
 
 		// Validates birthDate
 		if data.BirthDate == "" {
@@ -607,13 +609,13 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 				log.Printf("Invalid birth date: %v", data.BirthDate)
 				data.ErrorBirthDate = "Invalid birth date."
 			} else {
-				swimmer.BirthDate = sql.NullTime{
+				swimmer.Swimmer.BirthDate = sql.NullTime{
 					Time: birthDate,
 				}
 			}
 
 			// Validates age
-			age := swimmer.AgeAt(time.Now())
+			age := swimmer.Swimmer.AgeAt(time.Now())
 			if age < 13 {
 				log.Printf("Invalid age: %v", age)
 				data.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
@@ -621,11 +623,11 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		}
 
 		// Validates gender
-		if data.Gender == "" || (data.Gender != GenderFemale && data.Gender != GenderMale) {
+		if data.Gender == "" || (data.Gender != swimming.GenderFemale && data.Gender != swimming.GenderMale) {
 			log.Printf("Invalid Gender: %v", data.Gender)
 			data.ErrorGender = "Select your gender."
 		} else {
-			swimmer.Gender = sql.NullString{
+			swimmer.Swimmer.Gender = sql.NullString{
 				String: data.Gender,
 			}
 		}
@@ -655,7 +657,7 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 			}
 			return
 		}
-		if err := uc.addSwimmerToSession(swimmer, res, req); err != nil {
+		if err := uc.addSwimmerToSession(swimmer.Swimmer, res, req); err != nil {
 			log.Printf("Error adding swimmer to session: %v", err)
 		}
 	} else {
@@ -687,7 +689,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		return
 	}
 
-	var swimmer *Swimmer
+	var swimmer *UserSwimmer
 	if sessionData.Role == RoleSwimmer {
 		swimmer = FindSwimmerByEmail(sessionData.Email, uc.DB)
 	} else {
@@ -745,7 +747,7 @@ func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
-	events, err := swimming.FindEvents(uc.DB)
+	events, err := swimming.FindEvents(swimming.DefaultCourse, uc.DB)
 	if err != nil {
 		log.Printf("home.events.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -895,7 +897,7 @@ func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
 
 	selectedSwimmers := req.Form["swimmers"]
-	var swimmers []*Swimmer
+	var swimmers []*UserSwimmer
 	for _, swimmerIDStr := range selectedSwimmers {
 		swimmerID, err := strconv.ParseInt(swimmerIDStr, 10, 64)
 		if err != nil {
@@ -960,9 +962,11 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 		context.ErrorLastName = "Last Name is empty."
 	}
 
-	swimmer := &Swimmer{
-		FirstName: context.FirstName,
-		LastName:  context.LastName,
+	swimmer := &UserSwimmer{
+		Swimmer: &swimming.Swimmer{
+			FirstName: context.FirstName,
+			LastName:  context.LastName,
+		},
 	}
 
 	// Validates birthDate
@@ -975,18 +979,18 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 			log.Printf("Invalid birth date: %v", context.BirthDate)
 			context.ErrorBirthDate = "Invalid birth date."
 		} else {
-			swimmer.BirthDate = sql.NullTime{
+			swimmer.Swimmer.BirthDate = sql.NullTime{
 				Time: birthDate,
 			}
 		}
 	}
 
 	// Validates gender
-	if context.Gender == "" || (context.Gender != GenderFemale && context.Gender != GenderMale) {
+	if context.Gender == "" || (context.Gender != swimming.GenderFemale && context.Gender != swimming.GenderMale) {
 		log.Printf("Invalid Gender: %v", context.Gender)
 		context.ErrorGender = "Select your gender."
 	} else {
-		swimmer.Gender = sql.NullString{
+		swimmer.Swimmer.Gender = sql.NullString{
 			String: context.Gender,
 		}
 	}
@@ -1017,7 +1021,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 	}
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	swimmers := []*Swimmer{swimmer}
+	swimmers := []*UserSwimmer{swimmer}
 	if err := linkSwimmersToParent(parent, swimmers, uc.DB); err != nil {
 		log.Printf("Error linking swimmer to parent: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")
@@ -1167,7 +1171,7 @@ func (uc *Controller) addUserToSession(userAccount *UserAccount, res http.Respon
 	return nil
 }
 
-func (uc *Controller) addSwimmerToSession(swimmer *Swimmer, res http.ResponseWriter, req *http.Request) error {
+func (uc *Controller) addSwimmerToSession(swimmer *swimming.Swimmer, res http.ResponseWriter, req *http.Request) error {
 	if err := storage.AddSessionEntry(res, req, "profile", "gender", swimmer.Gender.String); err != nil {
 		return err
 	}

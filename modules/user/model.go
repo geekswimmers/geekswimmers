@@ -8,9 +8,6 @@ import (
 )
 
 const (
-	GenderFemale = "FEMALE"
-	GenderMale   = "MALE"
-
 	FailedMatchIdentifier       = "IDENTIFIER"
 	FailedMatchPassword         = "PASSWORD"
 	FailedMatchHumanScore       = "HUMAN_SCORE"
@@ -50,12 +47,9 @@ func (ua *UserAccount) CleanEmail() string {
 	return email
 }
 
-type Swimmer struct {
+type UserSwimmer struct {
 	ID            int64
-	FirstName     string
-	LastName      string
-	Gender        sql.NullString
-	BirthDate     sql.NullTime
+	Swimmer       *swimming.Swimmer
 	UserAccount   *UserAccount
 	UserAccountID sql.NullInt64
 
@@ -63,17 +57,9 @@ type Swimmer struct {
 	LinkApproved bool
 }
 
-func (swimmer *Swimmer) AgeAt(date time.Time) int64 {
-	age := date.Year() - swimmer.BirthDate.Time.Year()
-	if date.YearDay() < swimmer.BirthDate.Time.YearDay() {
-		age--
-	}
-	return int64(age)
-}
-
 type SwimmerBestTime struct {
 	ID       int64
-	Swimmer  *Swimmer
+	Swimmer  *UserSwimmer
 	Event    swimming.Event
 	Course   string
 	BestTime int64

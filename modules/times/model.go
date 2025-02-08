@@ -8,8 +8,6 @@ import (
 )
 
 const (
-	DefaultCourse = "SHORT"
-
 	JurisdictionLevelCountry  = "COUNTRY"
 	JurisdictionLevelProvince = "PROVINCE"
 	JurisdictionLevelRegion   = "REGION"

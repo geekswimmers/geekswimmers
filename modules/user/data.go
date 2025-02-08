@@ -59,7 +59,7 @@ type profileData struct {
 	LastName         string
 	Role             string
 	SessionData      *storage.SessionData
-	Swimmers         []*Swimmer
+	Swimmers         []*UserSwimmer
 }
 
 func (sud *profileData) errorHappened() bool {
@@ -72,7 +72,7 @@ func (sud *profileData) errorHappened() bool {
 }
 
 type swimmerData struct {
-	Swimmer          *Swimmer
+	Swimmer          *UserSwimmer
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
 	Email            string
@@ -84,7 +84,7 @@ type swimmerData struct {
 	ErrorLastName    string
 	FirstName        string
 	Events           []*swimming.Event
-	FoundSwimmers    []*Swimmer
+	FoundSwimmers    []*UserSwimmer
 	BestTimes        []*SwimmerBestTime
 	Gender           string
 	LastName         string
@@ -111,7 +111,7 @@ type swimmerBestTimeData struct {
 	Minute           string
 	Second           string
 	Millisecond      string
-	Swimmer          *Swimmer
+	Swimmer          *UserSwimmer
 	Events           []*swimming.Event
 	SessionData      *storage.SessionData
 }

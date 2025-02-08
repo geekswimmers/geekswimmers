@@ -19,6 +19,8 @@ type Controller struct {
 }
 
 func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
 	quoteOfTheDay, err := content.GetQuoteOfTheDay(utils.DayOfTheYear(), wc.DB)
 	if err != nil {
 		log.Printf("home.quoteOfTheDay.%v", err)
@@ -31,7 +33,12 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	events, err := swimming.FindEvents(wc.DB)
+	course := swimming.DefaultCourse
+	if sessionData.Course != "" {
+		course = sessionData.Course
+	}
+
+	events, err := swimming.FindEvents(course, wc.DB)
 	if err != nil {
 		log.Printf("home.events.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -49,7 +56,6 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	sessionData := storage.NewSessionData(req)
 	ctx := &homeViewData{
 		QuoteOfTheDay:    quoteOfTheDay,
 		Articles:         articles,

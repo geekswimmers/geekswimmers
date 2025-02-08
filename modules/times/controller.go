@@ -3,7 +3,7 @@ package times
 import (
 	"database/sql"
 	"fmt"
-	"geekswimmers/modules/user"
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"geekswimmers/utils/reporting"
@@ -63,7 +63,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		log.Printf("times.%v", err)
 	}
 
-	swimmer := &user.Swimmer{
+	swimmer := &swimming.Swimmer{
 		BirthDate: sql.NullTime{
 			Time: birthDate,
 		},
@@ -234,11 +234,11 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = user.GenderFemale
+		gender = swimming.GenderFemale
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = DefaultCourse
+		course = swimming.DefaultCourse
 	}
 
 	example := StandardTime{
@@ -358,11 +358,11 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = user.GenderFemale
+		gender = swimming.GenderFemale
 	}
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = DefaultCourse
+		course = swimming.DefaultCourse
 	}
 
 	definition := RecordDefinition{
@@ -507,13 +507,13 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
-		gender = user.GenderFemale
+		gender = swimming.GenderFemale
 	}
 	ctx.Gender = gender
 
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = DefaultCourse
+		course = swimming.DefaultCourse
 	}
 	ctx.Course = course
 
