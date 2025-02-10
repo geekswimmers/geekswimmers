@@ -77,6 +77,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	}
 
 	// The order here must be absolutely respected.
+	// Web Content
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
 
@@ -121,7 +122,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/sitemap.xml", http.HandlerFunc(webController.SitemapView))
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
 
-	s.Router.Get("/api/events/", s.handleRequest(userController.EventsResource))
+	// BFF API
+	s.Router.Get("/api/swimmers/:id/events/", s.handleRequest(userController.EventsResource))
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }

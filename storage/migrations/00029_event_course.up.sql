@@ -1,0 +1,1 @@
+alter table swim_event add column if not exists course varchar(10) not null default 'SHORT';

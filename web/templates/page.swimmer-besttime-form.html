@@ -25,11 +25,11 @@
                 <div class="mb-3">
                     <label>Course</label><br>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" {{if eq .Course "SHORT"}}checked{{end}} required>
+                        <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" onclick="updateEventsByCourse({{.Swimmer.ID}})" {{if eq .Course "SHORT"}}checked{{end}} required>
                         <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" {{if eq .Course "LONG"}}checked{{end}} required>
+                        <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" onclick="updateEventsByCourse({{.Swimmer.ID}})" {{if eq .Course "LONG"}}checked{{end}} required>
                         <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                     </div>
                 </div>
@@ -37,10 +37,9 @@
                 <div class="mb-3">
                     <label for="event">Event</label>
                     <select id="event" name="event" class="form-select" required>
-                        <option value="">Select...</option>
+                        <option value="0">Select...</option>
                         {{range .Events}}
-                            {{$eventValue := printf "%d-%s" .Distance .Style.Stroke}}
-                            <option value="{{$eventValue}}" {{if eq $eventValue $.Event}}selected{{end}}>{{.Distance}}m {{.Style.Stroke | Title}}</option>
+                            <option value="{{.ID}}" {{if eq .ID $.Event}}selected{{end}}>{{.Distance}}m {{.Style.Stroke | Title}}</option>
                         {{end}}
                     </select>
                 </div>

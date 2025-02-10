@@ -81,18 +81,12 @@ func InsertSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 func insertSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	event, err := swimming.FindEventByExample(bestTime.Event, db)
-	if err != nil {
-		return 0, fmt.Errorf("user.InsertSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Event.Style.Stroke,
-			bestTime.Event.Distance, bestTime.Course, bestTime.BestTime, err)
-	}
-
 	stm := `insert into swimmer_best_time (swimmer, event, course, best_time, updated) 
 			values ($1, $2, $3, $4, current_timestamp) returning id`
 
-	err = db.QueryRow(context.Background(), stm,
+	err := db.QueryRow(context.Background(), stm,
 		bestTime.Swimmer.ID,
-		event.ID,
+		bestTime.Event.ID,
 		bestTime.Course,
 		bestTime.BestTime).Scan(&lastInsertId)
 	if err != nil {
@@ -456,7 +450,8 @@ func findSwimmerMissingBestTimes(swimmer *UserSwimmer, course string, db storage
 			from swim_event se
 				join swim_style ss on se.style = ss.id
 			where se.id not in (select event from swimmer_best_time where swimmer = $1 and course = $2)
-			order by ss.sequence`
+				and se.course = $2
+			order by ss.sequence asc, se.distance asc`
 	rows, err := db.Query(context.Background(), stm, swimmer.ID, course)
 	if err != nil {
 		return nil, fmt.Errorf("findSwimmerMissingBestTimes: %v", err)

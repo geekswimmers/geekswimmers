@@ -107,7 +107,7 @@ type swimmerBestTimeData struct {
 	ErrorMinute      string
 	ErrorSecond      string
 	ErrorMillisecond string
-	Event            string
+	Event            int64
 	Minute           string
 	Second           string
 	Millisecond      string
@@ -121,7 +121,7 @@ func (sbt *swimmerBestTimeData) valid() bool {
 		sbt.ErrorCourse = "Course is required"
 		return false
 	}
-	if len(sbt.Event) == 0 {
+	if sbt.Event == 0 {
 		sbt.ErrorEvent = "Event is required"
 		return false
 	}

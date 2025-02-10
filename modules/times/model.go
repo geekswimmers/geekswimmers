@@ -15,11 +15,7 @@ const (
 	JurisdictionLevelClub     = "CLUB"
 	JurisdictionLevelMeet     = "MEET"
 
-	StrokeFree   = "FREESTYLE"
-	StrokeBack   = "BACKSTROKE"
-	StrokeBreast = "BREASTSTROKE"
-	StrokeFly    = "BUTTERFLY"
-	StrokeMedley = "MEDLEY"
+	DefaultStroke = "FREESTYLE"
 )
 
 type SwimSeason struct {

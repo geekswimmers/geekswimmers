@@ -479,29 +479,29 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		stroke = event[1]
 	}
 	if stroke == "" {
-		stroke = StrokeFree
+		stroke = DefaultStroke
 	}
 	ctx.Style = stroke
 	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
 
-	min, max, err := findMinAndMaxStandardAges(sc.DB)
+	minimum, maximum, err := findMinAndMaxStandardAges(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
 
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
 	if err != nil {
-		age = min
+		age = minimum
 	}
-	if age < min {
-		age = min
+	if age < minimum {
+		age = minimum
 	}
-	if age > max {
-		age = max
+	if age > maximum {
+		age = maximum
 	}
 	ctx.Age = age
 
-	for i := min; i <= max; i++ {
+	for i := minimum; i <= maximum; i++ {
 		ctx.Ages = append(ctx.Ages, i)
 	}
 

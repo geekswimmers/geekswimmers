@@ -77,7 +77,7 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (wc *Controller) CrawlerView(res http.ResponseWriter, req *http.Request) {
+func (wc *Controller) CrawlerView(res http.ResponseWriter, _ *http.Request) {
 	txt, err := ttemplate.ParseFiles("web/templates/robots.txt")
 	if err != nil {
 		log.Printf("html.template.ParseFiles: %v", err)

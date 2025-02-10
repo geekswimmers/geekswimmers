@@ -13,12 +13,9 @@ const (
 	FailedMatchHumanScore       = "HUMAN_SCORE"
 	FailedMatchAttemptsExceeded = "ATTEMPTS_EXCEEDED"
 
-	RoleAdmin    = "ADMIN"
-	RoleSwimmer  = "SWIMMER"
-	RoleClub     = "CLUB"
-	RoleCoach    = "COACH"
-	RoleOfficial = "OFFICIAL"
-	RoleParent   = "PARENT"
+	RoleAdmin   = "ADMIN"
+	RoleSwimmer = "SWIMMER"
+	RoleParent  = "PARENT"
 
 	StatusSucceed = "SUCCEED"
 	StatusFailed  = "FAILED"

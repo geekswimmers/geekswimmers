@@ -12,9 +12,9 @@ func ToMiliseconds(min, sec, milisec int) int64 {
 func FromMiliseconds(milliseconds int64) (int, int, int) {
 	min := int(milliseconds / 60000)
 	sec := int((milliseconds % 60000) / 1000)
-	milisec := int(((milliseconds % 60000) % 1000))
+	milisec := int((milliseconds % 60000) % 1000)
 
-	return min, sec, (milisec / 10)
+	return min, sec, milisec / 10
 }
 
 func FormatMiliseconds(milliseconds int64) string {
