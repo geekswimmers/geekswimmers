@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col">
         <h3>{{.SwimmerBestTime.Swimmer.Swimmer.FirstName}}'s Best Time</h3>
-        <h1 class="display-6">{{.SwimmerBestTime.Event.Distance}} {{.SwimmerBestTime.Event.Style.Stroke | Title}} - {{.SwimmerBestTime.BestTime | FormatMiliseconds}}</h1>
+        <h1 class="display-6">{{.SwimmerBestTime.Event.Distance}} {{.SwimmerBestTime.Event.Style.Stroke | Title}}, {{.SwimmerBestTime.Course | Title}} Course - {{.SwimmerBestTime.BestTime | FormatMiliseconds}}</h1>
     </div>
     <div class="col-auto">
         <div class="dropdown">
@@ -25,7 +25,7 @@
                 </svg>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/profile/swimmers/{{$.SwimmerBestTime.Swimmer.ID}}/besttimes/{{.SwimmerBestTime.ID}}/">Edit Best Time</a></li>
+                <li><a class="dropdown-item" href="/profile/swimmers/{{$.SwimmerBestTime.Swimmer.ID}}/besttimes/{{.SwimmerBestTime.ID}}/form/">Edit Best Time</a></li>
             </ul>
         </div>
     </div>

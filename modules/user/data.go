@@ -109,9 +109,9 @@ type swimmerBestTimeData struct {
 	ErrorSecond      string
 	ErrorMillisecond string
 	Event            int64
-	Minute           string
-	Second           string
-	Millisecond      string
+	Minute           int
+	Second           int
+	Millisecond      int
 	Swimmer          *UserSwimmer
 	Events           []*swimming.Event
 	SessionData      *storage.SessionData
@@ -127,17 +127,17 @@ func (sbt *swimmerBestTimeData) valid() bool {
 		return false
 	}
 
-	if len(sbt.Minute) == 0 {
+	if sbt.Minute < 0 {
 		sbt.ErrorMinute = "Minute is required"
 		return false
 	}
 
-	if len(sbt.Second) == 0 {
+	if sbt.Second < 0 {
 		sbt.ErrorSecond = "Second is required"
 		return false
 	}
 
-	if len(sbt.Millisecond) == 0 {
+	if sbt.Millisecond < 0 {
 		sbt.ErrorMillisecond = "Millisecond is required"
 		return false
 	}

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
@@ -447,7 +448,7 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swimmer
 
 func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database) *SwimmerBestTime {
 	stm := `select sbt.id, sbt.course, sbt.best_time, sbt.updated,
-				   s.first_name, s.last_name, s.gender, s.birth_date,
+				   s.id, s.first_name, s.last_name, s.gender, s.birth_date,
 				   se.distance, ss.stroke
 			from swimmer_best_time sbt
 				left join swimmer s on s.id = sbt.swimmer
@@ -462,9 +463,12 @@ func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database
 		},
 	}
 	err := row.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated,
-		&bestTime.Swimmer.Swimmer.FirstName, &bestTime.Swimmer.Swimmer.LastName, &bestTime.Swimmer.Swimmer.Gender, &bestTime.Swimmer.Swimmer.BirthDate,
+		&bestTime.Swimmer.ID, &bestTime.Swimmer.Swimmer.FirstName, &bestTime.Swimmer.Swimmer.LastName, &bestTime.Swimmer.Swimmer.Gender, &bestTime.Swimmer.Swimmer.BirthDate,
 		&bestTime.Event.Distance, &bestTime.Event.Style.Stroke)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil
+		}
 		log.Printf("findSwimmerBestTime: %v", err)
 		return nil
 	}

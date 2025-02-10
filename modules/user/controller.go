@@ -777,22 +777,34 @@ func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
+	id = req.URL.Query().Get(":bestId")
+	bestId, _ := strconv.ParseInt(id, 10, 64)
+	bestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
+
 	events, err := findSwimmerMissingBestTimes(swimmer, swimming.DefaultCourse, uc.DB)
 	if err != nil {
 		log.Printf("home.events.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime-form", template.FuncMap{
-		"Title": utils.Title,
-	})
-	if err := html.Execute(res, &swimmerBestTimeData{
+	data := &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
+		SwimmerBestTime:  bestTime,
 		SessionData:      sessionData,
 		Events:           events,
 		Swimmer:          swimmer,
 		Course:           swimming.DefaultCourse,
-	}); err != nil {
+	}
+
+	if bestTime != nil {
+		data.Course = bestTime.Course
+		data.Minute, data.Second, data.Millisecond = utils.FromMiliseconds(bestTime.BestTime)
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime-form", template.FuncMap{
+		"Title": utils.Title,
+	})
+	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer best time form: %v", err)
 	}
 }
@@ -814,15 +826,18 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
 	eventId, _ := strconv.ParseInt(req.PostForm.Get("event"), 10, 64)
+	minute, _ := strconv.Atoi(req.PostForm.Get("minute"))
+	second, _ := strconv.Atoi(req.PostForm.Get("second"))
+	millisecond, _ := strconv.Atoi(req.PostForm.Get("millisecond"))
 
 	data := &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		Event:            eventId,
 		Course:           req.PostForm.Get("course"),
-		Minute:           req.PostForm.Get("minute"),
-		Second:           req.PostForm.Get("second"),
-		Millisecond:      req.PostForm.Get("millisecond"),
+		Minute:           minute,
+		Second:           second,
+		Millisecond:      millisecond,
 		Swimmer:          swimmer,
 	}
 
@@ -843,10 +858,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 		ID: eventId,
 	}
 
-	minute, _ := strconv.Atoi(data.Minute)
-	second, _ := strconv.Atoi(data.Second)
-	millisecond, _ := strconv.Atoi(data.Millisecond)
-	bestTime := utils.ToMiliseconds(minute, second, millisecond)
+	bestTime := utils.ToMiliseconds(data.Minute, data.Second, data.Millisecond)
 
 	swimmerBestTime := &SwimmerBestTime{
 		Swimmer:  *data.Swimmer,
