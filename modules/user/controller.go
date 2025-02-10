@@ -736,6 +736,36 @@ func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request
 	}
 }
 
+func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	id = req.URL.Query().Get(":bestId")
+	bestId, _ := strconv.ParseInt(id, 10, 64)
+	bestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
+
+	data := &swimmerBestTimeData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SwimmerBestTime:  bestTime,
+		SessionData:      sessionData,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime", template.FuncMap{
+		"Title":             utils.Title,
+		"FormatMiliseconds": utils.FormatMiliseconds,
+	})
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the swimmer's best time: %v", err)
+	}
+}
+
 func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
@@ -819,7 +849,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	bestTime := utils.ToMiliseconds(minute, second, millisecond)
 
 	swimmerBestTime := &SwimmerBestTime{
-		Swimmer:  data.Swimmer,
+		Swimmer:  *data.Swimmer,
 		Event:    event,
 		Course:   data.Course,
 		BestTime: bestTime,

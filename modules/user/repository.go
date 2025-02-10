@@ -445,6 +445,33 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swimmer
 	return bestTimes, nil
 }
 
+func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database) *SwimmerBestTime {
+	stm := `select sbt.id, sbt.course, sbt.best_time, sbt.updated,
+				   s.first_name, s.last_name, s.gender, s.birth_date,
+				   se.distance, ss.stroke
+			from swimmer_best_time sbt
+				left join swimmer s on s.id = sbt.swimmer
+				left join swim_event se on se.id = sbt.event
+				left join swim_style ss on ss.id = se.style
+			where sbt.id = $1 and sbt.swimmer = $2`
+	row := db.QueryRow(context.Background(), stm, bestId, swimmer.ID)
+
+	bestTime := &SwimmerBestTime{
+		Swimmer: UserSwimmer{
+			Swimmer: &swimming.Swimmer{},
+		},
+	}
+	err := row.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated,
+		&bestTime.Swimmer.Swimmer.FirstName, &bestTime.Swimmer.Swimmer.LastName, &bestTime.Swimmer.Swimmer.Gender, &bestTime.Swimmer.Swimmer.BirthDate,
+		&bestTime.Event.Distance, &bestTime.Event.Style.Stroke)
+	if err != nil {
+		log.Printf("findSwimmerBestTime: %v", err)
+		return nil
+	}
+
+	return bestTime
+}
+
 func findSwimmerMissingBestTimes(swimmer *UserSwimmer, course string, db storage.Database) ([]*swimming.Event, error) {
 	stm := `select se.id, ss.stroke, se.distance
 			from swim_event se

@@ -98,6 +98,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/profile/swimmers/form/", s.handleRequest(userController.SwimmerForm))
 	s.Router.Get("/profile/swimmers/:id/besttimes/form/", s.handleRequest(userController.SwimmerBestTimeFormView))
 	s.Router.Post("/profile/swimmers/:id/besttimes/form/", s.handleRequest(userController.SwimmerBestTimeForm))
+	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleRequest(userController.SwimmerBestTimeFormView))
+	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/", s.handleRequest(userController.SwimmerBestTimeView))
 	s.Router.Get("/profile/swimmers/:id/", s.handleRequest(userController.ProfileSwimmerView))
 	s.Router.Get("/profile/swimmers/", s.handleRequest(userController.ProfileSwimmerView))
 	s.Router.Get("/profile/edit/", s.handleRequest(userController.ProfileEditView))

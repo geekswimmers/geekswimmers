@@ -32,7 +32,7 @@
             {{range .BestTimes}}
                 <tr>
                     <td>{{.Course | Title}}</td>
-                    <td>{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</td>
+                    <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
                     <td>{{.BestTime | FormatMiliseconds}}</td>
                 </tr>
             {{else}}

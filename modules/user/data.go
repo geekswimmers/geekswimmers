@@ -100,6 +100,7 @@ func (ad *swimmerData) errorHappened() bool {
 
 type swimmerBestTimeData struct {
 	BaseTemplateData *utils.BaseTemplateData
+	SwimmerBestTime  *SwimmerBestTime
 	Course           string
 	Error            string
 	ErrorCourse      string

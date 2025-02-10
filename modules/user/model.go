@@ -56,7 +56,7 @@ type UserSwimmer struct {
 
 type SwimmerBestTime struct {
 	ID       int64
-	Swimmer  *UserSwimmer
+	Swimmer  UserSwimmer
 	Event    swimming.Event
 	Course   string
 	BestTime int64
