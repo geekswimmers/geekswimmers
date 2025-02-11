@@ -79,22 +79,39 @@ func InsertSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 	return lastInsertId, nil
 }
 
-func insertSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64, error) {
+func saveSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64, error) {
 	var lastInsertId int64
+	var stmt string
 
-	stm := `insert into swimmer_best_time (swimmer, event, course, best_time, updated) 
-			values ($1, $2, $3, $4, current_timestamp) returning id`
+	if bestTime.ID == 0 {
+		stmt = `insert into swimmer_best_time (swimmer, event, course, best_time, updated) 
+				values ($1, $2, $3, $4, current_timestamp) returning id`
 
-	err := db.QueryRow(context.Background(), stm,
-		bestTime.Swimmer.ID,
-		bestTime.Event.ID,
-		bestTime.Course,
-		bestTime.BestTime).Scan(&lastInsertId)
-	if err != nil {
-		return 0, fmt.Errorf("user.InsertSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Swimmer.ID,
-			bestTime.Event.ID, bestTime.Course, bestTime.BestTime, err)
+		err := db.QueryRow(context.Background(), stmt,
+			bestTime.Swimmer.ID,
+			bestTime.Event.ID,
+			bestTime.Course,
+			bestTime.BestTime).Scan(&lastInsertId)
+		if err != nil {
+			return 0, fmt.Errorf("user.SaveSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Swimmer.ID,
+				bestTime.Event.ID, bestTime.Course, bestTime.BestTime, err)
+		}
+	} else {
+		lastInsertId = bestTime.ID
+
+		stmt = `update swimmer_best_time 
+				set best_time = $1, updated = current_timestamp
+				where id = $2 and swimmer = $3 returning id`
+
+		_, err := db.Exec(context.Background(), stmt,
+			bestTime.BestTime,
+			bestTime.ID,
+			bestTime.Swimmer.ID)
+		if err != nil {
+			return 0, fmt.Errorf("user.SaveSwimmerBestTime(%v, %v, %v, %v): %v", bestTime.Swimmer.ID,
+				bestTime.Event.ID, bestTime.Course, bestTime.BestTime, err)
+		}
 	}
-
 	return lastInsertId, nil
 }
 
@@ -449,7 +466,7 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swimmer
 func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database) *SwimmerBestTime {
 	stm := `select sbt.id, sbt.course, sbt.best_time, sbt.updated,
 				   s.id, s.first_name, s.last_name, s.gender, s.birth_date,
-				   se.distance, ss.stroke
+				   se.id, se.distance, ss.stroke
 			from swimmer_best_time sbt
 				left join swimmer s on s.id = sbt.swimmer
 				left join swim_event se on se.id = sbt.event
@@ -464,7 +481,7 @@ func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database
 	}
 	err := row.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated,
 		&bestTime.Swimmer.ID, &bestTime.Swimmer.Swimmer.FirstName, &bestTime.Swimmer.Swimmer.LastName, &bestTime.Swimmer.Swimmer.Gender, &bestTime.Swimmer.Swimmer.BirthDate,
-		&bestTime.Event.Distance, &bestTime.Event.Style.Stroke)
+		&bestTime.Event.ID, &bestTime.Event.Distance, &bestTime.Event.Style.Stroke)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil

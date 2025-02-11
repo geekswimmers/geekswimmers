@@ -825,20 +825,46 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
-	eventId, _ := strconv.ParseInt(req.PostForm.Get("event"), 10, 64)
+	id = req.URL.Query().Get(":bestId")
+	bestId, _ := strconv.ParseInt(id, 10, 64)
+	swimmerBestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
+
 	minute, _ := strconv.Atoi(req.PostForm.Get("minute"))
 	second, _ := strconv.Atoi(req.PostForm.Get("second"))
 	millisecond, _ := strconv.Atoi(req.PostForm.Get("millisecond"))
+	bestTime := utils.ToMiliseconds(minute, second, millisecond)
+
+	var eventId int64
+	var course string
+	if swimmerBestTime == nil {
+		eventId, _ = strconv.ParseInt(req.PostForm.Get("event"), 10, 64)
+		course = req.PostForm.Get("course")
+
+		event := swimming.Event{
+			ID: eventId,
+		}
+		swimmerBestTime = &SwimmerBestTime{
+			Swimmer:  *swimmer,
+			Event:    event,
+			Course:   course,
+			BestTime: bestTime,
+		}
+	} else {
+		eventId = swimmerBestTime.Event.ID
+		course = swimmerBestTime.Course
+		swimmerBestTime.BestTime = bestTime
+	}
 
 	data := &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		Event:            eventId,
-		Course:           req.PostForm.Get("course"),
+		Course:           course,
 		Minute:           minute,
 		Second:           second,
 		Millisecond:      millisecond,
 		Swimmer:          swimmer,
+		SwimmerBestTime:  swimmerBestTime,
 	}
 
 	if !data.valid() {
@@ -854,20 +880,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 		return
 	}
 
-	event := swimming.Event{
-		ID: eventId,
-	}
-
-	bestTime := utils.ToMiliseconds(data.Minute, data.Second, data.Millisecond)
-
-	swimmerBestTime := &SwimmerBestTime{
-		Swimmer:  *data.Swimmer,
-		Event:    event,
-		Course:   data.Course,
-		BestTime: bestTime,
-	}
-
-	_, err = insertSwimmerBestTime(swimmerBestTime, uc.DB)
+	_, err = saveSwimmerBestTime(swimmerBestTime, uc.DB)
 	if err != nil {
 		log.Printf("Error saving the best time: %v", err)
 		html := utils.GetTemplateWithFunctions("base", "swimmer-besttime-form", template.FuncMap{

@@ -20,7 +20,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form id="signup-form" method="post" action="/profile/swimmers/{{.Swimmer.ID}}/besttimes/form/">
+            <form id="signup-form" method="post" action="/profile/swimmers/{{.Swimmer.ID}}/besttimes/{{if .SwimmerBestTime}}{{.SwimmerBestTime.ID}}/{{end}}form/">
                 {{if .Error }}
                     <div class="alert alert-warning" role="alert">
                         {{html .Error}}
