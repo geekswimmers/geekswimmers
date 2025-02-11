@@ -15,6 +15,9 @@ func (uc *Controller) EventsResource(res http.ResponseWriter, req *http.Request)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
 	events, err := findSwimmerMissingBestTimes(swimmer, course, uc.DB)
+	if err != nil {
+		log.Printf("swimming.EventsResource: %v", err)
+	}
 
 	evts, err := json.Marshal(events)
 	if err != nil {
@@ -23,5 +26,8 @@ func (uc *Controller) EventsResource(res http.ResponseWriter, req *http.Request)
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
-	res.Write(evts)
+	_, err = res.Write(evts)
+	if err != nil {
+		log.Printf("swimming.EventsResource: %v", err)
+	}
 }

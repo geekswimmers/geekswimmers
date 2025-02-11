@@ -873,6 +873,10 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 			"Title": utils.Title,
 		})
 		data.Events, err = findSwimmerMissingBestTimes(swimmer, swimming.DefaultCourse, uc.DB)
+		if err != nil {
+			log.Printf("home.events.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
 		err = html.Execute(res, data)
 		if err != nil {
 			log.Print(err)
@@ -890,6 +894,10 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 			your best time at this moment. Please, trying again later. 
 			Thank you for your understanding.`
 		data.Events, err = findSwimmerMissingBestTimes(swimmer, swimming.DefaultCourse, uc.DB)
+		if err != nil {
+			log.Printf("home.events.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
 		err = html.Execute(res, data)
 		if err != nil {
 			log.Print(err)
