@@ -49,12 +49,12 @@
                     {{range .Swimmers}}
                         <tr>
                             <td>{{if .LinkApproved}}
-                                    <a href="/profile/swimmers/{{.ID}}">{{.FirstName}} {{.LastName}}</a>
+                                    <a href="/profile/swimmers/{{.ID}}">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</a>
                                 {{else}}
-                                    {{.FirstName}} {{.LastName}}
+                                    {{.Swimmer.FirstName}} {{.Swimmer.LastName}}
                                 {{end}}</td>
-                            <td>{{.BirthDate.Time.Format "Jan 02, 2006"}}</td>
-                            <td>{{.Gender.String | Title}}</td>
+                            <td>{{.Swimmer.BirthDate.Time.Format "Jan 02, 2006"}}</td>
+                            <td>{{.Swimmer.Gender.String | Title}}</td>
                         </tr>
                     {{else}}
                         <tr>
