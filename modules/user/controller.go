@@ -908,7 +908,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	if sessionData.Role == "SWIMMER" {
 		http.Redirect(res, req, "/profile/swimmers/", http.StatusSeeOther)
 	} else {
-		http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+		http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/%d/", swimmer.ID), http.StatusSeeOther)
 	}
 }
 
