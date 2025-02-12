@@ -45,3 +45,16 @@ function toTitleCase(str) {
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
     );
 }
+
+function deleteBestTime(swimmerId, bestTimeId) {
+    fetch('/profile/swimmers/'+ swimmerId +'/besttimes/'+ bestTimeId +'/', { method: 'DELETE' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            location.href = '/profile/swimmers/'+ swimmerId +'/';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}

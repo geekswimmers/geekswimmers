@@ -115,6 +115,17 @@ func saveSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64,
 	return lastInsertId, nil
 }
 
+func deleteSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) error {
+	stm := `delete from swimmer_best_time where id = $1 and swimmer = $2`
+
+	_, err := db.Exec(context.Background(), stm, bestTime.ID, bestTime.Swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.DeleteSwimmerBestTime(%v, %v): %v", bestTime.ID, bestTime.Swimmer.ID, err)
+	}
+
+	return nil
+}
+
 func updateProfile(userAccount *UserAccount, db storage.Database) error {
 	stm := `update user_account 
 			set first_name = $1,
@@ -465,7 +476,6 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swimmer
 
 func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database) *SwimmerBestTime {
 	stm := `select sbt.id, sbt.course, sbt.best_time, sbt.updated,
-				   s.id, s.first_name, s.last_name, s.gender, s.birth_date,
 				   se.id, se.distance, ss.stroke
 			from swimmer_best_time sbt
 				left join swimmer s on s.id = sbt.swimmer
@@ -475,12 +485,9 @@ func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database
 	row := db.QueryRow(context.Background(), stm, bestId, swimmer.ID)
 
 	bestTime := &SwimmerBestTime{
-		Swimmer: UserSwimmer{
-			Swimmer: &swimming.Swimmer{},
-		},
+		Swimmer: *swimmer,
 	}
 	err := row.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated,
-		&bestTime.Swimmer.ID, &bestTime.Swimmer.Swimmer.FirstName, &bestTime.Swimmer.Swimmer.LastName, &bestTime.Swimmer.Swimmer.Gender, &bestTime.Swimmer.Swimmer.BirthDate,
 		&bestTime.Event.ID, &bestTime.Event.Distance, &bestTime.Event.Style.Stroke)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

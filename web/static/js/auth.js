@@ -13,7 +13,7 @@ function checkStrength(password) {
         passwordStrengthLabel.textContent = "Regular";
     } else if (password.length === 0) {
         passwordStrength.src = "/static/images/password-empty.svg";
-        passwordStrengthLabel.textContent = "Empty";
+        passwordStrengthLabel.textContent = "";
     } else {
         passwordStrength.src = "/static/images/password-weak.svg";
         passwordStrengthLabel.textContent = "Weak";

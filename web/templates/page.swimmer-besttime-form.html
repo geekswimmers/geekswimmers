@@ -82,7 +82,7 @@
                         <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                     </svg> Save
                 </button>
-                <a class="btn btn-secondary" href="/profile/{{if eq .SessionData.Role "SWIMMER"}}swimmers/{{end}}" role="button">Cancel</a>
+                <a class="btn btn-secondary" href="/profile/swimmers/{{.SwimmerBestTime.Swimmer.ID}}/" role="button">Cancel</a>
             </form>
         </div>
     </div>
