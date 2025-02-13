@@ -924,26 +924,26 @@ func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Reque
 		log.Print(err)
 	}
 
-	context := &swimmerData{
+	data := &swimmerData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
 		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
 	}
 
 	// Validates email
-	if !messaging.IsEmailAddressValid(context.Email) {
-		log.Printf("Invalid email address: %v", context.Email)
-		context.ErrorEmail = "Invalid email address."
+	if !messaging.IsEmailAddressValid(data.Email) {
+		log.Printf("Invalid email address: %v", data.Email)
+		data.ErrorEmail = "Invalid email address."
 	}
 
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	context.FoundSwimmers, err = findLinkableSwimmerByEmail(context.Email, parent, uc.DB)
+	data.FoundSwimmers, err = findLinkableSwimmerByEmail(data.Email, parent, uc.DB)
 	if err != nil {
 		log.Printf("Error finding swimmers: %v", err)
 	}
 
 	html := utils.GetTemplate("base", "swimmer-form")
-	if err := html.Execute(res, context); err != nil {
+	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer form: %v", err)
 	}
 }

@@ -49,9 +49,7 @@ type UserSwimmer struct {
 	Swimmer       *swimming.Swimmer
 	UserAccount   *UserAccount
 	UserAccountID sql.NullInt64
-
-	// Transient
-	LinkApproved bool
+	LinkApproval  string
 }
 
 type SwimmerBestTime struct {

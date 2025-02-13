@@ -48,7 +48,7 @@
                 <tbody>
                     {{range .Swimmers}}
                         <tr>
-                            <td>{{if .LinkApproved}}
+                            <td>{{if eq .LinkApproval "APPROVED"}}
                                     <a href="/profile/swimmers/{{.ID}}">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</a>
                                 {{else}}
                                     {{.Swimmer.FirstName}} {{.Swimmer.LastName}}

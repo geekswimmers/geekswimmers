@@ -400,15 +400,15 @@ func findLinkableSwimmerByEmail(email string, parent *UserAccount, db storage.Da
 }
 
 func linkSwimmersToParent(parent *UserAccount, swimmers []*UserSwimmer, db storage.Database) error {
-	stm := `insert into parent_swimmer (parent, swimmer, approved) values ($1, $2, $3)`
+	stm := `insert into parent_swimmer (parent, swimmer, approval) values ($1, $2, $3)`
 
 	for _, swimmer := range swimmers {
-		approved := false
+		approval := "PENDING"
 		if !swimmer.UserAccountID.Valid {
-			approved = true
+			approval = "APPROVED"
 		}
 
-		_, err := db.Exec(context.Background(), stm, parent.ID, swimmer.ID, approved)
+		_, err := db.Exec(context.Background(), stm, parent.ID, swimmer.ID, approval)
 		if err != nil {
 			return fmt.Errorf("user.linkSwimmersToParent(%v, %v): %v", parent.ID, swimmer.ID, err)
 		}
@@ -418,11 +418,11 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*UserSwimmer, db stora
 }
 
 func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimmer, error) {
-	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, pa.approved
-			from swimmer a
-			    join parent_swimmer pa on a.id = pa.swimmer
-			where pa.parent = $1
-			order by a.first_name`
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, ps.approval
+			from swimmer s
+			    join parent_swimmer ps on s.id = ps.swimmer
+			where ps.parent = $1
+			order by s.first_name`
 
 	rows, err := db.Query(context.Background(), stm, parent.ID)
 	if err != nil {
@@ -436,7 +436,7 @@ func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimme
 			Swimmer: &swimming.Swimmer{},
 		}
 		err = rows.Scan(&swimmer.ID, &swimmer.Swimmer.FirstName, &swimmer.Swimmer.LastName, &swimmer.Swimmer.BirthDate,
-			&swimmer.Swimmer.Gender, &swimmer.LinkApproved)
+			&swimmer.Swimmer.Gender, &swimmer.LinkApproval)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("FindSwimmersParent: %v", err)
 		}
