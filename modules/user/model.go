@@ -19,6 +19,10 @@ const (
 
 	StatusSucceed = "SUCCEED"
 	StatusFailed  = "FAILED"
+
+	ParentSwimmerApprovalPending   = "PENDING"
+	ParentSwimmerApprovalAccepted  = "ACCEPTED"
+	ParentSwimmerApprovalDismissed = "DISMISSED"
 )
 
 type UserAccount struct {
@@ -50,6 +54,13 @@ type UserSwimmer struct {
 	UserAccount   *UserAccount
 	UserAccountID sql.NullInt64
 	LinkApproval  string
+}
+
+type ParentSwimmer struct {
+	ID       int64
+	Parent   *UserAccount
+	Swimmer  *UserSwimmer
+	Approval string
 }
 
 type SwimmerBestTime struct {

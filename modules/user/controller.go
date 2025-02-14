@@ -698,6 +698,11 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		swimmer = FindSwimmerByID(swimmerId, uc.DB)
 	}
 
+	linkRequests, err := findLinkRequests(swimmer, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmerView: %v", err)
+	}
+
 	bestTimes, err := findSwimmerBestTimes(swimmer, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmerView: %v", err)
@@ -708,6 +713,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		SessionData:      sessionData,
 		Swimmer:          swimmer,
 		BestTimes:        bestTimes,
+		LinkRequests:     linkRequests,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer",

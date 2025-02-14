@@ -239,6 +239,17 @@ func ResetUserAccountSignOffPeriod(userAccount *UserAccount, db storage.Database
 	return nil
 }
 
+func approvalParentLink(swimmer *UserSwimmer, linkId int64, approval string, db storage.Database) error {
+	stm := `update parent_swimmer set approval = $1 where id = $2 and swimmer = $3`
+
+	_, err := db.Exec(context.Background(), stm, approval, linkId, swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.approvalParentLink(%v, %v, %v): %v", linkId, approval, swimmer.ID, err)
+	}
+
+	return nil
+}
+
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	stm := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
              from user_account where email = $1`
@@ -403,9 +414,9 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*UserSwimmer, db stora
 	stm := `insert into parent_swimmer (parent, swimmer, approval) values ($1, $2, $3)`
 
 	for _, swimmer := range swimmers {
-		approval := "PENDING"
+		approval := ParentSwimmerApprovalPending
 		if !swimmer.UserAccountID.Valid {
-			approval = "APPROVED"
+			approval = ParentSwimmerApprovalAccepted
 		}
 
 		_, err := db.Exec(context.Background(), stm, parent.ID, swimmer.ID, approval)
@@ -417,14 +428,42 @@ func linkSwimmersToParent(parent *UserAccount, swimmers []*UserSwimmer, db stora
 	return nil
 }
 
+func findLinkRequests(swimmer *UserSwimmer, db storage.Database) ([]*ParentSwimmer, error) {
+	stm := `select ps.id, ua.first_name , ua.last_name
+			from parent_swimmer ps
+				left join user_account ua on ua.id = ps.parent
+			where swimmer = $1 and approval = $2`
+
+	rows, err := db.Query(context.Background(), stm, swimmer.ID, ParentSwimmerApprovalPending)
+	if err != nil {
+		return nil, fmt.Errorf("user.findLinkRequests(%v): %v", swimmer.ID, err)
+	}
+	defer rows.Close()
+
+	var linkRequests []*ParentSwimmer
+	for rows.Next() {
+		request := &ParentSwimmer{
+			Swimmer: swimmer,
+			Parent:  &UserAccount{},
+		}
+		err := rows.Scan(&request.ID, &request.Parent.FirstName, &request.Parent.LastName)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("user.findLinkRequests(%v): %v", swimmer.ID, err)
+		}
+		linkRequests = append(linkRequests, request)
+	}
+
+	return linkRequests, nil
+}
+
 func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimmer, error) {
 	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, ps.approval
 			from swimmer s
 			    join parent_swimmer ps on s.id = ps.swimmer
-			where ps.parent = $1
+			where ps.parent = $1 and ps.approval != $2
 			order by s.first_name`
 
-	rows, err := db.Query(context.Background(), stm, parent.ID)
+	rows, err := db.Query(context.Background(), stm, parent.ID, ParentSwimmerApprovalDismissed)
 	if err != nil {
 		return nil, fmt.Errorf("FindSwimmersParent: %v", err)
 	}
@@ -445,6 +484,30 @@ func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimme
 
 	return swimmers, nil
 }
+
+//func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Database) *ParentSwimmer {
+//	stm := `select ps.id, ps.approval
+//			from parent_swimmer ps
+//				join user_account ua on ps.parent = ua.id
+//			where ua.email = $1 and ps.swimmer = $2`
+//
+//	row := db.QueryRow(context.Background(), stm, parent.ID, swimmer.ID)
+//
+//	link := &ParentSwimmer{
+//		Parent:  parent,
+//		Swimmer: swimmer,
+//	}
+//	err := row.Scan(&link.ID, &link.Approval)
+//	if err != nil {
+//		if errors.Is(err, sql.ErrNoRows) {
+//			return nil
+//		}
+//		log.Printf("findParentSwimmer: %v", err)
+//		return nil
+//	}
+//
+//	return link
+//}
 
 func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*SwimmerBestTime, error) {
 	stm := `select sbt.id, sbt.course, best_time, updated,
