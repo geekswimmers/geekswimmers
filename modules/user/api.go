@@ -73,6 +73,13 @@ func (uc *Controller) SwimmerDelete(res http.ResponseWriter, req *http.Request) 
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
 
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	parentSwimmer := findParentSwimmer(parent, swimmer, uc.DB)
+	if parentSwimmer == nil {
+		http.Error(res, "Permission denied", http.StatusUnauthorized)
+		return
+	}
+
 	err := deleteSwimmer(swimmer, uc.DB)
 	if err != nil {
 		log.Printf("Error deleting the swimmer: %v", err)
