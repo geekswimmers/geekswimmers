@@ -691,11 +691,21 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 
 	var swimmer *UserSwimmer
 	if sessionData.Role == RoleSwimmer {
+		// The swimmer is the user itself
 		swimmer = FindSwimmerByEmail(sessionData.Email, uc.DB)
 	} else {
+		// The swimmer is a child of the user
 		id := req.URL.Query().Get(":id")
 		swimmerId, _ := strconv.ParseInt(id, 10, 64)
 		swimmer = FindSwimmerByID(swimmerId, uc.DB)
+
+		parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+		parentSwimmer := findParentSwimmer(parent, swimmer, uc.DB)
+
+		if parentSwimmer == nil || parentSwimmer.Approval != ParentSwimmerApprovalAccepted {
+			http.Error(res, "The swimmer is not related to the parent.", http.StatusForbidden)
+			return
+		}
 	}
 
 	linkRequests, err := findLinkRequests(swimmer, uc.DB)

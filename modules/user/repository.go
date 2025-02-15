@@ -485,29 +485,28 @@ func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimme
 	return swimmers, nil
 }
 
-//func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Database) *ParentSwimmer {
-//	stm := `select ps.id, ps.approval
-//			from parent_swimmer ps
-//				join user_account ua on ps.parent = ua.id
-//			where ua.email = $1 and ps.swimmer = $2`
-//
-//	row := db.QueryRow(context.Background(), stm, parent.ID, swimmer.ID)
-//
-//	link := &ParentSwimmer{
-//		Parent:  parent,
-//		Swimmer: swimmer,
-//	}
-//	err := row.Scan(&link.ID, &link.Approval)
-//	if err != nil {
-//		if errors.Is(err, sql.ErrNoRows) {
-//			return nil
-//		}
-//		log.Printf("findParentSwimmer: %v", err)
-//		return nil
-//	}
-//
-//	return link
-//}
+func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Database) *ParentSwimmer {
+	stm := `select ps.id, ps.approval
+			from parent_swimmer ps
+			where ps.parent = $1 and ps.swimmer = $2`
+
+	row := db.QueryRow(context.Background(), stm, parent.ID, swimmer.ID)
+
+	link := &ParentSwimmer{
+		Parent:  parent,
+		Swimmer: swimmer,
+	}
+	err := row.Scan(&link.ID, &link.Approval)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil
+		}
+		log.Printf("findParentSwimmer: %v", err)
+		return nil
+	}
+
+	return link
+}
 
 func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*SwimmerBestTime, error) {
 	stm := `select sbt.id, sbt.course, best_time, updated,
