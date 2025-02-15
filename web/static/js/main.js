@@ -59,6 +59,19 @@ function deleteBestTime(swimmerId, bestTimeId) {
         });
 }
 
+function deleteSwimmer(swimmerId) {
+    fetch('/profile/swimmers/'+ swimmerId +'/', { method: 'DELETE' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok' + response.Error);
+            }
+            location.href = '/profile/';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
 function acceptLinkRequest(swimmerId, linkId) {
     fetch('/api/profile/swimmers/'+ swimmerId +'/parentlink/'+ linkId +'/', { method: 'PUT' })
     .then(response => {

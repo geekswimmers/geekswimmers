@@ -103,6 +103,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Del("/profile/swimmers/:id/besttimes/:bestId/", s.handleRequest(userController.SwimmerBestTimeDelete))
 	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/", s.handleRequest(userController.SwimmerBestTimeView))
 	s.Router.Get("/profile/swimmers/:id/", s.handleRequest(userController.ProfileSwimmerView))
+	s.Router.Del("/profile/swimmers/:id/", s.handleRequest(userController.SwimmerDelete))
 	s.Router.Get("/profile/swimmers/", s.handleRequest(userController.ProfileSwimmerView))
 	s.Router.Get("/profile/edit/", s.handleRequest(userController.ProfileEditView))
 	s.Router.Post("/profile/edit/", s.handleRequest(userController.ProfileEditSave))

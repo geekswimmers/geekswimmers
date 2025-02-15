@@ -61,6 +61,9 @@ type ParentSwimmer struct {
 	Parent   *UserAccount
 	Swimmer  *UserSwimmer
 	Approval string
+
+	// Transient
+	Responsible bool
 }
 
 type SwimmerBestTime struct {

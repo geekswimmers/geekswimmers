@@ -690,6 +690,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 	}
 
 	var swimmer *UserSwimmer
+	var parentSwimmer *ParentSwimmer
 	if sessionData.Role == RoleSwimmer {
 		// The swimmer is the user itself
 		swimmer = FindSwimmerByEmail(sessionData.Email, uc.DB)
@@ -700,7 +701,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		swimmer = FindSwimmerByID(swimmerId, uc.DB)
 
 		parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-		parentSwimmer := findParentSwimmer(parent, swimmer, uc.DB)
+		parentSwimmer = findParentSwimmer(parent, swimmer, uc.DB)
 
 		if parentSwimmer == nil || parentSwimmer.Approval != ParentSwimmerApprovalAccepted {
 			http.Error(res, "The swimmer is not related to the parent.", http.StatusForbidden)
@@ -724,6 +725,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		Swimmer:          swimmer,
 		BestTimes:        bestTimes,
 		LinkRequests:     linkRequests,
+		ParentSwimmer:    parentSwimmer,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer",

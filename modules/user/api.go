@@ -62,6 +62,26 @@ func (uc *Controller) SwimmerBestTimeDelete(res http.ResponseWriter, req *http.R
 	res.WriteHeader(http.StatusOK)
 }
 
+func (uc *Controller) SwimmerDelete(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Error(res, "Permission denied", http.StatusUnauthorized)
+		return
+	}
+
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	err := deleteSwimmer(swimmer, uc.DB)
+	if err != nil {
+		log.Printf("Error deleting the swimmer: %v", err)
+		res.WriteHeader(http.StatusInternalServerError)
+	}
+
+	res.WriteHeader(http.StatusOK)
+}
+
 func (uc *Controller) AcceptParentLink(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {

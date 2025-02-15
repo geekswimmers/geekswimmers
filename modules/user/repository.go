@@ -115,12 +115,53 @@ func saveSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64,
 	return lastInsertId, nil
 }
 
+func deleteParentsSwimmer(swimmer *UserSwimmer, db storage.Database) error {
+	stm := `delete from parent_swimmer where swimmer = $1`
+
+	_, err := db.Exec(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.DeleteParentsSwimmer(%v): %v", swimmer.ID, err)
+	}
+
+	return nil
+}
+
 func deleteSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) error {
 	stm := `delete from swimmer_best_time where id = $1 and swimmer = $2`
 
 	_, err := db.Exec(context.Background(), stm, bestTime.ID, bestTime.Swimmer.ID)
 	if err != nil {
 		return fmt.Errorf("user.DeleteSwimmerBestTime(%v, %v): %v", bestTime.ID, bestTime.Swimmer.ID, err)
+	}
+
+	return nil
+}
+
+func deleteSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) error {
+	stm := `delete from swimmer_best_time where swimmer = $1`
+
+	_, err := db.Exec(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.DeleteSwimmerBestTimes(%v): %v", swimmer.ID, err)
+	}
+
+	return nil
+}
+
+func deleteSwimmer(swimmer *UserSwimmer, db storage.Database) error {
+	if err := deleteParentsSwimmer(swimmer, db); err != nil {
+		return err
+	}
+
+	if err := deleteSwimmerBestTimes(swimmer, db); err != nil {
+		return err
+	}
+
+	stm := `delete from swimmer where id = $1`
+
+	_, err := db.Exec(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return fmt.Errorf("user.DeleteSwimmer(%v): %v", swimmer.ID, err)
 	}
 
 	return nil
@@ -486,8 +527,9 @@ func findSwimmersParent(parent *UserAccount, db storage.Database) ([]*UserSwimme
 }
 
 func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Database) *ParentSwimmer {
-	stm := `select ps.id, ps.approval
+	stm := `select ps.id, ps.approval, s.user_account
 			from parent_swimmer ps
+				left join swimmer s on s.id = ps.swimmer
 			where ps.parent = $1 and ps.swimmer = $2`
 
 	row := db.QueryRow(context.Background(), stm, parent.ID, swimmer.ID)
@@ -496,13 +538,17 @@ func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Dat
 		Parent:  parent,
 		Swimmer: swimmer,
 	}
-	err := row.Scan(&link.ID, &link.Approval)
+	err := row.Scan(&link.ID, &link.Approval, &link.Swimmer.UserAccountID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
 		}
 		log.Printf("findParentSwimmer: %v", err)
 		return nil
+	}
+
+	if !link.Swimmer.UserAccountID.Valid {
+		link.Responsible = true
 	}
 
 	return link

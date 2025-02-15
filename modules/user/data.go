@@ -87,6 +87,7 @@ type swimmerData struct {
 	FoundSwimmers    []*UserSwimmer
 	BestTimes        []*SwimmerBestTime
 	LinkRequests     []*ParentSwimmer
+	ParentSwimmer    *ParentSwimmer
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData
