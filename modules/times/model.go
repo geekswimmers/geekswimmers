@@ -3,18 +3,12 @@ package times
 import (
 	"database/sql"
 	"fmt"
+	"geekswimmers/modules/swimming"
 	"geekswimmers/utils"
 	"time"
 )
 
 const (
-	JurisdictionLevelCountry  = "COUNTRY"
-	JurisdictionLevelProvince = "PROVINCE"
-	JurisdictionLevelRegion   = "REGION"
-	JurisdictionLevelCity     = "CITY"
-	JurisdictionLevelClub     = "CLUB"
-	JurisdictionLevelMeet     = "MEET"
-
 	DefaultStroke = "FREESTYLE"
 )
 
@@ -23,50 +17,6 @@ type SwimSeason struct {
 	Name      string
 	StartDate time.Time
 	EndDate   time.Time
-}
-
-type Jurisdiction struct {
-	ID       int64
-	Country  string
-	Province *string
-	Region   *string
-	City     *string
-	Meet     *string
-	Club     *string
-
-	// Transient
-	Title    string
-	SubTitle string
-}
-
-func (jurisdiction *Jurisdiction) SetTitle() {
-	if jurisdiction.Meet != nil {
-		jurisdiction.Title = *jurisdiction.Meet
-	} else if jurisdiction.Club != nil {
-		jurisdiction.Title = *jurisdiction.Club
-	} else if jurisdiction.City != nil {
-		jurisdiction.Title = *jurisdiction.City
-	} else if jurisdiction.Region != nil {
-		jurisdiction.Title = *jurisdiction.Region
-	} else if jurisdiction.Province != nil {
-		jurisdiction.Title = *jurisdiction.Province
-	} else {
-		jurisdiction.Title = jurisdiction.Country
-	}
-}
-
-func (jurisdiction *Jurisdiction) SetSubTitle() {
-	if jurisdiction.Meet != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v, %v - %v", *jurisdiction.Club, *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Club != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v - %v", *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.City != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v - %v", *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Region != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v - %v", *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Province != nil {
-		jurisdiction.SubTitle = jurisdiction.Country
-	}
 }
 
 type Source struct {
@@ -80,7 +30,7 @@ type TimeStandard struct {
 	Name         string
 	MinAgeTime   *int64
 	MaxAgeTime   *int64
-	Jurisdiction Jurisdiction
+	Jurisdiction swimming.Jurisdiction
 	Open         bool
 	Source       Source
 	Previous     *TimeStandard
@@ -110,6 +60,7 @@ type Meet struct {
 	TimeStandard   TimeStandard
 	MinAgeEnforced bool
 	MaxAgeEnforced bool
+	Organizer      swimming.Club
 
 	// Transient
 	Age          int64
@@ -149,7 +100,7 @@ func (definition *RecordDefinition) AgeRange() string {
 
 type RecordSet struct {
 	ID           int64
-	Jurisdiction Jurisdiction
+	Jurisdiction swimming.Jurisdiction
 	Source       Source
 }
 

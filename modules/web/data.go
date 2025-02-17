@@ -3,7 +3,6 @@ package web
 import (
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
-	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 )
@@ -11,7 +10,7 @@ import (
 type homeViewData struct {
 	Articles         []*content.Article
 	Updates          []*content.ServiceUpdate
-	Jurisdictions    []*times.Jurisdiction
+	Jurisdictions    []*swimming.Jurisdiction
 	Events           []*swimming.Event
 	Jurisdiction     string
 	BirthDate        string

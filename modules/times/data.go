@@ -1,6 +1,7 @@
 package times
 
 import (
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"time"
@@ -61,7 +62,7 @@ type recordHistoryViewData struct {
 	RecordDefinition *RecordDefinition
 	RecordSet        RecordSet
 	Records          []*Record
-	Jurisdiction     Jurisdiction
+	Jurisdiction     swimming.Jurisdiction
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
 }

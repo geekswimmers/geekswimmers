@@ -3,7 +3,6 @@ package web
 import (
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
-	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	htemplate "html/template"
@@ -27,7 +26,7 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	jurisdictions, err := times.FindJurisdictionsByLevel(times.JurisdictionLevelRegion, wc.DB)
+	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, wc.DB)
 	if err != nil {
 		log.Printf("home.jurisdictions.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

@@ -31,48 +31,6 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 	return swimSeasons, nil
 }
 
-func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdiction, error) {
-	stm := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
-	         from jurisdiction j`
-
-	if level == JurisdictionLevelMeet {
-		stm = fmt.Sprintf("%v where j.meet is not null", stm)
-	} else if level == JurisdictionLevelClub {
-		stm = fmt.Sprintf("%v where j.club is not null and j.meet is null", stm)
-	} else if level == JurisdictionLevelCity {
-		stm = fmt.Sprintf("%v where j.city is not null and j.club is null", stm)
-	} else if level == JurisdictionLevelRegion {
-		stm = fmt.Sprintf("%v where j.region is not null and j.city is null", stm)
-	} else if level == JurisdictionLevelProvince {
-		stm = fmt.Sprintf("%v where j.province is not null and j.region is null", stm)
-	} else if level == JurisdictionLevelCountry {
-		stm = fmt.Sprintf("%v where j.country is not null and j.province is null", stm)
-	} else {
-		return []*Jurisdiction{}, nil
-	}
-	stm = fmt.Sprintf("%v order by country, province, region, city, club, meet", stm)
-
-	rows, err := db.Query(context.Background(), stm)
-	if err != nil {
-		return nil, fmt.Errorf("findJurisdictionsByLevel: %v", err)
-	}
-	defer rows.Close()
-
-	var jurisdictions []*Jurisdiction
-	for rows.Next() {
-		jurisdiction := &Jurisdiction{}
-		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findJurisdictionsByLevel: %v", err)
-		}
-		jurisdiction.SetTitle()
-		jurisdiction.SetSubTitle()
-		jurisdictions = append(jurisdictions, jurisdiction)
-	}
-
-	return jurisdictions, nil
-}
-
 func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, error) {
 	stm := `select rd.gender, rd.course, rd.style, rd.distance, rd.min_age, rd.max_age
 			from record_definition rd
