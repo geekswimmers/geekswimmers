@@ -30,9 +30,15 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 	sessionData := storage.NewSessionData(req)
 
+	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+	if err != nil {
+		log.Printf("Error loading jurisdictions: %v", err)
+	}
+
 	data := &signUpData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
+		Jurisdictions:    jurisdictions,
 		ReCaptchaSiteKey: reCaptchaSiteKey,
 	}
 
@@ -41,7 +47,7 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 	}
 
 	html := utils.GetTemplate("base", "signup")
-	err := html.Execute(res, data)
+	err = html.Execute(res, data)
 	if err != nil {
 		log.Print(err)
 	}
@@ -55,118 +61,57 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 
 	sessionData := storage.NewSessionData(req)
 	var html *template.Template
-	context := &signUpData{
-		SessionData:      sessionData,
-		BaseTemplateData: uc.BaseTemplateData,
-		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
-		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
-		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
-		Role:             req.PostForm.Get("role"),
-		BirthDate:        req.PostForm.Get("birthDate"),
-		Gender:           req.PostForm.Get("gender"),
+
+	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
+	if err != nil {
+		jurisdiction = 0
 	}
 
-	// Validates firstName
-	if context.FirstName == "" {
-		log.Printf("Invalid first name: %v", context.FirstName)
-		context.ErrorFirstName = "First Name is empty."
+	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	if err != nil {
+		club = 0
 	}
 
-	// Validates lastName
-	if context.LastName == "" {
-		log.Printf("Invalid last name: %v", context.LastName)
-		context.ErrorLastName = "Last Name is empty."
+	data := &signUpData{
+		SessionData:       sessionData,
+		BaseTemplateData:  uc.BaseTemplateData,
+		Agreed:            req.PostForm.Get("agreed"),
+		Email:             strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
+		FirstName:         strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:          strings.TrimSpace(req.PostForm.Get("lastName")),
+		Role:              req.PostForm.Get("role"),
+		BirthDate:         req.PostForm.Get("birthDate"),
+		Gender:            req.PostForm.Get("gender"),
+		Jurisdiction:      jurisdiction,
+		Club:              club,
+		UserAccountExists: userAccountExists(uc.DB),
 	}
 
-	// Validates email
-	if !messaging.IsEmailAddressValid(context.Email) {
-		log.Printf("Invalid email address: %v", context.Email)
-		context.ErrorEmail = "Invalid email address."
-	} else {
-		userAccount := FindUserAccountByEmail(context.Email, uc.DB)
-		if userAccount != nil {
-			context.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
-		}
+	if !data.UserAccountExists {
+		data.Role = RoleAdmin
 	}
 
-	// Validates role
-	if context.Role == "" || (context.Role != RoleParent && context.Role != RoleSwimmer) {
-		log.Printf("Invalid role: %v", context.Role)
-		context.ErrorRole = "Select a role."
-	}
-	if !userAccountExists(uc.DB) {
-		context.Role = RoleAdmin
-	}
-
-	userAccount := &UserAccount{
-		Email:     context.Email,
-		FirstName: context.FirstName,
-		LastName:  context.LastName,
-		Role:      context.Role,
-	}
-
-	var swimmer *UserSwimmer
-
-	if userAccount.Role == RoleSwimmer {
-		swimmer = &UserSwimmer{
-			Swimmer: &swimming.Swimmer{
-				FirstName: context.FirstName,
-				LastName:  context.LastName,
-			},
-		}
-
-		// Validates birthDate
-		if context.BirthDate == "" {
-			log.Printf("Birth date is required.")
-			context.ErrorBirthDate = "Birth date is required."
-		}
-		if context.BirthDate != "" {
-			birthDate, err := time.Parse("2006-01-02", context.BirthDate)
-			if err != nil {
-				log.Printf("Invalid birth date: %v", context.BirthDate)
-				context.ErrorBirthDate = "Invalid birth date."
-			} else {
-				swimmer.Swimmer.BirthDate = sql.NullTime{
-					Time: birthDate,
-				}
-			}
-
-			// Validates age
-			age := swimmer.Swimmer.AgeAt(time.Now())
-			if age < 13 {
-				log.Printf("Invalid age: %v", age)
-				context.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
-			}
-		}
-
-		// Validates gender
-		if (context.Gender == "" || (context.Gender != swimming.GenderFemale && context.Gender != swimming.GenderMale)) && context.Role == RoleSwimmer {
-			log.Printf("Invalid Gender: %v", context.Gender)
-			context.ErrorGender = "Select your gender."
-		} else {
-			swimmer.Swimmer.Gender = sql.NullString{
-				String: context.Gender,
-			}
-		}
-	}
-
-	// Validates terms agreement
-	agreed := req.PostForm.Get("agreed")
-	if agreed != "on" {
-		context.ErrorAgreed = "You have to agree with our terms before creating an account."
-	}
+	data.ExistingUserAccount = FindUserAccountByEmail(data.Email, uc.DB)
 
 	// Back to the signup page in case of error.
-	if context.errorHappened() {
+	if !data.valid() {
+		jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+		}
+		data.Jurisdictions = jurisdictions
+
 		html = utils.GetTemplateWithFunctions("base", "signup", template.FuncMap{"html": utils.ToHTML})
 		log.Printf("Back to signup page with errors.")
-		context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
-		err = html.Execute(res, context)
+		data.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+		err = html.Execute(res, data)
 		if err != nil {
 			log.Print(err)
 		}
 		return
 	}
+
+	userAccount := data.createUserAccount()
 
 	reCaptcha := req.PostForm.Get("g-recaptcha-response")
 	var reCaptchaScore float32
@@ -185,11 +130,11 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Printf("Error saving the user: %v", err)
 		html = utils.GetTemplate("base", "signup")
-		context.Error = `Due to an internal error, it was not possible to create
+		data.Error = `Due to an internal error, it was not possible to create
 			your account at this moment. Please, trying again later. 
 			Thank you for your undestanding.`
-		context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
-		err = html.Execute(res, context)
+		data.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+		err = html.Execute(res, data)
 		if err != nil {
 			log.Print(err)
 		}
@@ -197,16 +142,17 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	if userAccount.Role == RoleSwimmer {
-		swimmer.UserAccount = userAccount
+		swimmer := data.createSwimmer(userAccount)
+
 		_, err = InsertSwimmer(swimmer, uc.DB)
 		if err != nil {
 			log.Printf("Error saving the swimmer: %v", err)
 			html = utils.GetTemplate("base", "signup")
-			context.Error = `Due to an internal error, it was not possible to create
+			data.Error = `Due to an internal error, it was not possible to create
 				your account at this moment. Please, trying again later. 
 				Thank you for your undestanding.`
-			context.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
-			err = html.Execute(res, context)
+			data.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+			err = html.Execute(res, data)
 			if err != nil {
 				log.Print(err)
 			}
@@ -228,7 +174,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		}
 
 		html = utils.GetTemplate("base", "signup-ok")
-		err = html.Execute(res, context)
+		err = html.Execute(res, data)
 		if err != nil {
 			log.Print(err)
 		}

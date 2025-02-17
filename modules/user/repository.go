@@ -53,8 +53,8 @@ func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error
 func InsertSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	stm := `insert into swimmer (first_name, last_name, birth_date, gender, user_account)
-			values ($1, $2, $3, $4, $5) returning id`
+	stm := `insert into swimmer (first_name, last_name, birth_date, gender, user_account, club)
+			values ($1, $2, $3, $4, $5, $6) returning id`
 
 	var userAccountId sql.NullInt64
 	if swimmer.UserAccount != nil {
@@ -71,7 +71,8 @@ func InsertSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 		swimmer.Swimmer.LastName,
 		swimmer.Swimmer.BirthDate.Time,
 		swimmer.Swimmer.Gender.String,
-		userAccountId).Scan(&lastInsertId)
+		userAccountId,
+		swimmer.Swimmer.Club.ID).Scan(&lastInsertId)
 	if err != nil {
 		return 0, fmt.Errorf("user.InsertSwimmer(%v %v): %v", swimmer.Swimmer.FirstName, swimmer.Swimmer.LastName, err)
 	}

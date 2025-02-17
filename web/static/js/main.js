@@ -16,12 +16,14 @@ function updateEventsByCourse(swimmerId) {
                     const eventsField = document.getElementById("event");
                     eventsField.innerHTML = "";
 
-                    createSelectOption(eventsField, "0", "Select...");
+                    createSelectOption(eventsField, "0", "Select...", false);
 
                     events.forEach(event => {
                         createSelectOption(eventsField,
                             event.ID,
-                            event.Distance + 'm ' + toTitleCase(event.Style.Stroke));
+                            event.Distance + 'm ' + toTitleCase(event.Style.Stroke),
+                            false
+                        );
                     });
                 })
                 .catch(error => {
@@ -32,10 +34,34 @@ function updateEventsByCourse(swimmerId) {
     }
 }
 
-function createSelectOption(selectField, value, text) {
+function updateClubsByJurisdiction(selectedId) {
+    const jurisdictionCbx = document.getElementById("jurisdiction");
+    const clubCbx = document.getElementById("club");
+    clubCbx.innerHTML = "";
+    fetch('/api/clubs/?jurisdiction=' + jurisdictionCbx.value)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(clubs => {
+            createSelectOption(clubCbx, "0", "Select...", false);
+
+            if (clubs != null) {
+                clubs.forEach(club => {
+                    const selected = club.ID == selectedId;
+                    createSelectOption(clubCbx, club.ID, club.Acronym +" - "+ club.FullName, selected);
+                });
+            }
+        });
+}
+
+function createSelectOption(selectField, value, text, selected) {
     const option = document.createElement("option");
     option.value = value;
     option.text = text;
+    option.selected = selected;
     selectField.appendChild(option);
 }
 

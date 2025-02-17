@@ -169,3 +169,29 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 
 	return jurisdictions, nil
 }
+
+func FindClubsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]*Club, error) {
+	stm := `select c.id, c.full_name, c.acronym, c.website
+	        from club c
+	        where c.jurisdiction = $1
+	        order by c.full_name`
+	rows, err := db.Query(context.Background(), stm, jurisdiction.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findClubsByJurisdiction: %v", err)
+	}
+	defer rows.Close()
+
+	var clubs []*Club
+	for rows.Next() {
+		club := &Club{
+			Jurisdiction: jurisdiction,
+		}
+		err = rows.Scan(&club.ID, &club.FullName, &club.Acronym, &club.WebSite)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findClubsByJurisdiction: %v", err)
+		}
+		clubs = append(clubs, club)
+	}
+
+	return clubs, nil
+}

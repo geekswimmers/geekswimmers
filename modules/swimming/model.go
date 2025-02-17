@@ -88,7 +88,7 @@ func (jurisdiction *Jurisdiction) SetSubTitle() {
 type Club struct {
 	ID           int64
 	FullName     string
-	Achronym     string
+	Acronym      string
 	WebSite      string
 	Jurisdiction Jurisdiction
 }

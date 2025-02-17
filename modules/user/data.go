@@ -1,39 +1,172 @@
 package user
 
 import (
+	"database/sql"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
+	"geekswimmers/utils/messaging"
+	"log"
+	"time"
 )
 
 type signUpData struct {
-	BaseTemplateData *utils.BaseTemplateData
-	BirthDate        string
-	Email            string
-	Error            string
-	ErrorAgreed      string
-	ErrorBirthDate   string
-	ErrorEmail       string
-	ErrorFirstName   string
-	ErrorGender      string
-	ErrorLastName    string
-	ErrorRole        string
-	FirstName        string
-	Gender           string
-	LastName         string
-	ReCaptchaSiteKey string
-	Role             string
-	SessionData      *storage.SessionData
+	Agreed              string
+	BaseTemplateData    *utils.BaseTemplateData
+	BirthDate           string
+	Club                int64
+	Email               string
+	Error               string
+	ErrorAgreed         string
+	ErrorBirthDate      string
+	ErrorClub           string
+	ErrorEmail          string
+	ErrorFirstName      string
+	ErrorGender         string
+	ErrorLastName       string
+	ErrorRole           string
+	FirstName           string
+	Gender              string
+	Jurisdiction        int64
+	Jurisdictions       []*swimming.Jurisdiction
+	LastName            string
+	ReCaptchaSiteKey    string
+	Role                string
+	SessionData         *storage.SessionData
+	ExistingUserAccount *UserAccount
+	UserAccountExists   bool
 }
 
-func (sud *signUpData) errorHappened() bool {
-	return len(sud.ErrorEmail) > 0 ||
-		len(sud.ErrorFirstName) > 0 ||
-		len(sud.ErrorLastName) > 0 ||
-		len(sud.ErrorAgreed) > 0 ||
-		len(sud.ErrorRole) > 0 ||
-		len(sud.ErrorBirthDate) > 0 ||
-		len(sud.ErrorGender) > 0
+func (sud *signUpData) createUserAccount() *UserAccount {
+	userAccount := &UserAccount{
+		FirstName: sud.FirstName,
+		LastName:  sud.LastName,
+		Email:     sud.Email,
+		Role:      sud.Role,
+	}
+
+	return userAccount
+}
+
+func (sud *signUpData) createSwimmer(userAccount *UserAccount) *UserSwimmer {
+	swimmer := &UserSwimmer{
+		Swimmer: &swimming.Swimmer{
+			FirstName: sud.FirstName,
+			LastName:  sud.LastName,
+		},
+	}
+
+	birthDate, err := time.Parse("2006-01-02", sud.BirthDate)
+	if err != nil {
+		log.Printf("Invalid birth date: %v", sud.BirthDate)
+		return nil
+	}
+
+	swimmer.Swimmer.BirthDate = sql.NullTime{
+		Time: birthDate,
+	}
+
+	swimmer.Swimmer.Gender = sql.NullString{
+		String: sud.Gender,
+	}
+
+	swimmer.Swimmer.Club = &swimming.Club{
+		ID: sud.Club,
+	}
+
+	swimmer.UserAccount = userAccount
+
+	return swimmer
+}
+
+func (sud *signUpData) valid() bool {
+	valid := true
+
+	// Validates firstName
+	if sud.FirstName == "" {
+		log.Printf("Invalid first name: %v", sud.FirstName)
+		sud.ErrorFirstName = "First Name is empty."
+		valid = false
+	}
+
+	// Validates lastName
+	if sud.LastName == "" {
+		log.Printf("Invalid last name: %v", sud.LastName)
+		sud.ErrorLastName = "Last Name is empty."
+		valid = false
+	}
+
+	// Validates email
+	if !messaging.IsEmailAddressValid(sud.Email) {
+		log.Printf("Invalid email address: %v", sud.Email)
+		sud.ErrorEmail = "Invalid email address."
+		valid = false
+	}
+
+	if sud.ExistingUserAccount != nil {
+		sud.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
+		valid = false
+	}
+
+	// Validates role
+	if sud.Role == "" || (sud.Role != RoleParent && sud.Role != RoleSwimmer) {
+		log.Printf("Invalid role: %v", sud.Role)
+		sud.ErrorRole = "Select a role."
+		valid = false
+	}
+
+	if sud.Role == RoleSwimmer {
+		// Validates birthDate
+		if sud.BirthDate == "" {
+			log.Printf("Birth date is required.")
+			sud.ErrorBirthDate = "Birth date is required."
+			valid = false
+		}
+		if sud.BirthDate != "" {
+			birthDate, err := time.Parse("2006-01-02", sud.BirthDate)
+			if err != nil {
+				log.Printf("Invalid birth date: %v", sud.BirthDate)
+				sud.ErrorBirthDate = "Invalid birth date."
+				valid = false
+			}
+
+			// Validates age
+			swimmer := swimming.Swimmer{
+				BirthDate: sql.NullTime{
+					Time: birthDate,
+				},
+			}
+
+			age := swimmer.AgeAt(time.Now())
+			if age < 13 {
+				log.Printf("Invalid age: %v", age)
+				sud.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
+				valid = false
+			}
+		}
+
+		// Validates gender
+		if (sud.Gender == "" || (sud.Gender != swimming.GenderFemale && sud.Gender != swimming.GenderMale)) && sud.Role == RoleSwimmer {
+			log.Printf("Invalid Gender: %v", sud.Gender)
+			sud.ErrorGender = "Select your gender."
+			valid = false
+		}
+
+		// Validates club
+		if sud.Club == 0 {
+			log.Printf("Invalid club: %v", sud.Club)
+			sud.ErrorClub = "Select your club."
+			valid = false
+		}
+	}
+
+	// Validates terms agreement
+	if sud.Agreed != "on" {
+		sud.ErrorAgreed = "You have to agree with our terms before creating an account."
+		valid = false
+	}
+
+	return valid
 }
 
 type passwordViewData struct {

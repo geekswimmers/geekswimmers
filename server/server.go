@@ -129,6 +129,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 
 	// BFF API
 	s.Router.Get("/api/swimmers/:id/events/", s.handleRequest(userController.EventsResource))
+	s.Router.Get("/api/clubs/", s.handleRequest(swimmingController.ClubResource))
 	s.Router.Put("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleRequest(userController.AcceptParentLink))
 	s.Router.Del("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleRequest(userController.DismissParentLink))
 
