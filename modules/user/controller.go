@@ -474,6 +474,7 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 		jurisdictionId = swimmer.Swimmer.Club.Jurisdiction.ID.Int64
 	} else {
 		clubId = 0
+		jurisdictionId = 0
 	}
 
 	data := &profileData{
