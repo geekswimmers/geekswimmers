@@ -471,7 +471,7 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 	var jurisdictionId int64
 	if swimmer != nil {
 		clubId = swimmer.Swimmer.Club.ID.Int64
-		jurisdictionId = swimmer.Swimmer.Club.Jurisdiction.ID
+		jurisdictionId = swimmer.Swimmer.Club.Jurisdiction.ID.Int64
 	} else {
 		clubId = 0
 	}

@@ -1,6 +1,7 @@
 package swimming
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -11,7 +12,9 @@ func (sc *Controller) ClubResource(res http.ResponseWriter, req *http.Request) {
 	j := req.URL.Query().Get("jurisdiction")
 	jurisdictionId, _ := strconv.ParseInt(j, 10, 64)
 	jurisdiction := Jurisdiction{
-		ID: jurisdictionId,
+		ID: sql.NullInt64{
+			Int64: jurisdictionId,
+		},
 	}
 
 	clubs, err := FindClubsByJurisdiction(jurisdiction, sc.DB)

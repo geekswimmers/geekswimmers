@@ -42,7 +42,7 @@ type Event struct {
 }
 
 type Jurisdiction struct {
-	ID       int64
+	ID       sql.NullInt64
 	Country  string
 	Province *string
 	Region   *string
