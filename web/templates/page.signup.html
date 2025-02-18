@@ -85,7 +85,7 @@
                         <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateClubsByJurisdiction()">
                             <option value="0">Select...</option>
                             {{range .Jurisdictions}}
-                                <option value="{{.ID}}" {{if eq .ID $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
                             {{end}}
                         </select>
                     </div>

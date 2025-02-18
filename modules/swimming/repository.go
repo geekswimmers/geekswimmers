@@ -175,7 +175,7 @@ func FindClubsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]
 	        from club c
 	        where c.jurisdiction = $1
 	        order by c.full_name`
-	rows, err := db.Query(context.Background(), stm, jurisdiction.ID)
+	rows, err := db.Query(context.Background(), stm, jurisdiction.ID.Int64)
 	if err != nil {
 		return nil, fmt.Errorf("findClubsByJurisdiction: %v", err)
 	}
