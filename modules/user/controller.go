@@ -623,7 +623,10 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 	}
 
 	var swimmer *UserSwimmer
-	var parentSwimmer *ParentSwimmer
+	parentSwimmer := &ParentSwimmer{
+		Responsible: false,
+	}
+
 	if sessionData.Role == RoleSwimmer {
 		// The swimmer is the user itself
 		swimmer = FindSwimmerByEmail(sessionData.Email, uc.DB)
