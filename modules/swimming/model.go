@@ -86,7 +86,7 @@ func (jurisdiction *Jurisdiction) SetSubTitle() {
 }
 
 type Club struct {
-	ID           int64
+	ID           sql.NullInt64
 	FullName     string
 	Acronym      string
 	WebSite      string

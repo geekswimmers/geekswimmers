@@ -50,8 +50,8 @@ function updateClubsByJurisdiction(selectedId) {
 
             if (clubs != null) {
                 clubs.forEach(club => {
-                    const selected = club.ID == selectedId;
-                    createSelectOption(clubCbx, club.ID, club.Acronym +" - "+ club.FullName, selected);
+                    const selected = club.ID.Int64 === selectedId;
+                    createSelectOption(clubCbx, club.ID.Int64, club.Acronym +" - "+ club.FullName, selected);
                 });
             }
         });

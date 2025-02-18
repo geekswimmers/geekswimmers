@@ -53,7 +53,11 @@ func (sud *signUpData) createSwimmer(userAccount *UserAccount) *UserSwimmer {
 		Swimmer: &swimming.Swimmer{
 			FirstName: sud.FirstName,
 			LastName:  sud.LastName,
+			Club: &swimming.Club{
+				ID: sql.NullInt64{Int64: sud.Club, Valid: true},
+			},
 		},
+		UserAccount: userAccount,
 	}
 
 	birthDate, err := time.Parse("2006-01-02", sud.BirthDate)
@@ -69,12 +73,6 @@ func (sud *signUpData) createSwimmer(userAccount *UserAccount) *UserSwimmer {
 	swimmer.Swimmer.Gender = sql.NullString{
 		String: sud.Gender,
 	}
-
-	swimmer.Swimmer.Club = &swimming.Club{
-		ID: sud.Club,
-	}
-
-	swimmer.UserAccount = userAccount
 
 	return swimmer
 }
@@ -180,28 +178,98 @@ type passwordViewData struct {
 type profileData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
+	Club             int64
+	CurrentUser      *UserAccount
+	CurrentSwimmer   *UserSwimmer
 	Email            string
 	Error            string
 	ErrorBirthDate   string
+	ErrorClub        string
 	ErrorEmail       string
 	ErrorFirstName   string
 	ErrorGender      string
 	ErrorLastName    string
+	ExistingUser     *UserAccount
 	FirstName        string
 	Gender           string
+	Jurisdiction     int64
+	Jurisdictions    []*swimming.Jurisdiction
 	LastName         string
 	Role             string
 	SessionData      *storage.SessionData
 	Swimmers         []*UserSwimmer
 }
 
-func (sud *profileData) errorHappened() bool {
-	return len(sud.ErrorEmail) > 0 ||
-		len(sud.ErrorFirstName) > 0 ||
-		len(sud.ErrorLastName) > 0 ||
-		len(sud.Error) > 0 ||
-		len(sud.ErrorBirthDate) > 0 ||
-		len(sud.ErrorGender) > 0
+func (sud *profileData) valid() bool {
+	valid := true
+
+	// Validates firstName
+	if sud.FirstName == "" {
+		log.Printf("Invalid first name: %v", sud.FirstName)
+		sud.ErrorFirstName = "First Name is empty."
+		valid = false
+	}
+
+	// Validates lastName
+	if sud.LastName == "" {
+		log.Printf("Invalid last name: %v", sud.LastName)
+		sud.ErrorLastName = "Last Name is empty."
+		valid = false
+	}
+
+	// Validates email
+	if !messaging.IsEmailAddressValid(sud.Email) {
+		log.Printf("Invalid email address: %v", sud.Email)
+		sud.ErrorEmail = "Invalid email address."
+		valid = false
+	} else {
+		if sud.CurrentUser.Email != sud.Email {
+			if sud.ExistingUser != nil {
+				sud.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
+				valid = false
+			}
+		}
+	}
+
+	if sud.CurrentUser.Role == RoleSwimmer && sud.CurrentSwimmer != nil {
+		// Validates birthDate
+		if sud.BirthDate == "" {
+			log.Printf("Birth date is required.")
+			sud.ErrorBirthDate = "Birth date is required."
+			valid = false
+		} else {
+			_, err := time.Parse("2006-01-02", sud.BirthDate)
+			if err != nil {
+				log.Printf("Invalid birth date: %v", sud.BirthDate)
+				sud.ErrorBirthDate = "Invalid birth date."
+				valid = false
+			}
+
+			// Validates age
+			age := sud.CurrentSwimmer.Swimmer.AgeAt(time.Now())
+			if age < 13 {
+				log.Printf("Invalid age: %v", age)
+				sud.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
+				valid = false
+			}
+		}
+
+		// Validates gender
+		if sud.Gender == "" || (sud.Gender != swimming.GenderFemale && sud.Gender != swimming.GenderMale) {
+			log.Printf("Invalid Gender: %v", sud.Gender)
+			sud.ErrorGender = "Select your gender."
+			valid = false
+		}
+
+		// Validates club
+		if sud.Club == 0 {
+			log.Printf("Invalid club: %v", sud.Club)
+			sud.ErrorClub = "Select your club."
+			valid = false
+		}
+	}
+
+	return valid
 }
 
 type swimmerData struct {

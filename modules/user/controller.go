@@ -462,14 +462,30 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmer := FindSwimmerByUserAccount(user, uc.DB)
+	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+	if err != nil {
+		log.Printf("Error loading jurisdictions: %v", err)
+	}
+
+	var clubId int64
+	var jurisdictionId int64
+	if swimmer != nil {
+		clubId = swimmer.Swimmer.Club.ID.Int64
+		jurisdictionId = swimmer.Swimmer.Club.Jurisdiction.ID
+	} else {
+		clubId = 0
+	}
 
 	data := &profileData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		FirstName:        user.FirstName,
+		Jurisdiction:     jurisdictionId,
+		Jurisdictions:    jurisdictions,
 		LastName:         user.LastName,
 		Email:            user.Email,
 		Role:             user.Role,
+		Club:             clubId,
 	}
 
 	if swimmer != nil {
@@ -497,6 +513,16 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		log.Print(err)
 	}
 
+	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
+	if err != nil {
+		jurisdiction = 0
+	}
+
+	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	if err != nil {
+		club = 0
+	}
+
 	data := &profileData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
@@ -505,82 +531,26 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
 		BirthDate:        req.PostForm.Get("birthDate"),
 		Gender:           req.PostForm.Get("gender"),
+		Jurisdiction:     jurisdiction,
+		Club:             club,
 	}
 
 	currentUser := FindUserAccountByEmail(sessionData.Email, uc.DB)
-
-	// Validates firstName
-	if data.FirstName == "" {
-		log.Printf("Invalid first name: %v", data.FirstName)
-		data.ErrorFirstName = "First Name is empty."
-	} else {
-		currentUser.FirstName = data.FirstName
-	}
-
-	// Validates lastName
-	if data.LastName == "" {
-		log.Printf("Invalid last name: %v", data.LastName)
-		data.ErrorLastName = "Last Name is empty."
-	} else {
-		currentUser.LastName = data.LastName
-	}
-
-	// Validates email
-	if !messaging.IsEmailAddressValid(data.Email) {
-		log.Printf("Invalid email address: %v", data.Email)
-		data.ErrorEmail = "Invalid email address."
-	} else {
-		if currentUser.Email != data.Email {
-			existingUser := FindUserAccountByEmail(data.Email, uc.DB)
-			if existingUser != nil {
-				data.ErrorEmail = "This email is already in use. Do you want to <a href='/auth/signin/'>sign in</a> instead?"
-			} else {
-				currentUser.Email = data.Email
-			}
-		}
-	}
-
-	swimmer := FindSwimmerByUserAccount(currentUser, uc.DB)
-	if currentUser.Role == RoleSwimmer && swimmer != nil {
-		swimmer.Swimmer.FirstName = data.FirstName
-		swimmer.Swimmer.LastName = data.LastName
-
-		// Validates birthDate
-		if data.BirthDate == "" {
-			log.Printf("Birth date is required.")
-			data.ErrorBirthDate = "Birth date is required."
-		} else {
-			birthDate, err := time.Parse("2006-01-02", data.BirthDate)
-			if err != nil {
-				log.Printf("Invalid birth date: %v", data.BirthDate)
-				data.ErrorBirthDate = "Invalid birth date."
-			} else {
-				swimmer.Swimmer.BirthDate = sql.NullTime{
-					Time: birthDate,
-				}
-			}
-
-			// Validates age
-			age := swimmer.Swimmer.AgeAt(time.Now())
-			if age < 13 {
-				log.Printf("Invalid age: %v", age)
-				data.ErrorBirthDate = "You must be at least 13 years old to use Geek Swimmers."
-			}
-		}
-
-		// Validates gender
-		if data.Gender == "" || (data.Gender != swimming.GenderFemale && data.Gender != swimming.GenderMale) {
-			log.Printf("Invalid Gender: %v", data.Gender)
-			data.ErrorGender = "Select your gender."
-		} else {
-			swimmer.Swimmer.Gender = sql.NullString{
-				String: data.Gender,
-			}
-		}
-	}
+	existingUser := FindUserAccountByEmail(data.Email, uc.DB)
+	currentSwimmer := FindSwimmerByUserAccount(currentUser, uc.DB)
+	data.CurrentUser = currentUser
+	data.ExistingUser = existingUser
+	data.CurrentSwimmer = currentSwimmer
+	data.Role = currentUser.Role
 
 	// Back to the profile form in case of error.
-	if data.errorHappened() {
+	if !data.valid() {
+		jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+		}
+		data.Jurisdictions = jurisdictions
+
 		html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 		log.Printf("Back to profile page with errors.")
 		err = html.Execute(res, data)
@@ -590,8 +560,24 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		return
 	}
 
-	if currentUser.Role == RoleSwimmer && swimmer != nil {
-		if err := updateSwimmerProfile(currentUser, swimmer, uc.DB); err != nil {
+	currentUser.FirstName = data.FirstName
+	currentUser.LastName = data.LastName
+	currentUser.Email = data.Email
+
+	if currentUser.Role == RoleSwimmer && currentSwimmer != nil {
+		currentSwimmer.Swimmer.FirstName = currentUser.FirstName
+		currentSwimmer.Swimmer.LastName = currentUser.LastName
+
+		currentSwimmer.Swimmer.Gender = sql.NullString{
+			String: data.Gender,
+		}
+
+		birthDate, _ := time.Parse("2006-01-02", data.BirthDate)
+		currentSwimmer.Swimmer.BirthDate = sql.NullTime{
+			Time: birthDate,
+		}
+
+		if err := updateSwimmerProfile(currentUser, currentSwimmer, uc.DB); err != nil {
 			log.Printf("Error saving the swimmers' profile: %v", err)
 			html := utils.GetTemplate("base", "profile-form")
 			data.Error = `Due to an internal error, it was not possible to save
@@ -603,7 +589,7 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 			}
 			return
 		}
-		if err := uc.addSwimmerToSession(swimmer.Swimmer, res, req); err != nil {
+		if err := uc.addSwimmerToSession(currentSwimmer.Swimmer, res, req); err != nil {
 			log.Printf("Error adding swimmer to session: %v", err)
 		}
 	} else {

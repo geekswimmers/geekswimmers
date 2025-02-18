@@ -72,7 +72,7 @@ func InsertSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 		swimmer.Swimmer.BirthDate.Time,
 		swimmer.Swimmer.Gender.String,
 		userAccountId,
-		swimmer.Swimmer.Club.ID).Scan(&lastInsertId)
+		swimmer.Swimmer.Club.ID.Int64).Scan(&lastInsertId)
 	if err != nil {
 		return 0, fmt.Errorf("user.InsertSwimmer(%v %v): %v", swimmer.Swimmer.FirstName, swimmer.Swimmer.LastName, err)
 	}
@@ -338,17 +338,21 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 }
 
 func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *UserSwimmer {
-	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender
+	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, a.club, c.jurisdiction
 			from swimmer a
+				left join club c on a.club = c.id
 			where a.user_account = $1`
 
 	row := db.QueryRow(context.Background(), stm, userAccount.ID)
 
 	swimmer := &UserSwimmer{
 		UserAccount: userAccount,
-		Swimmer:     &swimming.Swimmer{},
+		Swimmer: &swimming.Swimmer{
+			Club: &swimming.Club{},
+		},
 	}
-	err := row.Scan(&swimmer.ID, &swimmer.Swimmer.FirstName, &swimmer.Swimmer.LastName, &swimmer.Swimmer.BirthDate, &swimmer.Swimmer.Gender)
+	err := row.Scan(&swimmer.ID, &swimmer.Swimmer.FirstName, &swimmer.Swimmer.LastName,
+		&swimmer.Swimmer.BirthDate, &swimmer.Swimmer.Gender, &swimmer.Swimmer.Club.ID, &swimmer.Swimmer.Club.Jurisdiction.ID)
 	if err != nil {
 		log.Printf("user.FindSwimmerByUserAccount(%v): %v", userAccount.ID, err)
 		return nil
