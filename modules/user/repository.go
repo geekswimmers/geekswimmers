@@ -190,14 +190,11 @@ func updateSwimmerProfile(userAccount *UserAccount, swimmer *UserSwimmer, db sto
 	}
 
 	stm := `update swimmer 
-			set first_name = $1,
-                last_name = $2,
-                birth_date = $3, 
-                gender = $4
-             where id = $5`
+			set first_name = $1, last_name = $2, birth_date = $3, gender = $4, club = $5
+            where id = $6`
 
 	_, err = db.Exec(context.Background(), stm, swimmer.Swimmer.FirstName, swimmer.Swimmer.LastName,
-		swimmer.Swimmer.BirthDate.Time, swimmer.Swimmer.Gender.String, swimmer.ID)
+		swimmer.Swimmer.BirthDate.Time, swimmer.Swimmer.Gender.String, swimmer.Swimmer.Club.ID.Int64, swimmer.ID)
 	if err != nil {
 		return fmt.Errorf("user.updateSwimmerProfile(%v): %v", swimmer.ID, err)
 	}
@@ -338,10 +335,10 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 }
 
 func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *UserSwimmer {
-	stm := `select a.id, a.first_name, a.last_name, a.birth_date, a.gender, a.club, c.jurisdiction
-			from swimmer a
-				left join club c on a.club = c.id
-			where a.user_account = $1`
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, s.club, c.jurisdiction
+			from swimmer s
+				left join club c on s.club = c.id
+			where s.user_account = $1`
 
 	row := db.QueryRow(context.Background(), stm, userAccount.ID)
 

@@ -421,7 +421,11 @@ func (uc *Controller) SignIn(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+	if userAccount.Role == RoleSwimmer {
+		http.Redirect(res, req, "/profile/swimmers", http.StatusSeeOther)
+	} else {
+		http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+	}
 }
 
 func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request) {
@@ -536,13 +540,10 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		Club:             club,
 	}
 
-	currentUser := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	existingUser := FindUserAccountByEmail(data.Email, uc.DB)
-	currentSwimmer := FindSwimmerByUserAccount(currentUser, uc.DB)
-	data.CurrentUser = currentUser
-	data.ExistingUser = existingUser
-	data.CurrentSwimmer = currentSwimmer
-	data.Role = currentUser.Role
+	data.CurrentUser = FindUserAccountByEmail(sessionData.Email, uc.DB)
+	data.ExistingUser = FindUserAccountByEmail(data.Email, uc.DB)
+	data.CurrentSwimmer = FindSwimmerByUserAccount(data.CurrentUser, uc.DB)
+	data.Role = data.CurrentUser.Role
 
 	// Back to the profile form in case of error.
 	if !data.valid() {
@@ -561,26 +562,27 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		return
 	}
 
-	currentUser.FirstName = data.FirstName
-	currentUser.LastName = data.LastName
-	currentUser.Email = data.Email
+	data.CurrentUser.FirstName = data.FirstName
+	data.CurrentUser.LastName = data.LastName
+	data.CurrentUser.Email = data.Email
 
-	if currentUser.Role == RoleSwimmer && currentSwimmer != nil {
-		currentSwimmer.Swimmer.FirstName = currentUser.FirstName
-		currentSwimmer.Swimmer.LastName = currentUser.LastName
+	if data.CurrentUser.Role == RoleSwimmer && data.CurrentSwimmer != nil {
+		data.CurrentSwimmer.Swimmer.Club.ID.Int64 = club
+		data.CurrentSwimmer.Swimmer.FirstName = data.CurrentUser.FirstName
+		data.CurrentSwimmer.Swimmer.LastName = data.CurrentUser.LastName
 
-		currentSwimmer.Swimmer.Gender = sql.NullString{
+		data.CurrentSwimmer.Swimmer.Gender = sql.NullString{
 			String: data.Gender,
 		}
 
 		birthDate, _ := time.Parse("2006-01-02", data.BirthDate)
-		currentSwimmer.Swimmer.BirthDate = sql.NullTime{
+		data.CurrentSwimmer.Swimmer.BirthDate = sql.NullTime{
 			Time: birthDate,
 		}
 
-		if err := updateSwimmerProfile(currentUser, currentSwimmer, uc.DB); err != nil {
+		if err := updateSwimmerProfile(data.CurrentUser, data.CurrentSwimmer, uc.DB); err != nil {
 			log.Printf("Error saving the swimmers' profile: %v", err)
-			html := utils.GetTemplate("base", "profile-form")
+			html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 			data.Error = `Due to an internal error, it was not possible to save
 			your account at this moment. Please, trying again later. 
 			Thank you for your understanding.`
@@ -590,13 +592,14 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 			}
 			return
 		}
-		if err := uc.addSwimmerToSession(currentSwimmer.Swimmer, res, req); err != nil {
+
+		if err := uc.addSwimmerToSession(data.CurrentSwimmer.Swimmer, res, req); err != nil {
 			log.Printf("Error adding swimmer to session: %v", err)
 		}
 	} else {
-		if err := updateProfile(currentUser, uc.DB); err != nil {
+		if err := updateProfile(data.CurrentUser, uc.DB); err != nil {
 			log.Printf("Error saving the profile: %v", err)
-			html := utils.GetTemplate("base", "profile-form")
+			html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 			data.Error = `Due to an internal error, it was not possible to save
 			your profile at this moment. Please, trying again later. 
 			Thank you for your understanding.`
@@ -608,11 +611,15 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 		}
 	}
 
-	if err := uc.addUserToSession(currentUser, res, req); err != nil {
+	if err := uc.addUserToSession(data.CurrentUser, res, req); err != nil {
 		log.Printf("Error adding user to session: %v", err)
 	}
 
-	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+	if data.CurrentUser.Role == RoleSwimmer {
+		http.Redirect(res, req, "/profile/swimmers", http.StatusSeeOther)
+	} else {
+		http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+	}
 }
 
 func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
