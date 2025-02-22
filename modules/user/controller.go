@@ -144,7 +144,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	if userAccount.Role == RoleSwimmer {
 		swimmer := data.createSwimmer(userAccount)
 
-		_, err = InsertSwimmer(swimmer, uc.DB)
+		_, err = saveSwimmer(swimmer, uc.DB)
 		if err != nil {
 			log.Printf("Error saving the swimmer: %v", err)
 			html = utils.GetTemplate("base", "signup")
@@ -681,6 +681,129 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 	}
 }
 
+func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+	if err != nil {
+		log.Printf("Error loading jurisdictions: %v", err)
+	}
+
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	data := &swimmerData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		Swimmer:          swimmer,
+		FirstName:        swimmer.Swimmer.FirstName,
+		LastName:         swimmer.Swimmer.LastName,
+		BirthDate:        swimmer.Swimmer.BirthDate.Time.Format("2006-01-02"),
+		Gender:           swimmer.Swimmer.Gender.String,
+		Club:             swimmer.Swimmer.Club.ID.Int64,
+		Jurisdiction:     swimmer.Swimmer.Club.Jurisdiction.ID.Int64,
+		Jurisdictions:    jurisdictions,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form",
+		template.FuncMap{
+			"Title": utils.Title,
+		})
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the swimmer's profile form: %v", err)
+	}
+}
+
+func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
+	if err != nil {
+		jurisdiction = 0
+	}
+
+	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	if err != nil {
+		club = 0
+	}
+
+	data := &swimmerData{
+		BaseTemplateData: uc.BaseTemplateData,
+		SessionData:      sessionData,
+		Club:             club,
+		Jurisdiction:     jurisdiction,
+		Swimmer:          swimmer,
+		FirstName:        req.PostForm.Get("firstName"),
+		LastName:         req.PostForm.Get("lastName"),
+		Gender:           req.PostForm.Get("gender"),
+		BirthDate:        req.PostForm.Get("birthDate"),
+	}
+
+	if !data.valid() {
+		log.Printf("Error saving the swimmer: %v", err)
+		html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form", template.FuncMap{
+			"Title": utils.Title,
+		})
+		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	swimmer.Swimmer.FirstName = data.FirstName
+	swimmer.Swimmer.LastName = data.LastName
+	swimmer.Swimmer.BirthDate.Time, _ = time.Parse("2006-01-02", data.BirthDate)
+	swimmer.Swimmer.Gender.String = data.Gender
+	swimmer.Swimmer.Club.ID.Int64 = data.Club
+
+	_, err = saveSwimmer(swimmer, uc.DB)
+	if err != nil {
+		log.Printf("Error saving the swimmer: %v", err)
+		html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form", template.FuncMap{
+			"Title": utils.Title,
+		})
+		data.Error = `Due to an internal error, it was not possible to save
+			the swimmer at this moment. Please, trying again later. 
+			Thank you for your understanding.`
+		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/%d/", swimmer.ID), http.StatusSeeOther)
+}
+
 func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	if !sessionData.IsAuthenticated() {
@@ -1033,7 +1156,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	swimmer.ID, err = InsertSwimmer(swimmer, uc.DB)
+	swimmer.ID, err = saveSwimmer(swimmer, uc.DB)
 	if err != nil {
 		log.Printf("Error saving the swimmer: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")

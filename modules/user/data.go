@@ -276,14 +276,18 @@ type swimmerData struct {
 	Swimmer          *UserSwimmer
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
+	Club             int64
 	Email            string
 	Error            string
 	ErrorBirthDate   string
+	ErrorClub        string
 	ErrorEmail       string
 	ErrorFirstName   string
 	ErrorGender      string
 	ErrorLastName    string
 	FirstName        string
+	Jurisdiction     int64
+	Jurisdictions    []*swimming.Jurisdiction
 	Events           []*swimming.Event
 	FoundSwimmers    []*UserSwimmer
 	BestTimes        []*SwimmerBestTime
@@ -292,6 +296,54 @@ type swimmerData struct {
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData
+}
+
+func (sd *swimmerData) valid() bool {
+	valid := true
+
+	// Validates firstName
+	if sd.FirstName == "" {
+		log.Printf("Invalid first name: %v", sd.FirstName)
+		sd.ErrorFirstName = "First Name is empty."
+		valid = false
+	}
+
+	// Validates lastName
+	if sd.LastName == "" {
+		log.Printf("Invalid last name: %v", sd.LastName)
+		sd.ErrorLastName = "Last Name is empty."
+		valid = false
+	}
+
+	// Validates birthDate
+	if sd.BirthDate == "" {
+		log.Printf("Birth date is required.")
+		sd.ErrorBirthDate = "Birth date is required."
+		valid = false
+	} else {
+		_, err := time.Parse("2006-01-02", sd.BirthDate)
+		if err != nil {
+			log.Printf("Invalid birth date: %v", sd.BirthDate)
+			sd.ErrorBirthDate = "Invalid birth date."
+			valid = false
+		}
+	}
+
+	// Validates gender
+	if sd.Gender == "" || (sd.Gender != swimming.GenderFemale && sd.Gender != swimming.GenderMale) {
+		log.Printf("Invalid Gender: %v", sd.Gender)
+		sd.ErrorGender = "Select your gender."
+		valid = false
+	}
+
+	// Validates club
+	if sd.Club == 0 {
+		log.Printf("Invalid club: %v", sd.Club)
+		sd.ErrorClub = "Select your club."
+		valid = false
+	}
+
+	return valid
 }
 
 func (ad *swimmerData) errorHappened() bool {
