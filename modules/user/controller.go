@@ -1131,6 +1131,12 @@ func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Reque
 		Email:            strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
 	}
 
+	data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+	if err != nil {
+		log.Printf("Error loading jurisdictions: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	// Validates email
 	if !messaging.IsEmailAddressValid(data.Email) {
 		log.Printf("Invalid email address: %v", data.Email)
