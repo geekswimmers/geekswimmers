@@ -346,11 +346,32 @@ func (sd *swimmerData) valid() bool {
 	return valid
 }
 
-func (ad *swimmerData) errorHappened() bool {
-	return len(ad.ErrorFirstName) > 0 ||
-		len(ad.ErrorLastName) > 0 ||
-		len(ad.ErrorBirthDate) > 0 ||
-		len(ad.ErrorGender) > 0
+func (sd *swimmerData) createSwimmer() *UserSwimmer {
+	swimmer := &UserSwimmer{
+		Swimmer: &swimming.Swimmer{
+			FirstName: sd.FirstName,
+			LastName:  sd.LastName,
+			Club: &swimming.Club{
+				ID: sql.NullInt64{Int64: sd.Club, Valid: true},
+			},
+		},
+	}
+
+	birthDate, err := time.Parse("2006-01-02", sd.BirthDate)
+	if err != nil {
+		log.Printf("Invalid birth date: %v", sd.BirthDate)
+		return nil
+	}
+
+	swimmer.Swimmer.BirthDate = sql.NullTime{
+		Time: birthDate,
+	}
+
+	swimmer.Swimmer.Gender = sql.NullString{
+		String: sd.Gender,
+	}
+
+	return swimmer
 }
 
 type swimmerBestTimeData struct {

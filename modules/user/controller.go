@@ -811,13 +811,130 @@ func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request
 		return
 	}
 
-	html := utils.GetTemplate("base", "swimmer-form")
-	if err := html.Execute(res, &swimmerData{
+	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
+	if err != nil {
+		jurisdiction = 0
+	}
+
+	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	if err != nil {
+		club = 0
+	}
+
+	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
-	}); err != nil {
+		Jurisdiction:     jurisdiction,
+		Club:             club,
+	}
+
+	data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+	if err != nil {
+		log.Printf("Error loading jurisdictions: %v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	html := utils.GetTemplate("base", "swimmer-form")
+	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer form: %v", err)
 	}
+}
+
+func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	if !sessionData.IsAuthenticated() {
+		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+		return
+	}
+
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
+	if err != nil {
+		jurisdiction = 0
+	}
+
+	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	if err != nil {
+		club = 0
+	}
+
+	var html *template.Template
+	data := &swimmerData{
+		SessionData:      sessionData,
+		BaseTemplateData: uc.BaseTemplateData,
+		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
+		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
+		BirthDate:        req.PostForm.Get("birthDate"),
+		Gender:           req.PostForm.Get("gender"),
+		Jurisdiction:     jurisdiction,
+		Club:             club,
+	}
+
+	// Back to the signup page in case of error.
+	if !data.valid() {
+		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+
+		html = utils.GetTemplate("base", "swimmer-form")
+		log.Printf("Back to swimmer form with errors.")
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	swimmer := data.createSwimmer()
+
+	swimmer.ID, err = saveSwimmer(swimmer, uc.DB)
+	if err != nil {
+		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+
+		log.Printf("Error saving the swimmer: %v", err)
+		html = utils.GetTemplate("base", "swimmer-form")
+		data.Error = `Due to an internal error, it was not possible to create
+			your account at this moment. Please, trying again later. 
+			Thank you for your undestanding.`
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
+	swimmers := []*UserSwimmer{swimmer}
+	if err := linkSwimmersToParent(parent, swimmers, uc.DB); err != nil {
+		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
+		if err != nil {
+			log.Printf("Error loading jurisdictions: %v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+
+		log.Printf("Error linking swimmer to parent: %v", err)
+		html = utils.GetTemplate("base", "swimmer-form")
+		data.Error = `Due to an internal error, it was not possible to create
+			your account at this moment. Please, trying again later. 
+			Thank you for your undestanding.`
+		err = html.Execute(res, data)
+		if err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
+	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
 func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Request) {
@@ -1068,116 +1185,6 @@ func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request
 		html := utils.GetTemplate("base", "swimmer-form")
 		context.Error = `Due to an internal error, it was not possible to link
 			the swimmer wity your account at this moment. Please, trying again later.`
-		err = html.Execute(res, context)
-		if err != nil {
-			log.Print(err)
-		}
-		return
-	}
-
-	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
-}
-
-func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
-	err := req.ParseForm()
-	if err != nil {
-		log.Print(err)
-	}
-
-	var html *template.Template
-	context := &swimmerData{
-		SessionData:      sessionData,
-		BaseTemplateData: uc.BaseTemplateData,
-		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
-		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
-		BirthDate:        req.PostForm.Get("birthDate"),
-		Gender:           req.PostForm.Get("gender"),
-	}
-
-	// Validates firstName
-	if context.FirstName == "" {
-		log.Printf("Invalid first name: %v", context.FirstName)
-		context.ErrorFirstName = "First Name is empty."
-	}
-
-	// Validates lastName
-	if context.LastName == "" {
-		log.Printf("Invalid last name: %v", context.LastName)
-		context.ErrorLastName = "Last Name is empty."
-	}
-
-	swimmer := &UserSwimmer{
-		Swimmer: &swimming.Swimmer{
-			FirstName: context.FirstName,
-			LastName:  context.LastName,
-		},
-	}
-
-	// Validates birthDate
-	if context.BirthDate == "" {
-		log.Printf("Birth date is required.")
-		context.ErrorBirthDate = "Birth date is required."
-	} else {
-		birthDate, err := time.Parse("2006-01-02", context.BirthDate)
-		if err != nil {
-			log.Printf("Invalid birth date: %v", context.BirthDate)
-			context.ErrorBirthDate = "Invalid birth date."
-		} else {
-			swimmer.Swimmer.BirthDate = sql.NullTime{
-				Time: birthDate,
-			}
-		}
-	}
-
-	// Validates gender
-	if context.Gender == "" || (context.Gender != swimming.GenderFemale && context.Gender != swimming.GenderMale) {
-		log.Printf("Invalid Gender: %v", context.Gender)
-		context.ErrorGender = "Select your gender."
-	} else {
-		swimmer.Swimmer.Gender = sql.NullString{
-			String: context.Gender,
-		}
-	}
-
-	// Back to the signup page in case of error.
-	if context.errorHappened() {
-		html = utils.GetTemplate("base", "swimmer-form")
-		log.Printf("Back to swimmer form with errors.")
-		err = html.Execute(res, context)
-		if err != nil {
-			log.Print(err)
-		}
-		return
-	}
-
-	swimmer.ID, err = saveSwimmer(swimmer, uc.DB)
-	if err != nil {
-		log.Printf("Error saving the swimmer: %v", err)
-		html = utils.GetTemplate("base", "swimmer-form")
-		context.Error = `Due to an internal error, it was not possible to create
-			your account at this moment. Please, trying again later. 
-			Thank you for your undestanding.`
-		err = html.Execute(res, context)
-		if err != nil {
-			log.Print(err)
-		}
-		return
-	}
-
-	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
-	swimmers := []*UserSwimmer{swimmer}
-	if err := linkSwimmersToParent(parent, swimmers, uc.DB); err != nil {
-		log.Printf("Error linking swimmer to parent: %v", err)
-		html = utils.GetTemplate("base", "swimmer-form")
-		context.Error = `Due to an internal error, it was not possible to create
-			your account at this moment. Please, trying again later. 
-			Thank you for your undestanding.`
 		err = html.Execute(res, context)
 		if err != nil {
 			log.Print(err)

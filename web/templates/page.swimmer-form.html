@@ -133,6 +133,25 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="jurisdiction" class="form-label">Jurisdiction</label>
+                            <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateClubsByJurisdiction()">
+                                <option value="0">Select...</option>
+                                {{range .Jurisdictions}}
+                                    <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="club" class="form-label">Club</label>
+                            <select id="club" name="club" class="form-select">
+                                <option value="0">Select...</option>
+                            </select>
+                            <span class="error">{{.ErrorClub}}</span>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">
                             <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
@@ -151,4 +170,8 @@
     </div>
 {{end}}
 
-{{define "scripts"}}{{end}}
+{{define "scripts"}}
+<script>
+    updateClubsByJurisdiction({{.Club}});
+</script>
+{{end}}
