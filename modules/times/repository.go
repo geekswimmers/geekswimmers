@@ -83,7 +83,7 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 	return records, nil
 }
 
-func findRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
+func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
 	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
 	            coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet,
 				rd.min_age, rd.max_age
@@ -389,7 +389,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	return times, nil
 }
 
-func findStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
+func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
@@ -483,7 +483,7 @@ func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 	return minAge, maxAge, nil
 }
 
-func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, error) {
+func FindChampionshipMeets(jurisdictionId int64, db storage.Database) ([]*Meet, error) {
 	stm := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
 	            ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			from meet m
@@ -499,7 +499,7 @@ func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, er
 			order by m.age_date`
 	rows, err := db.Query(context.Background(), stm, jurisdictionId)
 	if err != nil {
-		return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+		return nil, fmt.Errorf("FindChampionshipMeets: %v", err)
 	}
 	defer rows.Close()
 
@@ -509,7 +509,7 @@ func findChampionshipMeets(jurisdictionId int, db storage.Database) ([]*Meet, er
 		err = rows.Scan(&meet.Name, &meet.AgeDate, &meet.TimeStandard.ID, &meet.Course, &meet.Season.ID, &meet.Season.Name,
 			&meet.TimeStandard.MinAgeTime, &meet.TimeStandard.MaxAgeTime, &meet.TimeStandard.Open, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findChampionshipMeets: %v", err)
+			return nil, fmt.Errorf("FindChampionshipMeets: %v", err)
 		}
 		meets = append(meets, meet)
 	}

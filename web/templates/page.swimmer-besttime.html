@@ -41,6 +41,115 @@
     </div>
 </div>
 
+<h3>Benchmark</h3>
+
+<p class="lead">We compared this time to some swimming standards and records.</p>
+
+<ul class="nav nav-tabs" id="tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="standards-tab" data-bs-toggle="tab" data-bs-target="#standards-tab-pane" type="button" role="tab" aria-controls="standards-tab-pane" aria-selected="true">Standards</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="records-tab" data-bs-toggle="tab" data-bs-target="#records-tab-pane" type="button" role="tab" aria-controls="records-tab-pane" aria-selected="false">Records</button>
+    </li>
+</ul>
+<div class="tab-content" id="tabs-content">
+    <div class="tab-pane fade show active" id="standards-tab-pane" role="tabpanel" aria-labelledby="standards-tab" tabindex="0">
+        {{range .Meets}}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{.Name}}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Standard: 
+                        <a href="/times/standards/{{.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Gender}}&course={{$.Course}}">{{.TimeStandard.Name}}</a>
+                    </h6>
+                    <p class="card-text">
+                        <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
+                            <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b></div>
+                        </div>
+                    </p>
+                    <p class="card-text">
+                        The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.SwimmerBestTime.Event.Distance}} {{$.SwimmerBestTime.Event.Style.Stroke | Title}}</b>
+                        at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
+                        {{if (gt .StandardTime.Difference 0)}}
+                            It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
+                        {{else}}
+                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b> meets the standard!<br>
+                            Please, confirm this information with your coach, since some championships have additional requirements.
+                        {{end}}
+                    </p>
+                </div>
+            </div>
+            <br>
+        {{else}}
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">
+                        Unfortunately, we didn't find any standards that match these criteria.
+                    </p>
+                </div>
+            </div>
+            <br>
+        {{end}}
+    </div>
+    <div class="tab-pane fade" id="records-tab-pane" role="tabpanel" aria-labelledby="records-tab" tabindex="1">
+        {{range .Records}}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="/times/records/{{.RecordSet.Jurisdiction.ID}}/">{{.RecordSet.Jurisdiction.Title}}</a></h5>
+                    <small>{{.RecordSet.Jurisdiction.SubTitle}}</small>
+                    <p class="card-text">
+                        <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Time}}" style="height: 30px">
+                            <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                        </div>
+                    </p>
+                    <p class="card-text">
+                        The <b>{{$.Distance}}m <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.Style | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                        {{if and .Definition.MinAge .Definition.MaxAge}}
+                            {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
+                        {{else if .Definition.MinAge}}
+                            {{.Definition.MinAge}}&Over-year-old
+                        {{else}}
+                            {{.Definition.MaxAge}}&Under-year-old
+                        {{end}}</b> record,
+                        {{if .Holder}}
+                            set by <b>{{.Holder}}</b>{{if .Year}} in {{if .Month}}{{.MonthName}}-{{end}}{{.Year}}{{end}},
+                        {{else}}
+                            for a {{.Definition.Age}}-year-old,
+                        {{end}}
+                        is <b>{{.Time | FormatMiliseconds}}</b>.
+                        {{if (gt .Difference 0)}}
+                            Your time missed the record by <b>{{.Difference | FormatMiliseconds}}</b>.
+                        {{else}}
+                            Your time of <b>{{$.FormatedTime}}</b> broke the record!<br>
+                            Please, confirm this information with your coach, since it takes time to validate it.
+                        {{end}}
+                    </p>
+                    {{if .Previous}}
+                        <p><i>Previous records</i>:</p>
+                        <ul>
+                            {{range .Previous}}
+                                <li>
+                                    {{.Time | FormatMiliseconds}} - {{.Holder}}{{if .Month}}, {{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}
+                                </li>
+                            {{end}}
+                        </ul>
+                    {{end}}
+                </div>
+            </div>
+            <br>
+        {{else}}
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">
+                        We didn't find any records that match these criteria.
+                    </p>
+                </div>
+            </div>
+            <br>
+        {{end}}
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="deleteBestTimeDlg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

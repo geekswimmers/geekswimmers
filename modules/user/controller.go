@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"geekswimmers/config"
 	"geekswimmers/modules/swimming"
+	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
@@ -13,6 +14,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -898,8 +900,86 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	bestId, _ := strconv.ParseInt(id, 10, 64)
 	bestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
 
+	meets, err := times.FindChampionshipMeets(swimmer.Swimmer.Club.Jurisdiction.ID.Int64, uc.DB)
+	if err != nil {
+		log.Printf("user.%v", err)
+	}
+
+	var foundMeets []*times.Meet
+	for _, meet := range meets {
+		meet.Age = swimmer.Swimmer.AgeAt(meet.AgeDate)
+		searchAge := meet.Age
+
+		if !meet.MinAgeEnforced && meet.TimeStandard.MinAgeTime != nil && meet.Age < *meet.TimeStandard.MinAgeTime {
+			searchAge = *meet.TimeStandard.MinAgeTime
+		} else if meet.MinAgeEnforced && meet.Age < *meet.TimeStandard.MinAgeTime {
+			continue
+		}
+
+		if !meet.MaxAgeEnforced && meet.TimeStandard.MaxAgeTime != nil && meet.Age > *meet.TimeStandard.MaxAgeTime {
+			searchAge = *meet.TimeStandard.MaxAgeTime
+		} else if meet.MaxAgeEnforced && meet.Age > *meet.TimeStandard.MaxAgeTime {
+			continue
+		}
+
+		standardTimeExample := times.StandardTime{
+			Age:          searchAge,
+			Gender:       swimmer.Swimmer.Gender.String,
+			Course:       bestTime.Course,
+			Style:        bestTime.Event.Style.Stroke,
+			Distance:     bestTime.Event.Distance,
+			TimeStandard: meet.TimeStandard,
+		}
+		standardTime, err := times.FindStandardTimeMeetByExample(standardTimeExample, meet.Season, uc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+		}
+
+		if standardTime.Standard > 0 {
+			standardTime.Difference = bestTime.BestTime - standardTime.Standard
+
+			if bestTime.BestTime <= standardTime.Standard {
+				standardTime.Percentage = 100
+			} else {
+				standardTime.Percentage = (standardTime.Standard * 100) / bestTime.BestTime
+			}
+			meet.StandardTime = *standardTime
+			foundMeets = append(foundMeets, meet)
+		}
+	}
+
+	recordExample := times.RecordDefinition{
+		Age:      swimmer.Swimmer.AgeAt(time.Now()),
+		Gender:   swimmer.Swimmer.Gender.String,
+		Course:   bestTime.Course,
+		Style:    bestTime.Event.Style.Description,
+		Distance: bestTime.Event.Distance,
+	}
+	records, err := times.FindRecordsByExample(recordExample, uc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+	groupedRecords := times.GroupRecordsByJurisdiction(records)
+
+	for i, record := range groupedRecords {
+		record.Difference = bestTime.BestTime - record.Time
+
+		if bestTime.BestTime <= record.Time {
+			record.Percentage = 100
+		} else {
+			record.Percentage = (record.Time * 100) / bestTime.BestTime
+		}
+		groupedRecords[i] = record
+	}
+
+	sort.SliceStable(foundMeets, func(i, j int) bool {
+		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
+	})
+
 	data := &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
+		Meets:            foundMeets,
+		Records:          groupedRecords,
 		SwimmerBestTime:  bestTime,
 		SessionData:      sessionData,
 	}
@@ -907,6 +987,8 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime", template.FuncMap{
 		"Title":             utils.Title,
 		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Lowercase":         utils.Lowercase,
+		"Abs":               utils.Abs,
 	})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer's best time: %v", err)

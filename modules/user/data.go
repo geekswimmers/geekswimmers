@@ -3,6 +3,7 @@ package user
 import (
 	"database/sql"
 	"geekswimmers/modules/swimming"
+	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
@@ -390,6 +391,8 @@ type swimmerBestTimeData struct {
 	Millisecond      int
 	Swimmer          *UserSwimmer
 	Events           []*swimming.Event
+	Meets            []*times.Meet
+	Records          []times.Record
 	SessionData      *storage.SessionData
 }
 

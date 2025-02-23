@@ -54,11 +54,11 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	distance, _ := strconv.ParseInt(event[0], 10, 64)
 	stroke := event[1]
 
-	jurisdictionId, err := strconv.Atoi(jurisdiction)
+	jurisdictionId, err := strconv.ParseInt(jurisdiction, 10, 64)
 	if err != nil {
 		jurisdictionId = 0
 	}
-	meets, err := findChampionshipMeets(jurisdictionId, bc.DB)
+	meets, err := FindChampionshipMeets(jurisdictionId, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
@@ -97,7 +97,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			Distance:     distance,
 			TimeStandard: meet.TimeStandard,
 		}
-		standardTime, err := findStandardTimeMeetByExample(standardTimeExample, meet.Season, bc.DB)
+		standardTime, err := FindStandardTimeMeetByExample(standardTimeExample, meet.Season, bc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
 		}
@@ -122,11 +122,11 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Style:    stroke,
 		Distance: distance,
 	}
-	records, err := findRecordsByExample(recordExample, bc.DB)
+	records, err := FindRecordsByExample(recordExample, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
-	groupedRecords := groupRecordsByJurisdiction(records)
+	groupedRecords := GroupRecordsByJurisdiction(records)
 
 	for i, record := range groupedRecords {
 		record.Difference = swimmerTime - record.Time

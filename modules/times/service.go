@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-func groupRecordsByJurisdiction(records []*Record) []Record {
+func GroupRecordsByJurisdiction(records []*Record) []Record {
 	grouping := make(map[any]*Record)
 
 	for _, record := range records {
