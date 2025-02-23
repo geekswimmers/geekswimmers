@@ -36,13 +36,7 @@ func (uc *Controller) EventsResource(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (uc *Controller) SwimmerBestTimeDelete(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Error(res, "Permission denied", http.StatusUnauthorized)
-		return
-	}
-
+func (uc *Controller) SwimmerBestTimeDelete(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
@@ -62,13 +56,7 @@ func (uc *Controller) SwimmerBestTimeDelete(res http.ResponseWriter, req *http.R
 	res.WriteHeader(http.StatusOK)
 }
 
-func (uc *Controller) SwimmerDelete(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Error(res, "Permission denied", http.StatusUnauthorized)
-		return
-	}
-
+func (uc *Controller) SwimmerDelete(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
@@ -89,13 +77,7 @@ func (uc *Controller) SwimmerDelete(res http.ResponseWriter, req *http.Request) 
 	res.WriteHeader(http.StatusOK)
 }
 
-func (uc *Controller) AcceptParentLink(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Error(res, "Permission denied", http.StatusUnauthorized)
-		return
-	}
-
+func (uc *Controller) AcceptParentLink(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
@@ -112,13 +94,7 @@ func (uc *Controller) AcceptParentLink(res http.ResponseWriter, req *http.Reques
 	res.WriteHeader(http.StatusOK)
 }
 
-func (uc *Controller) DismissParentLink(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Error(res, "Permission denied", http.StatusUnauthorized)
-		return
-	}
-
+func (uc *Controller) DismissParentLink(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)

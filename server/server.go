@@ -21,6 +21,8 @@ type Server struct {
 
 type Handler func(res http.ResponseWriter, req *http.Request)
 
+type AuthHandler func(res http.ResponseWriter, req *http.Request, session *storage.SessionData)
+
 func CreateServer(c config.Config, db storage.Database) *Server {
 	s := &Server{}
 	s.DB = db
@@ -37,6 +39,18 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 func (s *Server) handleRequest(f Handler) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		f(res, req)
+	}
+}
+
+func (s *Server) handleAuthRequest(f AuthHandler) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		sessionData := storage.NewSessionData(req)
+		if !sessionData.IsAuthenticated() {
+			http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+			return
+		}
+
+		f(res, req, sessionData)
 	}
 }
 
@@ -92,24 +106,24 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/auth/signin/", http.HandlerFunc(userController.SignInView))
 	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
 
-	s.Router.Post("/profile/swimmers/form/search/", s.handleRequest(userController.SwimmerFormSearch))
-	s.Router.Post("/profile/swimmers/form/link/", s.handleRequest(userController.SwimmerFormLink))
-	s.Router.Get("/profile/swimmers/form/", s.handleRequest(userController.SwimmerFormView))
-	s.Router.Post("/profile/swimmers/form/", s.handleRequest(userController.SwimmerForm))
-	s.Router.Get("/profile/swimmers/:id/besttimes/form/", s.handleRequest(userController.SwimmerBestTimeFormView))
-	s.Router.Post("/profile/swimmers/:id/besttimes/form/", s.handleRequest(userController.SwimmerBestTimeForm))
-	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleRequest(userController.SwimmerBestTimeFormView))
-	s.Router.Post("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleRequest(userController.SwimmerBestTimeForm))
-	s.Router.Del("/profile/swimmers/:id/besttimes/:bestId/", s.handleRequest(userController.SwimmerBestTimeDelete))
-	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/", s.handleRequest(userController.SwimmerBestTimeView))
-	s.Router.Get("/profile/swimmers/:id/edit/", s.handleRequest(userController.ProfileSwimmerFormView))
-	s.Router.Post("/profile/swimmers/:id/edit/", s.handleRequest(userController.ProfileSwimmerForm))
-	s.Router.Get("/profile/swimmers/:id/", s.handleRequest(userController.ProfileSwimmerView))
-	s.Router.Del("/profile/swimmers/:id/", s.handleRequest(userController.SwimmerDelete))
-	s.Router.Get("/profile/swimmers/", s.handleRequest(userController.ProfileSwimmerView))
-	s.Router.Get("/profile/edit/", s.handleRequest(userController.ProfileEditView))
-	s.Router.Post("/profile/edit/", s.handleRequest(userController.ProfileEditSave))
-	s.Router.Get("/profile/", s.handleRequest(userController.ProfileView))
+	s.Router.Post("/profile/swimmers/form/search/", s.handleAuthRequest(userController.SwimmerFormSearch))
+	s.Router.Post("/profile/swimmers/form/link/", s.handleAuthRequest(userController.SwimmerFormLink))
+	s.Router.Get("/profile/swimmers/form/", s.handleAuthRequest(userController.SwimmerFormView))
+	s.Router.Post("/profile/swimmers/form/", s.handleAuthRequest(userController.SwimmerForm))
+	s.Router.Get("/profile/swimmers/:id/besttimes/form/", s.handleAuthRequest(userController.SwimmerBestTimeFormView))
+	s.Router.Post("/profile/swimmers/:id/besttimes/form/", s.handleAuthRequest(userController.SwimmerBestTimeForm))
+	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleAuthRequest(userController.SwimmerBestTimeFormView))
+	s.Router.Post("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleAuthRequest(userController.SwimmerBestTimeForm))
+	s.Router.Del("/profile/swimmers/:id/besttimes/:bestId/", s.handleAuthRequest(userController.SwimmerBestTimeDelete))
+	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/", s.handleAuthRequest(userController.SwimmerBestTimeView))
+	s.Router.Get("/profile/swimmers/:id/edit/", s.handleAuthRequest(userController.ProfileSwimmerFormView))
+	s.Router.Post("/profile/swimmers/:id/edit/", s.handleAuthRequest(userController.ProfileSwimmerForm))
+	s.Router.Get("/profile/swimmers/:id/", s.handleAuthRequest(userController.ProfileSwimmerView))
+	s.Router.Del("/profile/swimmers/:id/", s.handleAuthRequest(userController.SwimmerDelete))
+	s.Router.Get("/profile/swimmers/", s.handleAuthRequest(userController.ProfileSwimmerView))
+	s.Router.Get("/profile/edit/", s.handleAuthRequest(userController.ProfileEditView))
+	s.Router.Post("/profile/edit/", s.handleAuthRequest(userController.ProfileEditSave))
+	s.Router.Get("/profile/", s.handleAuthRequest(userController.ProfileView))
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
 
@@ -132,8 +146,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	// BFF API
 	s.Router.Get("/api/swimmers/:id/events/", s.handleRequest(userController.EventsResource))
 	s.Router.Get("/api/clubs/", s.handleRequest(swimmingController.ClubResource))
-	s.Router.Put("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleRequest(userController.AcceptParentLink))
-	s.Router.Del("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleRequest(userController.DismissParentLink))
+	s.Router.Put("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthRequest(userController.AcceptParentLink))
+	s.Router.Del("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthRequest(userController.DismissParentLink))
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }

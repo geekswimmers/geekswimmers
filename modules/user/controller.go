@@ -428,13 +428,7 @@ func (uc *Controller) SignIn(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmers, err := findSwimmersParent(user, uc.DB)
 	if err != nil {
@@ -457,13 +451,7 @@ func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmer := FindSwimmerByUserAccount(user, uc.DB)
 	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
@@ -506,13 +494,7 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -622,13 +604,7 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	var swimmer *UserSwimmer
 	parentSwimmer := &ParentSwimmer{
 		Responsible: false,
@@ -681,13 +657,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 	}
 }
 
-func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
 	if err != nil {
 		log.Printf("Error loading jurisdictions: %v", err)
@@ -719,13 +689,7 @@ func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.
 	}
 }
 
-func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -804,13 +768,7 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 	http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/%d/", swimmer.ID), http.StatusSeeOther)
 }
 
-func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	jurisdiction, err := strconv.ParseInt(req.PostForm.Get("jurisdiction"), 10, 64)
 	if err != nil {
 		jurisdiction = 0
@@ -840,13 +798,7 @@ func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -937,13 +889,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/profile/", http.StatusSeeOther)
 }
 
-func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
@@ -967,13 +913,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	}
 }
 
-func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)
 	swimmer := FindSwimmerByID(swimmerId, uc.DB)
@@ -1010,13 +950,7 @@ func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http
 	}
 }
 
-func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -1113,13 +1047,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	}
 }
 
-func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -1155,13 +1083,7 @@ func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Reque
 	}
 }
 
-func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	if !sessionData.IsAuthenticated() {
-		http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
-		return
-	}
-
+func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
