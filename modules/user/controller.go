@@ -952,7 +952,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 		Age:      swimmer.Swimmer.AgeAt(time.Now()),
 		Gender:   swimmer.Swimmer.Gender.String,
 		Course:   bestTime.Course,
-		Style:    bestTime.Event.Style.Description,
+		Style:    bestTime.Event.Style.Stroke,
 		Distance: bestTime.Event.Distance,
 	}
 	records, err := times.FindRecordsByExample(recordExample, uc.DB)

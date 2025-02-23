@@ -99,11 +99,11 @@
                     <small>{{.RecordSet.Jurisdiction.SubTitle}}</small>
                     <p class="card-text">
                         <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Time}}" style="height: 30px">
-                            <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.FormatedTime}}</b></div>
+                            <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b></div>
                         </div>
                     </p>
                     <p class="card-text">
-                        The <b>{{$.Distance}}m <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.Style | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                        The <b>{{$.SwimmerBestTime.Event.Distance}}m <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.SwimmerBestTime.Event.Style.Stroke | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
                         {{if and .Definition.MinAge .Definition.MaxAge}}
                             {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
                         {{else if .Definition.MinAge}}
@@ -120,7 +120,7 @@
                         {{if (gt .Difference 0)}}
                             Your time missed the record by <b>{{.Difference | FormatMiliseconds}}</b>.
                         {{else}}
-                            Your time of <b>{{$.FormatedTime}}</b> broke the record!<br>
+                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b> broke the record!<br>
                             Please, confirm this information with your coach, since it takes time to validate it.
                         {{end}}
                     </p>
