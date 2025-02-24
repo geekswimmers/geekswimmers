@@ -174,33 +174,48 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		ID: swimSeasonID,
 	}
 
-	swimSeasons, err := findSwimSeasons(sc.DB)
+	jurisdictionID, _ := strconv.ParseInt(req.URL.Query().Get("jurisdiction"), 10, 64)
+	jurisdiction := swimming.Jurisdiction{
+		ID: sql.NullInt64{
+			Int64: jurisdictionID,
+		},
+	}
+
+	seasons, err := findSwimSeasons(sc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
 	if swimSeasonID == 0 {
-		swimSeason.ID = swimSeasons[0].ID
+		swimSeason.ID = seasons[0].ID
 	}
 
-	timeStandards, err := findTimeStandards(*swimSeason, sc.DB)
+	timeStandards, err := FindTimeStandards(*swimSeason, jurisdiction, sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
 	sessionData := storage.NewSessionData(req)
-	ctx := &timeStandardsViewData{
+	data := &timeStandardsViewData{
+		Jurisdiction:     jurisdiction,
+		Jurisdictions:    jurisdictions,
 		SwimSeason:       swimSeason,
-		SwimSeasons:      swimSeasons,
+		SwimSeasons:      seasons,
 		TimeStandards:    timeStandards,
 		BaseTemplateData: sc.BaseTemplateData,
 		SessionData:      sessionData,
 	}
 
 	html := utils.GetTemplate("base", "timestandards")
-	err = html.Execute(res, ctx)
+	err = html.Execute(res, data)
 	if err != nil {
 		log.Printf("times.TimeStandardsView: %v", err)
 	}

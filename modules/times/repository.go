@@ -3,6 +3,7 @@ package times
 import (
 	"context"
 	"fmt"
+	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 
 	"github.com/jackc/pgx/v5"
@@ -274,12 +275,14 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 	return recordSet, nil
 }
 
-func findTimeStandards(season SwimSeason, db storage.Database) ([]*TimeStandard, error) {
+func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
 	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
 	        from time_standard ts
-			where ts.season = $1
+				join jurisdiction j on j.id = ts.jurisdiction
+			where (j.id = $1 or j.region is null)
+				and ts.season = $2
 			order by ts.name`
-	rows, err := db.Query(context.Background(), stm, season.ID)
+	rows, err := db.Query(context.Background(), stm, jurisdiction.ID.Int64, season.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findTimeStandards: %v", err)
 	}

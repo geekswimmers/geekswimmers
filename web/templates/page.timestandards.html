@@ -15,12 +15,22 @@
         <div class="card-header">
             <form id="filter-form" method="get" action="/times/standards">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col">
                         <div class="mb-3">
-                            <label for="event">Season</label>
+                            <label for="season">Season</label>
                             <select id="season" name="season" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
                                 {{range .SwimSeasons}}
                                     <option value="{{.ID}}" {{if eq $.SwimSeason.ID .ID}}selected{{end}}>{{.Name}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="jurisdiction">Jurisdiction</label>
+                            <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                                {{range .Jurisdictions}}
+                                    <option value="{{.ID.Int64}}" {{if eq $.Jurisdiction.ID.Int64 .ID.Int64}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
                                 {{end}}
                             </select>
                         </div>

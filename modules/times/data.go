@@ -19,6 +19,8 @@ type benchmaskTimeViewData struct {
 }
 
 type timeStandardsViewData struct {
+	Jurisdiction     swimming.Jurisdiction
+	Jurisdictions    []*swimming.Jurisdiction
 	SwimSeason       *SwimSeason
 	SwimSeasons      []*SwimSeason
 	TimeStandards    []*TimeStandard
