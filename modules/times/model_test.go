@@ -24,6 +24,12 @@ func TestAgeAt(t *testing.T) {
 		t.Errorf("Expected %d, got %d", expected, age)
 	}
 
+	// Check age today
+	age = swimmer.AgeAt(time.Now())
+	if age != 35 {
+		t.Errorf("Expected 25, got %d", age)
+	}
+
 	// Test edge case - birthday later in year
 	swimmer = &swimming.Swimmer{
 		BirthDate: sql.NullTime{

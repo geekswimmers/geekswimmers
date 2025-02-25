@@ -424,6 +424,23 @@ func (sbt *swimmerBestTimeData) valid() bool {
 	return true
 }
 
+type swimmerBestTimeBenchmarkData struct {
+	BaseTemplateData *utils.BaseTemplateData
+	SessionData      *storage.SessionData
+	TimeBenchmarks   map[string]*timeBenchmarkData
+	Swimmer          *UserSwimmer
+	BestTimes        []*SwimmerBestTime
+	TimeStandard     times.TimeStandard
+	TimeStandards    []*times.TimeStandard
+	Meet             *times.Meet
+	Meets            []*times.Meet
+}
+
+type timeBenchmarkData struct {
+	StandardTime int64
+	Difference   int64
+}
+
 type setNewPasswordData struct {
 	Confirmation     string
 	Email            string

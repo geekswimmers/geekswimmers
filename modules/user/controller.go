@@ -995,6 +995,99 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	}
 }
 
+func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	id := req.URL.Query().Get(":id")
+	swimmerId, _ := strconv.ParseInt(id, 10, 64)
+	swimmer := FindSwimmerByID(swimmerId, uc.DB)
+
+	timeStandardID, _ := strconv.ParseInt(req.URL.Query().Get("standard"), 10, 64)
+	timeStandard := times.TimeStandard{
+		ID: timeStandardID,
+	}
+
+	var meet *times.Meet
+	meetID, _ := strconv.ParseInt(req.URL.Query().Get("meet"), 10, 64)
+	meet = times.GetMeet(meetID, uc.DB)
+	if meet == nil {
+		meet = &times.Meet{
+			ID: 0,
+		}
+	}
+
+	currentSwimSeason, err := times.GetCurrentSwimSeason(uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
+	}
+
+	timeStandards, err := times.FindTimeStandards(*currentSwimSeason, swimmer.Swimmer.Club.Jurisdiction, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
+	}
+
+	meets, err := times.FindStandardChampionshipMeets(timeStandard, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
+	}
+
+	bestTimes, err := findSwimmerBestTimes(swimmer, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmerView: %v", err)
+	}
+
+	age := swimmer.Swimmer.AgeAt(time.Now())
+	if meet.ID != 0 {
+		age = swimmer.Swimmer.AgeAt(meet.AgeDate)
+	}
+
+	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, age, timeStandard, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
+	}
+
+	timeBenchmarks := make(map[string]*timeBenchmarkData)
+	for _, standardTime := range standardTimes {
+		course := standardTime.Course
+		stroke := standardTime.Style
+		distance := standardTime.Distance
+		key := fmt.Sprintf("%s-%s-%d", course, stroke, distance)
+
+		timeBenchmarks[key] = &timeBenchmarkData{
+			StandardTime: standardTime.Standard,
+		}
+	}
+
+	for _, bestTime := range bestTimes {
+		course := bestTime.Course
+		stroke := bestTime.Event.Style.Stroke
+		distance := bestTime.Event.Distance
+		key := fmt.Sprintf("%s-%s-%d", course, stroke, distance)
+
+		if timeBenchmark, ok := timeBenchmarks[key]; ok {
+			timeBenchmark.Difference = utils.Abs(bestTime.BestTime - timeBenchmark.StandardTime)
+		}
+	}
+
+	data := &swimmerBestTimeBenchmarkData{
+		BaseTemplateData: uc.BaseTemplateData,
+		BestTimes:        bestTimes,
+		Meet:             meet,
+		Meets:            meets,
+		SessionData:      sessionData,
+		TimeBenchmarks:   timeBenchmarks,
+		Swimmer:          swimmer,
+		TimeStandard:     timeStandard,
+		TimeStandards:    timeStandards,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "profile-swimmer-benchmark", template.FuncMap{
+		"Title":             utils.Title,
+		"FormatMiliseconds": utils.FormatMiliseconds,
+	})
+	if err := html.Execute(res, data); err != nil {
+		log.Printf("Error loading the swimmer's benchmark: %v", err)
+	}
+}
+
 func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id := req.URL.Query().Get(":id")
 	swimmerId, _ := strconv.ParseInt(id, 10, 64)

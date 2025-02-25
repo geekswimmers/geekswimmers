@@ -38,6 +38,7 @@ type TimeStandard struct {
 }
 
 type StandardTime struct {
+	ID           int64
 	TimeStandard TimeStandard
 	Age          int64
 	Gender       string

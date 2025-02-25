@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
+	"log"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -30,6 +32,21 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 	}
 
 	return swimSeasons, nil
+}
+
+func GetCurrentSwimSeason(db storage.Database) (*SwimSeason, error) {
+	stm := `select id, name 
+			from swim_season ss
+			where start_date <= $1 and end_date >= $1`
+
+	row := db.QueryRow(context.Background(), stm, time.Now())
+
+	swimSeason := &SwimSeason{}
+	if err := row.Scan(&swimSeason.ID, &swimSeason.Name); err != nil {
+		return nil, fmt.Errorf("GetCurrentSwimSeason: %v", err)
+	}
+
+	return swimSeason, nil
 }
 
 func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, error) {
@@ -443,6 +460,32 @@ func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 	return standardTime, nil
 }
 
+func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, age int64, timeStandard TimeStandard, db storage.Database) ([]*StandardTime, error) {
+	stm := `select st.id, st.course, st.style, st.distance, st.standard 
+			from standard_time st
+			where st.gender = $1
+				and st.age = $2
+				and st.time_standard = $3`
+
+	rows, err := db.Query(context.Background(), stm, swimmer.Gender, age, timeStandard.ID)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
+	}
+	defer rows.Close()
+
+	var times []*StandardTime
+	for rows.Next() {
+		time := &StandardTime{}
+		err = rows.Scan(&time.ID, &time.Course, &time.Style, &time.Distance, &time.Standard)
+		if err != nil {
+			return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
+		}
+		times = append(times, time)
+	}
+
+	return times, nil
+}
+
 func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {
 	stm := `select ts.id , ts.name, st.standard, ss.id, ss.name
 			from standard_time st
@@ -520,7 +563,7 @@ func FindChampionshipMeets(jurisdictionId int64, db storage.Database) ([]*Meet, 
 	return meets, nil
 }
 
-func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
+func FindStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
 	stm := `select m.id, m.name, m.course
 			from meet m
 			where m.time_standard = $1
@@ -542,4 +585,24 @@ func findStandardChampionshipMeets(timeStandard TimeStandard, db storage.Databas
 	}
 
 	return meets, nil
+}
+
+func GetMeet(id int64, db storage.Database) *Meet {
+	stm := `select m.id, m.name, m.age_date, m.min_age_enforced, m.max_age_enforced
+			from meet m
+			where m.id = $1`
+	row := db.QueryRow(context.Background(), stm, id)
+
+	meet := &Meet{
+		ID: id,
+	}
+	err := row.Scan(&meet.Name, &meet.Course, &meet.AgeDate, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
+	if err != nil {
+		if err.Error() == storage.ErrNoRows {
+			return nil
+		}
+		log.Printf("GetMeet: %v", err)
+	}
+
+	return meet
 }

@@ -112,6 +112,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/profile/swimmers/form/", s.handleAuthRequest(userController.SwimmerForm))
 	s.Router.Get("/profile/swimmers/:id/besttimes/form/", s.handleAuthRequest(userController.SwimmerBestTimeFormView))
 	s.Router.Post("/profile/swimmers/:id/besttimes/form/", s.handleAuthRequest(userController.SwimmerBestTimeForm))
+	s.Router.Get("/profile/swimmers/:id/besttimes/benchmark/", s.handleAuthRequest(userController.ProfileSwimmersBestTimeBenchmarkView))
 	s.Router.Get("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleAuthRequest(userController.SwimmerBestTimeFormView))
 	s.Router.Post("/profile/swimmers/:id/besttimes/:bestId/form/", s.handleAuthRequest(userController.SwimmerBestTimeForm))
 	s.Router.Del("/profile/swimmers/:id/besttimes/:bestId/", s.handleAuthRequest(userController.SwimmerBestTimeDelete))
