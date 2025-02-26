@@ -441,6 +441,7 @@ type swimmerBestTimeBenchmarkData struct {
 type timeBenchmarkData struct {
 	StandardTime int64
 	Difference   int64
+	Qualified    bool
 }
 
 type setNewPasswordData struct {

@@ -17,14 +17,14 @@
                 {{end}}
 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="firstName">First Name</label>
                             <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
                             <span class="error">{{.ErrorFirstName}}</span>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="lastName">Last Name</label>
                             <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
@@ -41,7 +41,7 @@
 
                 {{if and .BirthDate .Gender}}
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="birthDate" class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}" required>
@@ -49,7 +49,7 @@
                                 <span class="error">{{.ErrorBirthDate}}</span>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Gender</label>
                                 <br>

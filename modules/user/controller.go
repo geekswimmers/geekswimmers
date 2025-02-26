@@ -1069,6 +1069,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 
 		if timeBenchmark, ok := timeBenchmarks[key]; ok {
 			timeBenchmark.Difference = utils.Abs(bestTime.BestTime - timeBenchmark.StandardTime)
+			timeBenchmark.Qualified = bestTime.BestTime <= timeBenchmark.StandardTime
 		}
 	}
 
