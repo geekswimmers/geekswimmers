@@ -460,14 +460,15 @@ func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 	return standardTime, nil
 }
 
-func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, age int64, timeStandard TimeStandard, db storage.Database) ([]*StandardTime, error) {
+func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age int64, timeStandard TimeStandard, db storage.Database) ([]*StandardTime, error) {
 	stm := `select st.id, st.course, st.style, st.distance, st.standard 
 			from standard_time st
 			where st.gender = $1
-				and st.age = $2
-				and st.time_standard = $3`
+				and st.course = $2
+				and st.age = $3
+				and st.time_standard = $4`
 
-	rows, err := db.Query(context.Background(), stm, swimmer.Gender, age, timeStandard.ID)
+	rows, err := db.Query(context.Background(), stm, swimmer.Gender, course, age, timeStandard.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
 	}

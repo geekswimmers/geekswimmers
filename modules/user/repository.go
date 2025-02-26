@@ -581,7 +581,7 @@ func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Dat
 	return link
 }
 
-func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*SwimmerBestTime, error) {
+func findAllSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*SwimmerBestTime, error) {
 	stm := `select sbt.id, sbt.course, best_time, updated,
 				ss.stroke,
     			se.distance
@@ -591,6 +591,34 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swimmer
 			where sbt.swimmer = $1
 			order by ss.sequence, sbt.course`
 	rows, err := db.Query(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
+	}
+	defer rows.Close()
+
+	var bestTimes []*SwimmerBestTime
+	for rows.Next() {
+		bestTime := &SwimmerBestTime{}
+		err := rows.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated, &bestTime.Event.Style.Stroke, &bestTime.Event.Distance)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
+		}
+		bestTimes = append(bestTimes, bestTime)
+	}
+
+	return bestTimes, nil
+}
+
+func findSwimmerBestTimes(swimmer *UserSwimmer, course string, db storage.Database) ([]*SwimmerBestTime, error) {
+	stm := `select sbt.id, sbt.course, best_time, updated,
+				ss.stroke,
+    			se.distance
+			from swimmer_best_time sbt 
+				left join swim_event se on sbt.event = se.id
+				left join swim_style ss on se.style = ss.id
+			where sbt.swimmer = $1 and sbt.course = $2
+			order by ss.sequence, sbt.course`
+	rows, err := db.Query(context.Background(), stm, swimmer.ID, course)
 	if err != nil {
 		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
 	}

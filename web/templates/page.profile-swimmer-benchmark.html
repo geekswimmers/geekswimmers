@@ -19,7 +19,20 @@
         <div class="card-header">
             <form id="filter-form" method="get" action="/profile/swimmers/{{.Swimmer.ID}}/besttimes/benchmark/">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label>Course</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" onchange="document.getElementById('filter-form').submit();" {{if eq .Course "SHORT"}}checked{{end}} required>
+                                <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" onchange="document.getElementById('filter-form').submit();" {{if eq .Course "LONG"}}checked{{end}} required>
+                                <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="standard">Time Standard</label>
                             <select id="standard" name="standard" class="form-select" onchange="document.getElementById('filter-form').submit();">
@@ -30,7 +43,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-md-3">
                         <div class="mb-3">
                             <label for="meet">Qualifier Meets</label>
                             <select id="meet" name="meet" class="form-select" onchange="document.getElementById('filter-form').submit();">
@@ -41,6 +54,12 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="age">Age</label>
+                            <div id="age" class="form-label">{{.Age}}</div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -48,7 +67,6 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th scope="col">Course</th>
                 <th scope="col">Event</th>
                 <th scope="col">Best</th>
                 {{if .TimeBenchmarks}}
@@ -61,13 +79,17 @@
             {{range .BestTimes}}
                 {{$key := printf "%s-%s-%d" .Course .Event.Style.Stroke .Event.Distance}}
                 <tr>
-                    <td>{{.Course | Title}}</td>
                     <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
                     <td>{{.BestTime | FormatMiliseconds}}</td>
                     {{if $.TimeBenchmarks}}
                         {{$timeBenchmark := index $.TimeBenchmarks $key}}
-                        <td>{{$timeBenchmark.StandardTime | FormatMiliseconds}}</td>
-                        <td>{{$timeBenchmark.Difference | FormatMiliseconds}}</td>
+                        {{if $timeBenchmark}}
+                            <td>{{$timeBenchmark.StandardTime | FormatMiliseconds}}</td>
+                            <td>{{$timeBenchmark.Difference | FormatMiliseconds}}</td>
+                        {{else}}
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        {{end}}
                     {{end}}
                 </tr>
             {{else}}
