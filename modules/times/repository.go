@@ -465,7 +465,7 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 			from standard_time st
 			where st.gender = $1
 				and st.course = $2
-				and st.age = $3
+				and (st.age = $3 or st.age is null)
 				and st.time_standard = $4`
 
 	rows, err := db.Query(context.Background(), stm, swimmer.Gender, course, age, timeStandard.ID)
