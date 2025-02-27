@@ -468,7 +468,7 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 				and (st.age = $3 or st.age is null)
 				and st.time_standard = $4`
 
-	rows, err := db.Query(context.Background(), stm, swimmer.Gender, course, age, timeStandard.ID)
+	rows, err := db.Query(context.Background(), stm, swimmer.Gender.String, course, age, timeStandard.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
 	}
