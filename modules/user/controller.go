@@ -1006,8 +1006,12 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 	}
 
 	timeStandardID, _ := strconv.ParseInt(req.URL.Query().Get("standard"), 10, 64)
-	timeStandard := times.TimeStandard{
-		ID: timeStandardID,
+	timeStandard, err := times.FindTimeStandard(timeStandardID, uc.DB)
+	if err != nil || timeStandard == nil {
+		timeStandard = &times.TimeStandard{
+			ID:   timeStandardID,
+			Open: false,
+		}
 	}
 
 	var meet *times.Meet
@@ -1029,7 +1033,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
-	meets, err := times.FindStandardChampionshipMeets(timeStandard, uc.DB)
+	meets, err := times.FindStandardChampionshipMeets(*timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
@@ -1039,12 +1043,38 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		log.Printf("ProfileSwimmerView: %v", err)
 	}
 
-	age := swimmer.Swimmer.AgeAt(time.Now())
-	if meet.ID != 0 {
-		age = swimmer.Swimmer.AgeAt(meet.AgeDate)
+	// Age is the swimmer's age by default, but it can be changed by the user
+	// to see the benchmark for a different age.
+	_, maximum, err := times.FindMinAndMaxStandardAges(uc.DB)
+	if err != nil {
+		log.Printf("user.controller.ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
-	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, course, age, timeStandard, uc.DB)
+	swimmerAge := swimmer.Swimmer.AgeAt(time.Now())
+	minimum := swimmerAge
+	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
+	if err != nil || age < swimmerAge {
+		age = swimmerAge
+	}
+
+	if meet.ID != 0 {
+		meetAge := swimmer.Swimmer.AgeAt(meet.AgeDate)
+		if age < meetAge {
+			age = meetAge
+			minimum = meetAge
+		}
+	}
+
+	var ages []int64
+	if !timeStandard.Open {
+		for i := minimum; i <= maximum; i++ {
+			ages = append(ages, i)
+		}
+	} else {
+		age = swimmerAge
+	}
+
+	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, course, age, *timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
@@ -1075,6 +1105,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 
 	data := &swimmerBestTimeBenchmarkData{
 		Age:              age,
+		Ages:             ages,
 		BaseTemplateData: uc.BaseTemplateData,
 		BestTimes:        bestTimes,
 		Course:           course,
@@ -1083,7 +1114,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		SessionData:      sessionData,
 		TimeBenchmarks:   timeBenchmarks,
 		Swimmer:          swimmer,
-		TimeStandard:     timeStandard,
+		TimeStandard:     *timeStandard,
 		TimeStandards:    timeStandards,
 	}
 

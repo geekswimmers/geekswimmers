@@ -41,6 +41,7 @@
                                     <option value="{{.ID}}" {{if eq .ID $.TimeStandard.ID}}selected{{end}}>{{.Name}}</option>
                                {{end}}
                             </select>
+                            <small class="text-body-secondary">Format: {{if .TimeStandard.Open}} Open {{else}} Age Group {{end}}</small>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -52,6 +53,7 @@
                                     <option value="{{.ID}}" {{if eq .ID $.Meet.ID}}selected{{end}}>{{.Name}}</option>
                                 {{end}}
                             </select>
+                            <small class="text-body-secondary">{{if gt .Meet.ID 0}} Age on: {{.Meet.AgeDate.Format "Jan 02, 2006"}} {{end}}</small>
                         </div>
                     </div>
                     <div class="col-md-1">
@@ -63,7 +65,15 @@
                                     <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                 </svg>
                             </a>
-                            <div id="age" class="form-label">{{.Age}}</div>
+                            {{if .Ages}}
+                                <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();">
+                                    {{range .Ages}}
+                                        <option value="{{.}}" {{if eq $.Age .}}selected{{end}}>{{.}}</option>
+                                    {{end}}
+                                </select>
+                            {{else}}
+                                <div id="age" class="form-label">{{.Age}}</div>
+                            {{end}}
                         </div>
                     </div>
                 </div>
@@ -76,7 +86,7 @@
                 <th scope="col">Event</th>
                 <th scope="col">Best</th>
                 {{if .TimeBenchmarks}}
-                    <th scope="col">Standard</th>
+                    <th scope="col">Standard *</th>
                     <th scope="col">Difference</th>
                 {{end}}
             </tr>
@@ -116,6 +126,12 @@
             {{end}}
             </tbody>
         </table>
+
+        <div class="card-footer">
+            <p>* Notice: This is a comparison tool for your convinience. In some cases, the actual requirements to qualify to a Championship are much more complex. Please, check with your 
+                coach what you need to match all the requirements.
+            </p>
+        </div>
     </div>
 {{end}}
 

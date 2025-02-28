@@ -320,7 +320,7 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 	return timeStandards, nil
 }
 
-func findTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
+func FindTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	stm := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#'), coalesce(ts.previous, 0)
 			from time_standard ts
 			 	join swim_season ss on ss.id = ts.season
@@ -517,7 +517,7 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 	return times, nil
 }
 
-func findMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
+func FindMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
 	stm := `select min(age) as min_age, max(age) as max_age from standard_time`
 
 	row := db.QueryRow(context.Background(), stm)

@@ -426,6 +426,7 @@ func (sbt *swimmerBestTimeData) valid() bool {
 
 type swimmerBestTimeBenchmarkData struct {
 	Age              int64
+	Ages             []int64
 	BaseTemplateData *utils.BaseTemplateData
 	Course           string
 	SessionData      *storage.SessionData

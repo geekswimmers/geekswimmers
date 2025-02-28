@@ -229,7 +229,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	timeStandard, err := findTimeStandard(id, sc.DB)
+	timeStandard, err := FindTimeStandard(id, sc.DB)
 	if err != nil || timeStandard == nil {
 		log.Printf("times.%v (%d)", err, id)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
@@ -499,7 +499,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	ctx.Style = stroke
 	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
 
-	minimum, maximum, err := findMinAndMaxStandardAges(sc.DB)
+	minimum, maximum, err := FindMinAndMaxStandardAges(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
