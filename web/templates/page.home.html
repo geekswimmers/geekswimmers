@@ -34,7 +34,7 @@
                                 <select id="jurisdiction" name="jurisdiction" class="form-select" required>
                                     <option value="">Select...</option>
                                     {{range .Jurisdictions}}
-                                        {{$id := printf "%d" .ID}}
+                                        {{$id := printf "%d" .ID.Int64}}
                                         <option value="{{.ID.Int64}}" {{if eq $id $.SessionData.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
                                     {{end}}
                                 </select>
