@@ -517,14 +517,29 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 	return times, nil
 }
 
-func FindMinAndMaxStandardAges(db storage.Database) (int64, int64, error) {
+func FindMinAndMaxStandardsAges(db storage.Database) (int64, int64, error) {
 	stm := `select min(age) as min_age, max(age) as max_age from standard_time`
 
 	row := db.QueryRow(context.Background(), stm)
 
 	var minAge, maxAge int64
 	if err := row.Scan(&minAge, &maxAge); err != nil {
-		return 0, 0, fmt.Errorf("findMinAndMaxStandardAges: %v", err)
+		return 0, 0, fmt.Errorf("FindMinAndMaxStandardsAges: %v", err)
+	}
+
+	return minAge, maxAge, nil
+}
+
+func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64, error) {
+	stm := `select min(st.age) as min_age, max(st.age) as max_age 
+			from standard_time st
+			where st.time_standard = $1`
+
+	row := db.QueryRow(context.Background(), stm, timeStandard.ID)
+
+	var minAge, maxAge int64
+	if err := row.Scan(&minAge, &maxAge); err != nil {
+		return 0, 0, fmt.Errorf("FindMinAndMaxStandardAges: %v", err)
 	}
 
 	return minAge, maxAge, nil

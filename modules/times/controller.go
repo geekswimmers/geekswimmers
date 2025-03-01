@@ -499,7 +499,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	ctx.Style = stroke
 	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
 
-	minimum, maximum, err := FindMinAndMaxStandardAges(sc.DB)
+	minimum, maximum, err := FindMinAndMaxStandardsAges(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}

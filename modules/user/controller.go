@@ -1045,13 +1045,13 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 
 	// Age is the swimmer's age by default, but it can be changed by the user
 	// to see the benchmark for a different age.
-	_, maximum, err := times.FindMinAndMaxStandardAges(uc.DB)
+	minimum, maximum, err := times.FindMinAndMaxStandardAges(timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("user.controller.ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
 	swimmerAge := swimmer.Swimmer.AgeAt(time.Now())
-	minimum := swimmerAge
+	min := swimmerAge
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
 	if err != nil || age < swimmerAge {
 		age = swimmerAge
@@ -1061,20 +1061,27 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		meetAge := swimmer.Swimmer.AgeAt(meet.AgeDate)
 		if age < meetAge {
 			age = meetAge
-			minimum = meetAge
+			min = meetAge
 		}
 	}
 
 	var ages []int64
 	if !timeStandard.Open {
-		for i := minimum; i <= maximum; i++ {
+		for i := min; i <= maximum; i++ {
 			ages = append(ages, i)
 		}
 	} else {
 		age = swimmerAge
 	}
 
-	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, course, age, *timeStandard, uc.DB)
+	var queryAge int64
+	if age < minimum {
+		queryAge = minimum
+	} else if age > maximum {
+		queryAge = maximum
+	}
+
+	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, course, queryAge, *timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
