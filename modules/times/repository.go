@@ -6,6 +6,7 @@ import (
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -530,7 +531,7 @@ func FindMinAndMaxStandardsAges(db storage.Database) (int64, int64, error) {
 	return minAge, maxAge, nil
 }
 
-func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64, error) {
+func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64) {
 	stm := `select min(st.age) as min_age, max(st.age) as max_age 
 			from standard_time st
 			where st.time_standard = $1`
@@ -539,10 +540,13 @@ func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) 
 
 	var minAge, maxAge int64
 	if err := row.Scan(&minAge, &maxAge); err != nil {
-		return 0, 0, fmt.Errorf("FindMinAndMaxStandardAges: %v", err)
+		if !strings.Contains(err.Error(), "cannot scan NULL") {
+			log.Printf("FindMinAndMaxStandardAges: %v", err)
+		}
+		return 0, 0
 	}
 
-	return minAge, maxAge, nil
+	return minAge, maxAge
 }
 
 func FindChampionshipMeets(jurisdictionId int64, db storage.Database) ([]*Meet, error) {

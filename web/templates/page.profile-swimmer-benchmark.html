@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="standard">Time Standard</label>
+                            <label for="standard">Time Standard *</label>
                             <select id="standard" name="standard" class="form-select" onchange="document.getElementById('filter-form').submit();">
                                <option value="0">Select...</option>
                                {{range .TimeStandards}}
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="meet">Qualifier Meets</label>
+                            <label for="meet">Qualifier Meets *</label>
                             <select id="meet" name="meet" class="form-select" onchange="document.getElementById('filter-form').submit();">
                                 <option value="0">Select...</option>
                                 {{range .Meets}}
@@ -121,14 +121,15 @@
                 </tr>
             {{else}}
                 <tr>
-                    <td colspan="3">No best time listed yet.</td>
+                    <td colspan="3">No best times for {{if eq .Course "SHORT"}}<b>short course</b>{{else}}<b>long course</b>{{end}} registered yet. 
+                        <a href="/profile/swimmers/{{.Swimmer.ID}}/besttimes/form/">Register one now</a>!</td>
                 </tr>
             {{end}}
             </tbody>
         </table>
 
         <div class="card-footer">
-            <p>* Notice: This is a comparison tool for your convinience. In some cases, the actual requirements to qualify to a Championship are much more complex. Please, check with your 
+            <p>* <b>Notice</b>: This is a comparison tool for your convinience. In some cases, the actual requirements to qualify to a Championship are much more complex. Please, check with your 
                 coach what you need to match all the requirements.
             </p>
         </div>
