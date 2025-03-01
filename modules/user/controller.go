@@ -1071,7 +1071,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		age = swimmerAge
 	}
 
-	var queryAge int64
+	queryAge := age
 	if age < minimum {
 		queryAge = minimum
 	} else if age > maximum {
