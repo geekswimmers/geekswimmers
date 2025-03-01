@@ -35,7 +35,7 @@
                                     <option value="">Select...</option>
                                     {{range .Jurisdictions}}
                                         {{$id := printf "%d" .ID}}
-                                        <option value="{{.ID}}" {{if eq $id $.SessionData.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                        <option value="{{.ID.Int64}}" {{if eq $id $.SessionData.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
                                     {{end}}
                                 </select>
                             </div>
