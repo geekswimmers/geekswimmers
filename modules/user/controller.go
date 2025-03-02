@@ -1078,6 +1078,23 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		queryAge = maximum
 	}
 
+	// If the meet is not in the list, reset the meet to the default.
+	resetMeet := true
+	for _, m := range meets {
+
+		if m.ID == meet.ID {
+			resetMeet = false
+			break
+		}
+	}
+	if resetMeet {
+		meet = &times.Meet{
+			ID: 0,
+		}
+		queryAge = swimmerAge
+		age = swimmerAge
+	}
+
 	standardTimes, err := times.FindStandardTimesBySwimmer(swimmer.Swimmer, course, queryAge, *timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
