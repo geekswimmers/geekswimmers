@@ -1,7 +1,3 @@
-After attending dozens of swim meets and hearing all the complaints from our swimmers, we came up with 7 tips from parents to swimmers that can improve their results. 
-
-We know that coaches don't like parents interfering with their kids' training and racing, but we are trying to complement, not conflict with, what they learn in the pool. These tips were inspired by our view from the galleries and as officials positioned on deck. Our knowledge from endurance sports practised outside the pool also backs them up.
-
 ## 1. Perfect your technique outside the pool
 
 We don't have to tell you to perfect your swimming technique—your coach already does it. But we can tell you that your dryland sets also need to be perfect. The correct movements will strengthen the right muscles to improve your swimming efficiency.
