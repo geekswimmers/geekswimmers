@@ -16,7 +16,7 @@ import (
 func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
-	stm := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role) 
+	stm := `insert into user_account (email, first_name, last_name, human_score, confirmation, access_role)
 			values ($1, $2, $3, $4, $5, $6) returning id`
 
 	err := db.QueryRow(context.Background(), stm,
@@ -34,7 +34,7 @@ func InsertUserAccount(userAccount *UserAccount, db storage.Database) (int64, er
 }
 
 func InsertSignInAttempt(signInAttempt SignInAttempt, db storage.Database) error {
-	stm := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match) 
+	stm := `insert into sign_in_attempt (identifier, human_score, status, ip_address, failed_match)
              values ($1, $2, $3, $4, $5)`
 
 	_, err := db.Exec(context.Background(), stm,
@@ -105,7 +105,7 @@ func saveSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64,
 	var stmt string
 
 	if bestTime.ID == 0 {
-		stmt = `insert into swimmer_best_time (swimmer, event, course, best_time, updated) 
+		stmt = `insert into swimmer_best_time (swimmer, event, course, best_time, updated)
 				values ($1, $2, $3, $4, current_timestamp) returning id`
 
 		err := db.QueryRow(context.Background(), stmt,
@@ -120,7 +120,7 @@ func saveSwimmerBestTime(bestTime *SwimmerBestTime, db storage.Database) (int64,
 	} else {
 		lastInsertId = bestTime.ID
 
-		stmt = `update swimmer_best_time 
+		stmt = `update swimmer_best_time
 				set best_time = $1, updated = current_timestamp
 				where id = $2 and swimmer = $3 returning id`
 
@@ -189,7 +189,7 @@ func deleteSwimmer(swimmer *UserSwimmer, db storage.Database) error {
 }
 
 func updateProfile(userAccount *UserAccount, db storage.Database) error {
-	stm := `update user_account 
+	stm := `update user_account
 			set first_name = $1,
                 last_name = $2,
                 email = $3
@@ -209,7 +209,7 @@ func updateSwimmerProfile(userAccount *UserAccount, swimmer *UserSwimmer, db sto
 		return fmt.Errorf("user.updateSwimmerProfile(%v): %v", userAccount.Email, err)
 	}
 
-	stm := `update swimmer 
+	stm := `update swimmer
 			set first_name = $1, last_name = $2, birth_date = $3, gender = $4, club = $5
             where id = $6`
 
@@ -223,7 +223,7 @@ func updateSwimmerProfile(userAccount *UserAccount, swimmer *UserSwimmer, db sto
 }
 
 func updateUserAccount(userAccount *UserAccount, db storage.Database) error {
-	stm := `update user_account set confirmation = $1, 
+	stm := `update user_account set confirmation = $1,
                                      modified = current_timestamp,
                                      first_name = $2,
                        	             last_name = $3,
@@ -240,9 +240,9 @@ func updateUserAccount(userAccount *UserAccount, db storage.Database) error {
 }
 
 func setUserAccountNewPassword(userAccount *UserAccount, db storage.Database) error {
-	stm := `update user_account set password = $1, 
-	                                 confirmation = null, 
-									 modified = current_timestamp
+	stm := `update user_account set password = $1,
+	                                confirmation = null,
+									modified = current_timestamp
              where email = $2 and confirmation = $3`
 
 	_, err := db.Exec(context.Background(), stm, userAccount.Password, userAccount.Email, userAccount.Confirmation)
@@ -255,7 +255,7 @@ func setUserAccountNewPassword(userAccount *UserAccount, db storage.Database) er
 
 func SetUserAccountNewEmail(userAccount *UserAccount, newEmail string, db storage.Database) error {
 	stm := `update user_account set email = $1,
-									 confirmation = null, 
+									 confirmation = null,
 									 modified = current_timestamp
              where email = $2 and confirmation = $3`
 
@@ -311,7 +311,8 @@ func approvalParentLink(swimmer *UserSwimmer, linkId int64, approval string, db 
 
 func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 	stm := `select id, email, first_name, last_name, access_role, password, sign_off, promotional_msg
-             from user_account where email = $1`
+            from user_account
+            where email = $1 and confirmation is null`
 
 	email = strings.ToLower(email)
 	email = strings.TrimSpace(email)
@@ -331,7 +332,7 @@ func FindUserAccountByEmail(email string, db storage.Database) *UserAccount {
 }
 
 func FindUserAccountByConfirmation(confirmation, email string, db storage.Database) *UserAccount {
-	stm := `select id, email, first_name, last_name, access_role 
+	stm := `select id, email, first_name, last_name, access_role
              from user_account where confirmation = $1`
 
 	var row pgx.Row
@@ -403,9 +404,9 @@ func FindSwimmerByID(id int64, db storage.Database) *UserSwimmer {
 }
 
 func FindSwimmerByEmail(email string, db storage.Database) *UserSwimmer {
-	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender 
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender
             from swimmer s
-    			join user_account ua on ua.id = s.user_account 
+    			join user_account ua on ua.id = s.user_account
 			where ua.email = $1`
 
 	row := db.QueryRow(context.Background(), stm, email)
@@ -585,7 +586,7 @@ func findAllSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*Swim
 	stm := `select sbt.id, sbt.course, best_time, updated,
 				ss.stroke,
     			se.distance
-			from swimmer_best_time sbt 
+			from swimmer_best_time sbt
 				left join swim_event se on sbt.event = se.id
 				left join swim_style ss on se.style = ss.id
 			where sbt.swimmer = $1
@@ -613,7 +614,7 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, course string, db storage.Databa
 	stm := `select sbt.id, sbt.course, best_time, updated,
 				ss.stroke,
     			se.distance
-			from swimmer_best_time sbt 
+			from swimmer_best_time sbt
 				left join swim_event se on sbt.event = se.id
 				left join swim_style ss on se.style = ss.id
 			where sbt.swimmer = $1 and sbt.course = $2
@@ -705,9 +706,9 @@ func userAccountExists(db storage.Database) bool {
 }
 
 func TooManySignInAttempts(ipAddress string, db storage.Database) bool {
-	stm := `select count(id) 
+	stm := `select count(id)
 			 from sign_in_attempt
-             where status = $1 and ip_address = $2  and created >= (current_timestamp - interval '1 HOURS') 
+             where status = $1 and ip_address = $2  and created >= (current_timestamp - interval '1 HOURS')
              limit 10`
 
 	row := db.QueryRow(context.Background(), stm, StatusFailed, ipAddress)

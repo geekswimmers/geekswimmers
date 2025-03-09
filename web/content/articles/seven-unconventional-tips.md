@@ -1,6 +1,6 @@
 ## 1. Perfect your technique outside the pool
 
-We don't have to tell you to perfect your swimming technique—your coach already does it. But we can tell you that your dryland sets also need to be perfect. The correct movements will strengthen the right muscles to improve your swimming efficiency.
+We don't have to tell you to perfect your swimming technique — your coach already does it. But we can tell you that your dryland sets also need to be perfect. The correct movements will strengthen the right muscles to improve your swimming efficiency.
 
 ## 2. Adapt to the new environment
 

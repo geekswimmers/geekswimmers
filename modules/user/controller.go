@@ -123,8 +123,8 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		reCaptchaScore = -1 // ReCaptcha not used
 	}
 	confirmation := uuid.New().String()
-	userAccount.HumanScore = reCaptchaScore
 	userAccount.Confirmation = &confirmation
+	userAccount.HumanScore = reCaptchaScore
 
 	// Creates a new user even before checking if the reCaptchaScore is high.
 	// It helps to prevent new registrations with the same email address.
@@ -133,7 +133,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		log.Printf("Error saving the user: %v", err)
 		html = utils.GetTemplate("base", "signup")
 		data.Error = `Due to an internal error, it was not possible to create
-			your account at this moment. Please, trying again later. 
+			your account at this moment. Please, trying again later.
 			Thank you for your undestanding.`
 		data.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 		err = html.Execute(res, data)
@@ -151,7 +151,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 			log.Printf("Error saving the swimmer: %v", err)
 			html = utils.GetTemplate("base", "signup")
 			data.Error = `Due to an internal error, it was not possible to create
-				your account at this moment. Please, trying again later. 
+				your account at this moment. Please, trying again later.
 				Thank you for your undestanding.`
 			data.ReCaptchaSiteKey = config.GetConfiguration().GetString(config.RecaptchaSiteKey)
 			err = html.Execute(res, data)
@@ -185,7 +185,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (uc *Controller) PasswordView(res http.ResponseWriter, req *http.Request) {
+func (uc *Controller) ChangePasswordView(res http.ResponseWriter, req *http.Request) {
 	confirmation := req.URL.Query().Get(":confirmation")
 	userAccount := FindUserAccountByConfirmation(confirmation, "", uc.DB)
 
@@ -568,7 +568,7 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 			log.Printf("Error saving the swimmers' profile: %v", err)
 			html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 			data.Error = `Due to an internal error, it was not possible to save
-			your account at this moment. Please, trying again later. 
+			your account at this moment. Please, trying again later.
 			Thank you for your understanding.`
 			err = html.Execute(res, data)
 			if err != nil {
@@ -585,7 +585,7 @@ func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request
 			log.Printf("Error saving the profile: %v", err)
 			html := utils.GetTemplateWithFunctions("base", "profile-form", template.FuncMap{"Title": utils.Title})
 			data.Error = `Due to an internal error, it was not possible to save
-			your profile at this moment. Please, trying again later. 
+			your profile at this moment. Please, trying again later.
 			Thank you for your understanding.`
 			err = html.Execute(res, data)
 			if err != nil {
@@ -753,7 +753,7 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 			"Title": utils.Title,
 		})
 		data.Error = `Due to an internal error, it was not possible to save
-			the swimmer at this moment. Please, trying again later. 
+			the swimmer at this moment. Please, trying again later.
 			Thank you for your understanding.`
 		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
 		if err != nil {
@@ -858,7 +858,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 		log.Printf("Error saving the swimmer: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")
 		data.Error = `Due to an internal error, it was not possible to create
-			your account at this moment. Please, trying again later. 
+			your account at this moment. Please, trying again later.
 			Thank you for your undestanding.`
 		err = html.Execute(res, data)
 		if err != nil {
@@ -879,7 +879,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 		log.Printf("Error linking swimmer to parent: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")
 		data.Error = `Due to an internal error, it was not possible to create
-			your account at this moment. Please, trying again later. 
+			your account at this moment. Please, trying again later.
 			Thank you for your undestanding.`
 		err = html.Execute(res, data)
 		if err != nil {
@@ -1261,7 +1261,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 			"Title": utils.Title,
 		})
 		data.Error = `Due to an internal error, it was not possible to save
-			your best time at this moment. Please, trying again later. 
+			your best time at this moment. Please, trying again later.
 			Thank you for your understanding.`
 		data.Events, err = findSwimmerMissingBestTimes(swimmer, swimming.DefaultCourse, uc.DB)
 		if err != nil {

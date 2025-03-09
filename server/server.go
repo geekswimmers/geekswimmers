@@ -98,7 +98,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/signup/", http.HandlerFunc(userController.SignUpView))
 	s.Router.Post("/signup/", s.handleRequest(userController.SignUp))
 
-	s.Router.Get("/auth/confirm/:confirmation", s.handleRequest(userController.PasswordView))
+	s.Router.Get("/auth/confirm/:confirmation", s.handleRequest(userController.ChangePasswordView))
 	s.Router.Get("/auth/password/reset/", http.HandlerFunc(userController.ResetPasswordView))
 	s.Router.Post("/auth/password/reset/", s.handleRequest(userController.ResetPassword))
 	s.Router.Post("/auth/password/", s.handleRequest(userController.SetNewPassword))
