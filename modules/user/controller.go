@@ -820,6 +820,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 	data := &swimmerData{
 		SessionData:      sessionData,
 		BaseTemplateData: uc.BaseTemplateData,
+		Consent:          req.PostForm.Get("consent"),
 		FirstName:        strings.TrimSpace(req.PostForm.Get("firstName")),
 		LastName:         strings.TrimSpace(req.PostForm.Get("lastName")),
 		BirthDate:        req.PostForm.Get("birthDate"),
@@ -870,13 +871,13 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 	parent := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmers := []*UserSwimmer{swimmer}
 	if err := linkSwimmersToParent(parent, swimmers, uc.DB); err != nil {
+		log.Printf("Error linking the swimmer to the parent: %v", err)
 		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
 		if err != nil {
 			log.Printf("Error loading jurisdictions: %v", err)
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 		}
 
-		log.Printf("Error linking swimmer to parent: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")
 		data.Error = `Due to an internal error, it was not possible to create
 			your account at this moment. Please, trying again later.

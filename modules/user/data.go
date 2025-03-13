@@ -279,9 +279,11 @@ type swimmerData struct {
 	BirthDate        string
 	Club             int64
 	Email            string
+	Consent          string
 	Error            string
 	ErrorBirthDate   string
 	ErrorClub        string
+	ErrorConsent     string
 	ErrorEmail       string
 	ErrorFirstName   string
 	ErrorGender      string
@@ -341,6 +343,12 @@ func (sd *swimmerData) valid() bool {
 	if sd.Club == 0 {
 		log.Printf("Invalid club: %v", sd.Club)
 		sd.ErrorClub = "Select your club."
+		valid = false
+	}
+
+	// Validates consent
+	if sd.Consent != "on" {
+		sd.ErrorConsent = "You have to consent the usage of the swimmer's data."
 		valid = false
 	}
 

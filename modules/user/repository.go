@@ -480,7 +480,7 @@ func findLinkableSwimmerByEmail(email string, parent *UserAccount, db storage.Da
 }
 
 func linkSwimmersToParent(parent *UserAccount, swimmers []*UserSwimmer, db storage.Database) error {
-	stm := `insert into parent_swimmer (parent, swimmer, approval) values ($1, $2, $3)`
+	stm := `insert into parent_swimmer (parent, swimmer, approval, data_consent) values ($1, $2, $3, true)`
 
 	for _, swimmer := range swimmers {
 		approval := ParentSwimmerApprovalPending

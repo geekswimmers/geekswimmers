@@ -152,6 +152,15 @@
                             <span class="error">{{.ErrorClub}}</span>
                         </div>
 
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="consent" name="consent" {{if .Consent}}checked{{end}} required>
+                            <label class="form-check-label" for="consent">
+                                I consent the usage of the swimmer's personal data to customize the information presented to the user,
+                                such as standards, records, rankings, and club information.
+                            </label>
+                            <br><span class="error">{{.ErrorConsent}}</span>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">
                             <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>

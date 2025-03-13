@@ -1,0 +1,1 @@
+alter table parent_swimmer add column data_consent boolean not null default false;
