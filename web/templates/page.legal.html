@@ -1,0 +1,14 @@
+{{template "base-layout" .}}
+
+{{define "title"}}{{.Title}}{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item">Legal</li>
+    <li class="breadcrumb-item active" aria-current="page">{{.Title}}</li>
+{{end}}
+
+{{define "content"}}
+    {{.Content | markdown}}
+{{end}}
+
+{{define "scripts"}}{{end}}

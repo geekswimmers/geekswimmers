@@ -34,3 +34,10 @@ type notFoundViewData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
 }
+
+type LegalData struct {
+	Title            string
+	Content          string
+	BaseTemplateData *utils.BaseTemplateData
+	SessionData      *storage.SessionData
+}

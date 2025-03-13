@@ -36,6 +36,16 @@ func TestTitle(t *testing.T) {
 			input:    "FREESTYLE_RELAY",
 			expected: "Freestyle Relay",
 		},
+		{
+			name:     "hyphen",
+			input:    "FREESTYLE-RELAY",
+			expected: "Freestyle Relay",
+		},
+		{
+			name:     "space",
+			input:    "FREESTYLE RELAY",
+			expected: "Freestyle Relay",
+		},
 	}
 
 	for _, tc := range testCases {

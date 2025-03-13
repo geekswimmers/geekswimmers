@@ -94,6 +94,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	// Web Content
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
 	s.Router.Get("/api/accepted-cookies", s.handleRequest(webController.ActivateCookieSession))
+	s.Router.Get("/legal/:doc/", s.handleRequest(webController.LegalView))
 
 	s.Router.Get("/signup/", http.HandlerFunc(userController.SignUpView))
 	s.Router.Post("/signup/", s.handleRequest(userController.SignUp))

@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
@@ -73,6 +74,33 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("web.HomeView: %v", err)
+	}
+}
+
+func (wc *Controller) LegalView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	docType := req.URL.Query().Get(":doc")
+
+	doc, err := content.LoadContent(fmt.Sprintf("web/content/%s.md", docType))
+	if err != nil {
+		log.Printf("Error loading the legal doc: %v", err)
+	}
+
+	title := utils.Title(docType)
+
+	data := &LegalData{
+		Title:            title,
+		Content:          doc,
+		BaseTemplateData: wc.BaseTemplateData,
+		SessionData:      sessionData,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "legal", htemplate.FuncMap{
+		"markdown": utils.MarkdownToHTML,
+	})
+	err = html.Execute(res, data)
+	if err != nil {
+		log.Printf("web.LegalView: %v", err)
 	}
 }
 

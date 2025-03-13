@@ -12,13 +12,11 @@ import (
 )
 
 type signUpData struct {
-	Agreed              string
 	BaseTemplateData    *utils.BaseTemplateData
 	BirthDate           string
 	Club                int64
 	Email               string
 	Error               string
-	ErrorAgreed         string
 	ErrorBirthDate      string
 	ErrorClub           string
 	ErrorEmail          string
@@ -31,9 +29,11 @@ type signUpData struct {
 	Jurisdiction        int64
 	Jurisdictions       []*swimming.Jurisdiction
 	LastName            string
+	PrivacyPolicy       string
 	ReCaptchaSiteKey    string
 	Role                string
 	SessionData         *storage.SessionData
+	TermsAndConditions  string
 	ExistingUserAccount *UserAccount
 	UserAccountExists   bool
 }
@@ -157,12 +157,6 @@ func (sud *signUpData) valid() bool {
 			sud.ErrorClub = "Select your club."
 			valid = false
 		}
-	}
-
-	// Validates terms agreement
-	if sud.Agreed != "on" {
-		sud.ErrorAgreed = "You have to agree with our terms before creating an account."
-		valid = false
 	}
 
 	return valid

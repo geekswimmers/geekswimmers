@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"geekswimmers/config"
+	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/modules/times"
 	"geekswimmers/storage"
@@ -44,11 +45,21 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 		ReCaptchaSiteKey: reCaptchaSiteKey,
 	}
 
+	data.PrivacyPolicy, err = content.LoadContent("web/content/privacy-policy.md")
+	if err != nil {
+		log.Printf("Error loading the privacy policy: %v", err)
+	}
+
+	data.TermsAndConditions, err = content.LoadContent("web/content/terms-and-conditions.md")
+	if err != nil {
+		log.Printf("Error loading the terms and conditions: %v", err)
+	}
+
 	if !userAccountExists(uc.DB) {
 		data.Error = "You'll become the first Geek Swimmers' user. You will be automatically assigned to an admin role."
 	}
 
-	html := utils.GetTemplate("base", "signup")
+	html := utils.GetTemplateWithFunctions("base", "signup", template.FuncMap{"markdown": utils.MarkdownToHTML})
 	err = html.Execute(res, data)
 	if err != nil {
 		log.Print(err)
@@ -77,7 +88,6 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 	data := &signUpData{
 		SessionData:       sessionData,
 		BaseTemplateData:  uc.BaseTemplateData,
-		Agreed:            req.PostForm.Get("agreed"),
 		Email:             strings.ToLower(strings.TrimSpace(req.PostForm.Get("email"))),
 		FirstName:         strings.TrimSpace(req.PostForm.Get("firstName")),
 		LastName:          strings.TrimSpace(req.PostForm.Get("lastName")),

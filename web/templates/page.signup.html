@@ -58,7 +58,7 @@
                             <div class="mb-3">
                                 <label for="birthDate" class="form-label">Date of Birth</label>
                                 <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}">
-                                <small class="text-body-secondary">We use the date of birth to calculate the age of the swimmer at the date specified by each championship.</small>
+                                <small class="text-body-secondary">We use the date of birth to calculate your age and use it to filter standards and records and select the standards according to the dates specified by each age group championship.</small>
                                 <br><span class="error">{{.ErrorBirthDate}}</span>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                     <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}}>
                                     <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
                                 </div><br>
-                                <small class="text-body-secondary">Swim Canada uses two genders to categorize time standards and records.</small>
+                                <small class="text-body-secondary">World Aquatics categorizes time standards and records using two genders. We use gender to filter these data for you automatically.</small>
                                 <span class="error">{{.ErrorGender}}</span>
                             </div>
                         </div>
@@ -100,16 +100,13 @@
                 </div>
                 
                 <hr>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="agreed" name="agreed" required>
-                    <label class="form-check-label" for="agreed">
-                        I understand, as an early adopter, that <strong>Geek Swimmers</strong> is currently in beta with
-                        no warranty. I also understand that I cannot opt-out from basic email communication
-                        required for the good functioning of the application.
-                    </label>
-                    <br><span class="error">{{.ErrorAgreed}}</span>
+                <div class="mb-3">
+                    <p>
+                        By creating an account, you agree to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsAndConditionsModal">Terms and Conditions</a> and 
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a>. 
+                        We'll occasionally send you account-related emails, and you can unsubscribe from marketing-related emails at any time.
+                    </p>
                 </div>
-                <hr>
                 {{if .ReCaptchaSiteKey}}
                     <button type="submit" id="btnSignUp" class="btn btn-primary g-recaptcha" data-sitekey="{{.ReCaptchaSiteKey}}" data-callback='onSubmit' data-action='submit'>
                         <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -131,6 +128,40 @@
                 <br><br><p>Already have an account? <a href="/auth/signin/">Sign in</a>.</p>
             </form>
         </div>
+    </div>
+
+    <div class="modal fade" id="termsAndConditionsModal" tabindex="-1" aria-labelledby="termsAndConditionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{.TermsAndConditions | markdown}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+    <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Privacy Policy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{.PrivacyPolicy | markdown}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>        
     </div>
 {{end}}
 

@@ -55,8 +55,17 @@ func Title(str string) string {
 		return str
 	}
 
-	words := strings.Split(str, "_")
-	separator := ""
+	var separator string
+	if strings.Contains(str, "_") {
+		separator = "_"
+	} else if strings.Contains(str, "-") {
+		separator = "-"
+	} else {
+		separator = " "
+	}
+
+	words := strings.Split(str, separator)
+	separator = ""
 	var title string
 	for _, word := range words {
 		title += separator + cases.Title(language.English, cases.Compact).String(word)

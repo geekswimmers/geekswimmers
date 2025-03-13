@@ -72,7 +72,7 @@ func getArticle(reference string, db storage.Database) (*Article, error) {
 		return nil, err
 	}
 
-	article.Content, err = loadContent(fmt.Sprintf("web/content/%s", article.Content))
+	article.Content, err = LoadContent(fmt.Sprintf("web/content/%s", article.Content))
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func getArticle(reference string, db storage.Database) (*Article, error) {
 	return article, nil
 }
 
-func loadContent(filePath string) (string, error) {
+func LoadContent(filePath string) (string, error) {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err
