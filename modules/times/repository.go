@@ -246,6 +246,7 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 	               j.country, j.province, j.region, j.city, j.club, j.meet
 			from record_set rs
 			    join jurisdiction j on j.id = rs.jurisdiction
+			where j.club is null
 			order by j.country, j.province, j.region, j.city, j.club, j.meet`
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
