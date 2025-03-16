@@ -618,7 +618,7 @@ func findSwimmerBestTimes(swimmer *UserSwimmer, course string, db storage.Databa
 				left join swim_event se on sbt.event = se.id
 				left join swim_style ss on se.style = ss.id
 			where sbt.swimmer = $1 and sbt.course = $2
-			order by ss.sequence, sbt.course`
+			order by sbt.course, ss.sequence, se.distance`
 	rows, err := db.Query(context.Background(), stm, swimmer.ID, course)
 	if err != nil {
 		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
