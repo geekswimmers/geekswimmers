@@ -126,9 +126,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
-	groupedRecords := GroupRecordsByJurisdiction(records)
-
-	for i, record := range groupedRecords {
+	for _, record := range records {
 		record.Difference = swimmerTime - record.Time
 
 		if swimmerTime <= record.Time {
@@ -136,7 +134,6 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		} else {
 			record.Percentage = (record.Time * 100) / swimmerTime
 		}
-		groupedRecords[i] = record
 	}
 
 	sort.SliceStable(foundMeets, func(i, j int) bool {
@@ -146,7 +143,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	sessionData := storage.NewSessionData(req)
 	ctx := &benchmaskTimeViewData{
 		Meets:            foundMeets,
-		Records:          groupedRecords,
+		Records:          records,
 		FormatedTime:     utils.FormatTime(minute, second, millisecond),
 		Distance:         distance,
 		Course:           course,
@@ -325,7 +322,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 
 func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
-	ctx := &recordsViewData{
+	data := &recordsViewData{
 		BaseTemplateData: rc.BaseTemplateData,
 		SessionData:      sessionData,
 	}
@@ -334,7 +331,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	recordSet, err := findRecordSet(recordSetId, rc.DB)
 	if err != nil || recordSet == nil {
 		log.Printf("times.%v (%d)", err, recordSetId)
-		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		utils.ErrorHandler(res, req, data, http.StatusNotFound)
 		return
 	}
 
@@ -345,31 +342,31 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	}
 
 	ageParam := req.URL.Query().Get("age")
-	age, err := strconv.ParseInt(ageParam, 10, 64)
-	if err != nil && len(ageParam) > 0 {
-		minMaxAge := strings.Split(ageParam, "-")
-		minAge, err := strconv.ParseInt(minMaxAge[0], 10, 64)
-		if err == nil {
-			age = minAge
-		} else {
-			maxAge, err := strconv.ParseInt(minMaxAge[1], 10, 64)
+	age := int64(0)
+	if ageParam != "All" {
+		age, err = strconv.ParseInt(ageParam, 10, 64)
+		if err != nil && len(ageParam) > 0 {
+			minMaxAge := strings.Split(ageParam, "-")
+			minAge, err := strconv.ParseInt(minMaxAge[0], 10, 64)
 			if err == nil {
-				age = maxAge
+				age = minAge
 			} else {
-				age = 0
+				maxAge, err := strconv.ParseInt(minMaxAge[1], 10, 64)
+				if err == nil {
+					age = maxAge
+				}
+			}
+		} else if len(ageParam) == 0 {
+			if ageRanges[0].MinAge != nil {
+				age = *ageRanges[0].MinAge
+			} else if ageRanges[0].MaxAge != nil {
+				age = *ageRanges[0].MaxAge
 			}
 		}
-	} else if len(ageParam) == 0 {
-		if ageRanges[0].MinAge != nil {
-			age = *ageRanges[0].MinAge
-		} else if ageRanges[0].MaxAge != nil {
-			age = *ageRanges[0].MaxAge
-		} else {
-			age = 0
-		}
 	}
-	ctx.AgeRange = ageParam
-	ctx.AgeRanges = ageRanges
+
+	data.AgeRange = ageParam
+	data.AgeRanges = ageRanges
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
@@ -392,19 +389,19 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	}
 	groupedRecords := groupRecordsByDefinition(records)
 
-	ctx.Age = age
-	ctx.Gender = gender
-	ctx.Course = course
-	ctx.RecordSet = recordSet
-	ctx.RecordDefinition = definition
-	ctx.Records = groupedRecords
+	data.Age = age
+	data.Gender = gender
+	data.Course = course
+	data.RecordSet = recordSet
+	data.RecordDefinition = definition
+	data.Records = groupedRecords
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":             utils.Title,
 		"Lowercase":         utils.Lowercase,
 		"FormatMiliseconds": utils.FormatMiliseconds,
 	})
-	err = html.Execute(res, ctx)
+	err = html.Execute(res, data)
 	if err != nil {
 		log.Printf("times.RecordsView: %v", err)
 	}

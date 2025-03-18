@@ -108,7 +108,7 @@
                             {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
                         {{else if .Definition.MinAge}}
                             {{.Definition.MinAge}}&Over-year-old
-                        {{else}}
+                        {{else if .Definition.MaxAge}}
                             {{.Definition.MaxAge}}&Under-year-old
                         {{end}}</b> record,
                         {{if .Holder}}

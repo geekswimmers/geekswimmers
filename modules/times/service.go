@@ -2,22 +2,8 @@ package times
 
 import (
 	"cmp"
-	"fmt"
 	"slices"
 )
-
-func GroupRecordsByJurisdiction(records []*Record) []Record {
-	grouping := make(map[any]*Record)
-
-	for _, record := range records {
-		key := fmt.Sprintf("%s-%s",
-			record.RecordSet.Jurisdiction.SubTitle,
-			record.RecordSet.Jurisdiction.Title)
-		groupDuplicates(grouping, record, key)
-	}
-
-	return squizeFastests(grouping)
-}
 
 func groupRecordsByDefinition(records []*Record) []Record {
 	grouping := make(map[any]*Record)

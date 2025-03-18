@@ -43,46 +43,63 @@ type Event struct {
 
 type Jurisdiction struct {
 	ID       sql.NullInt64
-	Country  string
-	Province *string
-	Region   *string
-	City     *string
-	Meet     *string
-	Club     *string
-
-	// Transient
-	Title    string
-	SubTitle string
+	World    sql.NullString
+	Country  sql.NullString
+	Province sql.NullString
+	Region   sql.NullString
+	City     sql.NullString
+	Meet     sql.NullString
+	Club     sql.NullString
 }
 
-func (jurisdiction *Jurisdiction) SetTitle() {
-	if jurisdiction.Meet != nil {
-		jurisdiction.Title = *jurisdiction.Meet
-	} else if jurisdiction.Club != nil {
-		jurisdiction.Title = *jurisdiction.Club
-	} else if jurisdiction.City != nil {
-		jurisdiction.Title = *jurisdiction.City
-	} else if jurisdiction.Region != nil {
-		jurisdiction.Title = *jurisdiction.Region
-	} else if jurisdiction.Province != nil {
-		jurisdiction.Title = *jurisdiction.Province
-	} else {
-		jurisdiction.Title = jurisdiction.Country
+func (jurisdiction *Jurisdiction) Title() string {
+	if jurisdiction.Meet.Valid {
+		return jurisdiction.Meet.String
+	} else if jurisdiction.Club.Valid {
+		return jurisdiction.Club.String
+	} else if jurisdiction.City.Valid {
+		return jurisdiction.City.String
+	} else if jurisdiction.Region.Valid {
+		return jurisdiction.Region.String
+	} else if jurisdiction.Province.Valid {
+		return jurisdiction.Province.String
+	} else if jurisdiction.Country.Valid {
+		return jurisdiction.Country.String
+	} else if jurisdiction.World.Valid {
+		return jurisdiction.World.String
 	}
+
+	return "None"
 }
 
-func (jurisdiction *Jurisdiction) SetSubTitle() {
-	if jurisdiction.Meet != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v, %v - %v", *jurisdiction.Club, *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Club != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v, %v - %v", *jurisdiction.City, *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.City != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v, %v - %v", *jurisdiction.Region, *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Region != nil {
-		jurisdiction.SubTitle = fmt.Sprintf("%v - %v", *jurisdiction.Province, jurisdiction.Country)
-	} else if jurisdiction.Province != nil {
-		jurisdiction.SubTitle = jurisdiction.Country
+func (jurisdiction *Jurisdiction) SubTitle() string {
+	if jurisdiction.Meet.Valid {
+		return fmt.Sprintf("%v, %v, %v, %v - %v",
+			jurisdiction.Club.String,
+			jurisdiction.City.String,
+			jurisdiction.Region.String,
+			jurisdiction.Province.String,
+			jurisdiction.Country.String)
+	} else if jurisdiction.Club.Valid {
+		return fmt.Sprintf("%v, %v, %v - %v",
+			jurisdiction.City.String,
+			jurisdiction.Region.String,
+			jurisdiction.Province.String,
+			jurisdiction.Country.String)
+	} else if jurisdiction.City.Valid {
+		return fmt.Sprintf("%v, %v - %v",
+			jurisdiction.Region.String,
+			jurisdiction.Province.String,
+			jurisdiction.Country.String)
+	} else if jurisdiction.Region.Valid {
+		return fmt.Sprintf("%v - %v",
+			jurisdiction.Province.String,
+			jurisdiction.Country.String)
+	} else if jurisdiction.Province.Valid {
+		return jurisdiction.Country.String
 	}
+
+	return ""
 }
 
 type Club struct {

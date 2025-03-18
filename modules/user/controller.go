@@ -970,9 +970,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
-	groupedRecords := times.GroupRecordsByJurisdiction(records)
-
-	for i, record := range groupedRecords {
+	for _, record := range records {
 		record.Difference = bestTime.BestTime - record.Time
 
 		if bestTime.BestTime <= record.Time {
@@ -980,7 +978,6 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 		} else {
 			record.Percentage = (record.Time * 100) / bestTime.BestTime
 		}
-		groupedRecords[i] = record
 	}
 
 	sort.SliceStable(foundMeets, func(i, j int) bool {
@@ -990,7 +987,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	data := &swimmerBestTimeData{
 		BaseTemplateData: uc.BaseTemplateData,
 		Meets:            foundMeets,
-		Records:          groupedRecords,
+		Records:          records,
 		SwimmerBestTime:  bestTime,
 		SessionData:      sessionData,
 	}

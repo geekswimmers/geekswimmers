@@ -394,7 +394,7 @@ type swimmerBestTimeData struct {
 	Swimmer          *UserSwimmer
 	Events           []*swimming.Event
 	Meets            []*times.Meet
-	Records          []times.Record
+	Records          []*times.Record
 	SessionData      *storage.SessionData
 }
 

@@ -13,7 +13,7 @@ type benchmaskTimeViewData struct {
 	Style            string
 	Meets            []*Meet
 	FormatedTime     string
-	Records          []Record
+	Records          []*Record
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
 }
