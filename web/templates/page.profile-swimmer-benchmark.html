@@ -98,7 +98,11 @@
                     {{if $.TimeBenchmarks}}
                         {{$timeBenchmark := index $.TimeBenchmarks $key}}
                         {{if $timeBenchmark}}
-                            <tr {{if $timeBenchmark.Qualified}}class="table-success"{{end}}>
+                            <tr {{if $timeBenchmark.Qualified}}
+                                    class="table-success"
+                                {{else if $timeBenchmark.Considered}}
+                                    class="table-warning"
+                                {{end}}>
                                 <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
                                 <td>{{.BestTime | FormatMiliseconds}}</td>
                                 <td>{{$timeBenchmark.StandardTime | FormatMiliseconds}}</td>
@@ -132,6 +136,8 @@
             <p>* <b>Notice</b>: This is a comparison tool for your convenience. In some cases, the actual requirements to qualify to a Championship are much more complex. Please, check with your 
                 coach what you need to match all the requirements.
             </p>
+
+            <p><span class=""></span>Green</p>
         </div>
     </div>
 {{end}}

@@ -445,6 +445,7 @@ type timeBenchmarkData struct {
 	StandardTime int64
 	Difference   int64
 	Qualified    bool
+	Considered   bool
 }
 
 type setNewPasswordData struct {
