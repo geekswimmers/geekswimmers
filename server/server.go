@@ -36,13 +36,13 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	return s
 }
 
-func (s *Server) handleRequest(f Handler) http.HandlerFunc {
+func (s *Server) handleRequest(h Handler) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
-		f(res, req)
+		h(res, req)
 	}
 }
 
-func (s *Server) handleAuthRequest(f AuthHandler) http.HandlerFunc {
+func (s *Server) handleAuthRequest(ah AuthHandler) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		sessionData := storage.NewSessionData(req)
 		if !sessionData.IsAuthenticated() {
@@ -50,7 +50,19 @@ func (s *Server) handleAuthRequest(f AuthHandler) http.HandlerFunc {
 			return
 		}
 
-		f(res, req, sessionData)
+		ah(res, req, sessionData)
+	}
+}
+
+func (s *Server) handleAuthApiRequest(ah AuthHandler) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		sessionData := storage.NewSessionData(req)
+		if !sessionData.IsAuthenticated() {
+			http.Error(res, "Not Authorized", http.StatusUnauthorized)
+			return
+		}
+
+		ah(res, req, sessionData)
 	}
 }
 
@@ -146,10 +158,11 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./web/static"))))
 
 	// BFF API
-	s.Router.Get("/api/swimmers/:id/events/", s.handleRequest(userController.EventsResource))
 	s.Router.Get("/api/clubs/", s.handleRequest(swimmingController.ClubResource))
-	s.Router.Put("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthRequest(userController.AcceptParentLink))
-	s.Router.Del("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthRequest(userController.DismissParentLink))
+	s.Router.Get("/api/swimmers/:id/events/", s.handleRequest(userController.EventsResource))
+	s.Router.Get("/api/swimmers/:id/times/best/", s.handleAuthApiRequest(userController.BestTimesPartial))
+	s.Router.Put("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthApiRequest(userController.AcceptParentLink))
+	s.Router.Del("/api/profile/swimmers/:id/parentlink/:linkId/", s.handleAuthApiRequest(userController.DismissParentLink))
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }

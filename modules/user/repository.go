@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"geekswimmers/modules/swimming"
+	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"log"
 	"strings"
@@ -582,34 +583,6 @@ func findParentSwimmer(parent *UserAccount, swimmer *UserSwimmer, db storage.Dat
 	return link
 }
 
-func findAllSwimmerBestTimes(swimmer *UserSwimmer, db storage.Database) ([]*SwimmerBestTime, error) {
-	stm := `select sbt.id, sbt.course, best_time, updated,
-				ss.stroke,
-    			se.distance
-			from swimmer_best_time sbt
-				left join swim_event se on sbt.event = se.id
-				left join swim_style ss on se.style = ss.id
-			where sbt.swimmer = $1
-			order by sbt.course, ss.sequence, se.distance`
-	rows, err := db.Query(context.Background(), stm, swimmer.ID)
-	if err != nil {
-		return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
-	}
-	defer rows.Close()
-
-	var bestTimes []*SwimmerBestTime
-	for rows.Next() {
-		bestTime := &SwimmerBestTime{}
-		err := rows.Scan(&bestTime.ID, &bestTime.Course, &bestTime.BestTime, &bestTime.Updated, &bestTime.Event.Style.Stroke, &bestTime.Event.Distance)
-		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findSwimmerBestTimes: %v", err)
-		}
-		bestTimes = append(bestTimes, bestTime)
-	}
-
-	return bestTimes, nil
-}
-
 func findSwimmerBestTimes(swimmer *UserSwimmer, course string, db storage.Database) ([]*SwimmerBestTime, error) {
 	stm := `select sbt.id, sbt.course, best_time, updated,
 				ss.stroke,
@@ -662,6 +635,35 @@ func findSwimmerBestTime(swimmer *UserSwimmer, bestId int64, db storage.Database
 	}
 
 	return bestTime
+}
+
+func addSwimmingPointsToRecords(swimmer *UserSwimmer, course string, bestTimes []*SwimmerBestTime, db storage.Database) []*SwimmerBestTime {
+	recordSet := times.RecordSet{
+		ID: 3,
+	}
+	recordDefinition := times.RecordDefinition{
+		Gender: swimmer.Swimmer.Gender.String,
+		Course: course,
+	}
+	records, err := times.FindRecordsByRecordSet(recordSet, recordDefinition, db)
+	if err != nil {
+		log.Printf("addFinaPoints: %v", err)
+		return nil
+	}
+
+	for _, bestTime := range bestTimes {
+		for _, record := range records {
+			if bestTime.Event.Style.Stroke == record.Definition.Style && bestTime.Event.Distance == record.Definition.Distance {
+				baseTime := record.Time
+				time := bestTime.BestTime
+				points := swimming.CalculateSwimmingPoints(baseTime, time)
+				bestTime.Points = points
+				break
+			}
+		}
+	}
+
+	return bestTimes
 }
 
 func findSwimmerMissingBestTimes(swimmer *UserSwimmer, course string, db storage.Database) ([]*swimming.Event, error) {

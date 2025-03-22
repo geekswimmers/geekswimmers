@@ -65,26 +65,44 @@
             <h6 class="card-subtitle mb-2 text-body-secondary">Recent best times to compare with standards and records.</h6>
         </div>
 
+        <div class="card-header">
+            <form id="filter-form" hx-get="/api/swimmers/{{.Swimmer.ID}}/times/best/" hx-trigger="change" hx-target="#best-times-list" hx-swap="innerHTML">
+                <div class="mb-3">
+                    <label>Course</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" {{if eq .Course "SHORT"}}checked{{end}}>
+                        <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="course" id="longCourse" value="LONG" {{if eq .Course "LONG"}}checked{{end}}>
+                        <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
+                    </div>
+                </div>
+            </form> 
+        </div>
+
         <table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col">Course</th>
                 <th scope="col">Event</th>
                 <th scope="col">Time</th>
+                <th scope="col">Points *</th>
             </tr>
             </thead>
-            <tbody>
-            {{range .BestTimes}}
-                <tr>
-                    <td>{{.Course | Title}}</td>
-                    <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
-                    <td>{{.BestTime | FormatMiliseconds}}</td>
-                </tr>
-            {{else}}
-                <tr>
-                    <td colspan="3">No best time listed yet.</td>
-                </tr>
-            {{end}}
+            <tbody id="best-times-list">
+                {{range .BestTimes}}
+                    <tr>
+                        <td>{{.Course | Title}}</td>
+                        <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
+                        <td>{{.BestTime | FormatMiliseconds}}</td>
+                        <td>{{.Points}}</td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="3">No best time listed yet.</td>
+                    </tr>
+                {{end}}
             </tbody>
         </table>
 
@@ -102,6 +120,11 @@
                     <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
                 </svg> Benchmark All
             </a>
+        </div>
+
+        <div class="card-footer">
+            <p>* <b>World Aquatics (FINA) Points</b>: allows comparisons of results among different events. <a href="https://www.worldaquatics.com/swimming/points" target="_blank" rel="noopener noreferrer">Learn more</a>.
+            </p>
         </div>
     </div>
 

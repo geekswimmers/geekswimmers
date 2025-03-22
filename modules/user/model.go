@@ -73,6 +73,9 @@ type SwimmerBestTime struct {
 	Course   string
 	BestTime int64
 	Updated  time.Time
+
+	// Transient
+	Points int
 }
 
 type EmailMessage struct {

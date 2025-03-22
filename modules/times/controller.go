@@ -382,7 +382,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		Gender: gender,
 		Course: course,
 	}
-	records, err := findRecordsByRecordSet(*recordSet, definition, rc.DB)
+	records, err := FindRecordsByRecordSet(*recordSet, definition, rc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

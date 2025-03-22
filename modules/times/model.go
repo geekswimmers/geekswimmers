@@ -10,6 +10,7 @@ import (
 
 const (
 	DefaultStroke = "FREESTYLE"
+	DefaultCourse = "SHORT"
 )
 
 type SwimSeason struct {

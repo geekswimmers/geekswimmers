@@ -645,13 +645,15 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		log.Printf("ProfileSwimmerView: %v", err)
 	}
 
-	bestTimes, err := findAllSwimmerBestTimes(swimmer, uc.DB)
+	bestTimes, err := findSwimmerBestTimes(swimmer, times.DefaultCourse, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmerView: %v", err)
 	}
+	bestTimes = addSwimmingPointsToRecords(swimmer, times.DefaultCourse, bestTimes, uc.DB)
 
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
+		Course:           times.DefaultCourse,
 		SessionData:      sessionData,
 		Swimmer:          swimmer,
 		BestTimes:        bestTimes,

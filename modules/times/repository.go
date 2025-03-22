@@ -149,7 +149,7 @@ func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 	return records, nil
 }
 
-func findRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db storage.Database) ([]*Record, error) {
+func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db storage.Database) ([]*Record, error) {
 	var rows pgx.Rows
 	var err error
 	if example.Age > 0 {

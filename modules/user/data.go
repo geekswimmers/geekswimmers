@@ -274,6 +274,7 @@ type swimmerData struct {
 	Club             int64
 	Email            string
 	Consent          string
+	Course           string
 	Error            string
 	ErrorBirthDate   string
 	ErrorClub        string
