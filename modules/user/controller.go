@@ -463,7 +463,7 @@ func (uc *Controller) ProfileView(res http.ResponseWriter, req *http.Request, se
 	}
 }
 
-func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+func (uc *Controller) ProfileFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	user := FindUserAccountByEmail(sessionData.Email, uc.DB)
 	swimmer := FindSwimmerByUserAccount(user, uc.DB)
 	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
@@ -506,7 +506,7 @@ func (uc *Controller) ProfileEditView(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uc *Controller) ProfileEditSave(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+func (uc *Controller) ProfileForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -1329,7 +1329,7 @@ func (uc *Controller) SwimmerFormSearch(res http.ResponseWriter, req *http.Reque
 	}
 }
 
-func (uc *Controller) SwimmerFormLink(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+func (uc *Controller) SwimmerLinkForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)

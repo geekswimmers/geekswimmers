@@ -120,7 +120,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
 
 	s.Router.Post("/profile/swimmers/form/search/", s.handleAuthRequest(userController.SwimmerFormSearch))
-	s.Router.Post("/profile/swimmers/form/link/", s.handleAuthRequest(userController.SwimmerFormLink))
+	s.Router.Post("/profile/swimmers/form/link/", s.handleAuthRequest(userController.SwimmerLinkForm))
 	s.Router.Get("/profile/swimmers/form/", s.handleAuthRequest(userController.SwimmerFormView))
 	s.Router.Post("/profile/swimmers/form/", s.handleAuthRequest(userController.SwimmerForm))
 	s.Router.Get("/profile/swimmers/:id/besttimes/form/", s.handleAuthRequest(userController.SwimmerBestTimeFormView))
@@ -135,8 +135,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/profile/swimmers/:id/", s.handleAuthRequest(userController.ProfileSwimmerView))
 	s.Router.Del("/profile/swimmers/:id/", s.handleAuthRequest(userController.SwimmerDelete))
 	s.Router.Get("/profile/swimmers/", s.handleAuthRequest(userController.ProfileSwimmerView))
-	s.Router.Get("/profile/edit/", s.handleAuthRequest(userController.ProfileEditView))
-	s.Router.Post("/profile/edit/", s.handleAuthRequest(userController.ProfileEditSave))
+	s.Router.Get("/profile/edit/", s.handleAuthRequest(userController.ProfileFormView))
+	s.Router.Post("/profile/edit/", s.handleAuthRequest(userController.ProfileForm))
 	s.Router.Get("/profile/", s.handleAuthRequest(userController.ProfileView))
 
 	s.Router.Get("/content/articles/:reference/", s.handleRequest(contentController.ArticleView))
