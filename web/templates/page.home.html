@@ -6,7 +6,7 @@
     <div class="row">
         {{if .QuoteOfTheDay}}
         <div class="mb-3">
-            <div class="card text-bg-success">
+            <div class="card text-bg-info">
                 <div class="card-body">
                     <h4 class="card-title">Daily Dive!</h4>
                     <p class="card-text lead"><i>"{{.QuoteOfTheDay.Quote}}"</i>
@@ -28,13 +28,13 @@
                         <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
                     {{end}}
                     <div class="card-body">
-                        <h1 class="display-5"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/articles/{{.Reference}}/">{{.Title}}</a></h1>
+                        <h1 class="display-5"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/blog/{{.Reference}}/">{{.Title}}</a></h1>
 
                         <div class="lead">
                             {{markdown .Abstract}}
                         </div>
 
-                        <p><a href="/content/articles/{{.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
+                        <p><a href="/content/blog/{{.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
                     </div>
                 </div>
                 <br>

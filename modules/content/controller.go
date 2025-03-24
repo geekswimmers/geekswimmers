@@ -13,6 +13,44 @@ type Controller struct {
 	BaseTemplateData *utils.BaseTemplateData
 }
 
+func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	highlightedArticles, err := FindHighlightedArticles(wc.DB)
+	if err != nil {
+		log.Printf("content.Blog.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	var highlightedArticle *Article
+	if len(highlightedArticles) > 0 {
+		highlightedArticle = highlightedArticles[0]
+	}
+
+	articles, err := FindArticlesExcept(highlightedArticle.Reference, wc.DB)
+	if err != nil {
+		log.Printf("content.Blog.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx := &blogViewData{
+		Articles:         articles,
+		BaseTemplateData: wc.BaseTemplateData,
+		Highlighted:      highlightedArticle,
+		SessionData:      sessionData,
+	}
+
+	html := utils.GetTemplateWithFunctions("base", "blog", template.FuncMap{
+		"Title":    utils.Title,
+		"markdown": utils.MarkdownToHTML,
+	})
+
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("web.BlogView: %v", err)
+	}
+}
+
 func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 

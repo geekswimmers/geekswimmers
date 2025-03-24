@@ -33,12 +33,12 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 	return articles, nil
 }
 
-func FindArticlesExcept(reference string, db storage.Database) ([]*Article, error) {
+func FindArticlesExcept(except string, db storage.Database) ([]*Article, error) {
 	stm := `select a.reference, a.title, coalesce(a.sub_title, ''), a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			from article a
 			where a.reference != $1
 			order by a.published desc`
-	rows, err := db.Query(context.Background(), stm, reference)
+	rows, err := db.Query(context.Background(), stm, except)
 	if err != nil {
 		return nil, err
 	}

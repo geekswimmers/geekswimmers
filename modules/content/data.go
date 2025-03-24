@@ -11,3 +11,10 @@ type articleViewData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData
 }
+
+type blogViewData struct {
+	Highlighted      *Article
+	Articles         []*Article
+	BaseTemplateData *utils.BaseTemplateData
+	SessionData      *storage.SessionData
+}

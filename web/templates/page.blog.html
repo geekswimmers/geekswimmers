@@ -1,0 +1,52 @@
+{{template "base-layout" .}}
+
+{{define "title"}}Blog{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item active" aria-current="page">Blog</li>
+{{end}}
+
+{{define "content"}}
+{{if .Highlighted}}
+    <div class="card">
+        {{if .Highlighted.Image}}
+            <img src="/static/images/content/{{.Highlighted.Image}}" class="card-img" alt="{{.Highlighted.ImageCopyright}}">
+        {{end}}
+        <div class="card-body">
+            <h1 class="display-5"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/blog/{{.Highlighted.Reference}}/">{{.Highlighted.Title}}</a></h1>
+
+            <div class="lead">
+                {{markdown .Highlighted.Abstract}}
+            </div>
+
+            <p><a href="/content/blog/{{.Highlighted.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
+        </div>
+    </div>
+    <br>
+{{end}}
+
+<div class="row row-cols-1 row-cols-md-3 g-4" data-masonry='{"percentPosition": true }'>
+    {{range .Articles}}
+    <div class="col">
+        <div class="card">
+            {{if .Image}}
+                <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
+            {{end}}
+            <div class="card-body">
+                <h1 class="display-6"><a class="link-dark link-offset-2 link-underline-opacity-0" href="/content/blog/{{.Reference}}/">{{.Title}}</a></h1>
+
+                <div class="lead">
+                    {{markdown .Abstract}}
+                </div>
+
+                <p><a href="/content/blog/{{.Reference}}/" class="btn btn-outline-primary">Keep reading...</a></p>
+            </div>
+        </div>
+    </div>
+    {{end}}
+</div>
+{{end}}
+
+{{define "scripts"}}
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+{{end}}

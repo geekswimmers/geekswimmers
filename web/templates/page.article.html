@@ -3,7 +3,7 @@
 {{define "title"}}{{.Article.Title}}{{end}}
 
 {{define "breadcrumb"}}
-    <li class="breadcrumb-item"><a href="/swimming/styles">Articles</a></li>
+    <li class="breadcrumb-item"><a href="/content/blog/">Blog</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{.Article.Title}}</li>
 {{end}}
 
@@ -37,7 +37,7 @@
                         <img src="/static/images/content/{{.Image}}" class="card-img" alt="{{.ImageCopyright}}">
                     {{end}}
                     <div class="card-body">
-                        <h5 class="card-title"><a href="/content/articles/{{.Reference}}/">{{.Title}}</a></h5>
+                        <h5 class="card-title"><a href="/content/blog/{{.Reference}}/">{{.Title}}</a></h5>
                         <p class="card-text">{{.SubTitle}}</p>
                     </div>
                 </div>
