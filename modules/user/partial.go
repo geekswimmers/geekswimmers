@@ -51,5 +51,8 @@ func (uc *Controller) BestTimesPartial(res http.ResponseWriter, req *http.Reques
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	html.Execute(res, data)
+	err = html.Execute(res, data)
+	if err != nil {
+		log.Print(err)
+	}
 }
