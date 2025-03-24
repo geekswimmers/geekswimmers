@@ -10,7 +10,7 @@ I had to get back to my position, but I left my cellphone at reach, anxiously wa
 
 After this experience we decided to sit down and definitely learn how these time standards work. And that was not self-explanatory. First, there is no such a thing like one time standard. There are several ones, in different levels and jurisdictions. Age is a criteria to find the time, but meets can follow different rules. Some consider your age on December 31st, others on the race day, and open meets don't consider age at all. It is so tricky that what athletes and parents usually do is to spend some time to find one time, set it as goal, and ignore all the rest until that goal is reached. I wondered if there was a way to simplify that.
 
-That's when we came up with the idea behind **Geekswimmers.com**. An app that would explain and streamline all numbers around the sport of swimming, starting with time standards, which still seems to be an open problem out there. 
+That's when we came up with the idea behind **Geekswimmers.com**. An app that would explain and streamline all numbers around the sport of swimming, starting with time standards.
 
 Let's imagine you are watching your kid in an invitational meet. They just finished swimming an event and you want to know if their time can qualify them for a championship. In GeekSwimmers, complete the [Time Benchmark](/#time-benchmark) form with the date of birth, gender, course, event, and the time.
 
