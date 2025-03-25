@@ -568,7 +568,7 @@ func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) 
 	return minAge, maxAge
 }
 
-func FindChampionshipMeets(jurisdictionId int64, db storage.Database) ([]*Meet, error) {
+func FindMeetsWithTimeStandardByJurisdiction(jurisdictionId int64, db storage.Database) ([]*Meet, error) {
 	stm := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
 	            ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			from meet m
@@ -602,7 +602,7 @@ func FindChampionshipMeets(jurisdictionId int64, db storage.Database) ([]*Meet, 
 	return meets, nil
 }
 
-func FindStandardChampionshipMeets(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
+func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
 	stm := `select m.id, m.name, m.course
 			from meet m
 			where m.time_standard = $1

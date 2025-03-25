@@ -58,7 +58,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	if err != nil {
 		jurisdictionId = 0
 	}
-	meets, err := FindChampionshipMeets(jurisdictionId, bc.DB)
+	meets, err := FindMeetsWithTimeStandardByJurisdiction(jurisdictionId, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
@@ -282,7 +282,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		ctx.LatestTimeStandard = latestTimeStandard
 	}
 
-	meets, err := FindStandardChampionshipMeets(*timeStandard, sc.DB)
+	meets, err := FindMeetsByTimeStandard(*timeStandard, sc.DB)
 	if err != nil {
 		log.Printf("TimeStandardView.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

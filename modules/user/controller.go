@@ -913,7 +913,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	bestId, _ := strconv.ParseInt(id, 10, 64)
 	bestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
 
-	meets, err := times.FindChampionshipMeets(swimmer.Swimmer.Club.Jurisdiction.ID.Int64, uc.DB)
+	meets, err := times.FindMeetsWithTimeStandardByJurisdiction(swimmer.Swimmer.Club.Jurisdiction.ID.Int64, uc.DB)
 	if err != nil {
 		log.Printf("user.%v", err)
 	}
@@ -1043,7 +1043,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
-	meets, err := times.FindStandardChampionshipMeets(*timeStandard, uc.DB)
+	meets, err := times.FindMeetsByTimeStandard(*timeStandard, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
