@@ -211,11 +211,32 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 }
 
 func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoster, error) {
-	stm := `select rm.placeholder, rp.field, r.holder, r.record_time, r.year, rm.coord_x, rm.coord_y
-            from record r
-                join record_poster rp on rp.record = r.id
-                join report_mapping rm on rm.id = rp.mapping
-            where r.record_set = $1`
+	stm := `select distinct r.placeholder, r.field, r.value, rm.coord_x , rm.coord_y 
+			from report_mapping rm
+				join (select 
+						r.id, 
+						concat(rd.gender, 
+								'_', 
+								rd.course, 
+								case when rd.min_age is null then '' else concat('_', rd.min_age) end, 
+								case when rd.max_age is null then '' else concat('_', rd.max_age) end, 
+								'_', 
+								rd.style,
+								'_', 
+								rd.distance,
+								'_',
+								prt.prtype) as placeholder, 
+						prt.prtype as field,
+						case when prt.prtype = 'HOLDER' then coalesce(r.holder::varchar(50), '')
+								when prt.prtype = 'TIME' then coalesce(r.record_time::varchar(50), '')
+								when prt.prtype = 'YEAR' then coalesce(r.year::varchar(50), '')
+						end as value
+					from record r
+						join record_definition rd on rd.id = r.definition
+						join (select definition, min(record_time) record_time from record group by definition) as df on df.record_time = r.record_time and df.definition = r.definition,
+						(select 'HOLDER' as prtype union select 'TIME' union select 'YEAR') prt 
+					where r.record_set = $1
+						and rd.distance > 25) r on r.placeholder = rm.placeholder`
 	rows, err := db.Query(context.Background(), stm, recordSet.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsPoster: %v", err)
@@ -225,7 +246,7 @@ func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoste
 	var records []*RecordPoster
 	for rows.Next() {
 		record := &RecordPoster{}
-		err = rows.Scan(&record.Placeholder, &record.Field, &record.Holder, &record.Time, &record.Year, &record.CoordX, &record.CoordY)
+		err = rows.Scan(&record.Placeholder, &record.Field, &record.Value, &record.CoordX, &record.CoordY)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsPoster: %v", err)
 		}

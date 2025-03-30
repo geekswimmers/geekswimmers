@@ -1,16 +1,5 @@
 alter table swim_style_distance rename to swim_event;
 
--- Use cases:
---  - the best time is defined for the first time, as a baseline: only the
---    required columns are informed.
---  - the user wants to update a baseline best time: they can update the
---    baseline record as long as there is no other record for the same
---    event and course.
---  - the swimmer achieve a new best time in a meet: a new record is inserted
---    with the columns 'updated' and 'meet' defined. The baseline best time
---    can not be updated anymore.
---  - the user made a mistake while inserting the best time obtained in a meet:
---    the record can be updated, but only the column 'best_time' can be changed.
 create table if not exists swimmer_best_time (
     id        serial      primary key,
     swimmer   integer     not null references swimmer,

@@ -446,9 +446,6 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 }
 
 func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
-	report := reporting.GetReportTemplate("records-club-poster")
-	res.Header().Set("Content-Type", "image/svg+xml")
-
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	resultSet := RecordSet{
 		ID: id,
@@ -459,10 +456,24 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	for _, record := range records {
+		if record.Field == "TIME" {
+			value, err := strconv.ParseInt(record.Value, 10, 64)
+			if err != nil {
+				log.Printf("Error parsing record.Value to int64: %v", err)
+				continue
+			}
+			record.Value = utils.FormatMiliseconds(value)
+		}
+	}
+
 	reportData := clubRecordsReportData{
 		Records:    records,
 		LastUpdate: time.Now(),
 	}
+
+	report := reporting.GetReportTemplate("records-club-poster")
+	res.Header().Set("Content-Type", "image/svg+xml")
 
 	err = report.Execute(res, reportData)
 	if err != nil {
