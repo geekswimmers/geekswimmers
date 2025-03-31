@@ -1,6 +1,7 @@
 package content
 
 import (
+	"fmt"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -82,4 +83,10 @@ func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Print(err)
 	}
+}
+
+func (wc *Controller) ArticleRedirectView(res http.ResponseWriter, req *http.Request) {
+	reference := req.URL.Query().Get(":reference")
+
+	http.Redirect(res, req, fmt.Sprintf("/content/blog/%s/", reference), http.StatusMovedPermanently)
 }
