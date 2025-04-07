@@ -29,7 +29,7 @@
 
                 <div class="mb-3">
                     <label>Course</label><br>
-                    {{if .SwimmerBestTime.ID}}
+                    {{if .SwimmerBestTime}}
                         <p>{{.SwimmerBestTime.Course | Title}}</p>
                     {{else}}
                         <div class="form-check form-check-inline">
@@ -45,7 +45,7 @@
 
                 <div class="mb-3">
                     <label for="event">Event</label>
-                    {{if .SwimmerBestTime.ID}}
+                    {{if .SwimmerBestTime}}
                         <p>{{.SwimmerBestTime.Event.Distance}}m {{.SwimmerBestTime.Event.Style.Stroke | Title}}</p>
                     {{else}}
                         <select id="event" name="event" class="form-select" required>
