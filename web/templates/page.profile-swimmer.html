@@ -78,7 +78,7 @@
                         <label class="form-check-label" style="font-weight: normal;" for="longCourse">Long (50m)</label>
                     </div>
                 </div>
-            </form> 
+            </form>
         </div>
 
         <table class="table table-striped">
@@ -127,6 +127,28 @@
             </p>
         </div>
     </div>
+
+    {{if or .Swimmer.Swimmer.SwimRanking.String .Swimmer.Swimmer.SwimCloud.String}}
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Other Profiles</h3>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Links to the swimmer's profile on other swimming reference portals.</h6>
+            </div>
+
+            <div class="card-body">
+                <ul>
+                    {{if .Swimmer.Swimmer.SwimRanking.String}}
+                        <li><b><a href="https://www.swimrankings.net/index.php?page=athleteDetail&athleteId={{.Swimmer.Swimmer.SwimRanking.String}}" target="_blank" rel="noopener noreferrer">Swim Rankings</a></b></li>
+                    {{end}}
+
+                    {{if .Swimmer.Swimmer.SwimCloud.String}}
+                        <li><b><a href="https://www.swimcloud.com/swimmer/{{.Swimmer.Swimmer.SwimCloud.String}}/" target="_blank" rel="noopener noreferrer">Swim Cloud</a></b></li>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+    {{end}}
 
     {{if .ParentSwimmer.Responsible}}
         <!-- Modal -->

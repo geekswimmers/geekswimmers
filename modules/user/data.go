@@ -294,6 +294,8 @@ type swimmerData struct {
 	Gender           string
 	LastName         string
 	SessionData      *storage.SessionData
+	SwimRanking      string
+	SwimCloud        string
 }
 
 func (sd *swimmerData) valid() bool {

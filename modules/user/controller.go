@@ -692,6 +692,8 @@ func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.
 		Club:             swimmer.Swimmer.Club.ID.Int64,
 		Jurisdiction:     swimmer.Swimmer.Club.Jurisdiction.ID.Int64,
 		Jurisdictions:    jurisdictions,
+		SwimRanking:      swimmer.Swimmer.SwimRanking.String,
+		SwimCloud:        swimmer.Swimmer.SwimCloud.String,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form",
@@ -729,14 +731,17 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 		Club:             club,
 		Jurisdiction:     jurisdiction,
 		Swimmer:          swimmer,
+		Consent:          "on",
 		FirstName:        req.PostForm.Get("firstName"),
 		LastName:         req.PostForm.Get("lastName"),
 		Gender:           req.PostForm.Get("gender"),
 		BirthDate:        req.PostForm.Get("birthDate"),
+		SwimRanking:      req.PostForm.Get("swimRanking"),
+		SwimCloud:        req.PostForm.Get("swimCloud"),
 	}
 
 	if !data.valid() {
-		log.Printf("Error saving the swimmer: %v", err)
+		log.Print("Swimmer data invalid")
 		html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form", template.FuncMap{
 			"Title": utils.Title,
 		})
@@ -757,6 +762,8 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 	swimmer.Swimmer.BirthDate.Time, _ = time.Parse("2006-01-02", data.BirthDate)
 	swimmer.Swimmer.Gender.String = data.Gender
 	swimmer.Swimmer.Club.ID.Int64 = data.Club
+	swimmer.Swimmer.SwimRanking.String = data.SwimRanking
+	swimmer.Swimmer.SwimCloud.String = data.SwimCloud
 
 	_, err = saveSwimmer(swimmer, uc.DB)
 	if err != nil {

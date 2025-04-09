@@ -111,11 +111,13 @@ type Club struct {
 }
 
 type Swimmer struct {
-	FirstName string
-	LastName  string
-	Gender    sql.NullString
-	BirthDate sql.NullTime
-	Club      *Club
+	FirstName   string
+	LastName    string
+	Gender      sql.NullString
+	BirthDate   sql.NullTime
+	Club        *Club
+	SwimRanking sql.NullString
+	SwimCloud   sql.NullString
 }
 
 func (swimmer *Swimmer) AgeAt(date time.Time) int64 {

@@ -78,6 +78,25 @@
                     </select>
                     <span class="error">{{.ErrorClub}}</span>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="swimRanking" class="form-label">Swim Rankings ID</label>
+                            <input type="text" class="form-control" name="swimRanking" id="swimRanking" value="{{.SwimRanking}}">
+                            <small class="text-body-secondary">Open your Swim Ranking Profile page and copy the id from the URL.<br>
+                                Ex.: swimrankings.net/index.php?page=athleteDetail&athleteId=<b>1234567</b></small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="swimCloud" class="form-label">Swim Cloud ID</label>
+                            <input type="text" class="form-control" name="swimCloud" id="swimCloud" value="{{.SwimCloud}}">
+                            <small class="text-body-secondary">Open your Swim Cloud Profile page and copy the id from the URL.<br>
+                                Ex.: swimcloud.com/swimmer/<b>7654321</b></small>
+                        </div>
+                    </div>
+                </div>
   
                 <button type="submit" class="btn btn-primary">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
