@@ -113,7 +113,7 @@
                     <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
                 </svg> Add Best Time
             </a>
-            <a class="btn btn-secondary" href="/profile/swimmers/{{.Swimmer.ID}}/besttimes/benchmark/">
+            <a class="btn btn-secondary" href="javascript:benchmarkAll('{{.Swimmer.ID}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
                     <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0z"/>
                     <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
@@ -132,7 +132,7 @@
         <br>
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Other Profiles</h3>
+                <h3 class="card-title">External Profiles</h3>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Links to the swimmer's profile on other swimming reference portals.</h6>
             </div>
 
@@ -173,4 +173,16 @@
 {{end}}
 
 {{define "scripts"}}
+<script>
+    function benchmarkAll(swimmerId) {
+        const shortCourse = document.getElementById('shortCourse');
+        const longCourse = document.getElementById('longCourse');
+        if (shortCourse.checked) {
+            params = 'course=SHORT';
+        } else if (longCourse.checked) {
+            params = 'course=LONG';
+        }
+        window.location.href = `/profile/swimmers/${swimmerId}/besttimes/benchmark/?${params}`;
+    }
+</script>
 {{end}}
