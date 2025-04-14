@@ -36,14 +36,13 @@ func (uc *Controller) BestTimesPartial(res http.ResponseWriter, req *http.Reques
 		}).Parse(
 		`{{range .BestTimes}}
 			<tr>
-				<td>{{.Course | Title}}</td>
 				<td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
 				<td>{{.BestTime | FormatMiliseconds}}</td>
 				<td>{{.Points}}</td>
 			</tr>
 		{{else}}
 			<tr>
-				<td colspan="4">No best time listed yet.</td>
+				<td colspan="3">No best time listed yet.</td>
 			</tr>
 		{{end}}`)
 	if err != nil {

@@ -640,20 +640,25 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		}
 	}
 
+	course := req.URL.Query().Get("course")
+	if course == "" {
+		course = times.DefaultCourse
+	}
+
 	linkRequests, err := findLinkRequests(swimmer, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmerView: %v", err)
 	}
 
-	bestTimes, err := findSwimmerBestTimes(swimmer, times.DefaultCourse, uc.DB)
+	bestTimes, err := findSwimmerBestTimes(swimmer, course, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmerView: %v", err)
 	}
-	bestTimes = addSwimmingPointsToRecords(swimmer, times.DefaultCourse, bestTimes, uc.DB)
+	bestTimes = addSwimmingPointsToRecords(swimmer, course, bestTimes, uc.DB)
 
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
-		Course:           times.DefaultCourse,
+		Course:           course,
 		SessionData:      sessionData,
 		Swimmer:          swimmer,
 		BestTimes:        bestTimes,
@@ -1294,9 +1299,9 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	}
 
 	if sessionData.Role == "SWIMMER" {
-		http.Redirect(res, req, "/profile/swimmers/", http.StatusSeeOther)
+		http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/?course=%s", course), http.StatusSeeOther)
 	} else {
-		http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/%d/", swimmer.ID), http.StatusSeeOther)
+		http.Redirect(res, req, fmt.Sprintf("/profile/swimmers/%d/?course=%s", swimmer.ID, course), http.StatusSeeOther)
 	}
 }
 

@@ -84,7 +84,6 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th scope="col">Course</th>
                 <th scope="col">Event</th>
                 <th scope="col">Time</th>
                 <th scope="col">Points *</th>
@@ -93,7 +92,6 @@
             <tbody id="best-times-list">
                 {{range .BestTimes}}
                     <tr>
-                        <td>{{.Course | Title}}</td>
                         <td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
                         <td>{{.BestTime | FormatMiliseconds}}</td>
                         <td>{{.Points}}</td>
