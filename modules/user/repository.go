@@ -677,6 +677,7 @@ func findSwimmerMissingBestTimes(swimmer *UserSwimmer, course string, db storage
 				join swim_style ss on se.style = ss.id
 			where se.id not in (select event from swimmer_best_time where swimmer = $1 and course = $2)
 				and se.course = $2
+				and ss.stroke in (select distinct style from standard_time)
 			order by ss.sequence asc, se.distance asc`
 	rows, err := db.Query(context.Background(), stm, swimmer.ID, course)
 	if err != nil {
