@@ -158,7 +158,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 
 		_, err = saveSwimmer(swimmer, uc.DB)
 		if err != nil {
-			log.Printf("Error saving the swimmer: %v", err)
+			log.Printf("Error saving the swimmer during signup: %v", err)
 			html = utils.GetTemplate("base", "signup")
 			data.Error = `Due to an internal error, it was not possible to create
 				your account at this moment. Please, trying again later.
@@ -772,7 +772,7 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 
 	_, err = saveSwimmer(swimmer, uc.DB)
 	if err != nil {
-		log.Printf("Error saving the swimmer: %v", err)
+		log.Printf("Error saving the swimmer profile: %v", err)
 		html := utils.GetTemplateWithFunctions("base", "profile-swimmer-form", template.FuncMap{
 			"Title": utils.Title,
 		})
@@ -874,13 +874,14 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 
 	swimmer.ID, err = saveSwimmer(swimmer, uc.DB)
 	if err != nil {
+		log.Printf("Error saving the swimmer: %v", err)
+
 		data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
 		if err != nil {
 			log.Printf("Error loading jurisdictions: %v", err)
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 		}
 
-		log.Printf("Error saving the swimmer: %v", err)
 		html = utils.GetTemplate("base", "swimmer-form")
 		data.Error = `Due to an internal error, it was not possible to create
 			your account at this moment. Please, trying again later.
@@ -1367,7 +1368,7 @@ func (uc *Controller) SwimmerLinkForm(res http.ResponseWriter, req *http.Request
 	}
 
 	if err := linkSwimmersToParent(parent, context.FoundSwimmers, uc.DB); err != nil {
-		log.Printf("Error saving the swimmer: %v", err)
+		log.Printf("Error linking swimmers to parent: %v", err)
 		html := utils.GetTemplate("base", "swimmer-form")
 		context.Error = `Due to an internal error, it was not possible to link
 			the swimmer wity your account at this moment. Please, trying again later.`

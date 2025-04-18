@@ -370,11 +370,13 @@ func (sd *swimmerData) createSwimmer() *UserSwimmer {
 	}
 
 	swimmer.Swimmer.BirthDate = sql.NullTime{
-		Time: birthDate,
+		Time:  birthDate,
+		Valid: true,
 	}
 
 	swimmer.Swimmer.Gender = sql.NullString{
 		String: sd.Gender,
+		Valid:  true,
 	}
 
 	return swimmer
@@ -445,6 +447,7 @@ type swimmerBestTimeBenchmarkData struct {
 }
 
 type timeBenchmarkData struct {
+	BestTime     int64
 	StandardTime int64
 	Difference   int64
 	Qualified    bool
