@@ -12,7 +12,8 @@ func TestAgeAt(t *testing.T) {
 	// Test normal case
 	swimmer := &swimming.Swimmer{
 		BirthDate: sql.NullTime{
-			Time: time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
+			Time:  time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
+			Valid: true,
 		},
 	}
 	date := time.Date(2010, 6, 15, 0, 0, 0, 0, time.UTC)
@@ -33,7 +34,8 @@ func TestAgeAt(t *testing.T) {
 	// Test edge case - birthday later in year
 	swimmer = &swimming.Swimmer{
 		BirthDate: sql.NullTime{
-			Time: time.Date(1990, 6, 15, 0, 0, 0, 0, time.UTC),
+			Time:  time.Date(1990, 6, 15, 0, 0, 0, 0, time.UTC),
+			Valid: true,
 		},
 	}
 	date = time.Date(2010, 1, 1, 0, 0, 0, 0, time.UTC)

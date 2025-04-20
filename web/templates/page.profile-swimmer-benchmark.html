@@ -36,10 +36,12 @@
                         <div class="mb-3">
                             <label for="standard">Time Standard *</label>
                             <select id="standard" name="standard" class="form-select" onchange="document.getElementById('filter-form').submit();">
-                               <option value="0">Select...</option>
-                               {{range .TimeStandards}}
+                                <option value="0">Select...</option>
+                                {{range .TimeStandards}}
                                     <option value="{{.ID}}" {{if eq .ID $.TimeStandard.ID}}selected{{end}}>{{.Name}}</option>
-                               {{end}}
+                                {{else}}
+                                    <option value="0">No time standards available</option>
+                                {{end}}
                             </select>
                             <small class="text-body-secondary">Format: {{if .TimeStandard.Open}} Open {{else}} Age Group {{end}}</small>
                         </div>
@@ -51,6 +53,8 @@
                                 <option value="0">Select...</option>
                                 {{range .Meets}}
                                     <option value="{{.ID}}" {{if eq .ID $.Meet.ID}}selected{{end}}>{{.Name}}</option>
+                                {{else}}
+                                    <option value="0">No qualifier meets available</option>
                                 {{end}}
                             </select>
                             <small class="text-body-secondary">{{if gt .Meet.ID 0}} Age on: {{.Meet.AgeDate.Format "Jan 02, 2006"}} {{end}}</small>

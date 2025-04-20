@@ -19,6 +19,12 @@
                 </div>
                 <p class="mb-1">{{.Description}}</p>
             </a>
+        {{else}}
+            <a href="#" class="list-group-item list-group-item-action disabled">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">No swimming styles available</h5>
+                </div>
+            </a>
         {{end}}
     </div>
 {{end}}

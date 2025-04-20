@@ -23,7 +23,9 @@ func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	var highlightedArticle *Article
+	highlightedArticle := &Article{
+		Reference: "",
+	}
 	if len(highlightedArticles) > 0 {
 		highlightedArticle = highlightedArticles[0]
 	}

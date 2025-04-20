@@ -7,7 +7,7 @@
 {{end}}
 
 {{define "content"}}
-{{if .Highlighted}}
+{{if .Highlighted.Reference}}
     <div class="card">
         {{if .Highlighted.Image}}
             <img src="/static/images/content/{{.Highlighted.Image}}" class="card-img" alt="{{.Highlighted.ImageCopyright}}">

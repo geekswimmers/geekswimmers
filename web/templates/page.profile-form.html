@@ -74,6 +74,8 @@
                             <option value="0">Select...</option>
                             {{range .Jurisdictions}}
                                 <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                            {{else}}
+                                <option value="0">No jurisdictions available</option>
                             {{end}}
                         </select>
                     </div>

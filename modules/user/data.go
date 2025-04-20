@@ -25,6 +25,7 @@ type signUpData struct {
 	ErrorLastName       string
 	ErrorRole           string
 	FirstName           string
+	FirstUserAccount    bool
 	Gender              string
 	Jurisdiction        int64
 	Jurisdictions       []*swimming.Jurisdiction
@@ -68,11 +69,13 @@ func (sud *signUpData) createSwimmer(userAccount *UserAccount) *UserSwimmer {
 	}
 
 	swimmer.Swimmer.BirthDate = sql.NullTime{
-		Time: birthDate,
+		Time:  birthDate,
+		Valid: true,
 	}
 
 	swimmer.Swimmer.Gender = sql.NullString{
 		String: sud.Gender,
+		Valid:  true,
 	}
 
 	return swimmer
@@ -108,7 +111,7 @@ func (sud *signUpData) valid() bool {
 	}
 
 	// Validates role
-	if sud.Role == "" || (sud.Role != RoleParent && sud.Role != RoleSwimmer) {
+	if sud.Role == "" || (sud.Role != RoleParent && sud.Role != RoleSwimmer && sud.Role != RoleAdmin) {
 		log.Printf("Invalid role: %v", sud.Role)
 		sud.ErrorRole = "Select a role."
 		valid = false

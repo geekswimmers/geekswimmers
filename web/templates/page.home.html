@@ -54,6 +54,8 @@
                                     {{range .Jurisdictions}}
                                         {{$id := printf "%d" .ID.Int64}}
                                         <option value="{{.ID.Int64}}" {{if eq $id $.SessionData.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                    {{else}}
+                                        <option value="">No Regions available</option>
                                     {{end}}
                                 </select>
                             </div>
@@ -102,6 +104,8 @@
                                     {{range .Events}}
                                         {{$eventValue := printf "%d-%s" .Distance .Style.Stroke}}
                                         <option value="{{$eventValue}}" {{if eq $eventValue $.SessionData.Event}}selected{{end}}>{{.Distance}}m {{.Style.Stroke | Title}}</option>
+                                    {{else}}
+                                        <option value="">No events available</option>
                                     {{end}}
                                 </select>
                             </div>

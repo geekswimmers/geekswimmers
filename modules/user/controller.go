@@ -57,6 +57,7 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 
 	if !userAccountExists(uc.DB) {
 		data.Error = "You'll become the first Geek Swimmers' user. You will be automatically assigned to an admin role."
+		data.FirstUserAccount = true
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "signup", template.FuncMap{"markdown": utils.MarkdownToHTML})
@@ -571,7 +572,8 @@ func (uc *Controller) ProfileForm(res http.ResponseWriter, req *http.Request, se
 
 		birthDate, _ := time.Parse("2006-01-02", data.BirthDate)
 		data.CurrentSwimmer.Swimmer.BirthDate = sql.NullTime{
-			Time: birthDate,
+			Time:  birthDate,
+			Valid: true,
 		}
 
 		if err := updateSwimmerProfile(data.CurrentUser, data.CurrentSwimmer, uc.DB); err != nil {
@@ -1142,6 +1144,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		key := fmt.Sprintf("%s-%s-%d", course, stroke, distance)
 
 		if timeBenchmark, ok := timeBenchmarks[key]; ok {
+			timeBenchmark.BestTime = bestTime.BestTime
 			timeBenchmark.Difference = utils.Abs(bestTime.BestTime - timeBenchmark.StandardTime)
 			timeBenchmark.Qualified = bestTime.BestTime <= timeBenchmark.StandardTime
 			timeBenchmark.Considered = bestTime.BestTime <= int64(float64(timeBenchmark.StandardTime)*float64(1.05))

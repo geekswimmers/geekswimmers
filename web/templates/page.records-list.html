@@ -25,6 +25,10 @@
                     <td><a href="/times/records/{{.ID}}/">{{.Jurisdiction.Title}}</td>
                     <td>{{.Jurisdiction.SubTitle}}</td>
                 </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2">No records available</td>
+                    </tr>
                 {{end}}
             </tbody>
         </table>

@@ -21,6 +21,8 @@
                             <select id="season" name="season" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
                                 {{range .SwimSeasons}}
                                     <option value="{{.ID}}" {{if eq $.SwimSeason.ID .ID}}selected{{end}}>{{.Name}}</option>
+                                {{else}}
+                                    <option value="">No seasons available</option>
                                 {{end}}
                             </select>
                         </div>
@@ -31,6 +33,8 @@
                             <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
                                 {{range .Jurisdictions}}
                                     <option value="{{.ID.Int64}}" {{if eq $.Jurisdiction.ID.Int64 .ID.Int64}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                {{else}}
+                                    <option value="">No jurisdictions available</option>
                                 {{end}}
                             </select>
                         </div>
@@ -69,6 +73,10 @@
                         {{end}}
                     </td>
                 </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="3">No time standards listed yet.</td>
+                    </tr>
                 {{end}}
             </tbody>
         </table>

@@ -65,10 +65,12 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	swimmer := &swimming.Swimmer{
 		BirthDate: sql.NullTime{
-			Time: birthDate,
+			Time:  birthDate,
+			Valid: true,
 		},
 		Gender: sql.NullString{
 			String: gender,
+			Valid:  true,
 		},
 	}
 
@@ -190,7 +192,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	if swimSeasonID == 0 {
+	if swimSeasonID == 0 && len(seasons) > 0 {
 		swimSeason.ID = seasons[0].ID
 	}
 

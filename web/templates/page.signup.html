@@ -39,6 +39,7 @@
                     <span class="error">{{html .ErrorEmail}}</span>
                 </div>
 
+                {{if not .FirstUserAccount}}
                 <div class="mb-3">
                     <label for="role" class="form-label">Community Role</label><br>
                     <div class="form-check form-check-inline" style="padding-top: 8px;">
@@ -86,6 +87,8 @@
                             <option value="0">Select...</option>
                             {{range .Jurisdictions}}
                                 <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                            {{else}}
+                                <option value="0">No jurisdictions available</option>
                             {{end}}
                         </select>
                     </div>
@@ -93,11 +96,11 @@
                     <div class="mb-3">
                         <label for="club" class="form-label">Club</label>
                         <select id="club" name="club" class="form-select">
-                            <option value="0">Select...</option>
                         </select>
                         <span class="error">{{.ErrorClub}}</span>
                     </div>
                 </div>
+                {{end}}
                 
                 <hr>
                 <div class="mb-3">
