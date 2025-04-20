@@ -22,7 +22,7 @@ create table if not exists standard_time (
     course        varchar(10) not null, -- LONG, SHORT
     stroke        varchar(20) not null, -- FREE, BREAST, BACK, FLY, MEDLEY
 	distance      integer     not null,
-    standard      integer     not null
+    standard      integer         null
 );
 
 create unique index idx_standard_time on standard_time (time_standard, age, gender, course, stroke, distance);

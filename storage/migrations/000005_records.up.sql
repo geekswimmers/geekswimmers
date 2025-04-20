@@ -21,7 +21,7 @@ create table if not exists record (
     id           serial      primary key,
     jurisdiction integer         null references jurisdiction, -- If null, then it's a world record.
     definition   integer     not null references record_definition,
-    record_time  integer     not null,
+    record_time  integer         null,
     record_date  date            null,
     holder       varchar(50)     null
 );
