@@ -1,3 +1,6 @@
+alter table standard_time add column standard_formatted varchar(12) null;
+alter table record add column record_time_formatted varchar(12) null;
+
 -- postgres trigger to convert time in mm:ss:ms to milliseconds
 create or replace function convert_to_milliseconds(time_in_mmssms text) returns integer as $$
 declare
