@@ -16,7 +16,7 @@ const (
 	JurisdictionLevelProvince = "PROVINCE"
 	JurisdictionLevelRegion   = "REGION"
 	JurisdictionLevelCity     = "CITY"
-	JurisdictionLevelClub     = "CLUB"
+	JurisdictionLevelTeam     = "TEAM"
 	JurisdictionLevelMeet     = "MEET"
 )
 
@@ -49,14 +49,14 @@ type Jurisdiction struct {
 	Region   sql.NullString
 	City     sql.NullString
 	Meet     sql.NullString
-	Club     sql.NullString
+	Team     sql.NullString
 }
 
 func (jurisdiction *Jurisdiction) Title() string {
 	if jurisdiction.Meet.Valid {
 		return jurisdiction.Meet.String
-	} else if jurisdiction.Club.Valid {
-		return jurisdiction.Club.String
+	} else if jurisdiction.Team.Valid {
+		return jurisdiction.Team.String
 	} else if jurisdiction.City.Valid {
 		return jurisdiction.City.String
 	} else if jurisdiction.Region.Valid {
@@ -75,12 +75,12 @@ func (jurisdiction *Jurisdiction) Title() string {
 func (jurisdiction *Jurisdiction) SubTitle() string {
 	if jurisdiction.Meet.Valid {
 		return fmt.Sprintf("%v, %v, %v, %v - %v",
-			jurisdiction.Club.String,
+			jurisdiction.Team.String,
 			jurisdiction.City.String,
 			jurisdiction.Region.String,
 			jurisdiction.Province.String,
 			jurisdiction.Country.String)
-	} else if jurisdiction.Club.Valid {
+	} else if jurisdiction.Team.Valid {
 		return fmt.Sprintf("%v, %v, %v - %v",
 			jurisdiction.City.String,
 			jurisdiction.Region.String,
@@ -102,7 +102,7 @@ func (jurisdiction *Jurisdiction) SubTitle() string {
 	return ""
 }
 
-type Club struct {
+type Team struct {
 	ID           sql.NullInt64
 	FullName     string
 	Acronym      string
@@ -115,7 +115,7 @@ type Swimmer struct {
 	LastName    string
 	Gender      sql.NullString
 	BirthDate   sql.NullTime
-	Club        *Club
+	Team        *Team
 	SwimRanking sql.NullString
 	SwimCloud   sql.NullString
 }

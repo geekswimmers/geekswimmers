@@ -130,15 +130,15 @@ func findInstructions(style *Style, db storage.Database) ([]*Instruction, error)
 }
 
 func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdiction, error) {
-	stm := `select j.id, j.country, j.province, j.region, j.city, j.club, j.meet
+	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
 	         from jurisdiction j`
 
 	if level == JurisdictionLevelMeet {
 		stm = fmt.Sprintf("%v where j.meet is not null", stm)
-	} else if level == JurisdictionLevelClub {
-		stm = fmt.Sprintf("%v where j.club is not null and j.meet is null", stm)
+	} else if level == JurisdictionLevelTeam {
+		stm = fmt.Sprintf("%v where j.team is not null and j.meet is null", stm)
 	} else if level == JurisdictionLevelCity {
-		stm = fmt.Sprintf("%v where j.city is not null and j.club is null", stm)
+		stm = fmt.Sprintf("%v where j.city is not null and j.team is null", stm)
 	} else if level == JurisdictionLevelRegion {
 		stm = fmt.Sprintf("%v where j.region is not null and j.city is null", stm)
 	} else if level == JurisdictionLevelProvince {
@@ -148,7 +148,7 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 	} else {
 		return []*Jurisdiction{}, nil
 	}
-	stm = fmt.Sprintf("%v order by country, province, region, city, club, meet", stm)
+	stm = fmt.Sprintf("%v order by country, province, region, city, team, meet", stm)
 
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
@@ -159,7 +159,7 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 	var jurisdictions []*Jurisdiction
 	for rows.Next() {
 		jurisdiction := &Jurisdiction{}
-		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Club, &jurisdiction.Meet)
+		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Team, &jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findJurisdictionsByLevel: %v", err)
 		}
@@ -169,28 +169,28 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 	return jurisdictions, nil
 }
 
-func FindClubsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]*Club, error) {
+func FindTeamsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]*Team, error) {
 	stm := `select c.id, c.full_name, c.acronym, c.website
-	        from club c
+	        from team c
 	        where c.jurisdiction = $1
 	        order by c.full_name`
 	rows, err := db.Query(context.Background(), stm, jurisdiction.ID.Int64)
 	if err != nil {
-		return nil, fmt.Errorf("findClubsByJurisdiction: %v", err)
+		return nil, fmt.Errorf("findTeamsByJurisdiction: %v", err)
 	}
 	defer rows.Close()
 
-	var clubs []*Club
+	var teams []*Team
 	for rows.Next() {
-		club := &Club{
+		team := &Team{
 			Jurisdiction: jurisdiction,
 		}
-		err = rows.Scan(&club.ID, &club.FullName, &club.Acronym, &club.WebSite)
+		err = rows.Scan(&team.ID, &team.FullName, &team.Acronym, &team.WebSite)
 		if err != nil && err.Error() != storage.ErrNoRows {
-			return nil, fmt.Errorf("findClubsByJurisdiction: %v", err)
+			return nil, fmt.Errorf("findTeamsByJurisdiction: %v", err)
 		}
-		clubs = append(clubs, club)
+		teams = append(teams, team)
 	}
 
-	return clubs, nil
+	return teams, nil
 }

@@ -469,12 +469,12 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 		}
 	}
 
-	reportData := clubRecordsReportData{
+	reportData := teamRecordsReportData{
 		Records:    records,
 		LastUpdate: time.Now(),
 	}
 
-	report := reporting.GetReportTemplate("records-club-poster")
+	report := reporting.GetReportTemplate("records-team-poster")
 	res.Header().Set("Content-Type", "image/svg+xml")
 
 	err = report.Execute(res, reportData)

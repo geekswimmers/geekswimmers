@@ -34,24 +34,24 @@ function updateEventsByCourse(swimmerId) {
     }
 }
 
-function updateClubsByJurisdiction(selectedId) {
+function updateTeamsByJurisdiction(selectedId) {
     const jurisdictionCbx = document.getElementById("jurisdiction");
-    const clubCbx = document.getElementById("club");
-    clubCbx.innerHTML = "";
-    fetch('/api/clubs/?jurisdiction=' + jurisdictionCbx.value)
+    const teamCbx = document.getElementById("team");
+    teamCbx.innerHTML = "";
+    fetch('/api/teams/?jurisdiction=' + jurisdictionCbx.value)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
-        .then(clubs => {
-            createSelectOption(clubCbx, "0", "Select...", false);
+        .then(teams => {
+            createSelectOption(teamCbx, "0", "Select...", false);
 
-            if (clubs != null) {
-                clubs.forEach(club => {
-                    const selected = club.ID.Int64 === selectedId;
-                    createSelectOption(clubCbx, club.ID.Int64, club.Acronym +" - "+ club.FullName, selected);
+            if (teams != null) {
+                teams.forEach(team => {
+                    const selected = team.ID.Int64 === selectedId;
+                    createSelectOption(teamCbx, team.ID.Int64, team.Acronym +" - "+ team.FullName, selected);
                 });
             }
         });

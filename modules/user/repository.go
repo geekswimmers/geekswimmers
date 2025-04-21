@@ -55,7 +55,7 @@ func saveSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 	var lastInsertId int64
 
 	if swimmer.ID == 0 {
-		stm := `insert into swimmer (first_name, last_name, birth_date, gender, user_account, club, swimranking, swimcloud)
+		stm := `insert into swimmer (first_name, last_name, birth_date, gender, user_account, team, swimranking, swimcloud)
 				values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
 
 		var userAccountId sql.NullInt64
@@ -74,7 +74,7 @@ func saveSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 			swimmer.Swimmer.BirthDate.Time,
 			swimmer.Swimmer.Gender,
 			userAccountId,
-			swimmer.Swimmer.Club.ID,
+			swimmer.Swimmer.Team.ID,
 			swimmer.Swimmer.SwimRanking.String,
 			swimmer.Swimmer.SwimCloud.String).Scan(&lastInsertId)
 		if err != nil {
@@ -83,7 +83,7 @@ func saveSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 	} else {
 
 		stm := `update swimmer
-				set first_name = $1, last_name = $2, birth_date = $3, gender = $4, club = $5, swimranking = $6, swimcloud = $7
+				set first_name = $1, last_name = $2, birth_date = $3, gender = $4, team = $5, swimranking = $6, swimcloud = $7
 				where id = $8 returning id`
 
 		err := db.QueryRow(context.Background(), stm,
@@ -91,7 +91,7 @@ func saveSwimmer(swimmer *UserSwimmer, db storage.Database) (int64, error) {
 			swimmer.Swimmer.LastName,
 			swimmer.Swimmer.BirthDate,
 			swimmer.Swimmer.Gender,
-			swimmer.Swimmer.Club.ID,
+			swimmer.Swimmer.Team.ID,
 			swimmer.Swimmer.SwimRanking.String,
 			swimmer.Swimmer.SwimCloud.String,
 			swimmer.ID,
@@ -214,11 +214,11 @@ func updateSwimmerProfile(userAccount *UserAccount, swimmer *UserSwimmer, db sto
 	}
 
 	stm := `update swimmer
-			set first_name = $1, last_name = $2, birth_date = $3, gender = $4, club = $5
+			set first_name = $1, last_name = $2, birth_date = $3, gender = $4, team = $5
             where id = $6`
 
 	_, err = db.Exec(context.Background(), stm, swimmer.Swimmer.FirstName, swimmer.Swimmer.LastName,
-		swimmer.Swimmer.BirthDate.Time, swimmer.Swimmer.Gender.String, swimmer.Swimmer.Club.ID.Int64, swimmer.ID)
+		swimmer.Swimmer.BirthDate.Time, swimmer.Swimmer.Gender.String, swimmer.Swimmer.Team.ID.Int64, swimmer.ID)
 	if err != nil {
 		return fmt.Errorf("user.updateSwimmerProfile(%v): %v", swimmer.ID, err)
 	}
@@ -360,9 +360,9 @@ func FindUserAccountByConfirmation(confirmation, email string, db storage.Databa
 }
 
 func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *UserSwimmer {
-	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, s.club, c.jurisdiction
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, s.team, c.jurisdiction
 			from swimmer s
-				left join club c on s.club = c.id
+				left join team c on s.team = c.id
 			where s.user_account = $1`
 
 	row := db.QueryRow(context.Background(), stm, userAccount.ID)
@@ -370,11 +370,11 @@ func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *Us
 	swimmer := &UserSwimmer{
 		UserAccount: userAccount,
 		Swimmer: &swimming.Swimmer{
-			Club: &swimming.Club{},
+			Team: &swimming.Team{},
 		},
 	}
 	err := row.Scan(&swimmer.ID, &swimmer.Swimmer.FirstName, &swimmer.Swimmer.LastName,
-		&swimmer.Swimmer.BirthDate, &swimmer.Swimmer.Gender, &swimmer.Swimmer.Club.ID, &swimmer.Swimmer.Club.Jurisdiction.ID)
+		&swimmer.Swimmer.BirthDate, &swimmer.Swimmer.Gender, &swimmer.Swimmer.Team.ID, &swimmer.Swimmer.Team.Jurisdiction.ID)
 	if err != nil {
 		log.Printf("user.FindSwimmerByUserAccount(%v): %v", userAccount.ID, err)
 		return nil
@@ -384,9 +384,9 @@ func FindSwimmerByUserAccount(userAccount *UserAccount, db storage.Database) *Us
 }
 
 func FindSwimmerByID(id int64, db storage.Database) *UserSwimmer {
-	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, s.user_account, s.club, s.swimranking, s.swimcloud, c.jurisdiction
+	stm := `select s.id, s.first_name, s.last_name, s.birth_date, s.gender, s.user_account, s.team, s.swimranking, s.swimcloud, c.jurisdiction
 			from swimmer s
-				left join club c on c.id = s.club
+				left join team c on c.id = s.team
 				left join jurisdiction j on j.id = c.jurisdiction
 			where s.id = $1`
 
@@ -394,12 +394,12 @@ func FindSwimmerByID(id int64, db storage.Database) *UserSwimmer {
 
 	swimmer := &UserSwimmer{
 		Swimmer: &swimming.Swimmer{
-			Club: &swimming.Club{},
+			Team: &swimming.Team{},
 		},
 	}
 	err := row.Scan(&swimmer.ID, &swimmer.Swimmer.FirstName, &swimmer.Swimmer.LastName, &swimmer.Swimmer.BirthDate,
-		&swimmer.Swimmer.Gender, &swimmer.UserAccountID, &swimmer.Swimmer.Club.ID, &swimmer.Swimmer.SwimRanking,
-		&swimmer.Swimmer.SwimCloud, &swimmer.Swimmer.Club.Jurisdiction.ID)
+		&swimmer.Swimmer.Gender, &swimmer.UserAccountID, &swimmer.Swimmer.Team.ID, &swimmer.Swimmer.SwimRanking,
+		&swimmer.Swimmer.SwimCloud, &swimmer.Swimmer.Team.Jurisdiction.ID)
 	if err != nil {
 		log.Printf("user.FindSwimmerByID(%v): %v", id, err)
 		return nil

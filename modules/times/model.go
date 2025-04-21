@@ -61,7 +61,7 @@ type Meet struct {
 	TimeStandard   TimeStandard
 	MinAgeEnforced bool
 	MaxAgeEnforced bool
-	Organizer      swimming.Club
+	Organizer      swimming.Team
 
 	// Transient
 	Age          int64

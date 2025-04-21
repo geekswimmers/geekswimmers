@@ -81,9 +81,9 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		jurisdiction = 0
 	}
 
-	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	team, err := strconv.ParseInt(req.PostForm.Get("team"), 10, 64)
 	if err != nil {
-		club = 0
+		team = 0
 	}
 
 	data := &signUpData{
@@ -96,7 +96,7 @@ func (uc *Controller) SignUp(res http.ResponseWriter, req *http.Request) {
 		BirthDate:         req.PostForm.Get("birthDate"),
 		Gender:            req.PostForm.Get("gender"),
 		Jurisdiction:      jurisdiction,
-		Club:              club,
+		Team:              team,
 		UserAccountExists: userAccountExists(uc.DB),
 	}
 
@@ -472,13 +472,13 @@ func (uc *Controller) ProfileFormView(res http.ResponseWriter, req *http.Request
 		log.Printf("Error loading jurisdictions: %v", err)
 	}
 
-	var clubId int64
+	var teamId int64
 	var jurisdictionId int64
 	if swimmer != nil {
-		clubId = swimmer.Swimmer.Club.ID.Int64
-		jurisdictionId = swimmer.Swimmer.Club.Jurisdiction.ID.Int64
+		teamId = swimmer.Swimmer.Team.ID.Int64
+		jurisdictionId = swimmer.Swimmer.Team.Jurisdiction.ID.Int64
 	} else {
-		clubId = 0
+		teamId = 0
 		jurisdictionId = 0
 	}
 
@@ -491,7 +491,7 @@ func (uc *Controller) ProfileFormView(res http.ResponseWriter, req *http.Request
 		LastName:         user.LastName,
 		Email:            user.Email,
 		Role:             user.Role,
-		Club:             clubId,
+		Team:             teamId,
 	}
 
 	if swimmer != nil {
@@ -518,9 +518,9 @@ func (uc *Controller) ProfileForm(res http.ResponseWriter, req *http.Request, se
 		jurisdiction = 0
 	}
 
-	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	team, err := strconv.ParseInt(req.PostForm.Get("team"), 10, 64)
 	if err != nil {
-		club = 0
+		team = 0
 	}
 
 	data := &profileData{
@@ -532,7 +532,7 @@ func (uc *Controller) ProfileForm(res http.ResponseWriter, req *http.Request, se
 		BirthDate:        req.PostForm.Get("birthDate"),
 		Gender:           req.PostForm.Get("gender"),
 		Jurisdiction:     jurisdiction,
-		Club:             club,
+		Team:             team,
 	}
 
 	data.CurrentUser = FindUserAccountByEmail(sessionData.Email, uc.DB)
@@ -562,7 +562,7 @@ func (uc *Controller) ProfileForm(res http.ResponseWriter, req *http.Request, se
 	data.CurrentUser.Email = data.Email
 
 	if data.CurrentUser.Role == RoleSwimmer && data.CurrentSwimmer != nil {
-		data.CurrentSwimmer.Swimmer.Club.ID.Int64 = club
+		data.CurrentSwimmer.Swimmer.Team.ID.Int64 = team
 		data.CurrentSwimmer.Swimmer.FirstName = data.CurrentUser.FirstName
 		data.CurrentSwimmer.Swimmer.LastName = data.CurrentUser.LastName
 
@@ -696,8 +696,8 @@ func (uc *Controller) ProfileSwimmerFormView(res http.ResponseWriter, req *http.
 		LastName:         swimmer.Swimmer.LastName,
 		BirthDate:        swimmer.Swimmer.BirthDate.Time.Format("2006-01-02"),
 		Gender:           swimmer.Swimmer.Gender.String,
-		Club:             swimmer.Swimmer.Club.ID.Int64,
-		Jurisdiction:     swimmer.Swimmer.Club.Jurisdiction.ID.Int64,
+		Team:             swimmer.Swimmer.Team.ID.Int64,
+		Jurisdiction:     swimmer.Swimmer.Team.Jurisdiction.ID.Int64,
 		Jurisdictions:    jurisdictions,
 		SwimRanking:      swimmer.Swimmer.SwimRanking.String,
 		SwimCloud:        swimmer.Swimmer.SwimCloud.String,
@@ -727,15 +727,15 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 		jurisdiction = 0
 	}
 
-	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	team, err := strconv.ParseInt(req.PostForm.Get("team"), 10, 64)
 	if err != nil {
-		club = 0
+		team = 0
 	}
 
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
-		Club:             club,
+		Team:             team,
 		Jurisdiction:     jurisdiction,
 		Swimmer:          swimmer,
 		Consent:          "on",
@@ -768,7 +768,7 @@ func (uc *Controller) ProfileSwimmerForm(res http.ResponseWriter, req *http.Requ
 	swimmer.Swimmer.LastName = data.LastName
 	swimmer.Swimmer.BirthDate.Time, _ = time.Parse("2006-01-02", data.BirthDate)
 	swimmer.Swimmer.Gender.String = data.Gender
-	swimmer.Swimmer.Club.ID.Int64 = data.Club
+	swimmer.Swimmer.Team.ID.Int64 = data.Team
 	swimmer.Swimmer.SwimRanking.String = data.SwimRanking
 	swimmer.Swimmer.SwimCloud.String = data.SwimCloud
 
@@ -802,16 +802,16 @@ func (uc *Controller) SwimmerFormView(res http.ResponseWriter, req *http.Request
 		jurisdiction = 0
 	}
 
-	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	team, err := strconv.ParseInt(req.PostForm.Get("team"), 10, 64)
 	if err != nil {
-		club = 0
+		team = 0
 	}
 
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		SessionData:      sessionData,
 		Jurisdiction:     jurisdiction,
-		Club:             club,
+		Team:             team,
 	}
 
 	data.Jurisdictions, err = swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
@@ -837,9 +837,9 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 		jurisdiction = 0
 	}
 
-	club, err := strconv.ParseInt(req.PostForm.Get("club"), 10, 64)
+	team, err := strconv.ParseInt(req.PostForm.Get("team"), 10, 64)
 	if err != nil {
-		club = 0
+		team = 0
 	}
 
 	var html *template.Template
@@ -852,7 +852,7 @@ func (uc *Controller) SwimmerForm(res http.ResponseWriter, req *http.Request, se
 		BirthDate:        req.PostForm.Get("birthDate"),
 		Gender:           req.PostForm.Get("gender"),
 		Jurisdiction:     jurisdiction,
-		Club:             club,
+		Team:             team,
 	}
 
 	// Back to the signup page in case of error.
@@ -928,7 +928,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	bestId, _ := strconv.ParseInt(id, 10, 64)
 	bestTime := findSwimmerBestTime(swimmer, bestId, uc.DB)
 
-	meets, err := times.FindMeetsWithTimeStandardByJurisdiction(swimmer.Swimmer.Club.Jurisdiction.ID.Int64, uc.DB)
+	meets, err := times.FindMeetsWithTimeStandardByJurisdiction(swimmer.Swimmer.Team.Jurisdiction.ID.Int64, uc.DB)
 	if err != nil {
 		log.Printf("user.%v", err)
 	}
@@ -1053,7 +1053,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
-	timeStandards, err := times.FindTimeStandards(*currentSwimSeason, swimmer.Swimmer.Club.Jurisdiction, uc.DB)
+	timeStandards, err := times.FindTimeStandards(*currentSwimSeason, swimmer.Swimmer.Team.Jurisdiction, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}

@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func (sc *Controller) ClubResource(res http.ResponseWriter, req *http.Request) {
+func (sc *Controller) TeamResource(res http.ResponseWriter, req *http.Request) {
 	j := req.URL.Query().Get("jurisdiction")
 	jurisdictionId, _ := strconv.ParseInt(j, 10, 64)
 	jurisdiction := Jurisdiction{
@@ -17,23 +17,23 @@ func (sc *Controller) ClubResource(res http.ResponseWriter, req *http.Request) {
 		},
 	}
 
-	clubs, err := FindClubsByJurisdiction(jurisdiction, sc.DB)
+	teams, err := FindTeamsByJurisdiction(jurisdiction, sc.DB)
 	if err != nil {
-		log.Printf("swimming.ClubResource: %v", err)
+		log.Printf("swimming.TeamResource: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	clubsJson, err := json.Marshal(clubs)
+	teamsJson, err := json.Marshal(teams)
 	if err != nil {
-		log.Printf("swimming.ClubResource: %v", err)
+		log.Printf("swimming.TeamResource: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
-	_, err = res.Write(clubsJson)
+	_, err = res.Write(teamsJson)
 	if err != nil {
-		log.Printf("swimming.ClubResource: %v", err)
+		log.Printf("swimming.TeamResource: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 }

@@ -82,7 +82,7 @@ type standardsEventViewData struct {
 	SessionData      *storage.SessionData
 }
 
-type clubRecordsReportData struct {
+type teamRecordsReportData struct {
 	Records    []*RecordPoster
 	LastUpdate time.Time
 }

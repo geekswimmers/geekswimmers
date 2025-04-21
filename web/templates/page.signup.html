@@ -83,7 +83,7 @@
 
                     <div class="mb-3">
                         <label for="jurisdiction" class="form-label">Jurisdiction</label>
-                        <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateClubsByJurisdiction()">
+                        <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateTeamsByJurisdiction()">
                             <option value="0">Select...</option>
                             {{range .Jurisdictions}}
                                 <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
@@ -94,10 +94,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="club" class="form-label">Club</label>
-                        <select id="club" name="club" class="form-select">
+                        <label for="team" class="form-label">Team</label>
+                        <select id="team" name="team" class="form-select">
                         </select>
-                        <span class="error">{{.ErrorClub}}</span>
+                        <span class="error">{{.ErrorTeam}}</span>
                     </div>
                 </div>
                 {{end}}
@@ -182,6 +182,6 @@
             document.getElementById('forRoleSwimmer').style.display = 'block';
         }
 
-        updateClubsByJurisdiction({{.Club}});
+        updateTeamsByJurisdiction({{.Team}});
     </script>
 {{end}}

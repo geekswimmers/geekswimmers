@@ -14,11 +14,11 @@ import (
 type signUpData struct {
 	BaseTemplateData    *utils.BaseTemplateData
 	BirthDate           string
-	Club                int64
+	Team                int64
 	Email               string
 	Error               string
 	ErrorBirthDate      string
-	ErrorClub           string
+	ErrorTeam           string
 	ErrorEmail          string
 	ErrorFirstName      string
 	ErrorGender         string
@@ -55,8 +55,8 @@ func (sud *signUpData) createSwimmer(userAccount *UserAccount) *UserSwimmer {
 		Swimmer: &swimming.Swimmer{
 			FirstName: sud.FirstName,
 			LastName:  sud.LastName,
-			Club: &swimming.Club{
-				ID: sql.NullInt64{Int64: sud.Club, Valid: true},
+			Team: &swimming.Team{
+				ID: sql.NullInt64{Int64: sud.Team, Valid: true},
 			},
 		},
 		UserAccount: userAccount,
@@ -154,10 +154,10 @@ func (sud *signUpData) valid() bool {
 			valid = false
 		}
 
-		// Validates club
-		if sud.Club == 0 {
-			log.Printf("Invalid club: %v", sud.Club)
-			sud.ErrorClub = "Select your club."
+		// Validates team
+		if sud.Team == 0 {
+			log.Printf("Invalid team: %v", sud.Team)
+			sud.ErrorTeam = "Select your team."
 			valid = false
 		}
 	}
@@ -176,13 +176,13 @@ type passwordViewData struct {
 type profileData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
-	Club             int64
+	Team             int64
 	CurrentUser      *UserAccount
 	CurrentSwimmer   *UserSwimmer
 	Email            string
 	Error            string
 	ErrorBirthDate   string
-	ErrorClub        string
+	ErrorTeam        string
 	ErrorEmail       string
 	ErrorFirstName   string
 	ErrorGender      string
@@ -259,10 +259,10 @@ func (sud *profileData) valid() bool {
 			valid = false
 		}
 
-		// Validates club
-		if sud.Club == 0 {
-			log.Printf("Invalid club: %v", sud.Club)
-			sud.ErrorClub = "Select your club."
+		// Validates team
+		if sud.Team == 0 {
+			log.Printf("Invalid team: %v", sud.Team)
+			sud.ErrorTeam = "Select your team."
 			valid = false
 		}
 	}
@@ -274,13 +274,13 @@ type swimmerData struct {
 	Swimmer          *UserSwimmer
 	BaseTemplateData *utils.BaseTemplateData
 	BirthDate        string
-	Club             int64
+	Team             int64
 	Email            string
 	Consent          string
 	Course           string
 	Error            string
 	ErrorBirthDate   string
-	ErrorClub        string
+	ErrorTeam        string
 	ErrorConsent     string
 	ErrorEmail       string
 	ErrorFirstName   string
@@ -339,10 +339,10 @@ func (sd *swimmerData) valid() bool {
 		valid = false
 	}
 
-	// Validates club
-	if sd.Club == 0 {
-		log.Printf("Invalid club: %v", sd.Club)
-		sd.ErrorClub = "Select your club."
+	// Validates team
+	if sd.Team == 0 {
+		log.Printf("Invalid team: %v", sd.Team)
+		sd.ErrorTeam = "Select your team."
 		valid = false
 	}
 
@@ -360,8 +360,8 @@ func (sd *swimmerData) createSwimmer() *UserSwimmer {
 		Swimmer: &swimming.Swimmer{
 			FirstName: sd.FirstName,
 			LastName:  sd.LastName,
-			Club: &swimming.Club{
-				ID: sql.NullInt64{Int64: sd.Club, Valid: true},
+			Team: &swimming.Team{
+				ID: sql.NullInt64{Int64: sd.Team, Valid: true},
 			},
 		},
 	}

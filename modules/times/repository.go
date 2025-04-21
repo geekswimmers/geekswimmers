@@ -72,7 +72,7 @@ func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, erro
 func findRecordsByDefinition(definition RecordDefinition, db storage.Database) ([]*Record, error) {
 	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
 				rs.id, coalesce(rs.source_title, ''), coalesce(rs.source_link, ''),
-				coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.club, j.meet
+				coalesce(j.id, 0), coalesce(j.country, ''), j.province, j.region, j.city, j.team, j.meet
 			from record r
                 join record_set rs on rs.id = r.record_set
                 left join jurisdiction j on j.id = rs.jurisdiction
@@ -89,7 +89,7 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 		record := &Record{}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.ID, &record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
 			&record.RecordSet.Jurisdiction.ID, &record.RecordSet.Jurisdiction.Country, &record.RecordSet.Jurisdiction.Province, &record.RecordSet.Jurisdiction.Region,
-			&record.RecordSet.Jurisdiction.City, &record.RecordSet.Jurisdiction.Club, &record.RecordSet.Jurisdiction.Meet)
+			&record.RecordSet.Jurisdiction.City, &record.RecordSet.Jurisdiction.Team, &record.RecordSet.Jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
 		}
@@ -102,7 +102,7 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
 
 func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Record, error) {
 	stm := `select r.record_time, r.year, r.month, r.holder,
-	            j.id, j.world, j.country, j.province, j.region, j.city, j.club, j.meet,
+	            j.id, j.world, j.country, j.province, j.region, j.city, j.team, j.meet,
 				rd.min_age, rd.max_age
 			from record r
                 join record_definition rd on rd.id = r.definition
@@ -137,7 +137,7 @@ func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 		}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.RecordSet.Jurisdiction.ID,
 			&record.RecordSet.Jurisdiction.World, &record.RecordSet.Jurisdiction.Country, &record.RecordSet.Jurisdiction.Province,
-			&record.RecordSet.Jurisdiction.Region, &record.RecordSet.Jurisdiction.City, &record.RecordSet.Jurisdiction.Club,
+			&record.RecordSet.Jurisdiction.Region, &record.RecordSet.Jurisdiction.City, &record.RecordSet.Jurisdiction.Team,
 			&record.RecordSet.Jurisdiction.Meet, &record.Definition.MinAge, &record.Definition.MaxAge)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByExample: %v", err)
@@ -285,11 +285,11 @@ func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDe
 
 func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 	stm := `select rs.id, rs.jurisdiction,
-	               j.world, j.country, j.province, j.region, j.city, j.club, j.meet
+	               j.world, j.country, j.province, j.region, j.city, j.team, j.meet
 			from record_set rs
 			    left join jurisdiction j on j.id = rs.jurisdiction
 			
-			order by j.world, j.country, j.province, j.region, j.city, j.club, j.meet`
+			order by j.world, j.country, j.province, j.region, j.city, j.team, j.meet`
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordSets: %v", err)
@@ -301,7 +301,7 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 		recordSet := &RecordSet{}
 		err = rows.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Jurisdiction.World,
 			&recordSet.Jurisdiction.Country, &recordSet.Jurisdiction.Province, &recordSet.Jurisdiction.Region,
-			&recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Club, &recordSet.Jurisdiction.Meet)
+			&recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Team, &recordSet.Jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordSets: %v", err)
 		}
@@ -314,7 +314,7 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 
 func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 	stm := `select rs.id, rs.jurisdiction, rs.source_title, rs.source_link, 
-	               j.world, j.country, j.province, j.region, j.city, j.club, j.meet
+	               j.world, j.country, j.province, j.region, j.city, j.team, j.meet
 			from record_set rs
 			    left join jurisdiction j on j.id = rs.jurisdiction
 			where rs.id = $1`
@@ -325,7 +325,7 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 	}
 	if err := row.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Source.Title, &recordSet.Source.Link,
 		&recordSet.Jurisdiction.World, &recordSet.Jurisdiction.Country, &recordSet.Jurisdiction.Province,
-		&recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Club,
+		&recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Team,
 		&recordSet.Jurisdiction.Meet); err != nil {
 		return nil, fmt.Errorf("findRecordSet: %v", err)
 	}
