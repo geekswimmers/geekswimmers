@@ -40,11 +40,11 @@ The Chef Timekeeper is an official and experienced timekeeper who coaches and en
 
 * Look at the flash of the strobe to start the stopwatch. Do not rely on the sound of the starter since it propagates slower than light. If you have any delay to start, raise your hand for assistance.
 
-* Start the stopwatch even if there is no swimmer in your lane. You can help other timekeepers when they need help.
+* Start the stopwatch even if there is no swimmer in your lane. You can help other timekeepers when they are not confident about their start.
 
 * The person who starts the stopwatch must stop it. Do not exchange a stopwatch once it starts.
 
-* Make sure you can see the wall at the finish, and do not step on the touchpad while doing that. It may cause a false reading to the time system.
+* Make sure you can see the wall at the finish, and do not step on the touchpad while doing that. It may send a false reading to the time system.
 
 ## The Procedure on Deck
 
@@ -62,11 +62,9 @@ As a timekeeper in action, you will work in a team of two or three in your lane.
 
 6. Write the final time on paper. If the swimmer did not finish, write "DNF".
 
-Usually, a timekeeper is responsible for checking in the swimmer, pressing one of the plungers, and writing the times on paper. In contrast, the others are responsible for the stopwatches and the other plunger.
-
 ## Operating the Stopwatch
 
-The stopwatch is a simple device, battery-operated, with three buttons that are easy to operate. From the left to the right, they are:
+The stopwatch is a simple device, battery-operated, with three buttons that are easy to use. From the left to the right, they are:
 
 * **Split/Reset**: Records the split times and resets the stopwatch.
 
