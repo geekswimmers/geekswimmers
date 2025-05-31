@@ -4,7 +4,7 @@ That's why the role of timekeeper is so essential. Most competitive swimming poo
 
 Timekeeping is also about precision. The more attentive and focused the timekeepers are, the more precise their times will be. So, effective timekeepers stay in the moment and react fast to what they see. Unfortunately, it is not that simple. The eyes send a hundred billion signals to the brain every second. Still, only about 10% of the information comes from the optic nerve. Other parts of the brain have to recognize, identify, and interpret things. So, the biggest part of seeing isn't receiving visual images; it's making sense of them, which takes up to two hundred milliseconds to complete. That's a considerable gap that would be easily noticeable if it wasn't for the brain continuously forecasting what the world will be like in a fifth of a second from now. Yes, it is hard to believe, but we never see the world as it is in this very instance, but rather as it will be a fraction of a moment in the future. Having said that, why would we rely on people using stopwatches at all? The more we practice with the stopwatches at the touch on the wall, the faster the brain interprets those signals. The more focused we get, the more neurons are engaged in the sight. Combining the visual stimulus with hearing and touch considerably improves perception. We can quickly get as close as a hundred milliseconds or faster reactions. You may ask: "What about when my stopwatch matches the touchpad?" Well, that's just a coincidence.
 
-## 6 Tips to Become More Effective
+## 5 Tips to Become More Effective
 
 After a lot of deck experience as a timekeeper, I have compiled these six tips over the years that you can follow and become as effective as I am today from day one:
 
@@ -12,13 +12,11 @@ After a lot of deck experience as a timekeeper, I have compiled these six tips o
 
 2. The moment you get your hands on a stopwatch, start practising with it, getting used to the buttons and the positioning of your fingers. Do it until you no longer have to think about the basic operations. Your muscle memory will improve your reaction time.
 
-3. When the swimmer approaches the wall, follow them with your eyes, without blinking, until they touch the wall. Following the swimmer, instead of looking fixed to the wall, helps your brain pre-process the two hundred milliseconds.
+3. Always start the stopwatch at the flash of the strobe light. Never rely on the start sound. Light reaches your eyes way faster than sound reaches your ears.
 
-4. Always start the stopwatch at the flash of the strobe light. Never rely on the start sound. Light reaches your eyes way faster than sound reaches your ears.
+4. Always count the laps. You must be ready to stop the watch when the swimmer is finishing. Short events are easier to count, but distance events from 200m and above require more attention. Short course events have more to count than long course, but the long ones are less intense, which can lead to distractions.
 
-5. Always count the laps. You must be ready to stop the watch when the swimmer is finishing. Short events are easier to count, but distance events from 200m and above require more attention. Short course events have more to count than long course, but the long ones are less intense, which can lead to distractions.
-
-6. If you are not confident about the start of your stopwatch, ask for assistance. The Chef Timekeeper is there to help, so raise your hand and let them take over the timing for that heat.
+5. If you are not confident about the start of your stopwatch, ask for assistance. The Chef Timekeeper is there to help, so raise your hand and let them take over the timing for that heat.
 
 ## Applying to Volunteer as a Timekeeper
 
