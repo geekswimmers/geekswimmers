@@ -13,7 +13,7 @@ previous meet, a personal best, a championship standard, or even a record. They
 are the reason swimmers get happy or sad, excited or frustrated. Given the 
 relevance of these numbers, leaving a swim meet without them is unthinkable.
 
-That's why the role of timekeeper is so essential. Most competitive swimming 
+That's why the role of a timekeeper is so essential. Most competitive swimming 
 pools in Canada are equipped with a timing system. It comes with touchpads and 
 plungers. Touchpads provide the most accurate times because they are sensible 
 to the swimmers' touch at the wall. However, they require minimal pressure, 
@@ -38,19 +38,19 @@ making sense of them, which takes up to two hundred milliseconds to complete.
 That's a considerable gap that would be easily noticeable if it wasn't for the 
 brain continuously forecasting what the world will be like in a fifth of a 
 second from now. Yes, it is hard to believe, but we never see the world as it 
-is in this very instance, but rather as it will be a fraction of a moment in 
-the future. Having said that, why would we rely on people using stopwatches at 
-all? The more we practice with the stopwatches at the touch on the wall, the 
-faster the brain interprets those signals. The more focused we get, the more 
-neurons are engaged in the sight. Combining the visual stimulus with hearing 
-and touch considerably improves perception. We can quickly get as close as a 
-hundred milliseconds or faster reactions. You may ask: "What about when my 
-stopwatch matches the touchpad?" Well, that's just a coincidence.
+is in this very instance; rather, we see it as it will be a fraction of a 
+moment in the future. Having said that, why would we rely on people using 
+stopwatches at all? The more we practice with the stopwatches at the touch on
+the wall, the faster the brain interprets those signals. The more focused we 
+get, the more neurons are engaged in the sight. Combining the visual stimulus
+with hearing and touch considerably improves perception. We can quickly get as
+close as a hundred milliseconds or faster reactions. You may ask: "What about
+when my stopwatch matches the touchpad?" Well, that's just a coincidence.
 
 ## 5 Tips to Become More Effective
 
-After a lot of deck experience as a timekeeper, I have compiled these six tips 
-over the years that you can follow and become as effective as I am today from 
+After a lot of deck experience as a timekeeper, I have compiled these five tips 
+over the years that you can follow to become an effective timekeeper from 
 day one:
 
 1. Have good nights of sleep on the three days that precede the meet. You will 
@@ -72,7 +72,7 @@ day one:
    to distractions.
 
 5. If you are not confident about the start of your stopwatch, ask for 
-   assistance. The Chef Timekeeper is there to help, so raise your hand and let 
+   assistance. The Chief Timekeeper is there to help, so raise your hand and let 
    them take over the timing for that heat.
 
 ## Applying to Volunteer as a Timekeeper
@@ -85,25 +85,25 @@ participation points to engage volunteers, so don't forget to take advantage of
 that.
 
 In Canada, the dress code of a timekeeper is a white shirt, black pants, and 
-black shoes.
+black shoes or sandals.
 
-## Briefing With The Chef Timekeeper
+## Briefing With The Chief Timekeeper
 
-The Chef Timekeeper is an official and experienced timekeeper who coaches and 
-ensures the procedures are followed. The chef is there to help, not to oversee 
+The Chief Timekeeper is an official and experienced timekeeper who coaches and 
+ensures the procedures are followed. The chief is there to help, not to oversee 
 you. They run a briefing a few minutes before the session, and here is what you
 may hear during that time:
 
-* The Chef Timekeeper introduces themselves and explains that their duty is to 
-  support the timekeepers and provide relief if they lose control of any part 
-  of the procedure or need to step away for a moment.
+* The Chief Timekeeper introduces themselves and explains that they are there to 
+  support the timekeepers and provide relief if they forget any part of the 
+  procedure or need to step away for a moment.
 
 * No phones are allowed on deck, but you can raise your hand to make or receive
-  an urgent call. This way, the chef can temporarily replace you while you use
+  an urgent call. This way, the chief can temporarily replace you while you use
   the phone outside the deck.
 
-* Raise your hand if you see any problem with a swimmer, such as hitting the 
-  head on the wall, bleeding, or being out of breath. The Chef Timekeeper will
+* Raise your hand if you see any problems with a swimmer, such as hitting their 
+  head on the wall, bleeding, or being out of breath. The Chief Timekeeper will
   contact the lifeguard to care for the swimmer while you prepare for the next
   heat.
 
@@ -138,7 +138,7 @@ You will split the following tasks among your peers:
 3. At the flash of the strobe light, start the stopwatch. If you are unsure 
    about the start, raise your hand for assistance.
 
-4. If requested by the Chef Timekeeper, record the splits of the swimmer at each 
+4. If requested by the Chief Timekeeper, record the splits of the swimmer at each 
    lap by pressing the split button while the stopwatch is still running. Write
    the split times on paper.
 
@@ -194,7 +194,7 @@ finish.
 
 ### Returning the Stopwatch
 
-When the session ends, reset the stopwatch and return it to the Chef Timekeeper.
+When the session ends, reset the stopwatch and return it to the Chief Timekeeper.
 
 ## Conclusion
 
