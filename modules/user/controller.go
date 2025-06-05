@@ -45,12 +45,12 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 		ReCaptchaSiteKey: reCaptchaSiteKey,
 	}
 
-	data.PrivacyPolicy, err = content.LoadContent("web/content/privacy-policy.md")
+	data.PrivacyPolicy, err = content.LoadMarkdownContent(fmt.Sprintf("web/content/%s", "privacy-policy.md"))
 	if err != nil {
 		log.Printf("Error loading the privacy policy: %v", err)
 	}
 
-	data.TermsAndConditions, err = content.LoadContent("web/content/terms-and-conditions.md")
+	data.TermsAndConditions, err = content.LoadMarkdownContent(fmt.Sprintf("web/content/%s", "terms-and-conditions.md"))
 	if err != nil {
 		log.Printf("Error loading the terms and conditions: %v", err)
 	}

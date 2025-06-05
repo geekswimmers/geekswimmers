@@ -1,3 +1,13 @@
+The water is usually colder, deeper, and not treated with chemicals. It's
+considered safe for swimming when there are tolerable levels of pathogenic
+bacteria and acceptable temperatures (15-24°C). We also share the water with 
+plants, animals and microorganisms, which depend on organic matter to survive. 
+When it rains, city debris flow into the water, since lakes, rivers, and 
+beaches are usually the lowest local points. Yet, thousands of people go for a
+swim in the open, and something bad rarely happens.
+
+<!-- more -->
+
 The swimming pool is a controlled environment with many safety measures in 
 place to ensure the safe practice of swimming. It is expensive to maintain 
 a pool because the facility needs to keep more than a million litres of water 

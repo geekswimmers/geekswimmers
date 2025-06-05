@@ -81,7 +81,7 @@ func (wc *Controller) LegalView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 	docType := req.URL.Query().Get(":doc")
 
-	doc, err := content.LoadContent(fmt.Sprintf("web/content/%s.md", docType))
+	doc, err := content.LoadMarkdownContent(fmt.Sprintf("web/content/%s.md", docType))
 	if err != nil {
 		log.Printf("Error loading the legal doc: %v", err)
 	}

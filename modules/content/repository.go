@@ -8,7 +8,7 @@ import (
 )
 
 func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
-	stm := `select a.reference, a.title, a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+	stm := `select a.reference, a.title, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			from article a
 			where a.highlighted = true
 			order by a.published desc`
@@ -21,12 +21,13 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 	var articles []*Article
 	for rows.Next() {
 		article := &Article{}
-		err = rows.Scan(&article.Reference, &article.Title, &article.Abstract,
-			&article.Highlighted, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
+		err = rows.Scan(&article.Reference, &article.Title,
+			&article.Highlighted, &article.Published, &article.ContentFile, &article.Image, &article.ImageCopyright)
 
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, err
 		}
+
 		articles = append(articles, article)
 	}
 
@@ -34,7 +35,7 @@ func FindHighlightedArticles(db storage.Database) ([]*Article, error) {
 }
 
 func FindArticlesExcept(except string, db storage.Database) ([]*Article, error) {
-	stm := `select a.reference, a.title, coalesce(a.sub_title, ''), a.abstract, a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+	stm := `select a.reference, a.title, coalesce(a.sub_title, ''), a.highlighted, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			from article a
 			where a.reference != $1
 			order by a.published desc`
@@ -47,8 +48,8 @@ func FindArticlesExcept(except string, db storage.Database) ([]*Article, error) 
 	var articles []*Article
 	for rows.Next() {
 		article := &Article{}
-		err = rows.Scan(&article.Reference, &article.Title, &article.SubTitle, &article.Abstract,
-			&article.Highlighted, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
+		err = rows.Scan(&article.Reference, &article.Title, &article.SubTitle,
+			&article.Highlighted, &article.Published, &article.ContentFile, &article.Image, &article.ImageCopyright)
 
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, err
@@ -60,19 +61,14 @@ func FindArticlesExcept(except string, db storage.Database) ([]*Article, error) 
 }
 
 func getArticle(reference string, db storage.Database) (*Article, error) {
-	stm := `select a.reference, a.title, a.abstract, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
+	stm := `select a.reference, a.title, a.published, a.content, coalesce(a.image, ''), coalesce(a.image_copyright, '')
 			 from article a
 			 where a.reference = $1`
 
 	row := db.QueryRow(context.Background(), stm, reference)
 
 	article := &Article{}
-	err := row.Scan(&article.Reference, &article.Title, &article.Abstract, &article.Published, &article.Content, &article.Image, &article.ImageCopyright)
-	if err != nil {
-		return nil, err
-	}
-
-	article.Content, err = LoadContent(fmt.Sprintf("web/content/%s", article.Content))
+	err := row.Scan(&article.Reference, &article.Title, &article.Published, &article.ContentFile, &article.Image, &article.ImageCopyright)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +76,7 @@ func getArticle(reference string, db storage.Database) (*Article, error) {
 	return article, nil
 }
 
-func LoadContent(filePath string) (string, error) {
+func LoadMarkdownContent(filePath string) (string, error) {
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return "", err

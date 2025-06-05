@@ -1,3 +1,13 @@
+GeekSwimmers is running its second swimming season in Canada. We struggled to
+build a data model to support time standards and records. When we thought we 
+were done, Swim Canada and Swim Ontario decided to review their standards for 
+the next Olympic cycle, forcing us to quickly adapt. The model became more 
+mature and resilient to changes, but we later discovered that the app had much 
+to catch up on. It wasn't ready to cover a wider area than our western region. 
+So, adapting to changes became our new normal.
+
+<!-- more -->
+
 The need to support a new region came from one of our most active users. Her 
 children used to swim with [ROW](https://www.rowswimming.ca) (Region
 of Waterloo Swim Club), but the [Hanover Swim Club](https://www.hanoverswimclub.ca)

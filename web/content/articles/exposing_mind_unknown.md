@@ -1,3 +1,11 @@
+"_I start swimming, breathing and stretching my arms, it's going well. I look 
+at the watch, it's been nine minutes and I feel good. I imagine I'm at the 
+lake, swimming in open water. I get the images in my mind and then the 
+sensations follow. Suddenly, I feel out of breath as if I can't swim anymore, 
+as if I need to let go and drown._"
+
+<!-- more -->
+
 It's Thursday, lunchtime, it's cold outside and I'm not in the mood for a run.
 So I decide to go for a swim. I want to discover something new about myself:
 
