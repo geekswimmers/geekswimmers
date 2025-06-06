@@ -47,31 +47,35 @@ with hearing and touch considerably improves perception. We can quickly get as
 close as a hundred milliseconds or faster reactions. You may ask: "What about
 when my stopwatch matches the touchpad?" Well, that's just a coincidence.
 
-## 5 Tips to Become More Effective
+## 6 Tips to Become More Effective
 
-After a lot of deck experience as a timekeeper, I have compiled these five tips 
+After a lot of deck experience as a timekeeper, I have compiled these six tips 
 over the years that you can follow to become an effective timekeeper from 
 day one:
 
 1. Have good nights of sleep on the three days that precede the meet. You will 
    feel rested and able to concentrate on the task at hand.
 
-2. The moment you get your hands on a stopwatch, start practising with it, 
+2. Review the slide deck of the timekeeper training to refresh your 
+   memory about the procedures and the role of a timekeeper. If you don't have
+   a copy, you can find one on the Swim Canada website or ask your club for it.
+
+3. The moment you get your hands on a stopwatch, start practising with it, 
    getting used to the buttons and the positioning of your fingers. Do it until
    you no longer have to think about the basic operations. Your muscle memory
    will improve your reaction time.
 
-3. Always start the stopwatch at the flash of the strobe light. Never rely on
+4. Always start the stopwatch at the flash of the strobe light. Never rely on
    the start sound. Light reaches your eyes way faster than sound reaches your 
    ears.
 
-4. Always count the laps. You must be ready to stop the watch when the swimmer 
+5. Always count the laps. You must be ready to stop the watch when the swimmer 
    is finishing. Short events are easier to count, but distance events from 
    200m and above require more attention. Short course events have more to 
    count than long course, but the long ones are less intense, which can lead 
    to distractions.
 
-5. If you are not confident about the start of your stopwatch, ask for 
+6. If you are not confident about the start of your stopwatch, ask for 
    assistance. The Chief Timekeeper is there to help, so raise your hand and let 
    them take over the timing for that heat.
 
