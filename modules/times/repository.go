@@ -7,7 +7,6 @@ import (
 	"geekswimmers/storage"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -36,11 +35,11 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 }
 
 func GetCurrentSwimSeason(db storage.Database) (*SwimSeason, error) {
-	stm := `select id, name 
+	stm := `select ss.id, ss.name 
 			from swim_season ss
-			where start_date <= $1 and end_date >= $1`
+			where ss.end_date = (select max(ssm.end_date) from swim_season ssm)`
 
-	row := db.QueryRow(context.Background(), stm, time.Now())
+	row := db.QueryRow(context.Background(), stm)
 
 	swimSeason := &SwimSeason{}
 	if err := row.Scan(&swimSeason.ID, &swimSeason.Name); err != nil {

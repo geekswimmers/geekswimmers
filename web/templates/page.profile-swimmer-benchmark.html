@@ -129,7 +129,7 @@
                 </tr>
             {{else}}
                 <tr>
-                    <td colspan="3">No best times for {{if eq .Course "SHORT"}}<b>short course</b>{{else}}<b>long course</b>{{end}} registered yet. 
+                    <td colspan="4">No best times for {{if eq .Course "SHORT"}}<b>short course</b>{{else}}<b>long course</b>{{end}} registered yet. 
                         <a href="/profile/swimmers/{{.Swimmer.ID}}/besttimes/form/">Register one now</a>!</td>
                 </tr>
             {{end}}
