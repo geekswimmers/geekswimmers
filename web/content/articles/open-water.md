@@ -45,6 +45,13 @@ The experience is different from a controlled environment, though:
    currents, wind, and waves to mess up your orientation and push you to swim
    further than necessary.
 
+2. **Currents**: the water flows in larger areas forming currents. They may
+   affect your speed and orientation. Your feeling of movement is also affected
+   because when you are against the current, you see the water flowing faster
+   around you, but you are not moving as fast as you would like. When you are
+   with the current, you see the water flowing slower around you, but you are
+   actually moving faster.
+
 2. **The water is dark**: unlike the pool, wild water is deep, full of particles,
    plants, and fish, making it dark. It may cause some discomfort at the 
    beginning, further degrading the sense of space, followed by a 
