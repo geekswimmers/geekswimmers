@@ -52,24 +52,24 @@ The experience is different from a controlled environment, though:
    with the current, you see the water flowing slower around you, but you are
    actually moving faster.
 
-2. **The water is dark**: unlike the pool, wild water is deep, full of particles,
+3. **The water is dark**: unlike the pool, wild water is deep, full of particles,
    plants, and fish, making it dark. It may cause some discomfort at the 
    beginning, further degrading the sense of space, followed by a 
    claustrophobic feeling, but you get used to the sensation after a few
    minutes of swimming. Just keep going.
 
-3. **Acclimation**: the water is usually cold, so you need to get used to the
+4. **Acclimation**: the water is usually cold, so you need to get used to the
    feeling. A reasonable target to aim for is to be comfortable at a water 
    temperature of 15°C. It means training over short periods at colder 
    temperatures and progressively increasing exposure time. Some races allow
    the usage of wetsuits, but they are expensive, especially for kids, who
    grow very fast.
 
-4. **Change on swim technique**: To orient yourself, you have to raise your head
+5. **Change on swim technique**: To orient yourself, you have to raise your head
    and turn your face ahead to see what is in front of you. That's unacceptable
    in a swim meet, even weird to see, due to its inefficiency in the pool.
 
-5. **Mostly freestyle**: If your favourite event is butterfly, back or breast,
+6. **Mostly freestyle**: If your favourite event is butterfly, back or breast,
    get used to swimming freestyle most of the time in open waters. Due to the
    long distances, swimmers typically pick the fastest and most efficient
    style. Backstroke can still be used for fuel on the course, rest a little,
@@ -77,18 +77,18 @@ The experience is different from a controlled environment, though:
    buoys; and breaststroke to intentionally slow down in a crowded section, but
    unfortunately, there is no use for butterfly.
 
-6. **Chaos**: The start of an open water race is chaotic. You will experience the
+7. **Chaos**: The start of an open water race is chaotic. You will experience the
    water very agitated, people bumping into each other, kicks and pushes from
    all directions, and boats passing by. Eventually, swimmers spread out and
    you conquer your space to find your pace.
 
-7. **Strategy required**: In fast races like the 50s and 100s, it's all out, with
+8. **Strategy required**: In fast races like the 50s and 100s, it's all out, with
    almost no room for strategy. Open water races are at least 1k long, which
    requires a plan. A common strategy is to sprint the first 100m to detach
    from the crowd, lock in a sustainable pace for most of the distance, and
    then build speed in the last 200m to finish strong.
 
-8. **Go with a partner**: never practice alone; use a buoy for extra safety. Find
+9. **Go with a partner**: never practice alone; use a buoy for extra safety. Find
    at least one partner who shares the same goals and schedule practices
    together. Even better if your swim club organizes such practices.
 
@@ -102,7 +102,7 @@ Knowing you can do open water swimming will open a whole lot of possibilities.
 We have seen people hooked to it on their first try. Others have said they felt
 incomparable freedom when treading in the middle of a lake. The sense of
 responsibility towards ecological causes also increases as a way to preserve
-the environment where the sport is practiced. So, please take it as an
+the environment where the sport is practised. So, please take it as an
 invitation to experiment and explore.
 
 ![Triathlon](/static/images/content/open-water-triathlon-2.jpg)
