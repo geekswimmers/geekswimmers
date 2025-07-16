@@ -44,9 +44,9 @@ Use the time you wait for your event to learn how to read the scoreboard. How
 fast can you identify your lane, position, and time? The fast pace of busy 
 events can quickly switch heats on the scoreboard, so learn to read it fast.
 
-## 5. Do not cycle swim during your race
+## 5. Do not circle swim during your race
 
-Cycle swimming is for practice, where there is more than one swimmer per lane. 
+Circle swimming is for practice, where there is more than one swimmer per lane. 
 During your race, you have a dedicated lane for yourself to stay on top of the 
 dark line at the bottom of the pool. Take advantage of that! Remember: the 
 shortest distance between two points is a straight line. So, don't swim more
