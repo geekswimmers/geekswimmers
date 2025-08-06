@@ -50,7 +50,10 @@ The experience is different from a controlled environment, though:
    because when you are against the current, you see the water flowing faster
    around you, but you are not moving as fast as you would like. When you are
    with the current, you see the water flowing slower around you, but you are
-   actually moving faster.
+   actually moving faster. If fast enough, the current can even push you to a
+   dangerous situation. If caught in a strong current, don't fight it. Swim
+   parallel to the shore to escape it. If you can't escape, float or tread
+   water and wave for assistance.
 
 3. **The water is dark**: unlike the pool, wild water is deep, full of particles,
    plants, and fish, making it dark. It may cause some discomfort at the 
