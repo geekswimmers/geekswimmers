@@ -101,6 +101,7 @@ func (definition *RecordDefinition) AgeRange() string {
 
 type RecordSet struct {
 	ID           int64
+	Title        string
 	Jurisdiction swimming.Jurisdiction
 	Source       Source
 }

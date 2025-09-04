@@ -1,0 +1,1 @@
+alter table record_set add if not exists title varchar(100) null;

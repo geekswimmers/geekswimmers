@@ -95,7 +95,7 @@ func (jurisdiction *Jurisdiction) SubTitle() string {
 		return fmt.Sprintf("%v - %v",
 			jurisdiction.Province.String,
 			jurisdiction.Country.String)
-	} else if jurisdiction.Province.Valid {
+	} else if jurisdiction.Province.Valid || jurisdiction.Country.Valid {
 		return jurisdiction.Country.String
 	}
 

@@ -283,7 +283,7 @@ func findRecordsAgeRanges(recordSet RecordSet, db storage.Database) ([]*RecordDe
 }
 
 func findRecordSets(db storage.Database) ([]*RecordSet, error) {
-	stm := `select rs.id, rs.jurisdiction,
+	stm := `select rs.id, rs.jurisdiction, rs.title,
 	               j.world, j.country, j.province, j.region, j.city, j.team, j.meet
 			from record_set rs
 			    left join jurisdiction j on j.id = rs.jurisdiction
@@ -298,7 +298,7 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 	var recordSets []*RecordSet
 	for rows.Next() {
 		recordSet := &RecordSet{}
-		err = rows.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Jurisdiction.World,
+		err = rows.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Title, &recordSet.Jurisdiction.World,
 			&recordSet.Jurisdiction.Country, &recordSet.Jurisdiction.Province, &recordSet.Jurisdiction.Region,
 			&recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Team, &recordSet.Jurisdiction.Meet)
 		if err != nil && err.Error() != storage.ErrNoRows {
