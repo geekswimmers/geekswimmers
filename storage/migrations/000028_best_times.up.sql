@@ -11,7 +11,7 @@ create table if not exists swimmer_best_time (
 );
 
 create unique index if not exists idx_best_time
-    on swimmer_best_time (swimmer, event, course, meet) nulls not distinct;
+    on swimmer_best_time (swimmer, event, course);
 
 -- If the swimmer's best time is older than this date then a new best time
 -- needs to be attempted to meet the standard.
