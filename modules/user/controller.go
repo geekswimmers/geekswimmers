@@ -1,7 +1,9 @@
 package user
 
 import (
+	"crypto/rsa"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"geekswimmers/config"
@@ -12,7 +14,9 @@ import (
 	"geekswimmers/utils"
 	"geekswimmers/utils/messaging"
 	"html/template"
+	"io"
 	"log"
+	"math/big"
 	"net/http"
 	"net/url"
 	"sort"
@@ -20,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -31,6 +36,7 @@ type Controller struct {
 
 func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+	googleClientID := config.GetConfiguration().GetString(config.GoogleClientID)
 	sessionData := storage.NewSessionData(req)
 
 	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, uc.DB)
@@ -43,6 +49,7 @@ func (uc *Controller) SignUpView(res http.ResponseWriter, req *http.Request) {
 		BaseTemplateData: uc.BaseTemplateData,
 		Jurisdictions:    jurisdictions,
 		ReCaptchaSiteKey: reCaptchaSiteKey,
+		GoogleClientID:   googleClientID,
 	}
 
 	data.PrivacyPolicy, err = content.LoadMarkdownContent(fmt.Sprintf("web/content/%s", "privacy-policy.md"))
@@ -311,6 +318,7 @@ func (uc *Controller) ResetPassword(res http.ResponseWriter, req *http.Request) 
 
 func (uc *Controller) SignInView(res http.ResponseWriter, req *http.Request) {
 	reCaptchaSiteKey := config.GetConfiguration().GetString(config.RecaptchaSiteKey)
+	googleClientID := config.GetConfiguration().GetString(config.GoogleClientID)
 
 	if !userAccountExists(uc.DB) {
 		http.Redirect(res, req, "/signup/", http.StatusSeeOther)
@@ -322,6 +330,7 @@ func (uc *Controller) SignInView(res http.ResponseWriter, req *http.Request) {
 	err := html.Execute(res, &signInData{
 		BaseTemplateData: uc.BaseTemplateData,
 		ReCaptchaSiteKey: reCaptchaSiteKey,
+		GoogleClientID:   googleClientID,
 		SessionData:      storage.NewSessionData(req),
 	})
 	if err != nil {
@@ -1551,4 +1560,236 @@ func (uc *Controller) SaveEmailSettings(res http.ResponseWriter, req *http.Reque
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+// GoogleSignIn handles Google One Tap authentication
+func (uc *Controller) GoogleSignIn(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		http.Error(res, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
+	credential := req.PostForm.Get("credential")
+	if credential == "" {
+		http.Error(res, "No credential provided", http.StatusBadRequest)
+		return
+	}
+
+	// Verify and parse the JWT token
+	googleUser, err := uc.verifyGoogleToken(credential)
+	if err != nil {
+		log.Printf("Error verifying Google token: %v", err)
+		http.Error(res, "Invalid Google credential", http.StatusUnauthorized)
+		return
+	}
+
+	// Check if user exists or create new user
+	userAccount := FindUserAccountByEmail(strings.ToLower(googleUser.Email), uc.DB)
+
+	if userAccount == nil {
+		// Create new user account from Google profile
+		userAccount = &UserAccount{
+			Email:     strings.ToLower(googleUser.Email),
+			FirstName: googleUser.GivenName,
+			LastName:  googleUser.FamilyName,
+			Role:      RoleParent, // Default role
+			Password:  []byte{},   // No password for Google users
+		}
+
+		userAccount.ID, err = InsertUserAccount(userAccount, uc.DB)
+		if err != nil {
+			log.Printf("Error creating user from Google sign-in: %v", err)
+			http.Error(res, "Error creating user account", http.StatusInternalServerError)
+			return
+		}
+		log.Printf("Created new user account for Google user: %v", userAccount.Email)
+	}
+
+	// Sign in the user
+	if err = uc.addUserToSession(userAccount, res, req); err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("Google user %v signed in successfully", userAccount.Email)
+
+	// Redirect based on user role
+	if userAccount.Role == RoleSwimmer {
+		http.Redirect(res, req, "/profile/swimmers", http.StatusSeeOther)
+	} else {
+		http.Redirect(res, req, "/profile/", http.StatusSeeOther)
+	}
+}
+
+// verifyGoogleToken validates the Google ID token
+func (uc *Controller) verifyGoogleToken(tokenString string) (*GoogleIDToken, error) {
+	// Parse and verify the token using MapClaims
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Validate the signing algorithm
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// Get the kid from the header
+		kid, ok := token.Header["kid"].(string)
+		if !ok {
+			return nil, fmt.Errorf("no kid in token header")
+		}
+
+		// Get Google's public key for verification
+		return uc.getGooglePublicKey(kid)
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to verify token: %v", err)
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	// Extract claims as map
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid token claims format")
+	}
+
+	// Convert map claims to our GoogleIDToken struct
+	googleToken := &GoogleIDToken{}
+
+	if iss, ok := claims["iss"].(string); ok {
+		googleToken.Iss = iss
+	} else {
+		return nil, fmt.Errorf("missing or invalid iss claim")
+	}
+
+	if sub, ok := claims["sub"].(string); ok {
+		googleToken.Sub = sub
+	} else {
+		return nil, fmt.Errorf("missing or invalid sub claim")
+	}
+
+	if aud, ok := claims["aud"].(string); ok {
+		googleToken.Aud = aud
+	} else {
+		return nil, fmt.Errorf("missing or invalid aud claim")
+	}
+
+	if exp, ok := claims["exp"].(float64); ok {
+		googleToken.Exp = int64(exp)
+	} else {
+		return nil, fmt.Errorf("missing or invalid exp claim")
+	}
+
+	if iat, ok := claims["iat"].(float64); ok {
+		googleToken.Iat = int64(iat)
+	} else {
+		return nil, fmt.Errorf("missing or invalid iat claim")
+	}
+
+	if email, ok := claims["email"].(string); ok {
+		googleToken.Email = email
+	} else {
+		return nil, fmt.Errorf("missing or invalid email claim")
+	}
+
+	if emailVerified, ok := claims["email_verified"].(bool); ok {
+		googleToken.EmailVerified = emailVerified
+	} else {
+		return nil, fmt.Errorf("missing or invalid email_verified claim")
+	}
+
+	// Optional fields
+	if name, ok := claims["name"].(string); ok {
+		googleToken.Name = name
+	}
+
+	if picture, ok := claims["picture"].(string); ok {
+		googleToken.Picture = picture
+	}
+
+	if givenName, ok := claims["given_name"].(string); ok {
+		googleToken.GivenName = givenName
+	}
+
+	if familyName, ok := claims["family_name"].(string); ok {
+		googleToken.FamilyName = familyName
+	}
+
+	// Validate our custom claims using the Valid() method we defined
+	if err := googleToken.Valid(); err != nil {
+		return nil, fmt.Errorf("token validation failed: %v", err)
+	}
+
+	// Verify the audience matches your client ID
+	expectedClientID := config.GetConfiguration().GetString(config.GoogleClientID)
+	if googleToken.Aud != expectedClientID {
+		return nil, fmt.Errorf("invalid audience: expected %s, got %s", expectedClientID, googleToken.Aud)
+	}
+
+	// Verify the issuer
+	if googleToken.Iss != "https://accounts.google.com" && googleToken.Iss != "accounts.google.com" {
+		return nil, fmt.Errorf("invalid issuer: %s", googleToken.Iss)
+	}
+
+	// Verify email is verified by Google
+	if !googleToken.EmailVerified {
+		return nil, fmt.Errorf("email not verified by Google")
+	}
+
+	return googleToken, nil
+}
+
+// getGooglePublicKey fetches and converts Google's public key for JWT verification
+func (uc *Controller) getGooglePublicKey(kid string) (*rsa.PublicKey, error) {
+	// Fetch Google's public keys
+	resp, err := http.Get("https://www.googleapis.com/oauth2/v3/certs")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var keys GoogleKeys
+	if err := json.Unmarshal(body, &keys); err != nil {
+		return nil, err
+	}
+
+	// Find the key with matching kid
+	for _, key := range keys.Keys {
+		if key.Kid == kid {
+			return uc.convertToRSAPublicKey(key)
+		}
+	}
+
+	return nil, fmt.Errorf("key with kid %s not found", kid)
+}
+
+// convertToRSAPublicKey converts Google's JWK to RSA public key
+func (uc *Controller) convertToRSAPublicKey(key GooglePublicKey) (*rsa.PublicKey, error) {
+	// Decode the modulus
+	nBytes, err := base64.RawURLEncoding.DecodeString(key.N)
+	if err != nil {
+		return nil, err
+	}
+
+	// Decode the exponent
+	eBytes, err := base64.RawURLEncoding.DecodeString(key.E)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert to big integers
+	n := new(big.Int).SetBytes(nBytes)
+	e := new(big.Int).SetBytes(eBytes)
+
+	return &rsa.PublicKey{
+		N: n,
+		E: int(e.Int64()),
+	}, nil
 }

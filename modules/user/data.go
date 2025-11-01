@@ -27,6 +27,7 @@ type signUpData struct {
 	FirstName           string
 	FirstUserAccount    bool
 	Gender              string
+	GoogleClientID      string
 	Jurisdiction        int64
 	Jurisdictions       []*swimming.Jurisdiction
 	LastName            string
@@ -474,6 +475,7 @@ type signInData struct {
 	BaseTemplateData *utils.BaseTemplateData
 	Error            string
 	Identifier       string
+	GoogleClientID   string
 	Lock             bool
 	ReCaptchaSiteKey string
 	SessionData      *storage.SessionData

@@ -9,127 +9,149 @@
 
     <div class="card">
         <div class="card-body">
-            <form id="signup-form" method="post" action="/signup/">
-                {{if .Error }}
-                    <div class="alert alert-warning" role="alert">
-                        {{html .Error}}
-                    </div>
-                {{end}}
+            <div id="g_id_onload"
+                data-client_id="{{.GoogleClientID}}"
+                data-callback="handleCredentialResponse"
+                data-auto_prompt="false"
+                data-cancel_on_tap_outside="false">
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
-                            <span class="error">{{.ErrorFirstName}}</span>
-                        </div>
+            <div class="card">
+                <div class="card-body">
+                    <!-- Google Sign-In Button -->
+                    {{if .GoogleClientID}}
+                    <div class="mb-3 text-center">
+                        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
-                            <span class="error">{{.ErrorLastName}}</span>
-                        </div>
+                    <hr class="my-4">
+                    <div class="text-center text-muted mb-3">
+                        <small>or sign in with your email</small>
                     </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" value="{{.Email}}" required>
-                    <span class="error">{{html .ErrorEmail}}</span>
-                </div>
+                    {{end}}
 
-                {{if not .FirstUserAccount}}
-                <div class="mb-3">
-                    <label for="role" class="form-label">Community Role</label><br>
-                    <div class="form-check form-check-inline" style="padding-top: 8px;">
-                        <input class="form-check-input" type="radio" name="role" id="roleParent" value="PARENT" required{{if eq .Role "PARENT"}} checked{{end}} onclick="document.getElementById('forRoleSwimmer').style.display = 'none';">
-                        <label class="form-check-label" style="font-weight: normal;" for="roleParent">I'm a Swimmer's Parent</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="role" id="roleSwimmer" value="SWIMMER" required{{if eq .Role "SWIMMER"}} checked{{end}}  onclick="document.getElementById('forRoleSwimmer').style.display = 'block';">
-                        <label class="form-check-label" style="font-weight: normal;" for="roleSwimmer">I'm a Swimmer</label>
-                    </div>
-                    <span class="error">{{.ErrorRole}}</span>
-                </div>
-
-                <div id="forRoleSwimmer" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="birthDate" class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}">
-                                <small class="text-body-secondary">We use the date of birth to calculate your age and use it to filter standards and records and select the standards according to the dates specified by each age group championship.</small>
-                                <br><span class="error">{{.ErrorBirthDate}}</span>
+                    <form id="signup-form" method="post" action="/signup/">
+                        {{if .Error }}
+                            <div class="alert alert-warning" role="alert">
+                                {{html .Error}}
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Gender</label>
-                                <br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}}>
-                                    <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
+                        {{end}}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" minlength="2" maxlength="30" value="{{.FirstName}}" required>
+                                    <span class="error">{{.ErrorFirstName}}</span>
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}}>
-                                    <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
-                                </div><br>
-                                <small class="text-body-secondary">World Aquatics categorizes time standards and records using two genders. We use gender to filter these data for you automatically.</small>
-                                <span class="error">{{.ErrorGender}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" minlength="2" maxlength="30" value="{{.LastName}}" required>
+                                    <span class="error">{{.ErrorLastName}}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        
+                        <div class="mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="email@example.com" maxlength="100" value="{{.Email}}" required>
+                            <span class="error">{{html .ErrorEmail}}</span>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="jurisdiction" class="form-label">Jurisdiction</label>
-                        <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateTeamsByJurisdiction()">
-                            <option value="0">Select...</option>
-                            {{range .Jurisdictions}}
-                                <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
-                            {{else}}
-                                <option value="0">No jurisdictions available</option>
-                            {{end}}
-                        </select>
-                    </div>
+                        {{if not .FirstUserAccount}}
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Community Role</label><br>
+                            <div class="form-check form-check-inline" style="padding-top: 8px;">
+                                <input class="form-check-input" type="radio" name="role" id="roleParent" value="PARENT" required{{if eq .Role "PARENT"}} checked{{end}} onclick="document.getElementById('forRoleSwimmer').style.display = 'none';">
+                                <label class="form-check-label" style="font-weight: normal;" for="roleParent">I'm a Swimmer's Parent</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="role" id="roleSwimmer" value="SWIMMER" required{{if eq .Role "SWIMMER"}} checked{{end}}  onclick="document.getElementById('forRoleSwimmer').style.display = 'block';">
+                                <label class="form-check-label" style="font-weight: normal;" for="roleSwimmer">I'm a Swimmer</label>
+                            </div>
+                            <span class="error">{{.ErrorRole}}</span>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="team" class="form-label">Team</label>
-                        <select id="team" name="team" class="form-select">
-                        </select>
-                        <span class="error">{{.ErrorTeam}}</span>
-                    </div>
+                        <div id="forRoleSwimmer" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="birthDate" class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" name="birthDate" id="birthDate" value="{{.BirthDate}}">
+                                        <small class="text-body-secondary">We use the date of birth to calculate your age and use it to filter standards and records and select the standards according to the dates specified by each age group championship.</small>
+                                        <br><span class="error">{{.ErrorBirthDate}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Gender</label>
+                                        <br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="FEMALE" {{if eq .Gender "FEMALE"}}checked{{end}}>
+                                            <label class="form-check-label" style="font-weight: normal;" for="genderFemale">Female</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="MALE" {{if eq .Gender "MALE"}}checked{{end}}>
+                                            <label class="form-check-label" style="font-weight: normal;" for="genderMale">Male</label>
+                                        </div><br>
+                                        <small class="text-body-secondary">World Aquatics categorizes time standards and records using two genders. We use gender to filter these data for you automatically.</small>
+                                        <span class="error">{{.ErrorGender}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="jurisdiction" class="form-label">Jurisdiction</label>
+                                <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="updateTeamsByJurisdiction()">
+                                    <option value="0">Select...</option>
+                                    {{range .Jurisdictions}}
+                                        <option value="{{.ID.Int64}}" {{if eq .ID.Int64 $.Jurisdiction}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
+                                    {{else}}
+                                        <option value="0">No jurisdictions available</option>
+                                    {{end}}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="team" class="form-label">Team</label>
+                                <select id="team" name="team" class="form-select">
+                                </select>
+                                <span class="error">{{.ErrorTeam}}</span>
+                            </div>
+                        </div>
+                        {{end}}
+                        
+                        <hr>
+                        <div class="mb-3">
+                            <p>
+                                By creating an account, you agree to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsAndConditionsModal">Terms and Conditions</a> and 
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a>. 
+                                We'll occasionally send you account-related emails, and you can unsubscribe from marketing-related emails at any time.
+                            </p>
+                        </div>
+                        {{if .ReCaptchaSiteKey}}
+                            <button type="submit" id="btnSignUp" class="btn btn-primary g-recaptcha" data-sitekey="{{.ReCaptchaSiteKey}}" data-callback='onSubmit' data-action='submit'>
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                                    <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                                    <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg> Sign Up
+                            </button>
+                        {{else}}
+                            <button type="submit" class="btn btn-primary">
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                                    <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                                    <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg> Sign Up
+                            </button>
+                        {{end}}
+                        <a class="btn btn-secondary" href="/" role="button">Cancel</a>
+                        <br><br><p>Already have an account? <a href="/auth/signin/">Sign in</a>.</p>
+                    </form>
                 </div>
-                {{end}}
-                
-                <hr>
-                <div class="mb-3">
-                    <p>
-                        By creating an account, you agree to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsAndConditionsModal">Terms and Conditions</a> and 
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a>. 
-                        We'll occasionally send you account-related emails, and you can unsubscribe from marketing-related emails at any time.
-                    </p>
-                </div>
-                {{if .ReCaptchaSiteKey}}
-                    <button type="submit" id="btnSignUp" class="btn btn-primary g-recaptcha" data-sitekey="{{.ReCaptchaSiteKey}}" data-callback='onSubmit' data-action='submit'>
-                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
-                            <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
-                            <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                        </svg> Sign Up
-                    </button>
-                {{else}}
-                    <button type="submit" class="btn btn-primary">
-                        <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
-                            <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
-                            <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                        </svg> Sign Up
-                    </button>
-                {{end}}
-                <a class="btn btn-secondary" href="/" role="button">Cancel</a>
-                <br><br><p>Already have an account? <a href="/auth/signin/">Sign in</a>.</p>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -169,6 +191,28 @@
 {{end}}
 
 {{define "scripts"}}
+   <script src="https://accounts.google.com/gsi/client" async></script>
+
+    {{if .GoogleClientID}}
+        <script>
+            function handleCredentialResponse(response) {
+                // Create a form to submit the credential
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/auth/google/';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'credential';
+                input.value = response.credential;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
+    {{end}}
+
     {{if .ReCaptchaSiteKey}}
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>

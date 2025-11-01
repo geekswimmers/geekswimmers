@@ -36,6 +36,11 @@ const (
 	// EmailFrom is the address used as from in an email message
 	EmailFrom = "email.from"
 
+	// GoogleClientID is the OAuth2 Client ID for Google Sign-In.
+	GoogleClientID = "google.clientid"
+	// GoogleClientSecret is the OAuth2 Client Secret for Google Sign-In.
+	GoogleClientSecret = "google.clientsecret"
+
 	// RecaptchaSiteKey reCAPTCHA Site Key used in the sign up page publically.
 	RecaptchaSiteKey = "recaptcha.sitekey"
 	// RecaptchaSecretKey reCAPTCHA Secret Key used in the backend to verify the authenticity with reCAPTCHA server.
@@ -121,6 +126,9 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	utils.LogError(viperConfig.BindEnv(EmailUsername, "EMAIL_USERNAME"), "EMAIL_USERNAME not available")
 	utils.LogError(viperConfig.BindEnv(EmailPassword, "EMAIL_PASSWORD"), "EMAIL_PASSWORD not available")
 	utils.LogError(viperConfig.BindEnv(EmailFrom, "EMAIL_FROM"), "EMAIL_FROM not available")
+
+	utils.LogError(viperConfig.BindEnv(GoogleClientID, "GOOGLE_CLIENTID"), "GOOGLE_CLIENTID not available")
+	utils.LogError(viperConfig.BindEnv(GoogleClientSecret, "GOOGLE_CLIENTSECRET"), "GOOGLE_CLIENTSECRET not available")
 
 	utils.LogError(viperConfig.BindEnv(RecaptchaSiteKey, "RECAPTCHA_SITEKEY"), "RECAPTCHA_SITEKEY not available")
 	utils.LogError(viperConfig.BindEnv(RecaptchaSecretKey, "RECAPTCHA_SECRETKEY"), "RECAPTCHA_SECRETKEY not available")

@@ -118,6 +118,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/auth/signout/", http.HandlerFunc(userController.SignOut))
 	s.Router.Get("/auth/signin/", http.HandlerFunc(userController.SignInView))
 	s.Router.Post("/auth/signin/", s.handleRequest(userController.SignIn))
+	s.Router.Post("/auth/google/", s.handleRequest(userController.GoogleSignIn))
 
 	s.Router.Post("/profile/swimmers/form/search/", s.handleAuthRequest(userController.SwimmerFormSearch))
 	s.Router.Post("/profile/swimmers/form/link/", s.handleAuthRequest(userController.SwimmerLinkForm))

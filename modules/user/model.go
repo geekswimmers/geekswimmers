@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"fmt"
 	"geekswimmers/modules/swimming"
 	"strings"
 	"time"
@@ -95,4 +96,55 @@ type SignInAttempt struct {
 	Status      string
 	IPAddress   string
 	FailedMatch string
+}
+
+// GoogleIDToken represents the structure of a Google ID token
+type GoogleIDToken struct {
+	Iss           string `json:"iss"`
+	Sub           string `json:"sub"`
+	Aud           string `json:"aud"`
+	Exp           int64  `json:"exp"`
+	Iat           int64  `json:"iat"`
+	Email         string `json:"email"`
+	EmailVerified bool   `json:"email_verified"`
+	Name          string `json:"name"`
+	Picture       string `json:"picture"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
+}
+
+// Valid implements the jwt.Claims interface
+func (g *GoogleIDToken) Valid() error {
+	now := time.Now().Unix()
+
+	// Check if token has expired
+	if g.Exp < now {
+		return fmt.Errorf("token has expired")
+	}
+
+	// Check if token was issued in the future (with some tolerance)
+	if g.Iat > now+300 { // 5 minutes tolerance
+		return fmt.Errorf("token issued in the future")
+	}
+
+	// Check required fields
+	if g.Iss == "" || g.Sub == "" || g.Aud == "" {
+		return fmt.Errorf("missing required claims")
+	}
+
+	return nil
+}
+
+// GooglePublicKey represents a Google public key
+type GooglePublicKey struct {
+	Kty string `json:"kty"`
+	Kid string `json:"kid"`
+	Use string `json:"use"`
+	N   string `json:"n"`
+	E   string `json:"e"`
+}
+
+// GoogleKeys represents Google's public keys response
+type GoogleKeys struct {
+	Keys []GooglePublicKey `json:"keys"`
 }
