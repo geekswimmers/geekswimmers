@@ -99,7 +99,9 @@ func InitConfiguration(filePath string) (Config, error) {
 		}
 	}
 
-	return configuration, nil
+	err := checkRequiredConfigEntries(configuration)
+
+	return configuration, err
 }
 
 /*
@@ -130,4 +132,30 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	utils.LogError(viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS"), "MONITORING_GOOGLE_ANALYTICS not available")
 
 	utils.LogError(viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM"), "MISCELLANEOUS_FEEDBACKFORM not available")
+}
+
+func checkRequiredConfigEntries(c Config) error {
+	requiredEntries := []string{
+		DatabaseURL,
+		DatabaseMaxOpenConns,
+		DatabaseConnMaxLifetime,
+		ServerURL,
+		ServerSessionKey,
+		ServerPort,
+	}
+
+	errorMessage := "missing required configuration entries: "
+	errorMessageSize := len(errorMessage)
+
+	for _, entry := range requiredEntries {
+		if c.GetString(entry) == "" {
+			errorMessage += fmt.Sprintf(" %v,", entry)
+		}
+	}
+
+	if len(errorMessage) > errorMessageSize {
+		return fmt.Errorf("%v", errorMessage)
+	}
+
+	return nil
 }

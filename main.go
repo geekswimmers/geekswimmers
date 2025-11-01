@@ -26,6 +26,7 @@ func run() error {
 	if err = storage.MigrateDatabase(conf); err != nil {
 		return fmt.Errorf("storage.%v", err)
 	}
+	log.Println("Database migration completed successfully.")
 
 	db, err := storage.InitializeConnectionPool(conf)
 	if err != nil {

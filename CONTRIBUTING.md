@@ -4,6 +4,15 @@
 
     $ go run main.go
 
+For better developer expereance, use `wgo`:
+
+    $ go install github.com/bokwoon95/wgo@latest
+    $ wgo run main.go
+
+For debugging, use delve:
+
+    $ go install -v github.com/go-delve/delve/cmd/dlv@latest
+
 ## Tests
 
 To run all tests:
