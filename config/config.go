@@ -139,9 +139,7 @@ func checkRequiredConfigEntries(c Config) error {
 		DatabaseURL,
 		DatabaseMaxOpenConns,
 		DatabaseConnMaxLifetime,
-		ServerURL,
 		ServerSessionKey,
-		ServerPort,
 	}
 
 	errorMessage := "missing required configuration entries: "
