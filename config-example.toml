@@ -5,7 +5,11 @@ connmaxlifetime = 30 # minutes
 
 [server]
 port = 8080
-sessionkey = ""
+sessionkey = "a"
+
+[google]
+clientid = ""
+clientsecret = ""
 
 [email]
 server = ""
