@@ -133,19 +133,20 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
 	         from jurisdiction j`
 
-	if level == JurisdictionLevelMeet {
+	switch level {
+	case JurisdictionLevelMeet:
 		stm = fmt.Sprintf("%v where j.meet is not null", stm)
-	} else if level == JurisdictionLevelTeam {
+	case JurisdictionLevelTeam:
 		stm = fmt.Sprintf("%v where j.team is not null and j.meet is null", stm)
-	} else if level == JurisdictionLevelCity {
+	case JurisdictionLevelCity:
 		stm = fmt.Sprintf("%v where j.city is not null and j.team is null", stm)
-	} else if level == JurisdictionLevelRegion {
+	case JurisdictionLevelRegion:
 		stm = fmt.Sprintf("%v where j.region is not null and j.city is null", stm)
-	} else if level == JurisdictionLevelProvince {
+	case JurisdictionLevelProvince:
 		stm = fmt.Sprintf("%v where j.province is not null and j.region is null", stm)
-	} else if level == JurisdictionLevelCountry {
+	case JurisdictionLevelCountry:
 		stm = fmt.Sprintf("%v where j.country is not null and j.province is null", stm)
-	} else {
+	default:
 		return []*Jurisdiction{}, nil
 	}
 	stm = fmt.Sprintf("%v order by country, province, region, city, team, meet", stm)

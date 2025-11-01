@@ -59,6 +59,11 @@ We use Github Actions as continuous integration service.
 
 The linter is configured to run on every push and pull request, verifying the quality of the code. More info: https://github.com/golangci/golangci-lint-action
 
+To install it, run:
+
+    $ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.6.0
+    $ golangci-lint --version
+
 It is recommended to run a linter locally before pushing the branch to the server. To do it, run:
 
     $ golangci-lint run
