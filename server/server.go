@@ -28,11 +28,11 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s.DB = db
 	s.Router = pat.New()
 
-	btc := utils.BaseTemplateData{
+	btd := utils.BaseTemplateData{
 		FeedbackForm:              c.GetString(config.FeedbackForm),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
 	}
-	s.Routes(btc)
+	s.Routes(btd)
 	return s
 }
 
