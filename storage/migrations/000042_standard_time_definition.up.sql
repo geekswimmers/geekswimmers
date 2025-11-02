@@ -1,0 +1,1 @@
+alter table standard_time add if not exists definition integer null references standard_definition (id);
