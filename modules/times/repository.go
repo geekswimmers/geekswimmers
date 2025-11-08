@@ -654,6 +654,31 @@ func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]
 	return meets, nil
 }
 
+func FindMeetsSeasonByTimeStandard(timeStandard TimeStandard, currentSwimSeason *SwimSeason, db storage.Database) ([]*Meet, error) {
+	stm := `select m.id, m.name, m.course, m.start_date
+			from meet m
+			where m.time_standard = $1
+				and m.season = $2
+			order by m.start_date desc`
+	rows, err := db.Query(context.Background(), stm, timeStandard.ID, currentSwimSeason.ID)
+	if err != nil {
+		return nil, fmt.Errorf("FindMeetsSeasonByTimeStandard: %v", err)
+	}
+	defer rows.Close()
+
+	var meets []*Meet
+	for rows.Next() {
+		meet := &Meet{}
+		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course, &meet.StartDate)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("FindMeetsSeasonByTimeStandard: %v", err)
+		}
+		meets = append(meets, meet)
+	}
+
+	return meets, nil
+}
+
 func GetMeet(id int64, db storage.Database) *Meet {
 	stm := `select m.id, m.name, m.age_date, m.min_age_enforced, m.max_age_enforced
 			from meet m

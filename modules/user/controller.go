@@ -1071,7 +1071,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
 
-	meets, err := times.FindMeetsByTimeStandard(*timeStandard, uc.DB)
+	meets, err := times.FindMeetsSeasonByTimeStandard(*timeStandard, currentSwimSeason, uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}
@@ -1119,7 +1119,6 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 	// If the meet is not in the list, reset the meet to the default.
 	resetMeet := true
 	for _, m := range meets {
-
 		if m.ID == meet.ID {
 			resetMeet = false
 			break
