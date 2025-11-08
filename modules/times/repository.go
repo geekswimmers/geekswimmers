@@ -457,7 +457,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	return times, nil
 }
 
-func GetStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
+func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*StandardTime, error) {
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
@@ -466,6 +466,7 @@ func GetStandardTimeMeetByExample(example StandardTime, season SwimSeason, db st
 					join standard_time st on ts.id = st.time_standard
 				    join standard_definition sd on st.definition = sd.id
 				where st.time_standard = $1
+				  	and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
 					and sd.age between $2 and $3
 					and sd.gender = $4
 					and sd.course  = $5
@@ -482,6 +483,7 @@ func GetStandardTimeMeetByExample(example StandardTime, season SwimSeason, db st
 					join standard_time st on ts.id = st.time_standard
 				    join standard_definition sd on st.definition = sd.id
 				where st.time_standard = $1
+				    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
 					and sd.gender = $2
 					and sd.course  = $3
 					and sd.style = $4

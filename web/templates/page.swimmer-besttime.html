@@ -59,7 +59,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{.Name}}</h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Standard: 
-                        <a href="/times/standards/{{.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Definition.Gender}}&course={{$.Course}}">{{.StandardTime.TimeStandard.Name}}</a>
+                        <a href="/times/standards/{{.TimeStandard.ID}}?age={{.Age}}&gender={{.StandardTime.Definition.Gender}}&course={{$.SwimmerBestTime.Course}}">{{.StandardTime.TimeStandard.Name}}</a>
                     </h6>
                     <p class="card-text">
                         <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
@@ -67,7 +67,7 @@
                         </div>
                     </p>
                     <p class="card-text">
-                        The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.SwimmerBestTime.Event.Distance}} {{$.SwimmerBestTime.Event.Style.Stroke | Title}}</b>
+                        The <b>{{if eq $.SwimmerBestTime.Course "SHORT"}}short course{{end}}{{if eq $.SwimmerBestTime.Course "LONG"}}long course{{end}}</b> standard to qualify a {{.Age}}-year-old to <b>{{$.SwimmerBestTime.Event.Distance}} {{$.SwimmerBestTime.Event.Style.Stroke | Title}}</b>
                         at this meet is <b>{{.StandardTime.Standard | FormatMilliseconds}}</b>.
                         {{if (gt .StandardTime.Difference 0)}}
                             It missed the standard by <b>{{.StandardTime.Difference | FormatMilliseconds}}</b>.
@@ -102,7 +102,7 @@
                         </div>
                     </p>
                     <p class="card-text">
-                        The <b>{{$.SwimmerBestTime.Event.Distance}}m <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.SwimmerBestTime.Event.Style.Stroke | Title}}</a> {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}
+                        The <b>{{$.SwimmerBestTime.Event.Distance}}m <a href="/swimming/styles/{{.Definition.Style | Lowercase}}/">{{$.SwimmerBestTime.Event.Style.Stroke | Title}}</a> {{if eq $.SwimmerBestTime.Course "SHORT"}}short course{{end}}{{if eq $.SwimmerBestTime.Course "LONG"}}long course{{end}}
                         {{if and .Definition.MinAge .Definition.MaxAge}}
                             {{.Definition.MinAge}}-{{.Definition.MaxAge}}-year-old
                         {{else if .Definition.MinAge}}

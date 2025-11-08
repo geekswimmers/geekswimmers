@@ -38,7 +38,7 @@
                             </div>
                         </p>
                         <p class="card-text">
-                            The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Style | Title}}</b>
+                            The <b>{{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}}</b> standard to qualify a {{.Age}}-year-old to <b>{{$.Distance}} {{$.Style | Title}}</b>
                             at this meet is <b>{{.StandardTime.Standard | FormatMilliseconds}}</b>.
                             {{if (gt .StandardTime.Difference 0)}}
                                 It missed the standard by <b>{{.StandardTime.Difference | FormatMilliseconds}}</b>.

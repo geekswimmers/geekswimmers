@@ -971,7 +971,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 			TimeStandard: meet.TimeStandard,
 			Definition:   standardDefinition,
 		}
-		standardTime, err := times.GetStandardTimeMeetByExample(standardTimeExample, meet.Season, uc.DB)
+		standardTime, err := times.GetStandardTimeMeetByExample(standardTimeExample, uc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
 		}
