@@ -1061,7 +1061,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		}
 	}
 
-	currentSwimSeason, err := times.GetCurrentSwimSeason(uc.DB)
+	currentSwimSeason, err := times.GetLatestSwimSeason(uc.DB)
 	if err != nil {
 		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
 	}

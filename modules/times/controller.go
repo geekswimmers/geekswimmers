@@ -173,9 +173,18 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 }
 
 func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
-	swimSeasonID, _ := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
-	swimSeason := &SwimSeason{
-		ID: swimSeasonID,
+	swimSeasonID, err := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
+	var swimSeason *SwimSeason
+	if err != nil {
+		swimSeason, err = GetLatestSwimSeason(sc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		swimSeason = &SwimSeason{
+			ID: swimSeasonID,
+		}
 	}
 
 	jurisdictionID, _ := strconv.ParseInt(req.URL.Query().Get("jurisdiction"), 10, 64)

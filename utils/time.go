@@ -18,8 +18,14 @@ func FromMiliseconds(milliseconds int64) (int, int, int) {
 }
 
 func FormatMilliseconds(milliseconds int64) string {
-	min, sec, milisec := FromMiliseconds(milliseconds)
-	return FormatTime(min, sec, milisec)
+	ms := milliseconds
+	signal := ""
+	if milliseconds < 0 {
+		ms = -milliseconds
+		signal = "-"
+	}
+	minute, sec, millisecond := FromMiliseconds(ms)
+	return fmt.Sprintf("%s%s", signal, FormatTime(minute, sec, millisecond))
 }
 
 func FormatTime(min, sec, milisec int) string {

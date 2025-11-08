@@ -19,6 +19,7 @@
                         <div class="mb-3">
                             <label for="season">Season</label>
                             <select id="season" name="season" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                                <option value="">Select...</option>
                                 {{range .SwimSeasons}}
                                     <option value="{{.ID}}" {{if eq $.SwimSeason.ID .ID}}selected{{end}}>{{.Name}}</option>
                                 {{else}}
@@ -31,6 +32,7 @@
                         <div class="mb-3">
                             <label for="jurisdiction">Jurisdiction</label>
                             <select id="jurisdiction" name="jurisdiction" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
+                                <option value="">Select...</option>
                                 {{range .Jurisdictions}}
                                     <option value="{{.ID.Int64}}" {{if eq $.Jurisdiction.ID.Int64 .ID.Int64}}selected{{end}}>{{.Title}}, {{.SubTitle}}</option>
                                 {{else}}
@@ -75,7 +77,7 @@
                 </tr>
                 {{else}}
                     <tr>
-                        <td colspan="3">No time standards listed yet.</td>
+                        <td colspan="3">No time standards found for the selected season and jurisdiction.</td>
                     </tr>
                 {{end}}
             </tbody>

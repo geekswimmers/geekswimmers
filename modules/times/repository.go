@@ -34,7 +34,7 @@ func findSwimSeasons(db storage.Database) ([]*SwimSeason, error) {
 	return swimSeasons, nil
 }
 
-func GetCurrentSwimSeason(db storage.Database) (*SwimSeason, error) {
+func GetLatestSwimSeason(db storage.Database) (*SwimSeason, error) {
 	stm := `select ss.id, ss.name 
 			from swim_season ss
 			where ss.end_date = (select max(ssm.end_date) from swim_season ssm)`
@@ -43,7 +43,7 @@ func GetCurrentSwimSeason(db storage.Database) (*SwimSeason, error) {
 
 	swimSeason := &SwimSeason{}
 	if err := row.Scan(&swimSeason.ID, &swimSeason.Name); err != nil {
-		return nil, fmt.Errorf("GetCurrentSwimSeason: %v", err)
+		return nil, fmt.Errorf("GetLatestSwimSeason: %v", err)
 	}
 
 	return swimSeason, nil
@@ -636,7 +636,7 @@ func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]
 	stm := `select m.id, m.name, m.course, m.start_date
 			from meet m
 			where m.time_standard = $1
-			order by m.name`
+			order by m.start_date desc`
 	rows, err := db.Query(context.Background(), stm, timeStandard.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findStandardChampionshipMeets: %v", err)
