@@ -1,0 +1,1 @@
+alter table time_standard drop column season;

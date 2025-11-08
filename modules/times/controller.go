@@ -104,7 +104,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			Definition:   standardDefinition,
 		}
 
-		standardTime, err := FindStandardTimeMeetByExample(standardTimeExample, meet.Season, bc.DB)
+		standardTime, err := GetStandardTimeMeetByExample(standardTimeExample, meet.Season, bc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
 		}

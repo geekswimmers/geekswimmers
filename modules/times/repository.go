@@ -457,42 +457,38 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	return times, nil
 }
 
-func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
+func GetStandardTimeMeetByExample(example StandardTime, season SwimSeason, db storage.Database) (*StandardTime, error) {
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		stm := `select ts.id, ts.name, st.standard
-				from standard_time st
-					join standard_definition sd on st.definition = sd.id
-					join time_standard ts on ts.id = st.time_standard
-					join swim_season ss on ss.id = ts.season
-				where ss.id = $1
-					and st.time_standard = $2
-					and sd.age between $3 and $4
-					and sd.gender = $5
-					and sd.course  = $6
-					and sd.style = $7
-					and sd.distance = $8`
+				from time_standard ts
+					join standard_time st on ts.id = st.time_standard
+				    join standard_definition sd on st.definition = sd.id
+				where st.time_standard = $1
+					and sd.age between $2 and $3
+					and sd.gender = $4
+					and sd.course  = $5
+					and sd.style = $6
+					and sd.distance = $7`
 
 		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
 
 		row = db.QueryRow(context.Background(), stm,
-			season.ID, example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
+			example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	} else {
 		stm := `select ts.id, ts.name, st.standard
-				from standard_time st
-					join standard_definition sd on st.definition = sd.id
-					join time_standard ts on ts.id = st.time_standard
-					join swim_season ss on ss.id = ts.season
-				where ss.id = $1
-					and st.time_standard = $2
-					and sd.gender = $3
-					and sd.course  = $4
-					and sd.style = $5
-					and sd.distance = $6`
+				from time_standard ts
+					join standard_time st on ts.id = st.time_standard
+				    join standard_definition sd on st.definition = sd.id
+				where st.time_standard = $1
+					and sd.gender = $2
+					and sd.course  = $3
+					and sd.style = $4
+					and sd.distance = $5`
 
 		row = db.QueryRow(context.Background(), stm,
-			season.ID, example.TimeStandard.ID, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
+			example.TimeStandard.ID, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	}
 
 	standardTime := &StandardTime{
