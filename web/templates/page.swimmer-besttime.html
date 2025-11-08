@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col">
         <h3>{{.SwimmerBestTime.Swimmer.Swimmer.FirstName}}'s Best Time</h3>
-        <h1 class="display-6">{{.SwimmerBestTime.Event.Distance}} {{.SwimmerBestTime.Event.Style.Stroke | Title}}, {{.SwimmerBestTime.Course | Title}} Course - {{.SwimmerBestTime.BestTime | FormatMiliseconds}}</h1>
+        <h1 class="display-6">{{.SwimmerBestTime.Event.Distance}} {{.SwimmerBestTime.Event.Style.Stroke | Title}}, {{.SwimmerBestTime.Course | Title}} Course - {{.SwimmerBestTime.BestTime | FormatMilliseconds}}</h1>
     </div>
     <div class="col-auto">
         <div class="dropdown">
@@ -63,16 +63,16 @@
                     </h6>
                     <p class="card-text">
                         <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.StandardTime.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.StandardTime.Standard}}" style="height: 30px">
-                            <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b></div>
+                            <div class="progress-bar {{if (gt .StandardTime.Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.StandardTime.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMilliseconds}}</b></div>
                         </div>
                     </p>
                     <p class="card-text">
                         The {{if eq $.Course "SHORT"}}short course{{end}}{{if eq $.Course "LONG"}}long course{{end}} standard to qualify a {{.Age}}-year-old to <b>{{$.SwimmerBestTime.Event.Distance}} {{$.SwimmerBestTime.Event.Style.Stroke | Title}}</b>
-                        at this meet is <b>{{.StandardTime.Standard | FormatMiliseconds}}</b>.
+                        at this meet is <b>{{.StandardTime.Standard | FormatMilliseconds}}</b>.
                         {{if (gt .StandardTime.Difference 0)}}
-                            It missed the standard by <b>{{.StandardTime.Difference | FormatMiliseconds}}</b>.
+                            It missed the standard by <b>{{.StandardTime.Difference | FormatMilliseconds}}</b>.
                         {{else}}
-                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b> meets the standard!<br>
+                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMilliseconds}}</b> meets the standard!<br>
                             Please, confirm this information with your coach, since some championships have additional requirements.
                         {{end}}
                     </p>
@@ -98,7 +98,7 @@
                     <small>{{.RecordSet.Jurisdiction.SubTitle}}</small>
                     <p class="card-text">
                         <div class="progress" role="progressbar" aria-label="Difference from standard" aria-valuenow="{{.Difference | Abs}}" aria-valuemin="0" aria-valuemax="{{.Time}}" style="height: 30px">
-                            <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b></div>
+                            <div class="progress-bar {{if (gt .Difference 0)}}bg-info{{else}}bg-success{{end}}" style="width: {{.Percentage}}%"><b>{{$.SwimmerBestTime.BestTime | FormatMilliseconds}}</b></div>
                         </div>
                     </p>
                     <p class="card-text">
@@ -115,11 +115,11 @@
                         {{else}}
                             for a {{.Definition.Age}}-year-old,
                         {{end}}
-                        is <b>{{.Time | FormatMiliseconds}}</b>.
+                        is <b>{{.Time | FormatMilliseconds}}</b>.
                         {{if (gt .Difference 0)}}
-                            Your time missed the record by <b>{{.Difference | FormatMiliseconds}}</b>.
+                            Your time missed the record by <b>{{.Difference | FormatMilliseconds}}</b>.
                         {{else}}
-                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMiliseconds}}</b> broke the record!<br>
+                            Your time of <b>{{$.SwimmerBestTime.BestTime | FormatMilliseconds}}</b> broke the record!<br>
                             Please, confirm this information with your coach, since it takes time to validate it.
                         {{end}}
                     </p>
@@ -128,7 +128,7 @@
                         <ul>
                             {{range .Previous}}
                                 <li>
-                                    {{.Time | FormatMiliseconds}} - {{.Holder}}{{if .Month}}, {{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}
+                                    {{.Time | FormatMilliseconds}} - {{.Holder}}{{if .Month}}, {{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}
                                 </li>
                             {{end}}
                         </ul>

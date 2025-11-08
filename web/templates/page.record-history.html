@@ -59,7 +59,7 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{.Time | FormatMiliseconds}}</td>
+                        <td>{{.Time | FormatMilliseconds}}</td>
                         <td>{{.Holder}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
                     </tr>
