@@ -26,26 +26,30 @@ type Source struct {
 
 type TimeStandard struct {
 	ID           int64
-	Season       SwimSeason
 	Name         string
 	MinAgeTime   *int64
 	MaxAgeTime   *int64
 	Jurisdiction swimming.Jurisdiction
 	Open         bool
 	Source       Source
-	Previous     *TimeStandard
 	Benchmark    bool
+}
+
+type StandardDefinition struct {
+	ID       int64
+	Age      *int64
+	Gender   string
+	Course   string
+	Style    string
+	Distance int64
 }
 
 type StandardTime struct {
 	ID           int64
 	TimeStandard TimeStandard
-	Age          int64
-	Gender       string
-	Course       string
-	Style        string
-	Distance     int64
+	Definition   StandardDefinition
 	Standard     int64
+	UpdateDate   time.Time
 
 	// Transient
 	Difference int64
@@ -57,6 +61,7 @@ type Meet struct {
 	Name           string
 	Course         string
 	AgeDate        time.Time
+	StartDate      time.Time
 	Season         SwimSeason
 	TimeStandard   TimeStandard
 	MinAgeEnforced bool

@@ -102,6 +102,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 		BaseTemplateData: &btc,
 	}
 
+	// The entire URL surface.
 	// The order here must be absolutely respected.
 	// Web Content
 	s.Router.Get("/", s.handleRequest(webController.HomeView))
@@ -149,7 +150,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/times/records/:id/poster/", s.handleRequest(recordsController.RecordPosterView))
 	s.Router.Get("/times/records/:id/", s.handleRequest(recordsController.RecordsView))
 	s.Router.Get("/times/records", s.handleRequest(recordsController.RecordsListView))
-	s.Router.Get("/times/standards/event/", s.handleRequest(standardsController.StandardsEventView))
+	s.Router.Get("/times/standards/:id/event/:eventId/", s.handleRequest(standardsController.StandardsEventView))
 	s.Router.Get("/times/standards/:id/", s.handleRequest(standardsController.TimeStandardView))
 	s.Router.Get("/times/standards", s.handleRequest(standardsController.TimeStandardsView))
 

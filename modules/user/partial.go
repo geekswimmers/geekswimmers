@@ -31,13 +31,13 @@ func (uc *Controller) BestTimesPartial(res http.ResponseWriter, req *http.Reques
 
 	html, err := template.New("bestTimes").Funcs(
 		template.FuncMap{
-			"Title":             utils.Title,
-			"FormatMiliseconds": utils.FormatMiliseconds,
+			"Title":              utils.Title,
+			"FormatMilliseconds": utils.FormatMilliseconds,
 		}).Parse(
 		`{{range .BestTimes}}
 			<tr>
 				<td><a href="/profile/swimmers/{{$.Swimmer.ID}}/besttimes/{{.ID}}/">{{.Event.Distance}} {{.Event.Style.Stroke | Title}}</a></td>
-				<td>{{.BestTime | FormatMiliseconds}}</td>
+				<td>{{.BestTime | FormatMilliseconds}}</td>
 				<td>{{.Points}}</td>
 			</tr>
 		{{else}}

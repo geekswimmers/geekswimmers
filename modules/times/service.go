@@ -13,7 +13,7 @@ func groupRecordsByDefinition(records []*Record) []Record {
 		groupDuplicates(grouping, record, key)
 	}
 
-	return squizeFastests(grouping)
+	return squeezeFastOnes(grouping)
 }
 
 func groupDuplicates(grouping map[any]*Record, record *Record, key any) {
@@ -33,7 +33,7 @@ func groupDuplicates(grouping map[any]*Record, record *Record, key any) {
 	}
 }
 
-func squizeFastests(grouping map[any]*Record) []Record {
+func squeezeFastOnes(grouping map[any]*Record) []Record {
 	fastestRecords := make([]Record, 0, len(grouping))
 	for _, record := range grouping {
 		fastestRecords = append(fastestRecords, *record)
@@ -62,4 +62,13 @@ func getStandardAgeInterval(age int64, timeStandard TimeStandard) (int64, int64)
 		}
 	}
 	return minAge, maxAge
+}
+
+func calculateDifferences(standardTimes []*StandardTime) []*StandardTime {
+	for i, standardTime := range standardTimes {
+		if i < len(standardTimes)-1 {
+			standardTimes[i].Difference = standardTime.Standard - standardTimes[i+1].Standard
+		}
+	}
+	return standardTimes
 }

@@ -68,7 +68,7 @@ func FindEvents(course string, db storage.Database) ([]*Event, error) {
 			 from swim_event se 
 				join swim_style ss on se.style = ss.id
 			 where se.course = $1
-			    and ss.stroke in (select distinct style from standard_time)
+			    and ss.stroke in (select distinct style from standard_definition)
 			 order by ss.sequence asc, se.distance asc`
 	rows, err := db.Query(context.Background(), stm, course)
 	if err != nil {

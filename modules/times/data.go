@@ -29,16 +29,15 @@ type timeStandardsViewData struct {
 }
 
 type timeStandardViewData struct {
-	Age                int64
-	Gender             string
-	Course             string
-	TimeStandard       *TimeStandard
-	StandardTimes      []*StandardTime
-	Ages               []int64
-	LatestTimeStandard *TimeStandard
-	Meets              []*Meet
-	BaseTemplateData   *utils.BaseTemplateData
-	SessionData        *storage.SessionData
+	Age              int64
+	Gender           string
+	Course           string
+	TimeStandard     *TimeStandard
+	StandardTimes    []*StandardTime
+	Ages             []int64
+	Meets            []*Meet
+	BaseTemplateData *utils.BaseTemplateData
+	SessionData      *storage.SessionData
 }
 
 type recordsListViewData struct {
@@ -77,6 +76,7 @@ type standardsEventViewData struct {
 	Event            string
 	Gender           string
 	Style            string
+	TimeStandard     *TimeStandard
 	StandardTimes    []*StandardTime
 	BaseTemplateData *utils.BaseTemplateData
 	SessionData      *storage.SessionData

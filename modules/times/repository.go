@@ -333,11 +333,12 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 }
 
 func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
-	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
+	stm := `select distinct ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
 	        from time_standard ts
 				join jurisdiction j on j.id = ts.jurisdiction
+				join meet m on m.time_standard = ts.id
 			where (j.id = $1 or j.region is null)
-				and ts.season = $2
+			    and m.season = $2
 			order by ts.name`
 	rows, err := db.Query(context.Background(), stm, jurisdiction.ID.Int64, season.ID)
 	if err != nil {
@@ -347,9 +348,7 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 
 	var timeStandards []*TimeStandard
 	for rows.Next() {
-		timeStandard := &TimeStandard{
-			Season: season,
-		}
+		timeStandard := &TimeStandard{}
 		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Benchmark)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findTimeStandards: %v", err)
@@ -361,39 +360,39 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 }
 
 func FindTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
-	stm := `select ss.name, ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#'), coalesce(ts.previous, 0)
+	stm := `select ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#')
 			from time_standard ts
-			 	join swim_season ss on ss.id = ts.season
 	        where ts.id = $1`
 
 	row := db.QueryRow(context.Background(), stm, id)
 
 	timeStandard := &TimeStandard{
-		ID:       id,
-		Previous: &TimeStandard{},
+		ID: id,
 	}
-	if err := row.Scan(&timeStandard.Season.Name, &timeStandard.Name,
+	if err := row.Scan(&timeStandard.Name,
 		&timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Open,
-		&timeStandard.Source.Title, &timeStandard.Source.Link, &timeStandard.Previous.ID); err != nil {
+		&timeStandard.Source.Title, &timeStandard.Source.Link); err != nil {
 		return nil, fmt.Errorf("findTimeStandard: %v", err)
 	}
 
 	return timeStandard, nil
 }
 
-func findLatestTimeStandard(previousId int64, db storage.Database) (*TimeStandard, error) {
-	stm := `select ts.id, ts.name
-			from time_standard ts
-	        where ts.previous = $1`
+func FindStandardDefinition(id int64, db storage.Database) (*StandardDefinition, error) {
+	stm := `select sd.gender, sd.course, sd.style, sd.distance, sd.age
+			from standard_definition sd
+			where sd.id = $1`
 
-	row := db.QueryRow(context.Background(), stm, previousId)
+	row := db.QueryRow(context.Background(), stm, id)
 
-	timeStandard := &TimeStandard{}
-	if err := row.Scan(&timeStandard.ID, &timeStandard.Name); err != nil {
-		return nil, fmt.Errorf("findLatestTimeStandard: %v", err)
+	standardDefinition := &StandardDefinition{
+		ID: id,
+	}
+	if err := row.Scan(&standardDefinition.Gender, &standardDefinition.Course, &standardDefinition.Style, &standardDefinition.Distance, &standardDefinition.Age); err != nil {
+		return nil, fmt.Errorf("FindStandardDefinition: %v", err)
 	}
 
-	return timeStandard, nil
+	return standardDefinition, nil
 }
 
 func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
@@ -402,32 +401,40 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
-		stm := `select st.style, st.distance, st.standard
+		stm := `select sd.id, sd.style, sd.distance, st.standard
 			 	from standard_time st
-			     	join swim_style ss on ss.stroke = st.style
-			 	where st.age between $1 and $2
-			   		and st.gender = $3
-			   		and st.course = $4
+					join standard_definition sd on st.definition = sd.id
+			     	join swim_style ss on ss.stroke = sd.style
+			 	where sd.age between $1 and $2
+			   		and sd.gender = $3
+			   		and sd.course = $4
 			   		and st.time_standard = $5
+					and st.update_date = (select max(stm.update_date) 
+										  from standard_time stm 
+										  where stm.time_standard = st.time_standard)
 				order by ss.sequence, st.standard asc`
 
-		minAge, maxAge := getStandardAgeInterval(example.Age, example.TimeStandard)
+		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
 
-		rows, err = db.Query(context.Background(), stm, minAge, maxAge, example.Gender, example.Course, example.TimeStandard.ID)
+		rows, err = db.Query(context.Background(), stm, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
 		defer rows.Close()
 	} else {
 		// Open
-		stm := `select st.style, st.distance, st.standard
+		stm := `select sd.id, sd.style, sd.distance, st.standard
 				from standard_time st
-				where st.gender = $1
-		  			and st.course = $2
+					join standard_definition sd on st.definition = sd.id
+				where sd.gender = $1
+		  			and sd.course = $2
 		  			and st.time_standard = $3
-				order by st.style, st.standard asc`
+					and st.update_date = (select max(stm.update_date)
+										  from standard_time stm 
+										  where stm.time_standard = st.time_standard)
+				order by sd.style, st.standard asc`
 
-		rows, err = db.Query(context.Background(), stm, example.Gender, example.Course, example.TimeStandard.ID)
+		rows, err = db.Query(context.Background(), stm, example.Definition.Gender, example.Definition.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
@@ -435,15 +442,16 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	}
 
 	var times []*StandardTime
-	if rows != nil {
-		for rows.Next() {
-			time := &StandardTime{}
-			err = rows.Scan(&time.Style, &time.Distance, &time.Standard)
-			if err != nil {
-				return nil, fmt.Errorf("findStandardTimes: %v", err)
-			}
-			times = append(times, time)
+
+	for rows.Next() {
+		time := &StandardTime{
+			TimeStandard: example.TimeStandard,
 		}
+		err = rows.Scan(&time.Definition.ID, &time.Definition.Style, &time.Definition.Distance, &time.Standard)
+		if err != nil {
+			return nil, fmt.Errorf("findStandardTimes: %v", err)
+		}
+		times = append(times, time)
 	}
 
 	return times, nil
@@ -455,42 +463,40 @@ func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		stm := `select ts.id, ts.name, st.standard
 				from standard_time st
+					join standard_definition sd on st.definition = sd.id
 					join time_standard ts on ts.id = st.time_standard
 					join swim_season ss on ss.id = ts.season
 				where ss.id = $1
 					and st.time_standard = $2
-					and st.age between $3 and $4
-					and st.gender = $5
-					and st.course  = $6
-					and st.style = $7
-					and st.distance = $8`
+					and sd.age between $3 and $4
+					and sd.gender = $5
+					and sd.course  = $6
+					and sd.style = $7
+					and sd.distance = $8`
 
-		minAge, maxAge := getStandardAgeInterval(example.Age, example.TimeStandard)
+		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
 
 		row = db.QueryRow(context.Background(), stm,
-			season.ID, example.TimeStandard.ID, minAge, maxAge, example.Gender, example.Course, example.Style, example.Distance)
+			season.ID, example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	} else {
 		stm := `select ts.id, ts.name, st.standard
 				from standard_time st
+					join standard_definition sd on st.definition = sd.id
 					join time_standard ts on ts.id = st.time_standard
 					join swim_season ss on ss.id = ts.season
 				where ss.id = $1
 					and st.time_standard = $2
-					and st.gender = $3
-					and st.course  = $4
-					and st.style = $5
-					and st.distance = $6`
+					and sd.gender = $3
+					and sd.course  = $4
+					and sd.style = $5
+					and sd.distance = $6`
 
 		row = db.QueryRow(context.Background(), stm,
-			season.ID, example.TimeStandard.ID, example.Gender, example.Course, example.Style, example.Distance)
+			season.ID, example.TimeStandard.ID, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	}
 
 	standardTime := &StandardTime{
-		Age:      example.Age,
-		Gender:   example.Gender,
-		Course:   example.Course,
-		Style:    example.Style,
-		Distance: example.Distance,
+		Definition: example.Definition,
 	}
 	err := row.Scan(&standardTime.TimeStandard.ID, &standardTime.TimeStandard.Name, &standardTime.Standard)
 	if err != nil && err.Error() != storage.ErrNoRows {
@@ -501,11 +507,12 @@ func FindStandardTimeMeetByExample(example StandardTime, season SwimSeason, db s
 }
 
 func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age int64, timeStandard TimeStandard, db storage.Database) ([]*StandardTime, error) {
-	stm := `select st.id, st.course, st.style, st.distance, st.standard 
+	stm := `select st.id, sd.course, sd.style, sd.distance, st.standard 
 			from standard_time st
-			where st.gender = $1
-				and st.course = $2
-				and (st.age = $3 or st.age is null)
+				join standard_definition sd on st.definition = sd.id
+			where sd.gender = $1
+				and sd.course = $2
+				and (sd.age = $3 or sd.age is null)
 				and st.time_standard = $4`
 
 	rows, err := db.Query(context.Background(), stm, swimmer.Gender.String, course, age, timeStandard.ID)
@@ -517,7 +524,7 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 	var times []*StandardTime
 	for rows.Next() {
 		time := &StandardTime{}
-		err = rows.Scan(&time.ID, &time.Course, &time.Style, &time.Distance, &time.Standard)
+		err = rows.Scan(&time.ID, &time.Definition.Course, &time.Definition.Style, &time.Definition.Distance, &time.Standard)
 		if err != nil {
 			return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
 		}
@@ -527,15 +534,16 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 	return times, nil
 }
 
-func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardTime, error) {
-	stm := `select ts.id , ts.name, st.standard, ss.id, ss.name
+func findStandardsEvent(timeStandard *TimeStandard, definition *StandardDefinition, db storage.Database) ([]*StandardTime, error) {
+	stm := `select ts.id , ts.name, st.standard, st.update_date
 			from standard_time st
+				join standard_definition sd on st.definition = sd.id
 				join time_standard ts on ts.id = st.time_standard
-				join swim_season ss on ts.season = ss.id
-			where st.age = $1 and st.gender = $2 and st.course = $3 and st.distance = $4 and st.style = $5
-			order by ss.name desc, st.standard desc`
+			where ts.id = $1 
+				and sd.id = $2
+			order by st.update_date desc`
 
-	rows, err := db.Query(context.Background(), stm, example.Age, example.Gender, example.Course, example.Distance, example.Style)
+	rows, err := db.Query(context.Background(), stm, timeStandard.ID, definition.ID)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("findStandardsEvent: %v", err)
 	}
@@ -545,8 +553,7 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 	for rows.Next() {
 		time := &StandardTime{}
 		err = rows.Scan(
-			&time.TimeStandard.ID, &time.TimeStandard.Name, &time.Standard,
-			&time.TimeStandard.Season.ID, &time.TimeStandard.Season.Name,
+			&time.TimeStandard.ID, &time.TimeStandard.Name, &time.Standard, &time.UpdateDate,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("findStandardsEvent: %v", err)
@@ -558,7 +565,9 @@ func findStandardsEvent(example StandardTime, db storage.Database) ([]*StandardT
 }
 
 func FindMinAndMaxStandardsAges(db storage.Database) (int64, int64, error) {
-	stm := `select min(age) as min_age, max(age) as max_age from standard_time`
+	stm := `select min(sd.age) as min_age, max(sd.age) as max_age 
+			from standard_time st
+				join standard_definition sd on st.definition = sd.id`
 
 	row := db.QueryRow(context.Background(), stm)
 
@@ -571,8 +580,9 @@ func FindMinAndMaxStandardsAges(db storage.Database) (int64, int64, error) {
 }
 
 func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64) {
-	stm := `select min(st.age) as min_age, max(st.age) as max_age 
+	stm := `select min(sd.age) as min_age, max(sd.age) as max_age 
 			from standard_time st
+				join standard_definition sd on st.definition = sd.id
 			where st.time_standard = $1`
 
 	row := db.QueryRow(context.Background(), stm, timeStandard.ID)
@@ -623,7 +633,7 @@ func FindMeetsWithTimeStandardByJurisdiction(jurisdictionId int64, db storage.Da
 }
 
 func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
-	stm := `select m.id, m.name, m.course
+	stm := `select m.id, m.name, m.course, m.start_date
 			from meet m
 			where m.time_standard = $1
 			order by m.name`
@@ -636,7 +646,7 @@ func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]
 	var meets []*Meet
 	for rows.Next() {
 		meet := &Meet{}
-		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course)
+		err = rows.Scan(&meet.ID, &meet.Name, &meet.Course, &meet.StartDate)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findStandardChampionshipMeets: %v", err)
 		}

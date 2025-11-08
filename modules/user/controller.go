@@ -679,8 +679,8 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer",
 		template.FuncMap{
-			"Title":             utils.Title,
-			"FormatMiliseconds": utils.FormatMiliseconds,
+			"Title":              utils.Title,
+			"FormatMilliseconds": utils.FormatMilliseconds,
 		})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer's profile: %v", err)
@@ -959,13 +959,17 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 			continue
 		}
 
+		standardDefinition := times.StandardDefinition{
+			Age:      &searchAge,
+			Gender:   swimmer.Swimmer.Gender.String,
+			Course:   bestTime.Course,
+			Style:    bestTime.Event.Style.Stroke,
+			Distance: bestTime.Event.Distance,
+		}
+
 		standardTimeExample := times.StandardTime{
-			Age:          searchAge,
-			Gender:       swimmer.Swimmer.Gender.String,
-			Course:       bestTime.Course,
-			Style:        bestTime.Event.Style.Stroke,
-			Distance:     bestTime.Event.Distance,
 			TimeStandard: meet.TimeStandard,
+			Definition:   standardDefinition,
 		}
 		standardTime, err := times.FindStandardTimeMeetByExample(standardTimeExample, meet.Season, uc.DB)
 		if err != nil {
@@ -1019,10 +1023,10 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime", template.FuncMap{
-		"Title":             utils.Title,
-		"FormatMiliseconds": utils.FormatMiliseconds,
-		"Lowercase":         utils.Lowercase,
-		"Abs":               utils.Abs,
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
+		"Lowercase":          utils.Lowercase,
+		"Abs":                utils.Abs,
 	})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer's best time: %v", err)
@@ -1136,9 +1140,9 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 
 	timeBenchmarks := make(map[string]*timeBenchmarkData)
 	for _, standardTime := range standardTimes {
-		course := standardTime.Course
-		stroke := standardTime.Style
-		distance := standardTime.Distance
+		course := standardTime.Definition.Course
+		stroke := standardTime.Definition.Style
+		distance := standardTime.Definition.Distance
 		key := fmt.Sprintf("%s-%s-%d", course, stroke, distance)
 
 		timeBenchmarks[key] = &timeBenchmarkData{
@@ -1176,8 +1180,8 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer-benchmark", template.FuncMap{
-		"Title":             utils.Title,
-		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
 	if err := html.Execute(res, data); err != nil {
 		log.Printf("Error loading the swimmer's benchmark: %v", err)

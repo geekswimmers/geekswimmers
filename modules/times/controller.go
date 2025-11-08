@@ -91,14 +91,19 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			continue
 		}
 
-		standardTimeExample := StandardTime{
-			Age:          searchAge,
-			Gender:       gender,
-			Course:       course,
-			Style:        stroke,
-			Distance:     distance,
-			TimeStandard: meet.TimeStandard,
+		standardDefinition := StandardDefinition{
+			Age:      &searchAge,
+			Gender:   gender,
+			Course:   course,
+			Style:    stroke,
+			Distance: distance,
 		}
+
+		standardTimeExample := StandardTime{
+			TimeStandard: meet.TimeStandard,
+			Definition:   standardDefinition,
+		}
+
 		standardTime, err := FindStandardTimeMeetByExample(standardTimeExample, meet.Season, bc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
@@ -155,10 +160,10 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
-		"Title":             utils.Title,
-		"FormatMiliseconds": utils.FormatMiliseconds,
-		"Abs":               utils.Abs,
-		"Lowercase":         utils.Lowercase,
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
+		"Abs":                utils.Abs,
+		"Lowercase":          utils.Lowercase,
 	})
 
 	err = html.Execute(res, ctx)
@@ -255,11 +260,15 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		course = swimming.DefaultCourse
 	}
 
+	standardDefinition := StandardDefinition{
+		Age:    &age,
+		Gender: gender,
+		Course: course,
+	}
+
 	example := StandardTime{
-		Age:          age,
-		Gender:       gender,
-		Course:       course,
 		TimeStandard: *timeStandard,
+		Definition:   standardDefinition,
 	}
 	standardTimes, err := findStandardTimes(example, sc.DB)
 	if err != nil {
@@ -279,11 +288,6 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		}
 	}
 
-	latestTimeStandard, err := findLatestTimeStandard(timeStandard.ID, sc.DB)
-	if condition := err == nil && latestTimeStandard != nil; condition {
-		ctx.LatestTimeStandard = latestTimeStandard
-	}
-
 	meets, err := FindMeetsByTimeStandard(*timeStandard, sc.DB)
 	if err != nil {
 		log.Printf("TimeStandardView.%v", err)
@@ -292,8 +296,8 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	ctx.Meets = meets
 
 	html := utils.GetTemplateWithFunctions("base", "timestandard", template.FuncMap{
-		"Title":             utils.Title,
-		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {
@@ -399,9 +403,9 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	data.Records = groupedRecords
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
-		"Title":             utils.Title,
-		"Lowercase":         utils.Lowercase,
-		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Title":              utils.Title,
+		"Lowercase":          utils.Lowercase,
+		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
 	err = html.Execute(res, data)
 	if err != nil {
@@ -438,8 +442,8 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{
-		"Title":             utils.Title,
-		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {
@@ -465,7 +469,7 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 				log.Printf("Error parsing record.Value to int64: %v", err)
 				continue
 			}
-			record.Value = utils.FormatMiliseconds(value)
+			record.Value = utils.FormatMilliseconds(value)
 		}
 	}
 
@@ -490,78 +494,54 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		SessionData:      sessionData,
 	}
 
-	// Represents the event in two parts: distance and stroke
-	event := strings.Split(req.URL.Query().Get("event"), "-")
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	timeStandard, err := FindTimeStandard(id, sc.DB)
+	if err != nil || timeStandard == nil {
+		log.Printf("times.%v (%d)", err, id)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
+	}
+	ctx.TimeStandard = timeStandard
 
-	distance, err := strconv.ParseInt(event[0], 10, 64)
-	if err != nil {
-		distance = 100
+	definitionId, _ := strconv.ParseInt(req.URL.Query().Get(":eventId"), 10, 64)
+	standardDefinition, err := FindStandardDefinition(definitionId, sc.DB)
+	if err != nil || standardDefinition == nil {
+		log.Printf("times.%v (%d)", err, definitionId)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
 	}
-	ctx.Distance = distance
 
-	var stroke string
-	if len(event) > 1 {
-		stroke = event[1]
-	}
-	if stroke == "" {
-		stroke = DefaultStroke
-	}
-	ctx.Style = stroke
-	ctx.Event = fmt.Sprintf("%d-%s", distance, stroke)
+	ctx.Distance = standardDefinition.Distance
+	ctx.Style = standardDefinition.Style
+	ctx.Event = fmt.Sprintf("%d-%s", standardDefinition.Distance, standardDefinition.Style)
 
 	minimum, maximum, err := FindMinAndMaxStandardsAges(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
 
-	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
-	if err != nil {
-		age = minimum
-	}
-	if age < minimum {
-		age = minimum
-	}
-	if age > maximum {
-		age = maximum
-	}
-	ctx.Age = age
+	ctx.Age = *standardDefinition.Age
 
 	for i := minimum; i <= maximum; i++ {
 		ctx.Ages = append(ctx.Ages, i)
 	}
 
-	gender := req.URL.Query().Get("gender")
-	if gender == "" {
-		gender = swimming.GenderFemale
-	}
-	ctx.Gender = gender
+	ctx.Gender = standardDefinition.Gender
+	ctx.Course = standardDefinition.Course
 
-	course := req.URL.Query().Get("course")
-	if course == "" {
-		course = swimming.DefaultCourse
-	}
-	ctx.Course = course
-
-	example := StandardTime{
-		Age:      age,
-		Gender:   gender,
-		Course:   course,
-		Style:    stroke,
-		Distance: distance,
-	}
-
-	standardsEvent, err := findStandardsEvent(example, sc.DB)
+	standardTimes, err := findStandardsEvent(timeStandard, standardDefinition, sc.DB)
+	standardTimes = calculateDifferences(standardTimes)
 	if err != nil {
-		log.Printf("times.%v (%d-%s)", err, distance, utils.Title(stroke))
+		log.Printf("times.%v (%d-%s)", err, standardDefinition.Distance, utils.Title(standardDefinition.Style))
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx.StandardTimes = standardsEvent
+	ctx.StandardTimes = standardTimes
 
 	html := utils.GetTemplateWithFunctions("base", "standards-event", template.FuncMap{
-		"Title":             utils.Title,
-		"Lowercase":         utils.Lowercase,
-		"FormatMiliseconds": utils.FormatMiliseconds,
+		"Title":              utils.Title,
+		"Lowercase":          utils.Lowercase,
+		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {

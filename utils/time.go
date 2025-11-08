@@ -17,7 +17,7 @@ func FromMiliseconds(milliseconds int64) (int, int, int) {
 	return min, sec, milisec / 10
 }
 
-func FormatMiliseconds(milliseconds int64) string {
+func FormatMilliseconds(milliseconds int64) string {
 	min, sec, milisec := FromMiliseconds(milliseconds)
 	return FormatTime(min, sec, milisec)
 }
