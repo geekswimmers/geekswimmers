@@ -81,6 +81,10 @@
                                     {{else}}
                                         <li><a class="dropdown-item" href="/profile/">Profile</a></li>
                                     {{end}}
+                                    {{if eq .SessionData.Role "ADMIN"}}
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/admin/console/">Administration</a></li>
+                                    {{end}}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/auth/signout/">Sign Out</a></li>
                                 </ul>
