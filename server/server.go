@@ -2,6 +2,7 @@ package server
 
 import (
 	"geekswimmers/config"
+	"geekswimmers/modules/admin"
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/modules/times"
@@ -22,6 +23,8 @@ type Server struct {
 type Handler func(res http.ResponseWriter, req *http.Request)
 
 type AuthHandler func(res http.ResponseWriter, req *http.Request, session *storage.SessionData)
+
+type AdminAuthHandler func(res http.ResponseWriter, req *http.Request, Session *storage.SessionData)
 
 func CreateServer(c config.Config, db storage.Database) *Server {
 	s := &Server{}
@@ -66,18 +69,20 @@ func (s *Server) handleAuthApiRequest(ah AuthHandler) http.HandlerFunc {
 	}
 }
 
+func (s *Server) handleAdminAuthRequest(ah AdminAuthHandler) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		sessionData := storage.NewSessionData(req)
+		if !sessionData.IsAuthenticated() || sessionData.Role != user.RoleAdmin {
+			http.Redirect(res, req, "/auth/signin/", http.StatusSeeOther)
+			return
+		}
+
+		ah(res, req, sessionData)
+	}
+}
+
 func (s *Server) Routes(btc utils.BaseTemplateData) {
-	userController := &user.Controller{
-		DB:               s.DB,
-		BaseTemplateData: &btc,
-	}
-
-	webController := &web.Controller{
-		DB:               s.DB,
-		BaseTemplateData: &btc,
-	}
-
-	contentController := &content.Controller{
+	adminController := &admin.AdminController{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
@@ -87,7 +92,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 		BaseTemplateData: &btc,
 	}
 
-	standardsController := &times.StandardsController{
+	contentController := &content.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
@@ -97,7 +102,22 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 		BaseTemplateData: &btc,
 	}
 
+	standardsController := &times.StandardsController{
+		DB:               s.DB,
+		BaseTemplateData: &btc,
+	}
+
 	swimmingController := &swimming.Controller{
+		DB:               s.DB,
+		BaseTemplateData: &btc,
+	}
+
+	userController := &user.Controller{
+		DB:               s.DB,
+		BaseTemplateData: &btc,
+	}
+
+	webController := &web.Controller{
 		DB:               s.DB,
 		BaseTemplateData: &btc,
 	}
@@ -111,6 +131,10 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 
 	s.Router.Get("/signup/", http.HandlerFunc(userController.SignUpView))
 	s.Router.Post("/signup/", s.handleRequest(userController.SignUp))
+
+	s.Router.Get("/admin/console/", s.handleAdminAuthRequest(adminController.ConsoleView))
+	s.Router.Get("/admin/standards/:id/", s.handleAdminAuthRequest(adminController.TimeStandardView))
+	s.Router.Post("/admin/standards/:id/", s.handleAdminAuthRequest(adminController.TimeStandardForm))
 
 	s.Router.Get("/auth/confirm/:confirmation", s.handleRequest(userController.ChangePasswordView))
 	s.Router.Get("/auth/password/reset/", http.HandlerFunc(userController.ResetPasswordView))

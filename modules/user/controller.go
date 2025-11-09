@@ -1044,7 +1044,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 	}
 
 	timeStandardID, _ := strconv.ParseInt(req.URL.Query().Get("standard"), 10, 64)
-	timeStandard, err := times.FindTimeStandard(timeStandardID, uc.DB)
+	timeStandard, err := times.GetTimeStandard(timeStandardID, uc.DB)
 	if err != nil || timeStandard == nil {
 		timeStandard = &times.TimeStandard{
 			ID:   timeStandardID,

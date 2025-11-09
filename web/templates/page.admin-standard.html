@@ -1,0 +1,64 @@
+{{template "base-layout" .}}
+
+{{define "title"}}Admin Time Standard{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item" aria-current="page">Admin</li>
+    <li class="breadcrumb-item active" aria-current="page">Time Standard</li>
+{{end}}
+
+{{define "content"}}
+    <h3>
+        Time Standard
+    </h3>
+
+    <h3 class="display-6">
+        {{.TimeStandard.Name}}
+    </h3>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Update Standard</h3>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Upload the standard when standard times change.</h6>
+
+            <form id="signup-form" method="post" action="/admin/standards/{{.TimeStandard.ID}}/" enctype="multipart/form-data">
+                {{if .Error }}
+                <div class="alert alert-warning" role="alert">
+                    {{html .Error}}
+                </div>
+                {{end}}
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="publicationDate">Publication Date</label>
+                            <input type="date" class="form-control" name="publicationDate" id="publicationDate" value="{{.PublicationDate.Format "2006-01-02"}}" required>
+                            <small class="text-body-secondary">Use the date in which the swimming organization has published the standard update.</small>
+                            <br><span class="error">{{.ErrorPublicationDate}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="mb-3">
+                            <label for="csvFile">Standard CSV File</label>
+                            <input type="file" class="form-control" id="csvFile" name="csvFile" required>
+                            <small class="text-body-secondary">Upload the standard CSV file.</small>
+                            <br><span class="error">{{.ErrorCSVFile}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-file-person" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4 1h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H4z"/>
+                        <path d="M13.784 14c-.497-1.27-1.988-3-5.784-3s-5.287 1.73-5.784 3h11.568z"/>
+                        <path fill-rule="evenodd" d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg> Save
+                </button>
+
+                <a class="btn btn-secondary" href="/admin/console/" role="button">Cancel</a>
+            </form>
+        </div>
+    </div>
+{{end}}
+
+{{define "scripts"}}{{end}}

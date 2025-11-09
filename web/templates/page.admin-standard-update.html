@@ -1,0 +1,46 @@
+{{template "base-layout" .}}
+
+{{define "title"}}Admin Time Standard{{end}}
+
+{{define "breadcrumb"}}
+<li class="breadcrumb-item" aria-current="page">Admin</li>
+<li class="breadcrumb-item" aria-current="page"><a href="/admin/standards/{{.TimeStandard.ID}}">Time Standard</a></li>
+<li class="breadcrumb-item active" aria-current="page">Update</li>
+{{end}}
+
+{{define "content"}}
+    <h3>
+        Time Standard
+    </h3>
+
+    <h3 class="display-6">
+        {{.TimeStandard.Name}}
+    </h3>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Standard Update</h3>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Summary of the update</h6>
+
+            <br>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="publicationDate" class="form-label">Publication Date</label>
+                        <p id="publicationDate">{{.PublicationDate.Format "Jan 02, 2006"}}</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Standard CSV File</label>
+                        <p id="csvFile">{{.CsvFile}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <a class="btn btn-secondary" href="/admin/standards/{{.TimeStandard.ID}}" role="button">Back</a>
+{{end}}
+
+{{define "scripts"}}{{end}}

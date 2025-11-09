@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func ErrorHandler(res http.ResponseWriter, req *http.Request, ctx any, status int) {
+func ErrorHandler(res http.ResponseWriter, _ *http.Request, ctx any, status int) {
 	res.WriteHeader(status)
 
 	if status == http.StatusNotFound {

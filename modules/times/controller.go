@@ -242,7 +242,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	timeStandard, err := FindTimeStandard(id, sc.DB)
+	timeStandard, err := GetTimeStandard(id, sc.DB)
 	if err != nil || timeStandard == nil {
 		log.Printf("times.%v (%d)", err, id)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
@@ -504,7 +504,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	timeStandard, err := FindTimeStandard(id, sc.DB)
+	timeStandard, err := GetTimeStandard(id, sc.DB)
 	if err != nil || timeStandard == nil {
 		log.Printf("times.%v (%d)", err, id)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)

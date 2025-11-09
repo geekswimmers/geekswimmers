@@ -359,7 +359,35 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 	return timeStandards, nil
 }
 
-func FindTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
+func FindAllTimeStandards(db storage.Database) ([]*TimeStandard, error) {
+	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time,
+                   j.world, j.country, j.province, j.region, j.city, j.team, j.meet
+	        from time_standard ts
+				join jurisdiction j on j.id = ts.jurisdiction
+			order by ts.name`
+	rows, err := db.Query(context.Background(), stm)
+	if err != nil {
+		return nil, fmt.Errorf("findTimeStandards: %v", err)
+	}
+	defer rows.Close()
+
+	var timeStandards []*TimeStandard
+	for rows.Next() {
+		timeStandard := &TimeStandard{}
+		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime,
+			&timeStandard.Jurisdiction.World, &timeStandard.Jurisdiction.Country, &timeStandard.Jurisdiction.Province,
+			&timeStandard.Jurisdiction.Region, &timeStandard.Jurisdiction.City, &timeStandard.Jurisdiction.Team,
+			&timeStandard.Jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findAllTimeStandards: %v", err)
+		}
+		timeStandards = append(timeStandards, timeStandard)
+	}
+
+	return timeStandards, nil
+}
+
+func GetTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	stm := `select ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#')
 			from time_standard ts
 	        where ts.id = $1`
