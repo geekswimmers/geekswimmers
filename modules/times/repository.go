@@ -470,18 +470,20 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
-		stm := `select sd.id, sd.style, sd.distance, st.standard
-			 	from standard_time st
-					join standard_definition sd on st.definition = sd.id
-			     	join swim_style ss on ss.stroke = sd.style
-			 	where sd.age between $1 and $2
-			   		and sd.gender = $3
-			   		and sd.course = $4
-			   		and st.time_standard = $5
-					and st.update_date = (select max(stm.update_date) 
-										  from standard_time stm 
-										  where stm.time_standard = st.time_standard)
-				order by ss.sequence, st.standard asc`
+		stm := `select st.definition, re.style, re.distance, st.standard
+				from standard_time st
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, max(ist.update_date) as update_date
+							from standard_time ist
+								join standard_definition sd on ist.definition = sd.id
+		 						join swim_style ss on ss.stroke = sd.style
+							where sd.age between $1 and $2
+								and sd.gender = $3
+								and sd.course = $4
+								and ist.time_standard = $5
+							group by ss.sequence, sd.id, sd.style, sd.distance) re on st.definition = re.def
+				where st.time_standard = $5
+					and st.update_date = re.update_date 
+				order by re.sequence, st.standard asc`
 
 		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
 
@@ -492,16 +494,19 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		defer rows.Close()
 	} else {
 		// Open
-		stm := `select sd.id, sd.style, sd.distance, st.standard
+		stm := `select st.definition, re.style, re.distance, st.standard
 				from standard_time st
-					join standard_definition sd on st.definition = sd.id
-				where sd.gender = $1
-		  			and sd.course = $2
-		  			and st.time_standard = $3
-					and st.update_date = (select max(stm.update_date)
-										  from standard_time stm 
-										  where stm.time_standard = st.time_standard)
-				order by sd.style, st.standard asc`
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, max(ist.update_date) as update_date
+							from standard_time ist
+								join standard_definition sd on ist.definition = sd.id
+		 						join swim_style ss on ss.stroke = sd.style
+							where sd.gender = $1
+								and sd.course = $2
+								and ist.time_standard = $3
+							group by ss.sequence, sd.id, sd.style, sd.distance) re on st.definition = re.def
+				where st.time_standard = $3
+					and st.update_date = re.update_date 
+				order by re.sequence, st.standard asc`
 
 		rows, err = db.Query(context.Background(), stm, example.Definition.Gender, example.Definition.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
