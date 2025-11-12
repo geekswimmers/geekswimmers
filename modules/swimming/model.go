@@ -7,7 +7,9 @@ import (
 )
 
 const (
-	DefaultCourse = "SHORT"
+	CourseShort   = "SHORT"
+	CourseLong    = "LONG"
+	DefaultCourse = CourseShort
 
 	GenderFemale = "FEMALE"
 	GenderMale   = "MALE"
@@ -18,6 +20,12 @@ const (
 	JurisdictionLevelCity     = "CITY"
 	JurisdictionLevelTeam     = "TEAM"
 	JurisdictionLevelMeet     = "MEET"
+
+	StyleFreestyle    = "FREESTYLE"
+	StyleBackstroke   = "BACKSTROKE"
+	StyleBreaststroke = "BREASTSTROKE"
+	StyleButterfly    = "BUTTERFLY"
+	StyleMedley       = "MEDLEY"
 )
 
 type Style struct {

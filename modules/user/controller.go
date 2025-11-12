@@ -653,7 +653,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 
 	course := req.URL.Query().Get("course")
 	if course == "" {
-		course = times.DefaultCourse
+		course = swimming.DefaultCourse
 	}
 
 	linkRequests, err := findLinkRequests(swimmer, uc.DB)
@@ -1213,7 +1213,7 @@ func (uc *Controller) SwimmerBestTimeFormView(res http.ResponseWriter, req *http
 
 	if bestTime != nil {
 		data.Course = bestTime.Course
-		data.Minute, data.Second, data.Millisecond = utils.FromMiliseconds(bestTime.BestTime)
+		data.Minute, data.Second, data.Millisecond = utils.FromMilliseconds(bestTime.BestTime)
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "swimmer-besttime-form", template.FuncMap{
@@ -1241,7 +1241,7 @@ func (uc *Controller) SwimmerBestTimeForm(res http.ResponseWriter, req *http.Req
 	minute, _ := strconv.Atoi(req.PostForm.Get("minute"))
 	second, _ := strconv.Atoi(req.PostForm.Get("second"))
 	millisecond, _ := strconv.Atoi(req.PostForm.Get("millisecond"))
-	bestTime := utils.ToMiliseconds(minute, second, millisecond)
+	bestTime := utils.ToMilliseconds(minute, second, millisecond)
 
 	var eventId int64
 	var course string

@@ -48,7 +48,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	minute, _ := strconv.Atoi(req.URL.Query().Get("minute"))
 	second, _ := strconv.Atoi(req.URL.Query().Get("second"))
 	millisecond, _ := strconv.Atoi(req.URL.Query().Get("millisecond"))
-	swimmerTime := utils.ToMiliseconds(minute, second, millisecond)
+	swimmerTime := utils.ToMilliseconds(minute, second, millisecond)
 
 	// Separate the event into distance and stroke
 	distance, _ := strconv.ParseInt(event[0], 10, 64)
@@ -513,7 +513,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	ctx.TimeStandard = timeStandard
 
 	definitionId, _ := strconv.ParseInt(req.URL.Query().Get(":eventId"), 10, 64)
-	standardDefinition, err := FindStandardDefinition(definitionId, sc.DB)
+	standardDefinition, err := GetStandardDefinition(definitionId, sc.DB)
 	if err != nil || standardDefinition == nil {
 		log.Printf("times.%v (%d)", err, definitionId)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)

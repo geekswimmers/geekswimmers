@@ -39,6 +39,102 @@
             </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Imported Records</h3>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Distance</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Standard</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .ImportedRecords}}
+                <tr>
+                    <td>{{.Definition.Gender}}</td>
+                    <td>{{.Definition.Age}}</td>
+                    <td>{{.Definition.Course}}</td>
+                    <td>{{.Definition.Distance}}</td>
+                    <td>{{.Definition.Style}}</td>
+                    <td>{{.Standard | FormatMilliseconds}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="6">No standard times imported this time.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Not Imported Records</h3>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Course</th>
+                    <th scope="col">Distance</th>
+                    <th scope="col">Style</th>
+                    <th scope="col">Standard</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .NotImportedRecords}}
+                <tr>
+                    <td>{{.Definition.Gender}}</td>
+                    <td>{{.Definition.Age}}</td>
+                    <td>{{.Definition.Course}}</td>
+                    <td>{{.Definition.Distance}}</td>
+                    <td>{{.Definition.Style}}</td>
+                    <td>{{.Standard | FormatMilliseconds}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="6">All standard times were imported.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Failed Records</h3>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Failure</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range .FailedRecords}}
+                <tr>
+                    <td>{{.}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td>No failed records.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+
     <br>
     <a class="btn btn-secondary" href="/admin/standards/{{.TimeStandard.ID}}" role="button">Back</a>
 {{end}}

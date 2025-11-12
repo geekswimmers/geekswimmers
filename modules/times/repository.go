@@ -406,7 +406,7 @@ func GetTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	return timeStandard, nil
 }
 
-func FindStandardDefinition(id int64, db storage.Database) (*StandardDefinition, error) {
+func GetStandardDefinition(id int64, db storage.Database) (*StandardDefinition, error) {
 	stm := `select sd.gender, sd.course, sd.style, sd.distance, sd.age
 			from standard_definition sd
 			where sd.id = $1`
@@ -417,10 +417,51 @@ func FindStandardDefinition(id int64, db storage.Database) (*StandardDefinition,
 		ID: id,
 	}
 	if err := row.Scan(&standardDefinition.Gender, &standardDefinition.Course, &standardDefinition.Style, &standardDefinition.Distance, &standardDefinition.Age); err != nil {
+		return nil, fmt.Errorf("GetStandardDefinition: %v", err)
+	}
+
+	return standardDefinition, nil
+}
+
+func FindStandardDefinition(standardDefinition *StandardDefinition, db storage.Database) (*StandardDefinition, error) {
+	stm := `select sd.id
+			from standard_definition sd
+			where sd.age = $1
+				and sd.gender = $2
+				and sd.course = $3
+				and sd.style = $4
+				and sd.distance = $5`
+
+	row := db.QueryRow(context.Background(), stm, standardDefinition.Age, standardDefinition.Gender, standardDefinition.Course, standardDefinition.Style, standardDefinition.Distance)
+
+	if err := row.Scan(&standardDefinition.ID); err != nil {
 		return nil, fmt.Errorf("FindStandardDefinition: %v", err)
 	}
 
 	return standardDefinition, nil
+}
+
+func GetStandardTimeByDefinition(definition *StandardDefinition, timeStandard *TimeStandard, db storage.Database) (*StandardTime, error) {
+	stm := `select st.id, st.standard, st.update_date
+			from standard_time st
+				join standard_definition sd on st.definition = sd.id
+			where st.time_standard = $1
+			  and st.definition = $2
+			  and st.update_date = (select max(stm.update_date) 
+			                        from standard_time stm
+			                        where stm.time_standard = $1
+			                          and stm.definition = $2)`
+	row := db.QueryRow(context.Background(), stm, timeStandard.ID, definition.ID)
+
+	standardTime := &StandardTime{
+		Definition:   *definition,
+		TimeStandard: *timeStandard,
+	}
+	if err := row.Scan(&standardTime.ID, &standardTime.Standard, &standardTime.UpdateDate); err != nil {
+		return nil, fmt.Errorf("GetStandardTimeByDefinition: %v", err)
+	}
+
+	return standardTime, nil
 }
 
 func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTime, error) {
@@ -494,7 +535,15 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 					join standard_time st on ts.id = st.time_standard
 				    join standard_definition sd on st.definition = sd.id
 				where st.time_standard = $1
-				  	and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
+				  	and st.update_date = (select max(stm.update_date) 
+										  from standard_time stm
+											join standard_definition sdm on stm.definition = sdm.id
+										  where stm.time_standard = $1
+										    and sdm.age = $2
+										    and sdm.gender = $4
+										    and sdm.course = $5
+										    and sdm.style = $6
+										    and sdm.distance = $7)
 					and sd.age between $2 and $3
 					and sd.gender = $4
 					and sd.course  = $5
@@ -725,4 +774,24 @@ func GetMeet(id int64, db storage.Database) *Meet {
 	}
 
 	return meet
+}
+
+func InsertStandardTime(standardTime *StandardTime, db storage.Database) error {
+	stm := `insert into standard_time (time_standard, age, gender, course, style, distance, standard, definition, update_date)
+             values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+
+	_, err := db.Exec(context.Background(), stm,
+		standardTime.TimeStandard.ID,
+		standardTime.Definition.Age,
+		standardTime.Definition.Gender,
+		standardTime.Definition.Course,
+		standardTime.Definition.Style,
+		standardTime.Definition.Distance,
+		standardTime.Standard,
+		standardTime.Definition.ID,
+		standardTime.UpdateDate)
+	if err != nil {
+		return fmt.Errorf("user.InsertStandardTime: %v", err)
+	}
+	return nil
 }

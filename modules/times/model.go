@@ -7,11 +7,6 @@ import (
 	"time"
 )
 
-const (
-	DefaultStroke = "FREESTYLE"
-	DefaultCourse = "SHORT"
-)
-
 type SwimSeason struct {
 	ID        int64
 	Name      string

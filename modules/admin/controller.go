@@ -128,7 +128,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	// Read CSV directly from the uploaded file
 	reader := csv.NewReader(csvFile)
 
-	records, err := reader.ReadAll()
+	standardTimes, err := reader.ReadAll()
 	if err != nil {
 		log.Printf("admin.TimeStandardForm: %v", err)
 		ctx["ErrorCSVFile"] = "Error reading CSV file. Please check the file format."
@@ -136,11 +136,16 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 		return
 	}
 
-	if len(records) == 0 {
+	if len(standardTimes) < 2 {
 		ctx["ErrorCSVFile"] = "CSV file is empty."
 		renderTimeStandardView(res, ctx)
 		return
 	}
+
+	importedRecords, notImportedRecords, failedRecords := processStandardRecords(standardTimes, timeStandard, publicationDate, ac.DB)
+	ctx["ImportedRecords"] = importedRecords
+	ctx["NotImportedRecords"] = notImportedRecords
+	ctx["FailedRecords"] = failedRecords
 
 	html := utils.GetTemplateWithFunctions("base", "admin-standard-update", template.FuncMap{
 		"Title":              utils.Title,

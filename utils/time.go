@@ -2,19 +2,55 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 )
 
-func ToMiliseconds(min, sec, milisec int) int64 {
+func ToMilliseconds(min, sec, milisec int) int64 {
 	return int64((min * 60000) + (sec * 1000) + (milisec * 10))
 }
 
-func FromMiliseconds(milliseconds int64) (int, int, int) {
-	min := int(milliseconds / 60000)
-	sec := int((milliseconds % 60000) / 1000)
+func FromMilliseconds(milliseconds int64) (int, int, int) {
+	minutes := int(milliseconds / 60000)
+	seconds := int((milliseconds % 60000) / 1000)
 	milisec := int((milliseconds % 60000) % 1000)
 
-	return min, sec, milisec / 10
+	return minutes, seconds, milisec / 10
+}
+
+func MillisecondsFromText(value string) (int64, error) {
+	parts := strings.Split(value, ":")
+
+	if len(parts) != 2 {
+		return 0, fmt.Errorf("invalid time format, expected M:SS.CS")
+	}
+
+	// Parse minutes
+	minutes, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0, fmt.Errorf("invalid minutes: %v", err)
+	}
+
+	// Split seconds and centiseconds by decimal point
+	secParts := strings.Split(parts[1], ".")
+	if len(secParts) != 2 {
+		return 0, fmt.Errorf("invalid seconds format, expected SS.CS")
+	}
+
+	// Parse seconds
+	seconds, err := strconv.Atoi(secParts[0])
+	if err != nil {
+		return 0, fmt.Errorf("invalid seconds: %v", err)
+	}
+
+	// Parse centiseconds
+	centiseconds, err := strconv.Atoi(secParts[1])
+	if err != nil {
+		return 0, fmt.Errorf("invalid centiseconds: %v", err)
+	}
+
+	return ToMilliseconds(minutes, seconds, centiseconds), nil
 }
 
 func FormatMilliseconds(milliseconds int64) string {
@@ -24,7 +60,7 @@ func FormatMilliseconds(milliseconds int64) string {
 		ms = -milliseconds
 		signal = "-"
 	}
-	minute, sec, millisecond := FromMiliseconds(ms)
+	minute, sec, millisecond := FromMilliseconds(ms)
 	return fmt.Sprintf("%s%s", signal, FormatTime(minute, sec, millisecond))
 }
 
