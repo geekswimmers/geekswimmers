@@ -47,6 +47,7 @@ func TestFormatTime(t *testing.T) {
 		}
 	}
 }
+
 func TestMonthName(t *testing.T) {
 	tests := []struct {
 		month int64
@@ -64,6 +65,26 @@ func TestMonthName(t *testing.T) {
 		got := MonthName(tt.month)
 		if got != tt.want {
 			t.Errorf("MonthName(%d) = %q, want %q", tt.month, got, tt.want)
+		}
+	}
+}
+
+func TestMillisecondsFromText(t *testing.T) {
+	tests := []struct {
+		milliseconds int64
+		want         string
+	}{
+		{133450, "02:13.45"},
+		{154120, "2:34.12"},
+		{633790, " 10:33.79"},
+		{34320, "00:34.32"},
+		{23340, "23.34"},
+	}
+
+	for _, tt := range tests {
+		got, _ := MillisecondsFromText(tt.want)
+		if got != tt.milliseconds {
+			t.Errorf("MillisecondsFromText(%v) = %v, want %v", tt.want, got, tt.milliseconds)
 		}
 	}
 }

@@ -20,20 +20,27 @@ func FromMilliseconds(milliseconds int64) (int, int, int) {
 }
 
 func MillisecondsFromText(value string) (int64, error) {
-	parts := strings.Split(value, ":")
+	value = strings.TrimSpace(value)
+	minutes := 0
+	if strings.Contains(value, ":") {
+		parts := strings.Split(value, ":")
 
-	if len(parts) != 2 {
-		return 0, fmt.Errorf("invalid time format, expected M:SS.CS")
-	}
+		if len(parts) != 2 {
+			return 0, fmt.Errorf("invalid time format, expected M:SS.CS")
+		}
 
-	// Parse minutes
-	minutes, err := strconv.Atoi(parts[0])
-	if err != nil {
-		return 0, fmt.Errorf("invalid minutes: %v", err)
+		// Parse minutes
+		var err error
+		minutes, err = strconv.Atoi(parts[0])
+		if err != nil {
+			return 0, fmt.Errorf("invalid minutes: %v", err)
+		}
+
+		value = parts[1]
 	}
 
 	// Split seconds and centiseconds by decimal point
-	secParts := strings.Split(parts[1], ".")
+	secParts := strings.Split(value, ".")
 	if len(secParts) != 2 {
 		return 0, fmt.Errorf("invalid seconds format, expected SS.CS")
 	}
