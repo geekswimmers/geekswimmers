@@ -122,7 +122,7 @@ func getQuoteSequence(dayOfYear, count int) int {
 	return seq
 }
 
-func FindUpdates(db storage.Database) ([]*ServiceUpdate, error) {
+func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
 	stm := `select su.title, su.content, su.published
 			from service_update su
 			order by su.published desc

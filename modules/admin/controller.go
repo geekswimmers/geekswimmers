@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/csv"
+	"geekswimmers/modules/content"
 	"geekswimmers/modules/times"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
@@ -26,10 +27,17 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	serviceUpdates, err := content.FindServiceUpdates(ac.DB)
+	if err != nil {
+		log.Printf("admin.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
 	ctx := map[string]any{
 		"TimeStandards":    timeStandards,
 		"BaseTemplateData": ac.BaseTemplateData,
 		"SessionData":      sessionData,
+		"ServiceUpdates":   serviceUpdates,
 	}
 
 	html := utils.GetTemplate("base", "admin-console")
@@ -60,7 +68,7 @@ func (ac *AdminController) TimeStandardView(res http.ResponseWriter, req *http.R
 }
 
 func renderTimeStandardView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplateWithFunctions("base", "admin-standard", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("base", "admin-standard-form", template.FuncMap{
 		"Title": utils.Title,
 	})
 	err := html.Execute(res, ctx)

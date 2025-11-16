@@ -50,7 +50,7 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	updates, err := content.FindUpdates(wc.DB)
+	serviceUpdates, err := content.FindServiceUpdates(wc.DB)
 	if err != nil {
 		log.Printf("home.Updates.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -59,7 +59,7 @@ func (wc *Controller) HomeView(res http.ResponseWriter, req *http.Request) {
 	ctx := &homeViewData{
 		QuoteOfTheDay:    quoteOfTheDay,
 		Articles:         articles,
-		Updates:          updates,
+		Updates:          serviceUpdates,
 		Jurisdictions:    jurisdictions,
 		Events:           events,
 		BaseTemplateData: wc.BaseTemplateData,
