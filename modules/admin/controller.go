@@ -47,7 +47,7 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 	}
 }
 
-func (ac *AdminController) TimeStandardView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	ctx := map[string]any{
 		"BaseTemplateData": ac.BaseTemplateData,
 		"SessionData":      sessionData,
@@ -64,16 +64,16 @@ func (ac *AdminController) TimeStandardView(res http.ResponseWriter, req *http.R
 
 	ctx["TimeStandard"] = timeStandard
 
-	renderTimeStandardView(res, ctx)
+	renderTimeStandardFormView(res, ctx)
 }
 
-func renderTimeStandardView(res http.ResponseWriter, ctx map[string]any) {
+func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
 	html := utils.GetTemplateWithFunctions("base", "admin-standard-form", template.FuncMap{
 		"Title": utils.Title,
 	})
 	err := html.Execute(res, ctx)
 	if err != nil {
-		log.Printf("admin.TimeStandardView: %v", err)
+		log.Printf("admin.TimeStandardFormView: %v", err)
 	}
 }
 
@@ -98,7 +98,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	if err != nil {
 		log.Printf("admin.TimeStandardForm: %v", err)
 		ctx["ErrorCSVFile"] = "Error uploading the file. It is larger than 1MB."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 
@@ -109,7 +109,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 		log.Printf("admin.TimeStandardForm: %v", err)
 		ctx["PublicationDate"] = date
 		ctx["ErrorPublicationDate"] = "Invalid publication date format. Please use YYYY-MM-DD."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 	ctx["PublicationDate"] = publicationDate
@@ -119,7 +119,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 		log.Printf("admin.TimeStandardForm: %v", err)
 		ctx["CsvFile"] = header.Filename
 		ctx["ErrorCSVFile"] = "Error uploading the file. Please check the file format."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 	defer csvFile.Close()
@@ -129,7 +129,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	ext := strings.ToLower(filepath.Ext(header.Filename))
 	if ext != ".csv" {
 		ctx["ErrorCSVFile"] = "Invalid file extension. Please upload a CSV file."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 
@@ -140,13 +140,13 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	if err != nil {
 		log.Printf("admin.TimeStandardForm: %v", err)
 		ctx["ErrorCSVFile"] = "Error reading CSV file. Please check the file format."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 
 	if len(standardTimes) < 2 {
 		ctx["ErrorCSVFile"] = "CSV file is empty."
-		renderTimeStandardView(res, ctx)
+		renderTimeStandardFormView(res, ctx)
 		return
 	}
 
@@ -161,6 +161,6 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	})
 	err = html.Execute(res, ctx)
 	if err != nil {
-		log.Printf("admin.TimeStandardView: %v", err)
+		log.Printf("admin.TimeStandardFormView: %v", err)
 	}
 }
