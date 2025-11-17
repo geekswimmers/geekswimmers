@@ -123,7 +123,7 @@ func getQuoteSequence(dayOfYear, count int) int {
 }
 
 func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
-	stm := `select su.title, su.content, su.published
+	stm := `select su.id, su.title, su.content, su.published
 			from service_update su
 			order by su.published desc
 			limit 5`
@@ -136,7 +136,7 @@ func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
 	var updates []*ServiceUpdate
 	for rows.Next() {
 		update := &ServiceUpdate{}
-		err = rows.Scan(&update.Title, &update.Content, &update.Published)
+		err = rows.Scan(&update.ID, &update.Title, &update.Content, &update.Published)
 
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, err
@@ -145,4 +145,19 @@ func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
 	}
 
 	return updates, nil
+}
+
+func InsertServiceUpdate(serviceUpdate *ServiceUpdate, db storage.Database) error {
+	stm := `insert into service_update (title, content, published)
+             values ($1, $2, $3)`
+
+	_, err := db.Exec(context.Background(), stm,
+		serviceUpdate.Title,
+		serviceUpdate.Content,
+		serviceUpdate.Published)
+	if err != nil {
+		return fmt.Errorf("user.InsertServiceUpdate(%v, %v, %v): %v", serviceUpdate.Title,
+			serviceUpdate.Content, serviceUpdate.Published, err)
+	}
+	return nil
 }

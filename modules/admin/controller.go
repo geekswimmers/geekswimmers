@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/csv"
+	"fmt"
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/times"
 	"geekswimmers/storage"
@@ -65,16 +66,6 @@ func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *ht
 	ctx["TimeStandard"] = timeStandard
 
 	renderTimeStandardFormView(res, ctx)
-}
-
-func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplateWithFunctions("base", "admin-standard-form", template.FuncMap{
-		"Title": utils.Title,
-	})
-	err := html.Execute(res, ctx)
-	if err != nil {
-		log.Printf("admin.TimeStandardFormView: %v", err)
-	}
 }
 
 func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
@@ -162,5 +153,82 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("admin.TimeStandardFormView: %v", err)
+	}
+}
+
+func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
+	html := utils.GetTemplateWithFunctions("base", "admin-standard-form", template.FuncMap{
+		"Title": utils.Title,
+	})
+	err := html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.TimeStandardFormView: %v", err)
+	}
+}
+
+func (ac *AdminController) ServiceUpdateFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	ctx := map[string]any{
+		"BaseTemplateData": ac.BaseTemplateData,
+		"SessionData":      sessionData,
+		"Error":            nil,
+	}
+
+	serviceUpdate := &content.ServiceUpdate{}
+
+	_, err := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	if err != nil {
+		serviceUpdate.ID = 0
+		serviceUpdate.Published = time.Now()
+	}
+
+	ctx["ServiceUpdate"] = serviceUpdate
+
+	renderServiceUpdateFormView(res, ctx)
+}
+
+func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	err := req.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	ctx := map[string]any{
+		"BaseTemplateData": ac.BaseTemplateData,
+		"SessionData":      sessionData,
+		"Error":            nil,
+		"Title":            req.PostForm.Get("title"),
+		"Content":          req.PostForm.Get("content"),
+	}
+
+	published, err := time.Parse("2006-01-02", req.PostForm.Get("publicationDate"))
+	if err != nil {
+		ctx["ErrorPublicationDate"] = "Invalid publication date format. Please use YYYY-MM-DD."
+		renderServiceUpdateFormView(res, ctx)
+		return
+	}
+	ctx["Published"] = published.Format("2006-01-02")
+
+	serviceUpdate := &content.ServiceUpdate{
+		Title:     req.PostForm.Get("title"),
+		Content:   req.PostForm.Get("content"),
+		Published: published,
+	}
+
+	err = content.InsertServiceUpdate(serviceUpdate, ac.DB)
+	if err != nil {
+		errorMessage := fmt.Sprintf("Error inserting service update: %v", err)
+		log.Print(errorMessage)
+		ctx["Error"] = errorMessage
+		renderServiceUpdateFormView(res, ctx)
+	}
+
+	http.Redirect(res, req, "/admin/console/", http.StatusSeeOther)
+}
+
+func renderServiceUpdateFormView(res http.ResponseWriter, ctx map[string]any) {
+	html := utils.GetTemplate("base", "admin-update-form")
+	err := html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.ServiceUpdateFormView: %v", err)
 	}
 }

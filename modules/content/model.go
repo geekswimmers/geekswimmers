@@ -99,6 +99,7 @@ type Quote struct {
 }
 
 type ServiceUpdate struct {
+	ID        int64
 	Title     string
 	Content   string
 	Published time.Time
