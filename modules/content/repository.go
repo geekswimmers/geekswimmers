@@ -147,6 +147,22 @@ func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
 	return updates, nil
 }
 
+func GetServiceUpdate(id int64, db storage.Database) (*ServiceUpdate, error) {
+	stm := `select su.title, su.content, su.published
+			 from service_update su
+			 where su.id = $1`
+
+	row := db.QueryRow(context.Background(), stm, id)
+
+	serviceUpdate := &ServiceUpdate{}
+	err := row.Scan(&serviceUpdate.Title, &serviceUpdate.Content, &serviceUpdate.Published)
+	if err != nil {
+		return nil, err
+	}
+
+	return serviceUpdate, nil
+}
+
 func InsertServiceUpdate(serviceUpdate *ServiceUpdate, db storage.Database) error {
 	stm := `insert into service_update (title, content, published)
              values ($1, $2, $3)`

@@ -137,6 +137,8 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/admin/standards/:id/", s.handleAdminAuthRequest(adminController.TimeStandardForm))
 	s.Router.Get("/admin/updates/form/", s.handleAdminAuthRequest(adminController.ServiceUpdateFormView))
 	s.Router.Post("/admin/updates/form/", s.handleAdminAuthRequest(adminController.ServiceUpdateForm))
+	s.Router.Get("/admin/updates/:id/", s.handleAdminAuthRequest(adminController.ServiceUpdateFormEditView))
+	s.Router.Post("/admin/updates/:id/", s.handleAdminAuthRequest(adminController.ServiceUpdateForm))
 
 	s.Router.Get("/auth/confirm/:confirmation", s.handleRequest(userController.ChangePasswordView))
 	s.Router.Get("/auth/password/reset/", http.HandlerFunc(userController.ResetPasswordView))

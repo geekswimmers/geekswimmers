@@ -171,17 +171,32 @@ func (ac *AdminController) ServiceUpdateFormView(res http.ResponseWriter, req *h
 		"BaseTemplateData": ac.BaseTemplateData,
 		"SessionData":      sessionData,
 		"Error":            nil,
+		"ID":               0,
+		"Published":        time.Now(),
 	}
 
-	serviceUpdate := &content.ServiceUpdate{}
+	renderServiceUpdateFormView(res, ctx)
+}
 
-	_, err := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+func (ac *AdminController) ServiceUpdateFormEditView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	ctx := map[string]any{
+		"BaseTemplateData": ac.BaseTemplateData,
+		"SessionData":      sessionData,
+		"Error":            nil,
+	}
+
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	serviceUpdate, err := content.GetServiceUpdate(id, ac.DB)
 	if err != nil {
-		serviceUpdate.ID = 0
-		serviceUpdate.Published = time.Now()
+		log.Printf("admin.ServiceUpdateFormEditView: %v", err)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
 	}
 
-	ctx["ServiceUpdate"] = serviceUpdate
+	ctx["ID"] = id
+	ctx["Title"] = serviceUpdate.Title
+	ctx["Content"] = serviceUpdate.Content
+	ctx["Published"] = serviceUpdate.Published
 
 	renderServiceUpdateFormView(res, ctx)
 }
