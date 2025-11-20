@@ -39,7 +39,8 @@
                 <tr>
                     <td>{{.UpdateDate.Format "Jan 02, 2006" }}</td>
                     <td>{{.Standard | FormatMilliseconds}}</td>
-                    <td>{{.Difference | FormatMilliseconds}}</td>
+                    {{ $diff := FormatMilliseconds .Difference }}
+                    <td>{{if eq $diff "00:00.00" }}---{{else}}{{$diff}}{{end}}</td>
                 </tr>
                 {{end}}
             </tbody>
