@@ -529,7 +529,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		log.Printf("times.%v", err)
 	}
 
-	ctx.Age = *standardDefinition.Age
+	ctx.Age = standardDefinition.Age
 
 	for i := minimum; i <= maximum; i++ {
 		ctx.Ages = append(ctx.Ages, i)

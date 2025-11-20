@@ -69,7 +69,7 @@ type recordHistoryViewData struct {
 }
 
 type standardsEventViewData struct {
-	Age              int64
+	Age              *int64
 	Ages             []int64
 	Course           string
 	Distance         int64
