@@ -207,7 +207,10 @@ func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.
 		log.Print(err)
 	}
 
+	id, _ := strconv.ParseInt(req.FormValue("id"), 10, 64)
+
 	ctx := map[string]any{
+		"ID":               id,
 		"BaseTemplateData": ac.BaseTemplateData,
 		"SessionData":      sessionData,
 		"Error":            nil,
@@ -224,12 +227,18 @@ func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.
 	ctx["Published"] = published.Format("2006-01-02")
 
 	serviceUpdate := &content.ServiceUpdate{
+		ID:        id,
 		Title:     req.PostForm.Get("title"),
 		Content:   req.PostForm.Get("content"),
 		Published: published,
 	}
 
-	err = content.InsertServiceUpdate(serviceUpdate, ac.DB)
+	if id > 0 {
+		err = content.SaveServiceUpdate(serviceUpdate, ac.DB)
+	} else {
+		err = content.InsertServiceUpdate(serviceUpdate, ac.DB)
+	}
+
 	if err != nil {
 		errorMessage := fmt.Sprintf("Error inserting service update: %v", err)
 		log.Print(errorMessage)

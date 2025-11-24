@@ -149,8 +149,8 @@ func FindServiceUpdates(db storage.Database) ([]*ServiceUpdate, error) {
 
 func GetServiceUpdate(id int64, db storage.Database) (*ServiceUpdate, error) {
 	stm := `select su.title, su.content, su.published
-			 from service_update su
-			 where su.id = $1`
+			from service_update su
+			where su.id = $1`
 
 	row := db.QueryRow(context.Background(), stm, id)
 
@@ -165,7 +165,7 @@ func GetServiceUpdate(id int64, db storage.Database) (*ServiceUpdate, error) {
 
 func InsertServiceUpdate(serviceUpdate *ServiceUpdate, db storage.Database) error {
 	stm := `insert into service_update (title, content, published)
-             values ($1, $2, $3)`
+            values ($1, $2, $3)`
 
 	_, err := db.Exec(context.Background(), stm,
 		serviceUpdate.Title,
@@ -174,6 +174,21 @@ func InsertServiceUpdate(serviceUpdate *ServiceUpdate, db storage.Database) erro
 	if err != nil {
 		return fmt.Errorf("user.InsertServiceUpdate(%v, %v, %v): %v", serviceUpdate.Title,
 			serviceUpdate.Content, serviceUpdate.Published, err)
+	}
+	return nil
+}
+
+func SaveServiceUpdate(serviceUpdate *ServiceUpdate, db storage.Database) error {
+	stm := `update service_update set title = $1, content = $2, published = $3 
+            where id = $4`
+	_, err := db.Exec(context.Background(), stm,
+		serviceUpdate.Title,
+		serviceUpdate.Content,
+		serviceUpdate.Published,
+		serviceUpdate.ID)
+	if err != nil {
+		return fmt.Errorf("user.SaveServiceUpdate(%v, %v, %v, %v): %v", serviceUpdate.Title,
+			serviceUpdate.Content, serviceUpdate.Published, serviceUpdate.ID, err)
 	}
 	return nil
 }

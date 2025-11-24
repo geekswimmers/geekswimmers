@@ -25,6 +25,8 @@
                     </div>
                 {{end}}
 
+                {{if gt .ID 0}}<input type="hidden" name="id" value="{{.ID}}">{{end}}
+
                 <div class="mb-3">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" name="title" id="title" value="{{.Title}}" required>
