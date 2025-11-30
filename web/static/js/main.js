@@ -121,3 +121,26 @@ function dismissLinkRequest(swimmerId, linkId) {
         console.error('Error:', error);
     });
 }
+
+function formatMilliseconds(milliseconds) {
+    let ms = milliseconds;
+    let signal = "";
+
+    if (milliseconds < 0) {
+        ms = -milliseconds;
+        signal = "-";
+    }
+
+    // Logic equivalent to FromMilliseconds
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    // Calculate centiseconds (milliseconds / 10)
+    const centiseconds = Math.floor((ms % 1000) / 10);
+
+    // Logic equivalent to FormatTime (using padStart for %02d)
+    const minStr = minutes.toString().padStart(2, '0');
+    const secStr = seconds.toString().padStart(2, '0');
+    const csStr = centiseconds.toString().padStart(2, '0');
+
+    return `${signal}${minStr}:${secStr}.${csStr}`;
+}

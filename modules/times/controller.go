@@ -9,6 +9,7 @@ import (
 	"geekswimmers/utils/reporting"
 	"log"
 	"net/http"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -498,9 +499,9 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 
 func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
-	ctx := &standardsEventViewData{
-		BaseTemplateData: sc.BaseTemplateData,
-		SessionData:      sessionData,
+	ctx := map[string]any{
+		"BaseTemplateData": sc.BaseTemplateData,
+		"SessionData":      sessionData,
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -510,7 +511,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
-	ctx.TimeStandard = timeStandard
+	ctx["TimeStandard"] = timeStandard
 
 	definitionId, _ := strconv.ParseInt(req.URL.Query().Get(":eventId"), 10, 64)
 	standardDefinition, err := GetStandardDefinition(definitionId, sc.DB)
@@ -520,23 +521,25 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		return
 	}
 
-	ctx.Distance = standardDefinition.Distance
-	ctx.Style = standardDefinition.Style
-	ctx.Event = fmt.Sprintf("%d-%s", standardDefinition.Distance, standardDefinition.Style)
+	ctx["Distance"] = standardDefinition.Distance
+	ctx["Style"] = standardDefinition.Style
+	ctx["Event"] = fmt.Sprintf("%d-%s", standardDefinition.Distance, standardDefinition.Style)
 
 	minimum, maximum, err := FindMinAndMaxStandardsAges(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
 
-	ctx.Age = standardDefinition.Age
+	ctx["Age"] = standardDefinition.Age
 
+	var ages []int64
 	for i := minimum; i <= maximum; i++ {
-		ctx.Ages = append(ctx.Ages, i)
+		ages = append(ages, i)
 	}
+	ctx["Ages"] = ages
 
-	ctx.Gender = standardDefinition.Gender
-	ctx.Course = standardDefinition.Course
+	ctx["Gender"] = standardDefinition.Gender
+	ctx["Course"] = standardDefinition.Course
 
 	standardTimes, err := findStandardsEvent(timeStandard, standardDefinition, sc.DB)
 	standardTimes = calculateDifferences(standardTimes)
@@ -545,7 +548,10 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx.StandardTimes = standardTimes
+	ctx["StandardTimes"] = standardTimes
+	reversedStandardTimes := slices.Clone(standardTimes)
+	slices.Reverse(reversedStandardTimes)
+	ctx["InvertedStandardTimes"] = reversedStandardTimes
 
 	html := utils.GetTemplateWithFunctions("base", "standards-event", template.FuncMap{
 		"Title":              utils.Title,

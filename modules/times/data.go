@@ -68,20 +68,6 @@ type recordHistoryViewData struct {
 	SessionData      *storage.SessionData
 }
 
-type standardsEventViewData struct {
-	Age              *int64
-	Ages             []int64
-	Course           string
-	Distance         int64
-	Event            string
-	Gender           string
-	Style            string
-	TimeStandard     *TimeStandard
-	StandardTimes    []*StandardTime
-	BaseTemplateData *utils.BaseTemplateData
-	SessionData      *storage.SessionData
-}
-
 type teamRecordsReportData struct {
 	Records    []*RecordPoster
 	LastUpdate time.Time

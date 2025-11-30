@@ -26,6 +26,9 @@
 
     <h4>History</h4>
     <div class="card">
+        <div class="card-body">
+            <canvas id="standard-chart"></canvas>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -55,4 +58,58 @@
     </button>
 {{end}}
 
-{{define "scripts"}}{{end}}
+{{define "scripts"}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('standard-chart');
+
+    const data = [
+        {{range .InvertedStandardTimes}}
+        {x: '{{.UpdateDate.Format "Jan 02, 2006" }}', y: {{.Standard}} },
+        {{end}}
+    ];
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Standard Times',
+                data: data,
+                borderWidth: 1,
+                pointStyle: 'circle',
+                pointRadius: 10,
+                pointHoverRadius: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: (ctx) => 'Historical Changes to the Standard Time',
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => formatMilliseconds(context.parsed.y)
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    afterBuildTicks: axis => axis.ticks = data.map(v => ({value: v.y})),
+                    ticks: {
+                        source: 'labels',
+                        callback: ((context) => {
+                            return formatMilliseconds(context);
+                        })
+                    }
+                }
+            }
+        }
+    });
+</script>
+{{end}}
