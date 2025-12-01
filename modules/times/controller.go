@@ -338,16 +338,16 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 
 func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
-	data := &recordsViewData{
-		BaseTemplateData: rc.BaseTemplateData,
-		SessionData:      sessionData,
+	ctx := map[string]any{
+		"BaseTemplateData": rc.BaseTemplateData,
+		"SessionData":      sessionData,
 	}
 
 	recordSetId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	recordSet, err := findRecordSet(recordSetId, rc.DB)
 	if err != nil || recordSet == nil {
 		log.Printf("times.%v (%d)", err, recordSetId)
-		utils.ErrorHandler(res, req, data, http.StatusNotFound)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
 
@@ -381,8 +381,8 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 		}
 	}
 
-	data.AgeRange = ageParam
-	data.AgeRanges = ageRanges
+	ctx["AgeRange"] = ageParam
+	ctx["AgeRanges"] = ageRanges
 
 	gender := req.URL.Query().Get("gender")
 	if gender == "" {
@@ -405,19 +405,19 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	}
 	groupedRecords := groupRecordsByDefinition(records)
 
-	data.Age = age
-	data.Gender = gender
-	data.Course = course
-	data.RecordSet = recordSet
-	data.RecordDefinition = definition
-	data.Records = groupedRecords
+	ctx["Age"] = age
+	ctx["Gender"] = gender
+	ctx["Course"] = course
+	ctx["RecordSet"] = recordSet
+	ctx["RecordDefinition"] = definition
+	ctx["Records"] = groupedRecords
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":              utils.Title,
 		"Lowercase":          utils.Lowercase,
 		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
-	err = html.Execute(res, data)
+	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordsView: %v", err)
 	}
@@ -471,6 +471,7 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 		log.Printf("times.RecordPosterView: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
+	records = groupPosterRecordsByDefinition(records)
 
 	for _, record := range records {
 		if record.Field == "TIME" {
@@ -483,15 +484,15 @@ func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 		}
 	}
 
-	reportData := teamRecordsReportData{
-		Records:    records,
-		LastUpdate: time.Now(),
+	ctx := map[string]any{
+		"Records":    records,
+		"LastUpdate": time.Now(),
 	}
 
 	report := reporting.GetReportTemplate("records-team-poster")
 	res.Header().Set("Content-Type", "image/svg+xml")
 
-	err = report.Execute(res, reportData)
+	err = report.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
 	}

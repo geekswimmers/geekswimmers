@@ -2,38 +2,94 @@ package times
 
 import (
 	"cmp"
+	"fmt"
 	"slices"
+	"strings"
 )
 
 func groupRecordsByDefinition(records []*Record) []Record {
-	grouping := make(map[any]*Record)
+	grouping := make(map[int64]*Record)
 
 	for _, record := range records {
 		key := record.Definition.ID
-		groupDuplicates(grouping, record, key)
+		groupByDefinition(grouping, record, key)
 	}
 
 	return squeezeFastOnes(grouping)
 }
 
-func groupDuplicates(grouping map[any]*Record, record *Record, key any) {
-	if grouping[key] == nil {
+func groupByDefinition(grouping map[int64]*Record, record *Record, key int64) {
+	grouped := grouping[key]
+
+	if grouped == nil {
 		grouping[key] = record
 		return
 	}
 
-	if record.Time > grouping[key].Time {
-		faster := grouping[key]
-		faster.Previous = append(faster.Previous, *record)
+	if record.Time > grouped.Time {
+		grouped.Previous = append(grouped.Previous, *record)
 	}
 
-	if record.Time < grouping[key].Time {
-		record.Previous = append(record.Previous, *grouping[key])
+	if record.Time == grouped.Time {
+		if record.Year == nil || grouped.Year == nil || record.Month == nil || grouped.Month == nil {
+			grouped.Previous = append(grouped.Previous, *record)
+			grouping[key] = grouped
+			return
+		}
+
+		if *record.Year > *grouped.Year {
+			record.Previous = append(record.Previous, *grouped)
+			grouping[key] = record
+		} else if *record.Year < *grouped.Year {
+			grouped.Previous = append(grouped.Previous, *record)
+			grouping[key] = grouped
+		} else if *record.Month > *grouped.Month {
+			record.Previous = append(record.Previous, *grouped)
+			grouping[key] = record
+		} else if *record.Month < *grouped.Month {
+			grouped.Previous = append(grouped.Previous, *record)
+			grouping[key] = grouped
+		} else {
+			record.Previous = append(record.Previous, *grouped)
+			grouping[key] = record
+		}
+	}
+
+	if record.Time < grouped.Time {
+		record.Previous = append(record.Previous, *grouped)
 		grouping[key] = record
 	}
 }
 
-func squeezeFastOnes(grouping map[any]*Record) []Record {
+func groupPosterRecordsByDefinition(records []*RecordPoster) []*RecordPoster {
+	grouping := make(map[string]*RecordPoster)
+	for _, record := range records {
+		if grouping[record.Placeholder] == nil {
+			grouping[record.Placeholder] = record
+			continue
+		}
+
+		if strings.Contains(record.Placeholder, "_HOLDER") {
+			grouping[record.Placeholder].Value = fmt.Sprintf(
+				"%s, %s",
+				grouping[record.Placeholder].Value,
+				record.Value)
+		} else {
+			newValue := record.Value
+			if newValue > grouping[record.Placeholder].Value {
+				grouping[record.Placeholder].Value = record.Value
+			}
+		}
+	}
+
+	groupedRecords := make([]*RecordPoster, 0, len(grouping))
+	for _, record := range grouping {
+		groupedRecords = append(groupedRecords, record)
+	}
+	return groupedRecords
+}
+
+func squeezeFastOnes(grouping map[int64]*Record) []Record {
 	fastestRecords := make([]Record, 0, len(grouping))
 	for _, record := range grouping {
 		fastestRecords = append(fastestRecords, *record)

@@ -121,6 +121,14 @@ type Record struct {
 	Percentage int64
 }
 
+func (record *Record) AllHolders() string {
+	if len(record.Previous) == 0 || record.Time != record.Previous[0].Time {
+		return record.Holder
+	}
+
+	return fmt.Sprintf("%s, %s", record.Holder, record.Previous[0].Holder)
+}
+
 func (record *Record) MonthName() string {
 	return utils.MonthName(*record.Month)
 }
