@@ -32,8 +32,13 @@ func groupByDefinition(grouping map[int64]*Record, record *Record, key int64) {
 
 	if record.Time == grouped.Time {
 		if record.Year == nil || grouped.Year == nil || record.Month == nil || grouped.Month == nil {
-			grouped.Previous = append(grouped.Previous, *record)
-			grouping[key] = grouped
+			if record.ID > grouped.ID {
+				record.Previous = append(record.Previous, *grouped)
+				grouping[key] = record
+			} else {
+				grouped.Previous = append(grouped.Previous, *record)
+				grouping[key] = grouped
+			}
 			return
 		}
 
