@@ -110,6 +110,7 @@ type Record struct {
 	ID         int64
 	RecordSet  RecordSet
 	Definition RecordDefinition
+	Swimmer    *swimming.Swimmer
 	Time       int64
 	Year       *int64
 	Month      *int64
@@ -121,12 +122,18 @@ type Record struct {
 	Percentage int64
 }
 
+func (record *Record) HolderName() string {
+	if len(record.Swimmer.FirstName) > 0 || len(record.Swimmer.LastName) > 0 {
+		return fmt.Sprintf("%s %s", record.Swimmer.FirstName, record.Swimmer.LastName)
+	}
+	return record.Holder
+}
+
 func (record *Record) AllHolders() string {
 	if len(record.Previous) == 0 || record.Time != record.Previous[0].Time {
-		return record.Holder
+		return record.HolderName()
 	}
-
-	return fmt.Sprintf("%s, %s", record.Holder, record.Previous[0].Holder)
+	return fmt.Sprintf("%s, %s", record.HolderName(), record.Previous[0].HolderName())
 }
 
 func (record *Record) MonthName() string {
