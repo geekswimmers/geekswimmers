@@ -431,17 +431,22 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	recordDefinition, err := getRecordDefinition(id, rc.DB)
+	recordSet := RecordSet{
+		ID: id,
+	}
+
+	defId, _ := strconv.ParseInt(req.URL.Query().Get(":defId"), 10, 64)
+	recordDefinition, err := getRecordDefinition(defId, rc.DB)
 	if err != nil || recordDefinition == nil {
-		log.Printf("times.RecordHistoryView (%d): %v", id, err)
+		log.Printf("times.RecordHistoryView (%d): %v", defId, err)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
 	ctx.RecordDefinition = recordDefinition
 
-	records, err := findRecordsByDefinition(*recordDefinition, rc.DB)
+	records, err := findRecordsByDefinition(*recordDefinition, recordSet, rc.DB)
 	if err != nil {
-		log.Printf("times.RecordHistoryView (%d): %v", id, err)
+		log.Printf("times.RecordHistoryView (%d): %v", defId, err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 	ctx.Records = records
@@ -463,10 +468,10 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 
 func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	resultSet := RecordSet{
+	recordSet := RecordSet{
 		ID: id,
 	}
-	records, err := findRecordsPoster(resultSet, sc.DB)
+	records, err := findRecordsPoster(recordSet, sc.DB)
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
