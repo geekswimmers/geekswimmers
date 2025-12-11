@@ -68,7 +68,7 @@ func getRecordDefinition(id int64, db storage.Database) (*RecordDefinition, erro
 	return recordDefinition, nil
 }
 
-func findRecordsByDefinition(definition RecordDefinition, db storage.Database) ([]*Record, error) {
+func findRecordsByDefinition(definition RecordDefinition, recordSet RecordSet, db storage.Database) ([]*Record, error) {
 	stm := `select r.record_time, r.year, r.month, coalesce(r.holder, ''),
        			coalesce(s.first_name, ''), coalesce(s.last_name, ''),
 				rs.id, coalesce(rs.source_title, ''), coalesce(rs.source_link, ''),
@@ -78,8 +78,9 @@ func findRecordsByDefinition(definition RecordDefinition, db storage.Database) (
                 left join jurisdiction j on j.id = rs.jurisdiction
 				left join swimmer s on s.id = r.swimmer
             where r.definition = $1
+            	and r.record_set = $2
             order by r.record_time asc`
-	rows, err := db.Query(context.Background(), stm, definition.ID)
+	rows, err := db.Query(context.Background(), stm, definition.ID, recordSet.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
 	}
@@ -240,7 +241,7 @@ func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoste
 								'_', 
 								rd.distance,
 								'_',
-								prt.prtype) as placeholder, 
+								prt.prtype) as placeholder,
 						prt.prtype as field,
 						case when prt.prtype = 'HOLDER' then coalesce(concat(s.first_name, ' ', s.last_name)::varchar(50), '')
 								when prt.prtype = 'TIME' then coalesce(r.record_time::varchar(50), '')
