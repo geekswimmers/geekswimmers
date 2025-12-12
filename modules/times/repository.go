@@ -353,6 +353,39 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 	return recordSet, nil
 }
 
+func findRecordsBySwimmer(swimmer *swimming.Swimmer, db storage.Database) ([]*Record, error) {
+	stm := `select r.id, r.record_time, r.year, r.month,
+       			rs.source_title,
+       			rd.min_age, rd.max_age, rd.style, rd.distance, rd.sequence
+			from record r
+				join swimmer s on s.id = r.swimmer
+				join record_definition rd on rd.id = r.definition
+				join record_set rs on rs.id = r.record_set
+			where s.id = $1`
+	rows, err := db.Query(context.Background(), stm, swimmer.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordsBySwimmer: %v", err)
+	}
+	defer rows.Close()
+
+	var records []*Record
+	for rows.Next() {
+		record := &Record{
+			RecordSet:  RecordSet{},
+			Definition: RecordDefinition{},
+		}
+		err = rows.Scan(&record.ID, &record.Time, &record.Year, &record.Month,
+			&record.RecordSet.Title,
+			&record.Definition.MinAge, &record.Definition.MaxAge, &record.Definition.Style,
+			&record.Definition.Distance, &record.Definition.Sequence)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordsBySwimmer: %v", err)
+		}
+		records = append(records, record)
+	}
+	return records, nil
+}
+
 func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
 	stm := `select distinct ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
 	        from time_standard ts
