@@ -466,12 +466,39 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 	}
 }
 
-func (sc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
+func (rc *RecordsController) RecordSwimmerView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+	ctx := map[string]any{
+		"BaseTemplateData": rc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
+	id, _ = strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
+	recordSet := RecordSet{
+		ID: id,
+	}
+
+	swmId, _ := strconv.ParseInt(req.URL.Query().Get("swmId"), 10, 64)
+	swimmer, err := swimming.FindSwimmer(swmId, rc.DB)
+	if err != nil || swimmer == nil {
+		log.Printf("times.RecordSwimmerView (%d): %v", swmId, err)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
+	}
+
+	records, err := findRecordsBySwimmer(swimmer, rc.DB)
+	if err != nil {
+		log.Printf("times.RecordSwimmerView (%d): %v", swmId, err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (rc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http.Request) {
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	recordSet := RecordSet{
 		ID: id,
 	}
-	records, err := findRecordsPoster(recordSet, sc.DB)
+	records, err := findRecordsPoster(recordSet, rc.DB)
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

@@ -8,8 +8,8 @@ import (
 
 func findStyles(db storage.Database) ([]*Style, error) {
 	stm := `select m.stroke, m.description
-			 from swim_style m
-			 order by m.sequence`
+			from swim_style m
+			order by m.sequence`
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
 		return nil, fmt.Errorf("findStyles: %v", err)
@@ -31,8 +31,8 @@ func findStyles(db storage.Database) ([]*Style, error) {
 
 func findStyle(stroke string, db storage.Database) (*Style, error) {
 	stm := `select m.id, m.description, m.sequence 
-			 from swim_style m 
-	         where m.stroke = $1`
+			from swim_style m 
+	        where m.stroke = $1`
 
 	row := db.QueryRow(context.Background(), stm, stroke)
 
@@ -47,29 +47,27 @@ func findStyle(stroke string, db storage.Database) (*Style, error) {
 	return style, nil
 }
 
-func FindEventByExample(event Event, db storage.Database) (*Event, error) {
-	stm := `select se.id, se.distance, ss.stroke
-			 from swim_event se
-			 join swim_style ss on se.style = ss.id
-			 where se.distance = $1 and ss.stroke = $2 and se.course = $3`
-	row := db.QueryRow(context.Background(), stm, event.Distance, event.Style.Stroke, event.Course)
+func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
+	stm := `select id, stroke
+			from swim_style
+			where sequence = $1`
+	row := db.QueryRow(context.Background(), stm, sequence)
 
-	ev := &Event{}
-	err := row.Scan(&ev.ID, &ev.Distance, &ev.Style.Stroke)
+	style := &Style{}
+	err := row.Scan(&style.ID, &style.Stroke)
 	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, fmt.Errorf("findEventByExample: %v", err)
+		return nil, fmt.Errorf("findStyleBySequence: %v", err)
 	}
-
-	return ev, nil
+	return style, nil
 }
 
 func FindEvents(course string, db storage.Database) ([]*Event, error) {
 	stm := `select se.distance , ss.stroke 
-			 from swim_event se 
+			from swim_event se 
 				join swim_style ss on se.style = ss.id
-			 where se.course = $1
+			where se.course = $1
 			    and ss.stroke in (select distinct style from standard_definition)
-			 order by ss.sequence asc, se.distance asc`
+			order by ss.sequence asc, se.distance asc`
 	rows, err := db.Query(context.Background(), stm, course)
 	if err != nil {
 		return nil, fmt.Errorf("findEvents: %v", err)
@@ -89,25 +87,11 @@ func FindEvents(course string, db storage.Database) ([]*Event, error) {
 	return events, nil
 }
 
-func findStyleBySequence(sequence int64, db storage.Database) (*Style, error) {
-	stm := `select id, stroke
-			from swim_style
-			where sequence = $1`
-	row := db.QueryRow(context.Background(), stm, sequence)
-
-	style := &Style{}
-	err := row.Scan(&style.ID, &style.Stroke)
-	if err != nil && err.Error() != storage.ErrNoRows {
-		return nil, fmt.Errorf("findStyleBySequence: %v", err)
-	}
-	return style, nil
-}
-
 func findInstructions(style *Style, db storage.Database) ([]*Instruction, error) {
 	stm := `select i.instruction, i.sequence
-			 from swim_style_instruction i
-			 where i.style = $1
-			 order by i.sequence`
+			from swim_style_instruction i
+			where i.style = $1
+			order by i.sequence`
 	rows, err := db.Query(context.Background(), stm, style.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findInstructions: %v", err)
@@ -131,7 +115,7 @@ func findInstructions(style *Style, db storage.Database) ([]*Instruction, error)
 
 func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdiction, error) {
 	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
-	         from jurisdiction j`
+	        from jurisdiction j`
 
 	switch level {
 	case JurisdictionLevelMeet:
@@ -194,4 +178,20 @@ func FindTeamsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]
 	}
 
 	return teams, nil
+}
+
+func FindSwimmer(swimmerId int64, db storage.Database) (*Swimmer, error) {
+	stm := `select s.first_name, s.last_name
+			from swimmer s
+			where s.id = $1`
+
+	row := db.QueryRow(context.Background(), stm, swimmerId)
+	swimmer := &Swimmer{
+		ID: swimmerId,
+	}
+	err := row.Scan(&swimmer.FirstName, &swimmer.LastName)
+	if err != nil && err.Error() != storage.ErrNoRows {
+		return nil, fmt.Errorf("FindSwimmer: %v", err)
+	}
+	return swimmer, nil
 }

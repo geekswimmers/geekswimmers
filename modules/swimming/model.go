@@ -119,6 +119,7 @@ type Team struct {
 }
 
 type Swimmer struct {
+	ID          int64
 	FirstName   string
 	LastName    string
 	Gender      sql.NullString
