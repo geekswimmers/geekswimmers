@@ -141,6 +141,7 @@ func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 			Definition: RecordDefinition{
 				Age: example.Age,
 			},
+			Swimmer: &swimming.Swimmer{},
 		}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Holder, &record.Swimmer.FirstName,
 			&record.Swimmer.LastName, &record.RecordSet.Jurisdiction.ID, &record.RecordSet.Jurisdiction.World,
