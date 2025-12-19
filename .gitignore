@@ -2,6 +2,7 @@ config.toml
 geekswimmers
 .vscode/settings.json
 *.bkp
+.env
 
 .idea/
 test/

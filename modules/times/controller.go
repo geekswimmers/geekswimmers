@@ -473,23 +473,38 @@ func (rc *RecordsController) RecordSwimmerView(res http.ResponseWriter, req *htt
 		"SessionData":      sessionData,
 	}
 
-	id, _ = strconv.ParseInt(req.URL.Query().Get("id"), 10, 64)
-	recordSet := RecordSet{
-		ID: id,
-	}
-
-	swmId, _ := strconv.ParseInt(req.URL.Query().Get("swmId"), 10, 64)
-	swimmer, err := swimming.FindSwimmer(swmId, rc.DB)
-	if err != nil || swimmer == nil {
-		log.Printf("times.RecordSwimmerView (%d): %v", swmId, err)
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	recordSet, err := findRecordSet(id, rc.DB)
+	if err != nil || recordSet == nil {
+		log.Printf("times.RecordSwimmerView (%d): %v", id, err)
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
+	ctx["RecordSet"] = recordSet
 
-	records, err := findRecordsBySwimmer(swimmer, rc.DB)
+	swimmerId, _ := strconv.ParseInt(req.URL.Query().Get(":swimmerId"), 10, 64)
+	swimmer, err := swimming.FindSwimmer(swimmerId, rc.DB)
+	if err != nil || swimmer == nil {
+		log.Printf("times.RecordSwimmerView (%d): %v", swimmerId, err)
+		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
+		return
+	}
+	ctx["Swimmer"] = swimmer
+
+	records, err := findRecordsBySwimmer(recordSet, swimmer, rc.DB)
 	if err != nil {
-		log.Printf("times.RecordSwimmerView (%d): %v", swmId, err)
+		log.Printf("times.RecordSwimmerView (%d): %v", swimmerId, err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+	ctx["Records"] = records
+
+	html := utils.GetTemplateWithFunctions("base", "record-holder", template.FuncMap{
+		"Title":              utils.Title,
+		"FormatMilliseconds": utils.FormatMilliseconds,
+	})
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("times.RecordSwimmerView: %v", err)
 	}
 }
 

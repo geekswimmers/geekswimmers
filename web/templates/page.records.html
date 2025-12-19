@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="gender" class="form-label">Gender</label>
+                            <label class="form-label">Gender</label>
                             <a href="#" data-bs-toggle="tooltip" data-bs-title="Swim Canada and Swim Ontario use only two genders to categorize time standards.">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -61,7 +61,7 @@
 
                     <div class="col-md-4">
                         <div class="mb-3">
-                            <label for="course">Course</label><br>
+                            <label>Course</label><br>
                             <div class="form-check form-check-inline" style="padding-top: 8px;">
                                 <input class="form-check-input" type="radio" name="course" id="shortCourse" value="SHORT" onchange="document.getElementById('filter-form').submit();" required{{if eq $.Course "SHORT"}} checked{{end}}>
                                 <label class="form-check-label" style="font-weight: normal;" for="shortCourse">Short (25m)</label>
@@ -100,7 +100,11 @@
                             {{end}}
                         </td>
                         <td>{{.Time | FormatMilliseconds}}</td>
-                        <td>{{.AllHolders}}</td>
+                        {{if gt .Swimmer.ID 0}}
+                            <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.AllHolders}}</a></td>
+                        {{else}}
+                            <td>{{.AllHolders}}</td>
+                        {{end}}
                         <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
                     </tr>
                 {{end}}
