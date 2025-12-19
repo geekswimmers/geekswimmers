@@ -164,7 +164,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 	var rows pgx.Rows
 	var err error
 	if example.Age > 0 {
-		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
+		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.id, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
        				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 					rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 				from record r
@@ -184,7 +184,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 			return nil, fmt.Errorf("findRecordsByRecordSet: %v", err)
 		}
 	} else {
-		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.first_name, ''), coalesce(s.last_name, ''),
+		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.id, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''),
        				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 					rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 				from record r
@@ -214,7 +214,8 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 			RecordSet: recordSet,
 			Swimmer:   &swimming.Swimmer{},
 		}
-		err = rows.Scan(&record.ID, &record.Time, &record.Year, &record.Month, &record.Holder, &record.Swimmer.FirstName, &record.Swimmer.LastName,
+		err = rows.Scan(&record.ID, &record.Time, &record.Year, &record.Month, &record.Holder,
+			&record.Swimmer.ID, &record.Swimmer.FirstName, &record.Swimmer.LastName,
 			&record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
 			&record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
 			&record.Definition.Style, &record.Definition.Distance, &record.Definition.Sequence)
@@ -333,36 +334,36 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 }
 
 func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
-	stm := `select rs.id, rs.jurisdiction, rs.source_title, rs.source_link, 
+	stm := `select rs.id, rs.title, rs.jurisdiction, rs.source_title, rs.source_link, 
 	               j.world, j.country, j.province, j.region, j.city, j.team, j.meet
 			from record_set rs
 			    left join jurisdiction j on j.id = rs.jurisdiction
 			where rs.id = $1`
 	row := db.QueryRow(context.Background(), stm, id)
 
-	recordSet := &RecordSet{
-		ID: id,
-	}
-	if err := row.Scan(&recordSet.ID, &recordSet.Jurisdiction.ID, &recordSet.Source.Title, &recordSet.Source.Link,
-		&recordSet.Jurisdiction.World, &recordSet.Jurisdiction.Country, &recordSet.Jurisdiction.Province,
-		&recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City, &recordSet.Jurisdiction.Team,
-		&recordSet.Jurisdiction.Meet); err != nil {
+	recordSet := &RecordSet{}
+	if err := row.Scan(&recordSet.ID, &recordSet.Title, &recordSet.Jurisdiction.ID, &recordSet.Source.Title,
+		&recordSet.Source.Link, &recordSet.Jurisdiction.World, &recordSet.Jurisdiction.Country,
+		&recordSet.Jurisdiction.Province, &recordSet.Jurisdiction.Region, &recordSet.Jurisdiction.City,
+		&recordSet.Jurisdiction.Team, &recordSet.Jurisdiction.Meet); err != nil {
 		return nil, fmt.Errorf("findRecordSet: %v", err)
 	}
 
 	return recordSet, nil
 }
 
-func findRecordsBySwimmer(swimmer *swimming.Swimmer, db storage.Database) ([]*Record, error) {
+func findRecordsBySwimmer(recordSet *RecordSet, swimmer *swimming.Swimmer, db storage.Database) ([]*Record, error) {
 	stm := `select r.id, r.record_time, r.year, r.month,
        			rs.source_title,
-       			rd.min_age, rd.max_age, rd.style, rd.distance, rd.sequence
+       			rd.min_age, rd.max_age, rd.style, rd.distance, rd.course
 			from record r
 				join swimmer s on s.id = r.swimmer
 				join record_definition rd on rd.id = r.definition
 				join record_set rs on rs.id = r.record_set
-			where s.id = $1`
-	rows, err := db.Query(context.Background(), stm, swimmer.ID)
+			where r.record_set = $1
+			    and s.id = $2
+			order by rd.max_age desc, r.year desc, r.month desc`
+	rows, err := db.Query(context.Background(), stm, recordSet.ID, swimmer.ID)
 	if err != nil {
 		return nil, fmt.Errorf("findRecordsBySwimmer: %v", err)
 	}
@@ -373,11 +374,12 @@ func findRecordsBySwimmer(swimmer *swimming.Swimmer, db storage.Database) ([]*Re
 		record := &Record{
 			RecordSet:  RecordSet{},
 			Definition: RecordDefinition{},
+			Swimmer:    swimmer,
 		}
 		err = rows.Scan(&record.ID, &record.Time, &record.Year, &record.Month,
 			&record.RecordSet.Title,
 			&record.Definition.MinAge, &record.Definition.MaxAge, &record.Definition.Style,
-			&record.Definition.Distance, &record.Definition.Sequence)
+			&record.Definition.Distance, &record.Definition.Course)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsBySwimmer: %v", err)
 		}

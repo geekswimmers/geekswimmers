@@ -4,61 +4,44 @@
 
 {{define "breadcrumb"}}
     <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
-    <li class="breadcrumb-item">{{.Jurisdiction.Title}}</li>
+    <li class="breadcrumb-item"><a href="/times/records/{{.RecordSet.ID}}/">{{.RecordSet.Title}}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Record Holder</li>
 {{end}} 
 
 {{define "content"}}
     <h3>Record Holder</h3>
-    <h2>{{.Holder.}}</h2>
-    <p class="lead">{{.Jurisdiction.Title}} - {{.Jurisdiction.SubTitle}}</p>
-    <h3 class="display-6">{{.RecordDefinition.Distance}} {{.RecordDefinition.Style | Title}}</h3>
+    <h2 class="display-6">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</h2>
+    <h4>{{.RecordSet.Title}}</h4>
 
+    <br>
     <div class="card">
         <div class="card-header">
-            <form
-                id="filter-form"
-                method="get"
-                action="/times/records/{{.Jurisdiction.ID}}">
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-0">
-                            <label for="age">Age</label>
-                            <p id="age">
-                                {{.RecordDefinition.MinAge}} -
-                                {{.RecordDefinition.MaxAge}}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mb-0">
-                            <label for="gender" class="form-label">Gender</label>
-                            <p id="gender">{{.RecordDefinition.Gender | Title}}</p>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="mb-0">
-                            <label for="course">Course</label><br />
-                            <p id="course">{{.RecordDefinition.Course | Title}}</p>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <h5 class="card-title">Record History</h5>
         </div>
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Event</th>
                     <th scope="col">Record</th>
-                    <th scope="col">Holder</th>
                     <th scope="col">When</th>
                 </tr>
             </thead>
             <tbody>
                 {{range .Records}}
                     <tr>
+                        <td>{{.Definition.Course | Title}},
+                            {{if .Definition.MinAge}}
+                                {{.Definition.MinAge}}
+                            {{end}}
+                            {{if and .Definition.MinAge .Definition.MaxAge}}
+                                -
+                            {{end}}
+                            {{if .Definition.MaxAge}}
+                                {{.Definition.MaxAge}}
+                            {{end}}
+                            yo, {{.Definition.Distance}}m {{.Definition.Style | Title}}
+                        </td>
                         <td>{{.Time | FormatMilliseconds}}</td>
-                        <td>{{.HolderName}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
                     </tr>
                 {{end}}
@@ -73,14 +56,6 @@
             Source: <a href="{{.RecordSet.Source.Link}}" target="_blank" rel="noopener noreferrer">{{.RecordSet.Source.Title}}</a>
         </div>
     </div>
-
-    <br>
-    <a class="btn btn-secondary" href="/times/records/{{.RecordSet.ID}}/?age={{.RecordDefinition.MinAge}}-{{.RecordDefinition.MaxAge}}&gender={{.RecordDefinition.Gender}}&course={{.RecordDefinition.Course}}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
-        </svg>
-        Back
-    </a>
 {{end}}
 
 {{define "scripts"}}{{end}}
