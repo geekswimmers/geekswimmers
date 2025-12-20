@@ -164,7 +164,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 	var rows pgx.Rows
 	var err error
 	if example.Age > 0 {
-		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.id, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
+		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(r.swimmer, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
        				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 					rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 				from record r
@@ -184,7 +184,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 			return nil, fmt.Errorf("findRecordsByRecordSet: %v", err)
 		}
 	} else {
-		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(s.id, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''),
+		stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(r.swimmer, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''),
        				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
 					rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, ss.sequence
 				from record r
