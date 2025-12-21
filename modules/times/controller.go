@@ -3,6 +3,7 @@ package times
 import (
 	"database/sql"
 	"fmt"
+	"geekswimmers/modules"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
@@ -33,12 +34,7 @@ type RecordsController struct {
 }
 
 func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": bc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), bc.BaseTemplateData)
 
 	// Put all the fields in the session cookie
 	fields := []string{"jurisdiction", "birthDate", "gender", "course", "event", "minute", "second", "millisecond"}
@@ -178,12 +174,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 }
 
 func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": sc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), sc.BaseTemplateData)
 
 	swimSeasonID, err := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
 	var swimSeason *SwimSeason
@@ -246,12 +237,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 }
 
 func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": sc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), sc.BaseTemplateData)
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := GetTimeStandard(id, sc.DB)
@@ -331,12 +317,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 }
 
 func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": sc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), sc.BaseTemplateData)
 
 	recordSets, err := findRecordSets(sc.DB)
 	if err != nil {
@@ -354,11 +335,7 @@ func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.
 }
 
 func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	ctx := map[string]any{
-		"BaseTemplateData": rc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), rc.BaseTemplateData)
 
 	recordSetId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	recordSet, err := findRecordSet(recordSetId, rc.DB)
@@ -441,12 +418,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 }
 
 func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": rc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), rc.BaseTemplateData)
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	recordSet := RecordSet{
@@ -566,11 +538,7 @@ func (rc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 }
 
 func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-	ctx := map[string]any{
-		"BaseTemplateData": sc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), sc.BaseTemplateData)
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := GetTimeStandard(id, sc.DB)

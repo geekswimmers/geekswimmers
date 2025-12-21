@@ -1,6 +1,7 @@
 package swimming
 
 import (
+	"geekswimmers/modules"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -15,12 +16,7 @@ type Controller struct {
 }
 
 func (mc *Controller) SwimStylesView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": mc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), mc.BaseTemplateData)
 
 	styles, err := findStyles(mc.DB)
 	if err != nil {
@@ -41,12 +37,7 @@ func (mc *Controller) SwimStylesView(res http.ResponseWriter, req *http.Request)
 }
 
 func (mc *Controller) SwimStyleView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": mc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), mc.BaseTemplateData)
 
 	stroke := req.URL.Query().Get(":stroke")
 

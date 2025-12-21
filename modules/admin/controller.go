@@ -3,6 +3,7 @@ package admin
 import (
 	"encoding/csv"
 	"fmt"
+	"geekswimmers/modules"
 	"geekswimmers/modules/content"
 	"geekswimmers/modules/times"
 	"geekswimmers/storage"
@@ -22,6 +23,8 @@ type AdminController struct {
 }
 
 func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
 	timeStandards, err := times.FindAllTimeStandards(ac.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
@@ -34,12 +37,8 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := map[string]any{
-		"TimeStandards":    timeStandards,
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-		"ServiceUpdates":   serviceUpdates,
-	}
+	ctx["TimeStandards"] = timeStandards
+	ctx["ServiceUpdates"] = serviceUpdates
 
 	html := utils.GetTemplate("base", "admin-console")
 	err = html.Execute(res, ctx)
@@ -49,11 +48,9 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 }
 
 func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
-	ctx := map[string]any{
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-		"Error":            nil,
-	}
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
+	ctx["Error"] = nil
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := times.GetTimeStandard(id, ac.DB)
@@ -69,10 +66,7 @@ func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *ht
 }
 
 func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
-	ctx := map[string]any{
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
 
 	timeStandardId, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	timeStandard, err := times.GetTimeStandard(timeStandardId, ac.DB)
@@ -167,23 +161,17 @@ func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
 }
 
 func (ac *AdminController) ServiceUpdateFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
-	ctx := map[string]any{
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-		"Error":            nil,
-		"ID":               0,
-		"Published":        time.Now(),
-	}
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+	ctx["Error"] = nil
+	ctx["ID"] = 0
+	ctx["Published"] = time.Now()
 
 	renderServiceUpdateFormView(res, ctx)
 }
 
 func (ac *AdminController) ServiceUpdateFormEditView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
-	ctx := map[string]any{
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-		"Error":            nil,
-	}
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+	ctx["Error"] = nil
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	serviceUpdate, err := content.GetServiceUpdate(id, ac.DB)
@@ -202,6 +190,8 @@ func (ac *AdminController) ServiceUpdateFormEditView(res http.ResponseWriter, re
 }
 
 func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
 	err := req.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -209,14 +199,10 @@ func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.
 
 	id, _ := strconv.ParseInt(req.FormValue("id"), 10, 64)
 
-	ctx := map[string]any{
-		"ID":               id,
-		"BaseTemplateData": ac.BaseTemplateData,
-		"SessionData":      sessionData,
-		"Error":            nil,
-		"Title":            req.PostForm.Get("title"),
-		"Content":          req.PostForm.Get("content"),
-	}
+	ctx["ID"] = id
+	ctx["Error"] = nil
+	ctx["Title"] = req.PostForm.Get("title")
+	ctx["Content"] = req.PostForm.Get("content")
 
 	published, err := time.Parse("2006-01-02", req.PostForm.Get("publicationDate"))
 	if err != nil {

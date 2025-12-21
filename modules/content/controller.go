@@ -2,6 +2,7 @@ package content
 
 import (
 	"fmt"
+	"geekswimmers/modules"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
 	"html/template"
@@ -15,12 +16,7 @@ type Controller struct {
 }
 
 func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": wc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), wc.BaseTemplateData)
 
 	highlightedArticles, err := FindHighlightedArticles(wc.DB)
 	if err != nil {
@@ -56,12 +52,7 @@ func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
 }
 
 func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
-	sessionData := storage.NewSessionData(req)
-
-	ctx := map[string]any{
-		"BaseTemplateData": wc.BaseTemplateData,
-		"SessionData":      sessionData,
-	}
+	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), wc.BaseTemplateData)
 
 	reference := req.URL.Query().Get(":reference")
 	article, err := getArticle(reference, wc.DB)
