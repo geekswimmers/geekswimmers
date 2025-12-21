@@ -107,7 +107,8 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 		renderTimeStandardFormView(res, ctx)
 		return
 	}
-	defer csvFile.Close()
+	defer utils.CloseMultipartFile(csvFile)
+
 	ctx["CsvFile"] = header.Filename
 
 	// Validate file extension
