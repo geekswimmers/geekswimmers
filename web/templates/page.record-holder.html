@@ -1,6 +1,6 @@
 {{template "base-layout" .}} 
 
-{{define "title"}}Record Holder{{end}}
+{{define "title"}}Record Holder - {{.Swimmer.FirstName}} {{.Swimmer.LastName}}{{end}}
 
 {{define "breadcrumb"}}
     <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
@@ -16,7 +16,7 @@
     <br>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Record History</h5>
+            <h5 class="card-title">Broken Records</h5>
         </div>
         <table class="table">
             <thead>
@@ -29,8 +29,7 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{.Definition.Course | Title}},
-                            {{if .Definition.MinAge}}
+                        <td>{{if .Definition.MinAge}}
                                 {{.Definition.MinAge}}
                             {{end}}
                             {{if and .Definition.MinAge .Definition.MaxAge}}
@@ -39,7 +38,8 @@
                             {{if .Definition.MaxAge}}
                                 {{.Definition.MaxAge}}
                             {{end}}
-                            yo, {{.Definition.Distance}}m {{.Definition.Style | Title}}
+                            yo, {{.Definition.Distance}}m {{.Definition.Style | Title}},
+                            {{.Definition.Course | Title}} course
                         </td>
                         <td>{{.Time | FormatMilliseconds}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
