@@ -33,6 +33,13 @@ type RecordsController struct {
 }
 
 func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	ctx := map[string]any{
+		"BaseTemplateData": bc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	// Put all the fields in the session cookie
 	fields := []string{"jurisdiction", "birthDate", "gender", "course", "event", "minute", "second", "millisecond"}
 	for _, field := range fields {
@@ -51,9 +58,15 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	millisecond, _ := strconv.Atoi(req.URL.Query().Get("millisecond"))
 	swimmerTime := utils.ToMilliseconds(minute, second, millisecond)
 
+	ctx["Course"] = course
+	ctx["FormatedTime"] = utils.FormatTime(minute, second, millisecond)
+
 	// Separate the event into distance and stroke
 	distance, _ := strconv.ParseInt(event[0], 10, 64)
-	stroke := event[1]
+	style := event[1]
+
+	ctx["Distance"] = distance
+	ctx["Style"] = style
 
 	jurisdictionId, err := strconv.ParseInt(jurisdiction, 10, 64)
 	if err != nil {
@@ -96,7 +109,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			Age:      &searchAge,
 			Gender:   gender,
 			Course:   course,
-			Style:    stroke,
+			Style:    style,
 			Distance: distance,
 		}
 
@@ -127,7 +140,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Age:      swimmer.AgeAt(time.Now()),
 		Gender:   gender,
 		Course:   course,
-		Style:    stroke,
+		Style:    style,
 		Distance: distance,
 	}
 	records, err := FindRecordsByExample(recordExample, bc.DB)
@@ -148,17 +161,8 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
 	})
 
-	sessionData := storage.NewSessionData(req)
-	ctx := &benchmaskTimeViewData{
-		Meets:            foundMeets,
-		Records:          records,
-		FormatedTime:     utils.FormatTime(minute, second, millisecond),
-		Distance:         distance,
-		Course:           course,
-		Style:            stroke,
-		BaseTemplateData: bc.BaseTemplateData,
-		SessionData:      sessionData,
-	}
+	ctx["Meets"] = foundMeets
+	ctx["Records"] = records
 
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
 		"Title":              utils.Title,
@@ -174,6 +178,13 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 }
 
 func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	ctx := map[string]any{
+		"BaseTemplateData": sc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	swimSeasonID, err := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
 	var swimSeason *SwimSeason
 	if err != nil {
@@ -195,11 +206,15 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		},
 	}
 
+	ctx["Jurisdiction"] = jurisdiction
+
 	seasons, err := findSwimSeasons(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
+
+	ctx["SwimSeasons"] = seasons
 
 	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, sc.DB)
 	if err != nil {
@@ -207,9 +222,13 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
+	ctx["Jurisdictions"] = jurisdictions
+
 	if swimSeasonID == 0 && len(seasons) > 0 {
 		swimSeason.ID = seasons[0].ID
 	}
+
+	ctx["SwimSeason"] = swimSeason
 
 	timeStandards, err := FindTimeStandards(*swimSeason, jurisdiction, sc.DB)
 	if err != nil {
@@ -217,19 +236,10 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	sessionData := storage.NewSessionData(req)
-	data := &timeStandardsViewData{
-		Jurisdiction:     jurisdiction,
-		Jurisdictions:    jurisdictions,
-		SwimSeason:       swimSeason,
-		SwimSeasons:      seasons,
-		TimeStandards:    timeStandards,
-		BaseTemplateData: sc.BaseTemplateData,
-		SessionData:      sessionData,
-	}
+	ctx["TimeStandards"] = timeStandards
 
 	html := utils.GetTemplate("base", "timestandards")
-	err = html.Execute(res, data)
+	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.TimeStandardsView: %v", err)
 	}
@@ -237,9 +247,10 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
-	ctx := &timeStandardViewData{
-		BaseTemplateData: sc.BaseTemplateData,
-		SessionData:      sessionData,
+
+	ctx := map[string]any{
+		"BaseTemplateData": sc.BaseTemplateData,
+		"SessionData":      sessionData,
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -286,24 +297,28 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx.Age = age
-	ctx.Gender = gender
-	ctx.Course = course
-	ctx.TimeStandard = timeStandard
-	ctx.StandardTimes = standardTimes
+	ctx["Age"] = age
+	ctx["Gender"] = gender
+	ctx["Course"] = course
+	ctx["TimeStandard"] = timeStandard
+	ctx["StandardTimes"] = standardTimes
 
+	var ages []int64
 	if timeStandard.MaxAgeTime != nil {
 		for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
-			ctx.Ages = append(ctx.Ages, i)
+			ages = append(ages, i)
 		}
 	}
+
+	ctx["Ages"] = ages
 
 	meets, err := FindMeetsByTimeStandard(*timeStandard, sc.DB)
 	if err != nil {
 		log.Printf("TimeStandardView.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
-	ctx.Meets = meets
+
+	ctx["Meets"] = meets
 
 	html := utils.GetTemplateWithFunctions("base", "timestandard", template.FuncMap{
 		"Title":              utils.Title,
@@ -316,18 +331,20 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 }
 
 func (sc *RecordsController) RecordsListView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	ctx := map[string]any{
+		"BaseTemplateData": sc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	recordSets, err := findRecordSets(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	sessionData := storage.NewSessionData(req)
-	ctx := &recordsListViewData{
-		RecordSets:       recordSets,
-		BaseTemplateData: sc.BaseTemplateData,
-		SessionData:      sessionData,
-	}
+	ctx["RecordSets"] = recordSets
 
 	html := utils.GetTemplate("base", "records-list")
 	err = html.Execute(res, ctx)
@@ -425,9 +442,10 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 
 func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
-	ctx := &recordHistoryViewData{
-		BaseTemplateData: rc.BaseTemplateData,
-		SessionData:      sessionData,
+
+	ctx := map[string]any{
+		"BaseTemplateData": rc.BaseTemplateData,
+		"SessionData":      sessionData,
 	}
 
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
@@ -442,18 +460,20 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 		utils.ErrorHandler(res, req, ctx, http.StatusNotFound)
 		return
 	}
-	ctx.RecordDefinition = recordDefinition
+
+	ctx["RecordDefinition"] = recordDefinition
 
 	records, err := findRecordsByDefinition(*recordDefinition, recordSet, rc.DB)
 	if err != nil {
 		log.Printf("times.RecordHistoryView (%d): %v", defId, err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
-	ctx.Records = records
+
+	ctx["Records"] = records
 
 	if len(records) > 0 {
-		ctx.RecordSet = records[0].RecordSet
-		ctx.Jurisdiction = records[0].RecordSet.Jurisdiction
+		ctx["RecordSet"] = records[0].RecordSet
+		ctx["Jurisdiction"] = records[0].RecordSet.Jurisdiction
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{

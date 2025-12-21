@@ -17,6 +17,11 @@ type Controller struct {
 func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 
+	ctx := map[string]any{
+		"BaseTemplateData": wc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	highlightedArticles, err := FindHighlightedArticles(wc.DB)
 	if err != nil {
 		log.Printf("content.Blog.%v", err)
@@ -36,12 +41,8 @@ func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx := &blogViewData{
-		Articles:         articles,
-		BaseTemplateData: wc.BaseTemplateData,
-		Highlighted:      highlightedArticle,
-		SessionData:      sessionData,
-	}
+	ctx["Articles"] = articles
+	ctx["Highlighted"] = highlightedArticle
 
 	html := utils.GetTemplateWithFunctions("base", "blog", template.FuncMap{
 		"Title":    utils.Title,
@@ -57,9 +58,9 @@ func (wc *Controller) BlogView(res http.ResponseWriter, req *http.Request) {
 func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
 	sessionData := storage.NewSessionData(req)
 
-	ctx := &articleViewData{
-		BaseTemplateData: wc.BaseTemplateData,
-		SessionData:      sessionData,
+	ctx := map[string]any{
+		"BaseTemplateData": wc.BaseTemplateData,
+		"SessionData":      sessionData,
 	}
 
 	reference := req.URL.Query().Get(":reference")
@@ -77,8 +78,8 @@ func (wc *Controller) ArticleView(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx.Article = article
-	ctx.OtherArticles = otherArticles
+	ctx["Article"] = article
+	ctx["OtherArticles"] = otherArticles
 
 	html := utils.GetTemplateWithFunctions("base", "article", template.FuncMap{"markdown": utils.MarkdownToHTML})
 	err = html.Execute(res, ctx)

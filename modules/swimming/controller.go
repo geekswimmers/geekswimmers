@@ -15,17 +15,19 @@ type Controller struct {
 }
 
 func (mc *Controller) SwimStylesView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	ctx := map[string]any{
+		"BaseTemplateData": mc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	styles, err := findStyles(mc.DB)
 	if err != nil {
 		log.Printf("meets.%v", err)
 	}
 
-	sessionData := storage.NewSessionData(req)
-	ctx := &swimStylesViewData{
-		Styles:           styles,
-		BaseTemplateData: mc.BaseTemplateData,
-		SessionData:      sessionData,
-	}
+	ctx["Styles"] = styles
 
 	html := utils.GetTemplateWithFunctions("base", "styles", template.FuncMap{
 		"Title":     utils.Title,
@@ -39,6 +41,13 @@ func (mc *Controller) SwimStylesView(res http.ResponseWriter, req *http.Request)
 }
 
 func (mc *Controller) SwimStyleView(res http.ResponseWriter, req *http.Request) {
+	sessionData := storage.NewSessionData(req)
+
+	ctx := map[string]any{
+		"BaseTemplateData": mc.BaseTemplateData,
+		"SessionData":      sessionData,
+	}
+
 	stroke := req.URL.Query().Get(":stroke")
 
 	style, err := findStyle(strings.ToUpper(stroke), mc.DB)
@@ -61,15 +70,10 @@ func (mc *Controller) SwimStyleView(res http.ResponseWriter, req *http.Request) 
 		log.Printf("meets.%v", err)
 	}
 
-	sessionData := storage.NewSessionData(req)
-	ctx := &swimStyleViewData{
-		Style:            style,
-		PreviousStyle:    previousStyle,
-		NextStyle:        nextStyle,
-		Instructions:     instructions,
-		BaseTemplateData: mc.BaseTemplateData,
-		SessionData:      sessionData,
-	}
+	ctx["Style"] = style
+	ctx["PreviousStyle"] = previousStyle
+	ctx["NextStyle"] = nextStyle
+	ctx["Instructions"] = instructions
 
 	html := utils.GetTemplateWithFunctions("base", "style", template.FuncMap{
 		"Title":     utils.Title,
