@@ -34,7 +34,7 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td><a href="/times/records/{{$.RecordSet.ID}}/?age={{if .Definition.MinAge}}{{.Definition.MinAge}}{{end}}{{if and .Definition.MinAge .Definition.MaxAge}}-{{end}}{{if .Definition.MaxAge}}{{.Definition.MaxAge}}{{end}}&gender={{.Definition.Gender}}&course={{.Definition.Course}}">
+                        <td><a href="/times/records/{{$.RecordSet.ID}}/?age={{if .Definition.MinAge}}{{.Definition.MinAge}}{{end}}-{{if .Definition.MaxAge}}{{.Definition.MaxAge}}{{end}}&gender={{.Definition.Gender}}&course={{.Definition.Course}}">
                             {{if .Definition.MinAge}}
                                 {{.Definition.MinAge}}
                             {{end}}

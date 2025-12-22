@@ -33,7 +33,7 @@
                             <label for="age">Age</label>
                             <select id="age" name="age" class="form-select" onchange="document.getElementById('filter-form').submit();" required>
                                 {{range .AgeRanges}}
-                                    <option value="{{.AgeRange}}" {{if eq $.AgeRange .AgeRange}}selected{{end}}>{{.AgeRange}}</option>
+                                    <option value="{{.AgeRangeValue}}" {{if eq $.AgeRange .AgeRangeValue}}selected{{end}}>{{.AgeRange}}</option>
                                 {{end}}
                             </select>
                         </div>

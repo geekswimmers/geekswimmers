@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/utils"
+	"strings"
 	"time"
 )
 
@@ -97,6 +98,13 @@ func (definition *RecordDefinition) AgeRange() string {
 	}
 
 	return "All"
+}
+
+func (definition *RecordDefinition) AgeRangeValue() string {
+	ageRange := definition.AgeRange()
+	ageRange = strings.ReplaceAll(ageRange, "Over", "")
+	ageRange = strings.ReplaceAll(ageRange, "Under", "")
+	return ageRange
 }
 
 type RecordSet struct {

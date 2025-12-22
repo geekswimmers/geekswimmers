@@ -353,9 +353,13 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 
 	ageParam := req.URL.Query().Get("age")
 	age := int64(0)
+
+	// Deal with age groups
 	if ageParam != "All" {
+		// Checks whether the age is a single number
 		age, err = strconv.ParseInt(ageParam, 10, 64)
 		if err != nil && len(ageParam) > 0 {
+			// In case the age is not a single number
 			minMaxAge := strings.Split(ageParam, "-")
 			minAge, err := strconv.ParseInt(minMaxAge[0], 10, 64)
 			if err == nil {
@@ -367,6 +371,7 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 				}
 			}
 		} else if len(ageParam) == 0 {
+			// In case the age is a single number
 			if ageRanges[0].MinAge != nil {
 				age = *ageRanges[0].MinAge
 			} else if ageRanges[0].MaxAge != nil {
