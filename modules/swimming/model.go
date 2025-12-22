@@ -58,9 +58,13 @@ type Jurisdiction struct {
 	City     sql.NullString
 	Meet     sql.NullString
 	Team     sql.NullString
+
+	// Volatile
+	Title    string
+	SubTitle string
 }
 
-func (jurisdiction *Jurisdiction) Title() string {
+func (jurisdiction *Jurisdiction) GetTitle() string {
 	if jurisdiction.Meet.Valid {
 		return jurisdiction.Meet.String
 	} else if jurisdiction.Team.Valid {
@@ -80,7 +84,7 @@ func (jurisdiction *Jurisdiction) Title() string {
 	return "None"
 }
 
-func (jurisdiction *Jurisdiction) SubTitle() string {
+func (jurisdiction *Jurisdiction) GetSubTitle() string {
 	if jurisdiction.Meet.Valid {
 		return fmt.Sprintf("%v, %v, %v, %v - %v",
 			jurisdiction.Team.String,

@@ -16,7 +16,12 @@
     <br>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Broken Records</h5>
+            <form id="filter-form" method="get" action="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}/">
+                <div class="form-check">
+                    <input type="checkbox" id="active" name="active" class="form-check-input" value="true" onchange="document.getElementById('filter-form').submit();" {{if eq .Active "true"}}checked{{end}}>
+                    <label class="form-check-label" for="active">Show only records that haven't been beaten yet</label>
+                </div>
+            </form>
         </div>
         <table class="table">
             <thead>
@@ -29,7 +34,8 @@
             <tbody>
                 {{range .Records}}
                     <tr>
-                        <td>{{if .Definition.MinAge}}
+                        <td><a href="/times/records/{{$.RecordSet.ID}}/?age={{if .Definition.MinAge}}{{.Definition.MinAge}}{{end}}{{if and .Definition.MinAge .Definition.MaxAge}}-{{end}}{{if .Definition.MaxAge}}{{.Definition.MaxAge}}{{end}}&gender={{.Definition.Gender}}&course={{.Definition.Course}}">
+                            {{if .Definition.MinAge}}
                                 {{.Definition.MinAge}}
                             {{end}}
                             {{if and .Definition.MinAge .Definition.MaxAge}}
@@ -39,7 +45,7 @@
                                 {{.Definition.MaxAge}}
                             {{end}}
                             yo, {{.Definition.Distance}}m {{.Definition.Style | Title}},
-                            {{.Definition.Course | Title}} course
+                            {{.Definition.Course | Title}} course</a>
                         </td>
                         <td>{{.Time | FormatMilliseconds}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>

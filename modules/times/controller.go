@@ -445,7 +445,11 @@ func (rc *RecordsController) RecordHistoryView(res http.ResponseWriter, req *htt
 
 	if len(records) > 0 {
 		ctx["RecordSet"] = records[0].RecordSet
-		ctx["Jurisdiction"] = records[0].RecordSet.Jurisdiction
+
+		jurisdiction := records[0].RecordSet.Jurisdiction
+		jurisdiction.Title = jurisdiction.GetTitle()
+		jurisdiction.SubTitle = jurisdiction.GetSubTitle()
+		ctx["Jurisdiction"] = jurisdiction
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "record-history", template.FuncMap{
@@ -483,7 +487,11 @@ func (rc *RecordsController) RecordSwimmerView(res http.ResponseWriter, req *htt
 	}
 	ctx["Swimmer"] = swimmer
 
-	records, err := findRecordsBySwimmer(recordSet, swimmer, rc.DB)
+	active := req.URL.Query().Get("active")
+	ctx["Active"] = active
+	log.Printf("Active: %v", active)
+
+	records, err := findRecordsBySwimmer(recordSet, swimmer, active == "true", rc.DB)
 	if err != nil {
 		log.Printf("times.RecordSwimmerView (%d): %v", swimmerId, err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

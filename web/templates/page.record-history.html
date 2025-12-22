@@ -4,9 +4,7 @@
 
 {{define "breadcrumb"}}
     <li class="breadcrumb-item"><a href="/times/records">Records</a></li>
-    <li class="breadcrumb-item active" aria-current="page">
-        {{.Jurisdiction.Title}}
-    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{.Jurisdiction.Title}}</li>
 {{end}} 
 
 {{define "content"}}
@@ -60,7 +58,13 @@
                 {{range .Records}}
                     <tr>
                         <td>{{.Time | FormatMilliseconds}}</td>
-                        <td>{{.HolderName}}</td>
+                        <td>
+                            {{if .Swimmer.ID}}
+                                <a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.HolderName}}</a>
+                            {{else}}
+                                {{.HolderName}}
+                            {{end}}
+                        </td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>
                     </tr>
                 {{end}}
