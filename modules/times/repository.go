@@ -100,6 +100,8 @@ func findRecordsByDefinition(definition RecordDefinition, recordSet RecordSet, d
 			return nil, fmt.Errorf("findRecordsByDefinition: %v", err)
 		}
 
+		record.RecordSet.Jurisdiction.Title = record.RecordSet.Jurisdiction.GetTitle()
+		record.RecordSet.Jurisdiction.SubTitle = record.RecordSet.Jurisdiction.GetSubTitle()
 		records = append(records, record)
 	}
 
@@ -154,6 +156,8 @@ func FindRecordsByExample(example RecordDefinition, db storage.Database) ([]*Rec
 			return nil, fmt.Errorf("findRecordsByExample: %v", err)
 		}
 
+		record.RecordSet.Jurisdiction.Title = record.RecordSet.Jurisdiction.GetTitle()
+		record.RecordSet.Jurisdiction.SubTitle = record.RecordSet.Jurisdiction.GetSubTitle()
 		records = append(records, record)
 	}
 
@@ -309,7 +313,6 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 	               j.world, j.country, j.province, j.region, j.city, j.team, j.meet
 			from record_set rs
 			    left join jurisdiction j on j.id = rs.jurisdiction
-			
 			order by j.world, j.country, j.province, j.region, j.city, j.team, j.meet`
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
@@ -327,6 +330,8 @@ func findRecordSets(db storage.Database) ([]*RecordSet, error) {
 			return nil, fmt.Errorf("findRecordSets: %v", err)
 		}
 
+		recordSet.Jurisdiction.Title = recordSet.Jurisdiction.GetTitle()
+		recordSet.Jurisdiction.SubTitle = recordSet.Jurisdiction.GetSubTitle()
 		recordSets = append(recordSets, recordSet)
 	}
 
@@ -349,6 +354,8 @@ func findRecordSet(id int64, db storage.Database) (*RecordSet, error) {
 		return nil, fmt.Errorf("findRecordSet: %v", err)
 	}
 
+	recordSet.Jurisdiction.Title = recordSet.Jurisdiction.GetTitle()
+	recordSet.Jurisdiction.SubTitle = recordSet.Jurisdiction.GetSubTitle()
 	return recordSet, nil
 }
 
@@ -458,6 +465,9 @@ func FindAllTimeStandards(db storage.Database) ([]*TimeStandard, error) {
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findAllTimeStandards: %v", err)
 		}
+
+		timeStandard.Jurisdiction.Title = timeStandard.Jurisdiction.GetTitle()
+		timeStandard.Jurisdiction.SubTitle = timeStandard.Jurisdiction.GetSubTitle()
 		timeStandards = append(timeStandards, timeStandard)
 	}
 
