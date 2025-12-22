@@ -148,6 +148,8 @@ func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdictio
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findJurisdictionsByLevel: %v", err)
 		}
+		jurisdiction.Title = jurisdiction.GetTitle()
+		jurisdiction.SubTitle = jurisdiction.GetSubTitle()
 		jurisdictions = append(jurisdictions, jurisdiction)
 	}
 
