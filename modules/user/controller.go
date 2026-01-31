@@ -1086,7 +1086,7 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 	minimum, maximum := times.FindMinAndMaxStandardAges(timeStandard, uc.DB)
 
 	swimmerAge := swimmer.Swimmer.AgeAt(time.Now())
-	min := swimmerAge
+	previousAge := swimmerAge
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
 	if err != nil || age < swimmerAge {
 		age = swimmerAge
@@ -1096,13 +1096,13 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 		meetAge := swimmer.Swimmer.AgeAt(meet.AgeDate)
 		if age < meetAge {
 			age = meetAge
-			min = meetAge
+			previousAge = meetAge
 		}
 	}
 
 	var ages []int64
 	if !timeStandard.Open {
-		for i := min; i <= maximum; i++ {
+		for i := previousAge; i <= maximum; i++ {
 			ages = append(ages, i)
 		}
 	} else {

@@ -677,12 +677,13 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 	stm := `select st.id, sd.course, sd.style, sd.distance, st.standard 
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
-			where sd.gender = $1
-				and sd.course = $2
-				and (sd.age = $3 or sd.age is null)
-				and st.time_standard = $4`
+			where st.time_standard = $1
+			    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
+			    and sd.gender = $2
+				and sd.course = $3
+				and (sd.age = $4 or sd.age is null)`
 
-	rows, err := db.Query(context.Background(), stm, swimmer.Gender.String, course, age, timeStandard.ID)
+	rows, err := db.Query(context.Background(), stm, timeStandard.ID, swimmer.Gender.String, course, age)
 	if err != nil && err.Error() != storage.ErrNoRows {
 		return nil, fmt.Errorf("FindStandardTimesBySwimmer: %v", err)
 	}

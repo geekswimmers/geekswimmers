@@ -8,6 +8,6 @@ import (
 )
 
 func main() {
-	randomKey := securecookie.GenerateRandomKey(32)
+	randomKey := securecookie.GenerateRandomKey(64)
 	log.Printf("%v", base32.StdEncoding.EncodeToString(randomKey))
 }
