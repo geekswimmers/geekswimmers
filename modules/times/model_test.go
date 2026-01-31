@@ -27,8 +27,8 @@ func TestAgeAt(t *testing.T) {
 
 	// Check age today
 	age = swimmer.AgeAt(time.Now())
-	if age != 35 {
-		t.Errorf("Expected 25, got %d", age)
+	if age != 36 {
+		t.Errorf("Expected 36, got %d", age)
 	}
 
 	// Test edge case - birthday later in year
