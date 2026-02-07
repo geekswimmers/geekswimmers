@@ -43,9 +43,9 @@
                             {{end}}
                             {{if .Definition.MaxAge}}
                                 {{.Definition.MaxAge}}
-                            {{end}}
-                            yo, {{.Definition.Distance}}m {{.Definition.Style | Title}},
-                            {{.Definition.Course | Title}} course</a>
+                            {{end}},
+                            {{.Definition.Distance}}m {{.Definition.Style | Title}},
+                            {{if eq .Definition.Course "SHORT"}}Short (25m){{else}}Long (50m){{end}}</a>
                         </td>
                         <td>{{.Time | FormatMilliseconds}}</td>
                         <td>{{if .Month}}{{.MonthName}}, {{end}}{{if .Year}}{{.Year}}{{end}}</td>

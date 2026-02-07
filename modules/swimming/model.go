@@ -131,6 +131,9 @@ type Swimmer struct {
 	Team        *Team
 	SwimRanking sql.NullString
 	SwimCloud   sql.NullString
+
+	// Transient
+	NumRecords int64
 }
 
 func (swimmer *Swimmer) AgeAt(date time.Time) int64 {

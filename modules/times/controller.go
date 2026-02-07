@@ -404,12 +404,23 @@ func (rc *RecordsController) RecordsView(res http.ResponseWriter, req *http.Requ
 	}
 	groupedRecords := groupRecordsByDefinition(records)
 
+	recentRecords, err := findRecentRecords(*recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+	topRecordHolders, err := findTopRecordHolders(*recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
 	ctx["Age"] = age
 	ctx["Gender"] = gender
 	ctx["Course"] = course
 	ctx["RecordSet"] = recordSet
 	ctx["RecordDefinition"] = definition
 	ctx["Records"] = groupedRecords
+	ctx["RecentRecords"] = recentRecords
+	ctx["TopRecordHolders"] = topRecordHolders
 
 	html := utils.GetTemplateWithFunctions("base", "records", template.FuncMap{
 		"Title":              utils.Title,
@@ -494,7 +505,6 @@ func (rc *RecordsController) RecordSwimmerView(res http.ResponseWriter, req *htt
 
 	active := req.URL.Query().Get("active")
 	ctx["Active"] = active
-	log.Printf("Active: %v", active)
 
 	records, err := findRecordsBySwimmer(recordSet, swimmer, active == "true", rc.DB)
 	if err != nil {

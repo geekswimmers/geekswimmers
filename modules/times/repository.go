@@ -232,6 +232,76 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 	return records, nil
 }
 
+func findRecentRecords(recordSet RecordSet, db storage.Database) ([]*Record, error) {
+	stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(r.swimmer, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
+				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
+				rd.id, coalesce(rd.min_age, 0), coalesce(rd.max_age, 0), rd.style, rd.distance, rd.gender, rd.course
+			from record r
+				join record_definition rd on rd.id = r.definition
+				join record_set rs on rs.id = r.record_set
+				join swim_style ss on ss.stroke = rd.style
+				left join swimmer s on s.id = r.swimmer
+			where rs.id = $1
+				and r.year is not null 
+				and r.month is not null
+			order by r.year desc, r.month desc 
+			limit 10`
+	rows, err := db.Query(context.Background(), stm, recordSet.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findRecentRecords: %v", err)
+	}
+
+	defer rows.Close()
+
+	var records []*Record
+	for rows.Next() {
+		record := &Record{
+			Definition: RecordDefinition{},
+			RecordSet:  recordSet,
+			Swimmer:    &swimming.Swimmer{},
+		}
+		err = rows.Scan(&record.ID, &record.Time, &record.Year, &record.Month, &record.Holder,
+			&record.Swimmer.ID, &record.Swimmer.FirstName, &record.Swimmer.LastName,
+			&record.RecordSet.Source.Title, &record.RecordSet.Source.Link,
+			&record.Definition.ID, &record.Definition.MinAge, &record.Definition.MaxAge,
+			&record.Definition.Style, &record.Definition.Distance, &record.Definition.Gender, &record.Definition.Course)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecentRecords: %v", err)
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
+}
+
+func findTopRecordHolders(recordSet RecordSet, db storage.Database) ([]*swimming.Swimmer, error) {
+	stm := `select s.id, s.first_name, s.last_name, count(r.id) num_records
+			from record r
+				join swimmer s on s.id = r.swimmer
+			where r.record_set = $1
+				and r.swimmer is not null
+			group by s.id, s.first_name, s.last_name 
+			order by num_records desc
+			limit 10`
+	rows, err := db.Query(context.Background(), stm, recordSet.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findTopRecordHolders: %v", err)
+	}
+	defer rows.Close()
+
+	var swimmers []*swimming.Swimmer
+	for rows.Next() {
+		swimmer := &swimming.Swimmer{}
+		err = rows.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.NumRecords)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findTopRecordHolders: %v", err)
+		}
+		swimmers = append(swimmers, swimmer)
+	}
+
+	return swimmers, nil
+}
+
 func findRecordsPoster(recordSet RecordSet, db storage.Database) ([]*RecordPoster, error) {
 	stm := `select distinct r.placeholder, r.field, r.value, rm.coord_x , rm.coord_y 
 			from report_mapping rm

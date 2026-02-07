@@ -24,6 +24,63 @@
         </a></p>
     {{end}}
 
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <h5 class="card-header">Recent Records</h5>
+                <table class="table table-striped">
+                    {{range .RecentRecords}}
+                        <tr>
+                            {{if gt .Swimmer.ID 0}}
+                                <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</a></td>
+                            {{else}}
+                                <td>{{.Holder}}</td>
+                            {{end}}
+                            <td>
+                                {{if .Definition.MinAge}}
+                                    {{.Definition.MinAge}}
+                                {{end}}
+                                {{if and .Definition.MinAge .Definition.MaxAge}}
+                                    -
+                                {{end}}
+                                {{if .Definition.MaxAge}}
+                                    {{.Definition.MaxAge}}
+                                {{end}},
+                                {{.Definition.Distance}}
+                                {{.Definition.Style | Title}},
+                                {{if eq .Definition.Course "SHORT"}}Short (25m){{else}}Long (50m){{end}}
+                            </td>
+                            <td>{{.Time | FormatMilliseconds}}</td>
+                            <td>{{.MonthName}}, {{.Year}}</td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="4">No recent records.</td>
+                        </tr>
+                    {{end}}
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <h5 class="card-header">Top Record Holders</h5>
+                <table class="table table-striped">
+                    {{range .TopRecordHolders}}
+                        <tr>
+                            <td><a href="/times/records/{{$.RecordSet.ID}}/swimmers/{{.ID}}">{{.FirstName}} {{.LastName}}</a></td>
+                            <td>{{.NumRecords}}</td>
+                        </tr>
+                    {{else}}
+                        <tr>
+                            <td colspan="2">No top record holder.</td>
+                        </tr>
+                    {{end}}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br>
     <div class="card">
         <div class="card-header">
             <form id="filter-form" method="get" action="/times/records/{{.RecordSet.ID}}/">
