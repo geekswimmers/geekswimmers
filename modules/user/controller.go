@@ -960,7 +960,7 @@ func (uc *Controller) SwimmerBestTimeView(res http.ResponseWriter, req *http.Req
 		}
 
 		standardDefinition := times.StandardDefinition{
-			Age:      &searchAge,
+			Age:      sql.NullInt64{Int64: searchAge, Valid: true},
 			Gender:   swimmer.Swimmer.Gender.String,
 			Course:   bestTime.Course,
 			Style:    bestTime.Event.Style.Stroke,

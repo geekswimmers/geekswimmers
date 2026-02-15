@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"database/sql"
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/modules/times"
@@ -63,7 +64,7 @@ func processStandardRecords(records [][]string, timeStandard *times.TimeStandard
 		}
 
 		definition := times.StandardDefinition{
-			Age:      &age,
+			Age:      sql.NullInt64{Int64: age, Valid: true},
 			Gender:   gender,
 			Course:   course,
 			Style:    style,

@@ -627,9 +627,9 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
-		stm := `select st.definition, re.style, re.distance, st.standard
+		stm := `select st.definition, re.style, re.distance, re.age, st.standard
 				from standard_time st
-  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, max(ist.update_date) as update_date
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(ist.update_date) as update_date
 							from standard_time ist
 								join standard_definition sd on ist.definition = sd.id
 		 						join swim_style ss on ss.stroke = sd.style
@@ -637,12 +637,12 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 								and sd.gender = $3
 								and sd.course = $4
 								and ist.time_standard = $5
-							group by ss.sequence, sd.id, sd.style, sd.distance) re on st.definition = re.def
+							group by ss.sequence, sd.id, sd.style, sd.distance, sd.age) re on st.definition = re.def
 				where st.time_standard = $5
 					and st.update_date = re.update_date 
 				order by re.sequence, st.standard asc`
 
-		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
+		minAge, maxAge := getStandardAgeInterval(example.Definition.Age.Int64, example.TimeStandard)
 
 		rows, err = db.Query(context.Background(), stm, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.TimeStandard.ID)
 		if err != nil && err.Error() != storage.ErrNoRows {
@@ -651,16 +651,16 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		defer rows.Close()
 	} else {
 		// Open
-		stm := `select st.definition, re.style, re.distance, st.standard
+		stm := `select st.definition, re.style, re.distance, re.age, st.standard
 				from standard_time st
-  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, max(ist.update_date) as update_date
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(ist.update_date) as update_date
 							from standard_time ist
 								join standard_definition sd on ist.definition = sd.id
 		 						join swim_style ss on ss.stroke = sd.style
 							where sd.gender = $1
 								and sd.course = $2
 								and ist.time_standard = $3
-							group by ss.sequence, sd.id, sd.style, sd.distance) re on st.definition = re.def
+							group by ss.sequence, sd.id, sd.style, sd.distance, sd.age) re on st.definition = re.def
 				where st.time_standard = $3
 					and st.update_date = re.update_date 
 				order by re.sequence, st.standard asc`
@@ -678,7 +678,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		time := &StandardTime{
 			TimeStandard: example.TimeStandard,
 		}
-		err = rows.Scan(&time.Definition.ID, &time.Definition.Style, &time.Definition.Distance, &time.Standard)
+		err = rows.Scan(&time.Definition.ID, &time.Definition.Style, &time.Definition.Distance, &time.Definition.Age, &time.Standard)
 		if err != nil {
 			return nil, fmt.Errorf("findStandardTimes: %v", err)
 		}
@@ -712,7 +712,7 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 					and sd.style = $6
 					and sd.distance = $7`
 
-		minAge, maxAge := getStandardAgeInterval(*example.Definition.Age, example.TimeStandard)
+		minAge, maxAge := getStandardAgeInterval(example.Definition.Age.Int64, example.TimeStandard)
 
 		row = db.QueryRow(context.Background(), stm,
 			example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)

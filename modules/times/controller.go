@@ -102,7 +102,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 
 		standardDefinition := StandardDefinition{
-			Age:      &searchAge,
+			Age:      sql.NullInt64{Int64: searchAge, Valid: true},
 			Gender:   gender,
 			Course:   course,
 			Style:    style,
@@ -268,7 +268,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 
 	standardDefinition := StandardDefinition{
-		Age:    &age,
+		Age:    sql.NullInt64{Int64: age, Valid: true},
 		Gender: gender,
 		Course: course,
 	}

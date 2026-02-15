@@ -1,6 +1,7 @@
 package times
 
 import (
+	"database/sql"
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/utils"
@@ -33,7 +34,7 @@ type TimeStandard struct {
 
 type StandardDefinition struct {
 	ID       int64
-	Age      *int64
+	Age      sql.NullInt64
 	Gender   string
 	Course   string
 	Style    string
