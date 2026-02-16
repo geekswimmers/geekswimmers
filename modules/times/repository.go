@@ -802,22 +802,7 @@ func findStandardsEvent(timeStandard *TimeStandard, definition *StandardDefiniti
 	return times, nil
 }
 
-func FindMinAndMaxStandardsAges(db storage.Database) (int64, int64, error) {
-	stm := `select min(sd.age) as min_age, max(sd.age) as max_age 
-			from standard_time st
-				join standard_definition sd on st.definition = sd.id`
-
-	row := db.QueryRow(context.Background(), stm)
-
-	var minAge, maxAge int64
-	if err := row.Scan(&minAge, &maxAge); err != nil {
-		return 0, 0, fmt.Errorf("FindMinAndMaxStandardsAges: %v", err)
-	}
-
-	return minAge, maxAge, nil
-}
-
-func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64) {
+func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) (int64, int64, error) {
 	stm := `select min(sd.age) as min_age, max(sd.age) as max_age 
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
@@ -830,10 +815,10 @@ func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) 
 		if !strings.Contains(err.Error(), "cannot scan NULL") {
 			log.Printf("FindMinAndMaxStandardAges: %v", err)
 		}
-		return 0, 0
+		return 0, 0, err
 	}
 
-	return minAge, maxAge
+	return minAge, maxAge, nil
 }
 
 func FindMeetsWithTimeStandardByJurisdiction(jurisdictionId int64, db storage.Database) ([]*Meet, error) {

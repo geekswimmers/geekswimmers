@@ -289,12 +289,16 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	ctx["TimeStandard"] = timeStandard
 	ctx["StandardTimes"] = standardTimes
 
+	minAge, maxAge, err := FindMinAndMaxStandardAges(timeStandard, sc.DB)
 	var ages []int64
-	if timeStandard.MaxAgeTime != nil {
-		for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
-			ages = append(ages, i)
-		}
+	for i := minAge; i <= maxAge; i++ {
+		ages = append(ages, i)
 	}
+	//if timeStandard.MaxAgeTime != nil {
+	//	for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
+	//		ages = append(ages, i)
+	//	}
+	//}
 
 	ctx["Ages"] = ages
 
@@ -584,7 +588,7 @@ func (sc *StandardsController) StandardsEventView(res http.ResponseWriter, req *
 	ctx["Style"] = standardDefinition.Style
 	ctx["Event"] = fmt.Sprintf("%d-%s", standardDefinition.Distance, standardDefinition.Style)
 
-	minimum, maximum, err := FindMinAndMaxStandardsAges(sc.DB)
+	minimum, maximum, err := FindMinAndMaxStandardAges(timeStandard, sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}

@@ -1083,7 +1083,10 @@ func (uc *Controller) ProfileSwimmersBestTimeBenchmarkView(res http.ResponseWrit
 
 	// Age is the swimmer's age by default, but it can be changed by the user
 	// to see the benchmark for a different age.
-	minimum, maximum := times.FindMinAndMaxStandardAges(timeStandard, uc.DB)
+	minimum, maximum, err := times.FindMinAndMaxStandardAges(timeStandard, uc.DB)
+	if err != nil {
+		log.Printf("ProfileSwimmersBestTimeBenchmarkView: %v", err)
+	}
 
 	swimmerAge := swimmer.Swimmer.AgeAt(time.Now())
 	previousAge := swimmerAge
