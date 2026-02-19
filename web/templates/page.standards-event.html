@@ -20,7 +20,7 @@
     <h2>
         {{.Distance}}m {{.Style | Title}} - {{.Course | Title}} Course - {{.Gender | Title}}
         {{if .Age}}
-        - {{.Age}} Years Old
+        - {{.Age.Int64}} Years Old
         {{end}}
     </h2>
 

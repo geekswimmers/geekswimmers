@@ -294,11 +294,6 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	for i := minAge; i <= maxAge; i++ {
 		ages = append(ages, i)
 	}
-	//if timeStandard.MaxAgeTime != nil {
-	//	for i := *timeStandard.MinAgeTime; i <= *timeStandard.MaxAgeTime; i++ {
-	//		ages = append(ages, i)
-	//	}
-	//}
 
 	ctx["Ages"] = ages
 
