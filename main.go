@@ -48,12 +48,12 @@ func run() error {
 }
 
 func loadConfiguration() (config.Config, error) {
-	config, err := config.InitConfiguration(config.DefaultConfigFile)
+	conf, err := config.InitConfiguration(config.DefaultConfigFile)
 	if err != nil {
 		return nil, fmt.Errorf("loadConfiguration.%v", err)
 	}
 
-	return config, nil
+	return conf, nil
 }
 
 func defineHTTPPort(c config.Config) string {
@@ -73,13 +73,13 @@ func runHTTPServer(server *server.Server, port string) {
 
 	log.Printf("Serving GeekSwimmers on port: %v", port)
 
-	srvr := &http.Server{
+	instance := &http.Server{
 		Addr:              ":" + port,
 		ReadHeaderTimeout: 10 * time.Second,
 		Handler:           c.Handler(server.Router),
 	}
 
-	if err := srvr.ListenAndServe(); err != nil {
+	if err := instance.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }
