@@ -80,6 +80,10 @@
                         <td><a href="/times/standards/{{.TimeStandard.ID}}/event/{{.Definition.ID}}/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a></td>
                         <td>{{.Standard | FormatMilliseconds}}</td>
                     </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2">No times associated with this standard. Try <a href="/times/standards/{{.TimeStandard.ID}}/?gender={{.Gender}}&course=LONG">Long Course</a>.</td>
+                    </tr>
                 {{end}}
             </tbody>
         </table>

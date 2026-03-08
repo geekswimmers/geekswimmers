@@ -71,7 +71,7 @@ func runHTTPServer(server *server.Server, port string) {
 		Debug:            false,
 	})
 
-	log.Printf("Serving GeekSwimmers on port: %v", port)
+	log.Printf("Serving GeekSwimmers on port: http://localhost:%v/", port)
 
 	instance := &http.Server{
 		Addr:              ":" + port,

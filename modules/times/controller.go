@@ -291,7 +291,7 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 
 	minAge, maxAge, err := FindMinAndMaxStandardAges(timeStandard, sc.DB)
 	var ages []int64
-	for i := minAge; i <= maxAge; i++ {
+	for i := minAge; i <= maxAge && maxAge > 0; i++ {
 		ages = append(ages, i)
 	}
 
