@@ -625,7 +625,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 	var rows pgx.Rows
 	var err error
 
-	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
+	if !example.TimeStandard.Open && example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
 		stm := `select st.definition, re.style, re.distance, re.age, st.standard
 				from standard_time st
