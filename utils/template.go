@@ -21,7 +21,9 @@ type BaseTemplateData struct {
 }
 
 func GetTemplate(layout, page string) *template.Template {
-	html, err := template.New(fmt.Sprintf("page.%s.html", page)).ParseFiles(applyLayout(layout, page)...)
+	html, err := template.
+		New(fmt.Sprintf("page.%s.html", page)).
+		ParseFiles(applyLayout(layout, page)...)
 	if err != nil {
 		log.Fatalf("utils.GetTemplate(%v, %v): %v", layout, page, err)
 	}
@@ -39,6 +41,30 @@ func GetTemplateWithFunctions(layout, page string, funcMap template.FuncMap) *te
 	}
 
 	return html
+}
+
+func GetSvgReportTemplate(name string) *template.Template {
+	svg, err := template.
+		New(fmt.Sprintf("%s.svg", name)).
+		Funcs(template.FuncMap{"FormatMilliseconds": FormatMilliseconds}).
+		ParseFiles(fmt.Sprintf("web/templates/reports/%s.svg", name))
+	if err != nil {
+		log.Print(err)
+	}
+
+	return svg
+}
+
+func GetHtmlReportTemplate(name string) *template.Template {
+	svg, err := template.
+		New(fmt.Sprintf("%s.html", name)).
+		Funcs(template.FuncMap{"FormatMilliseconds": FormatMilliseconds}).
+		ParseFiles(fmt.Sprintf("web/templates/reports/%s.html", name))
+	if err != nil {
+		log.Print(err)
+	}
+
+	return svg
 }
 
 func applyLayout(layout, page string) []string {

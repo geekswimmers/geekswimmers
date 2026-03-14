@@ -7,7 +7,6 @@ import (
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"geekswimmers/utils"
-	"geekswimmers/utils/reporting"
 	"log"
 	"net/http"
 	"slices"
@@ -553,12 +552,31 @@ func (rc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 		"LastUpdate": time.Now(),
 	}
 
-	report := reporting.GetReportTemplate("records-team-poster")
+	report := utils.GetSvgReportTemplate("records-team-poster")
 	res.Header().Set("Content-Type", "image/svg+xml")
 
 	err = report.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
+	}
+}
+
+func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.Request) {
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	recordSet := RecordSet{
+		ID: id,
+	}
+
+	ctx := map[string]any{
+		"RecordSet": recordSet,
+	}
+
+	report := utils.GetHtmlReportTemplate("records-team-page")
+	res.Header().Set("Content-Type", "text/html")
+
+	err := report.Execute(res, ctx)
+	if err != nil {
+		log.Printf("times.RecordPageView: %v", err)
 	}
 }
 
