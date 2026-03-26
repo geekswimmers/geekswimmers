@@ -58,7 +58,10 @@ func GetSvgReportTemplate(name string) *template.Template {
 func GetHtmlReportTemplate(name string) *template.Template {
 	svg, err := template.
 		New(fmt.Sprintf("%s.html", name)).
-		Funcs(template.FuncMap{"FormatMilliseconds": FormatMilliseconds}).
+		Funcs(template.FuncMap{
+			"FormatMilliseconds": FormatMilliseconds,
+			"Title":              Title,
+		}).
 		ParseFiles(fmt.Sprintf("web/templates/reports/%s.html", name))
 	if err != nil {
 		log.Print(err)

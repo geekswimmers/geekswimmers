@@ -20,13 +20,13 @@
                 <div class="card-body">
                     <!-- Google Sign-In Button -->
                     {{if .GoogleClientID}}
-                    <div class="mb-3 text-center">
-                        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
-                    </div>
-                    <hr class="my-4">
-                    <div class="text-center text-muted mb-3">
-                        <small>or sign in with your email</small>
-                    </div>
+                        <div class="mb-3 text-center">
+                            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                        </div>
+                        <hr class="my-4">
+                        <div class="text-center text-muted mb-3">
+                            <small>or sign in with your email</small>
+                        </div>
                     {{end}}
 
                     <form id="signup-form" method="post" action="/signup/">

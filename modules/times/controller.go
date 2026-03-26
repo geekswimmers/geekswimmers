@@ -567,14 +567,84 @@ func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.R
 		ID: id,
 	}
 
+	recentRecords, err := findRecentRecords(recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
+	topRecordHolders, err := findTopRecordHolders(recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
+	recordsAgeRanges, err := findRecordsAgeRanges(recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
+	recordsGenderCourse := make(map[string][]*Record)
+	for _, ranges := range recordsAgeRanges {
+		definition := RecordDefinition{
+			Gender: "FEMALE",
+			Course: "SHORT",
+			MinAge: ranges.MinAge,
+			MaxAge: ranges.MaxAge,
+		}
+		recordsGenderCourse[fmt.Sprintf("female-short-%s", ranges.AgeRange())], err = findRecordsByAgeGroup(recordSet, definition, rc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			break
+		}
+
+		definition = RecordDefinition{
+			Gender: "FEMALE",
+			Course: "LONG",
+			MinAge: ranges.MinAge,
+			MaxAge: ranges.MaxAge,
+		}
+		recordsGenderCourse[fmt.Sprintf("female-long-%s", ranges.AgeRange())], err = findRecordsByAgeGroup(recordSet, definition, rc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			break
+		}
+
+		definition = RecordDefinition{
+			Gender: "MALE",
+			Course: "SHORT",
+			MinAge: ranges.MinAge,
+			MaxAge: ranges.MaxAge,
+		}
+		recordsGenderCourse[fmt.Sprintf("male-short-%s", ranges.AgeRange())], err = findRecordsByAgeGroup(recordSet, definition, rc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			break
+		}
+
+		definition = RecordDefinition{
+			Gender: "MALE",
+			Course: "LONG",
+			MinAge: ranges.MinAge,
+			MaxAge: ranges.MaxAge,
+		}
+		recordsGenderCourse[fmt.Sprintf("male-long-%s", ranges.AgeRange())], err = findRecordsByAgeGroup(recordSet, definition, rc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			break
+		}
+	}
+
 	ctx := map[string]any{
-		"RecordSet": recordSet,
+		"RecordSet":           recordSet,
+		"RecentRecords":       recentRecords,
+		"TopRecordHolders":    topRecordHolders,
+		"RecordsAgeRanges":    recordsAgeRanges,
+		"RecordsGenderCourse": recordsGenderCourse,
 	}
 
 	report := utils.GetHtmlReportTemplate("records-team-page")
 	res.Header().Set("Content-Type", "text/html")
 
-	err := report.Execute(res, ctx)
+	err = report.Execute(res, ctx)
 	if err != nil {
 		log.Printf("times.RecordPageView: %v", err)
 	}

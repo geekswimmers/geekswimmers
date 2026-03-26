@@ -5,6 +5,272 @@
     <title>Club Records</title>
 </head>
 <body>
+    <style>
+        table {
+            width: 100%;
+            margin: 10px auto;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
 
+        th {
+            padding: 0.6em;
+            background-color: #eee;
+            text-align: left;
+        }
+
+        td {
+            padding: 0.6em;
+        }
+    </style>
+
+    <h1>Recent Records</h1>
+
+    <table>
+        {{range .RecentRecords}}
+            <tr>
+                {{if gt .Swimmer.ID 0}}
+                <td style="padding: 5px;">{{.Swimmer.FirstName}} {{.Swimmer.LastName}}</td>
+                {{else}}
+                <td style="padding: 5px;">{{.Holder}}</td>
+                {{end}}
+                <td style="padding: 5px; border: 2px">
+                    {{if .Definition.MinAge}}
+                        {{.Definition.MinAge}}
+                    {{end}}
+                    {{if and .Definition.MinAge .Definition.MaxAge}}
+                    -
+                    {{end}}
+                    {{if .Definition.MaxAge}}
+                    {{.Definition.MaxAge}}
+                    {{end}},
+                    {{.Definition.Distance}}
+                    {{.Definition.Style | Title}},
+                    {{if eq .Definition.Course "SHORT"}}Short (25m){{else}}Long (50m){{end}}
+                </td>
+                <td style="padding: 5px;">{{.Time | FormatMilliseconds}}</td>
+                <td style="padding: 5px;">{{.MonthName}}, {{.Year}}</td>
+            </tr>
+        {{end}}
+    </table>
+
+    <h1>Top Record Holders</h1>
+
+    <table>
+        {{range .TopRecordHolders}}
+            <tr>
+                <td style="padding: 5px;">{{.FirstName}} {{.LastName}}</td>
+                <td style="padding: 5px;">{{.NumRecords}}</td>
+            </tr>
+        {{end}}
+    </table>
+
+    <h1><a id="äll-records">All Records</a></h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2" style="font-size: x-large; text-align: center"><a href="#female">Female</a></th>
+                <th colspan="2" style="font-size: x-large; text-align: center"><a href="#male">Male</a></th>
+            </tr>
+            <tr>
+                <th style="font-size: large; text-align: center"><a href="#female-short">Short</a></th>
+                <th style="font-size: large; text-align: center"><a href="#female-long">Long</a></th>
+                <th style="font-size: large; text-align: center"><a href="#male-short">Short</a></th>
+                <th style="font-size: large; text-align: center"><a href="#male-long">Long</a></th>
+            </tr>
+        </thead>
+        {{range .RecordsAgeRanges}}
+            <tr>
+                <td style="text-align: center"><a href="#female-short-{{.AgeRange}}">{{.AgeRange}}</a></td>
+                <td style="text-align: center"><a href="#female-long-{{.AgeRange}}">{{.AgeRange}}</a></td>
+                <td style="text-align: center"><a href="#male-short-{{.AgeRange}}">{{.AgeRange}}</a></td>
+                <td style="text-align: center"><a href="#male-long-{{.AgeRange}}">{{.AgeRange}}</a></td>
+            </tr>
+        {{end}}
+    </table>
+
+    <h2><a id="female">Female</a></h2>
+
+    <h3><a id="female-short">Female - Short Course</a></h3>
+
+    {{range .RecordsAgeRanges}}
+        <h4><a id="female-short-{{.AgeRange}}">{{.AgeRange}} (Female - Short Course)</a></h4>
+        <p><a href="#äll-records">Back to the Top</a></p>
+        {{$k := printf "female-short-%s" .AgeRange}}
+        {{$records := index $.RecordsGenderCourse $k}}
+        <table>
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Record</th>
+                <th>Holder</th>
+                <th>When</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $records}}
+            <tr>
+                <td>
+                    {{if .Previous}}
+                    <a href="/times/records/{{.RecordSet.ID}}/history/{{.Definition.ID}}/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    {{else}}
+                    {{.Definition.Distance}} {{.Definition.Style | Title}}
+                    {{end}}
+                </td>
+                <td>{{.Time | FormatMilliseconds}}</td>
+                {{if gt .Swimmer.ID 0}}
+                <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.AllHolders}}</a></td>
+                {{else}}
+                <td>{{.AllHolders}}</td>
+                {{end}}
+                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
+
+    <h3><a id="female-long">Female - Long Course</a></h3>
+
+    {{range .RecordsAgeRanges}}
+        <h4><a id="female-long-{{.AgeRange}}">{{.AgeRange}} (Female - Long Course)</a></h4>
+        <p><a href="#äll-records">Back to the Top</a></p>
+
+        {{$k := printf "female-long-%s" .AgeRange}}
+        {{$records := index $.RecordsGenderCourse $k}}
+        <table>
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Record</th>
+                <th>Holder</th>
+                <th>When</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $records}}
+            <tr>
+                <td>
+                    {{if .Previous}}
+                    <a href="/times/records/{{.RecordSet.ID}}/history/{{.Definition.ID}}/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    {{else}}
+                    {{.Definition.Distance}} {{.Definition.Style | Title}}
+                    {{end}}
+                </td>
+                <td>{{.Time | FormatMilliseconds}}</td>
+                {{if gt .Swimmer.ID 0}}
+                <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.AllHolders}}</a></td>
+                {{else}}
+                <td>{{.AllHolders}}</td>
+                {{end}}
+                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
+
+    <h2><a id="male">Male</a></h2>
+
+    <h3><a id="male-short">Male - Short Course</a></h3>
+
+    {{range .RecordsAgeRanges}}
+        <h4><a id="male-short-{{.AgeRange}}">{{.AgeRange}} (Male - Short Course)</a></h4>
+        <p><a href="#äll-records">Back to the Top</a></p>
+
+        {{$k := printf "male-short-%s" .AgeRange}}
+        {{$records := index $.RecordsGenderCourse $k}}
+        <table>
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Record</th>
+                <th>Holder</th>
+                <th>When</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $records}}
+            <tr>
+                <td>
+                    {{if .Previous}}
+                    <a href="/times/records/{{.RecordSet.ID}}/history/{{.Definition.ID}}/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    {{else}}
+                    {{.Definition.Distance}} {{.Definition.Style | Title}}
+                    {{end}}
+                </td>
+                <td>{{.Time | FormatMilliseconds}}</td>
+                {{if gt .Swimmer.ID 0}}
+                <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.AllHolders}}</a></td>
+                {{else}}
+                <td>{{.AllHolders}}</td>
+                {{end}}
+                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
+
+    <h3><a id="male-long">Male - Long Course</a></h3>
+
+    {{range .RecordsAgeRanges}}
+        <h4><a id="male-long-{{.AgeRange}}">{{.AgeRange}} (Male - Long Course)</a></h4>
+        <p><a href="#äll-records">Back to the Top</a></p>
+
+        {{$k := printf "male-long-%s" .AgeRange}}
+        {{$records := index $.RecordsGenderCourse $k}}
+        <table>
+            <thead>
+            <tr>
+                <th>Event</th>
+                <th>Record</th>
+                <th>Holder</th>
+                <th>When</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $records}}
+            <tr>
+                <td>
+                    {{if .Previous}}
+                    <a href="/times/records/{{.RecordSet.ID}}/history/{{.Definition.ID}}/">{{.Definition.Distance}} {{.Definition.Style | Title}}</a>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                    </svg>
+                    {{else}}
+                    {{.Definition.Distance}} {{.Definition.Style | Title}}
+                    {{end}}
+                </td>
+                <td>{{.Time | FormatMilliseconds}}</td>
+                {{if gt .Swimmer.ID 0}}
+                <td><a href="/times/records/{{.RecordSet.ID}}/swimmers/{{.Swimmer.ID}}">{{.AllHolders}}</a></td>
+                {{else}}
+                <td>{{.AllHolders}}</td>
+                {{end}}
+                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    {{end}}
 </body>
 </html>

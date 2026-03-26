@@ -232,6 +232,56 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 	return records, nil
 }
 
+func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db storage.Database) ([]*Record, error) {
+	sql := `select bt.record_time, r.year, r.month, rd.style, rd.distance, s.first_name, s.last_name 
+			from record r
+				join record_set rs on rs.id = r.record_set
+				join record_definition rd on rd.id = r.definition
+			    join (select r.definition, r.record_set, min(record_time) as record_time
+					  from record r
+						join record_definition rd on rd.id = r.definition
+					  where r.record_set = $1
+						and rd.gender = $2
+						and rd.course = $3
+						and ((rd.min_age = $4 and rd.max_age = $5)
+						or (rd.min_age is null and rd.max_age = $5)
+						or (rd.min_age = $4 and rd.max_age is null))
+					  group by r.definition , r.record_set) as bt on bt.definition = rd.id 
+					                                              and bt.record_set = rs.id 
+					                                              and bt.record_time = r.record_time
+				join swimmer s on s.id = r.swimmer
+				join swim_style ss on ss.stroke = rd.style
+			where rs.id = $1
+			    and rd.gender = $2
+				and rd.course = $3
+				and ((rd.min_age = $4 and rd.max_age = $5)
+					or (rd.min_age is null and rd.max_age = $5)
+					or (rd.min_age = $4 and rd.max_age is null))
+			order by ss.sequence, rd.distance`
+	rows, err := db.Query(context.Background(), sql, recordSet.ID, definition.Gender, definition.Course, definition.MinAge, definition.MaxAge)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordsByAgeGroup: %v", err)
+	}
+	defer rows.Close()
+
+	var records []*Record
+	for rows.Next() {
+		record := &Record{
+			Definition: RecordDefinition{},
+			Swimmer:    &swimming.Swimmer{},
+		}
+		err = rows.Scan(&record.Time, &record.Year, &record.Month,
+			&record.Definition.Style, &record.Definition.Distance,
+			&record.Swimmer.FirstName, &record.Swimmer.LastName)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordsByAgeGroup: %v", err)
+		}
+		records = append(records, record)
+	}
+
+	return records, nil
+}
+
 func findRecentRecords(recordSet RecordSet, db storage.Database) ([]*Record, error) {
 	stm := `select r.id, r.record_time, r.year, r.month, coalesce(r.holder, ''), coalesce(r.swimmer, 0), coalesce(s.first_name, ''), coalesce(s.last_name, ''), 
 				coalesce(rs.source_title, 'None'), coalesce(rs.source_link, '#'),
