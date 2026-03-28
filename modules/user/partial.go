@@ -23,10 +23,16 @@ func (uc *Controller) BestTimesPartial(res http.ResponseWriter, req *http.Reques
 	}
 	bestTimes = addSwimmingPointsToRecords(swimmer, course, bestTimes, uc.DB)
 
+	totalPoints := 0
+	for _, bestTime := range bestTimes {
+		totalPoints += bestTime.Points
+	}
+
 	data := &swimmerData{
-		Swimmer:   swimmer,
-		BestTimes: bestTimes,
-		Course:    course,
+		Swimmer:     swimmer,
+		BestTimes:   bestTimes,
+		Course:      course,
+		TotalPoints: totalPoints,
 	}
 
 	html, err := template.New("bestTimes").Funcs(
@@ -44,7 +50,11 @@ func (uc *Controller) BestTimesPartial(res http.ResponseWriter, req *http.Reques
 			<tr>
 				<td colspan="3">No best time listed yet.</td>
 			</tr>
-		{{end}}`)
+		{{end}}
+		<tr>
+			<td colspan="2" style="text-align: right"><b>Total Points *</b>:</td>
+			<td>{{.TotalPoints}}</td>
+		</tr>`)
 	if err != nil {
 		log.Printf("swimming.BestTimesPartial: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)

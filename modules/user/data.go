@@ -300,6 +300,7 @@ type swimmerData struct {
 	SessionData      *storage.SessionData
 	SwimRanking      string
 	SwimCloud        string
+	TotalPoints      int
 }
 
 func (sd *swimmerData) valid() bool {

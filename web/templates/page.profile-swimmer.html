@@ -100,6 +100,12 @@
                         <td colspan="3">No best time listed yet.</td>
                     </tr>
                 {{end}}
+                {{if .TotalPoints}}
+                    <tr>
+                        <td colspan="2" style="text-align: right"><b>Total Points *</b>:</td>
+                        <td>{{.TotalPoints}}</td>
+                    </tr>
+                {{end}}
             </tbody>
         </table>
 

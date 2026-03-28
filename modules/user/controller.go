@@ -667,6 +667,11 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 	}
 	bestTimes = addSwimmingPointsToRecords(swimmer, course, bestTimes, uc.DB)
 
+	totalPoints := 0
+	for _, bestTime := range bestTimes {
+		totalPoints += bestTime.Points
+	}
+
 	data := &swimmerData{
 		BaseTemplateData: uc.BaseTemplateData,
 		Course:           course,
@@ -675,6 +680,7 @@ func (uc *Controller) ProfileSwimmerView(res http.ResponseWriter, req *http.Requ
 		BestTimes:        bestTimes,
 		LinkRequests:     linkRequests,
 		ParentSwimmer:    parentSwimmer,
+		TotalPoints:      totalPoints,
 	}
 
 	html := utils.GetTemplateWithFunctions("base", "profile-swimmer",
