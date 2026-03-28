@@ -40,7 +40,7 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 	ctx["TimeStandards"] = timeStandards
 	ctx["ServiceUpdates"] = serviceUpdates
 
-	html := utils.GetTemplate("base", "admin-console")
+	html := utils.GetTemplate("admin", "admin-console")
 	err = html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("admin.ConsoleView: %v", err)
@@ -141,7 +141,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	ctx["NotImportedRecords"] = notImportedRecords
 	ctx["FailedRecords"] = failedRecords
 
-	html := utils.GetTemplateWithFunctions("base", "admin-standard-update", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("admin", "admin-standard-update", template.FuncMap{
 		"Title":              utils.Title,
 		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
@@ -152,7 +152,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 }
 
 func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplateWithFunctions("base", "admin-standard-form", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("admin", "admin-standard-form", template.FuncMap{
 		"Title": utils.Title,
 	})
 	err := html.Execute(res, ctx)
@@ -237,7 +237,7 @@ func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.
 }
 
 func renderServiceUpdateFormView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplate("base", "admin-update-form")
+	html := utils.GetTemplate("admin", "admin-update-form")
 	err := html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("admin.ServiceUpdateFormView: %v", err)
