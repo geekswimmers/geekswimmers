@@ -7,76 +7,7 @@
 {{end}}
 
 {{define "content"}}
-    <h1>Time Standards</h1>
 
-    <br>
-    <div class="card">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Age Range</th>
-                    <th scope="col">Jurisdiction</th>
-                </tr>
-            </thead>
-            <tbody>
-            {{range .TimeStandards}}
-                <tr>
-                    <td><a href="/admin/standards/{{.ID}}/">{{.Name}}</a></td>
-                    <td>
-                        {{ if and .MinAgeTime .MaxAgeTime }}
-                            {{.MinAgeTime}} - {{.MaxAgeTime}}
-                        {{ else if .MinAgeTime }}
-                            {{.MinAgeTime}} & Over
-                        {{ else if .MaxAgeTime }}
-                            {{.MaxAgeTime}} & Under
-                        {{ end }}
-                    </td>
-                    <td>
-                        {{.Jurisdiction.Title}} - {{.Jurisdiction.SubTitle}}
-                    </td>
-                </tr>
-            {{else}}
-                <tr>
-                    <td colspan="3">No time standards are available.</td>
-                </tr>
-            {{end}}
-            </tbody>
-        </table>
-    </div>
-
-    <br>
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">Service Updates</h3>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Messages reporting service updates</h6>
-        </div>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Published</th>
-                </tr>
-            </thead>
-            <tbody>
-            {{range .ServiceUpdates}}
-                <tr>
-                    <td><a href="/admin/updates/{{.ID}}/">{{.Title}}</a></td>
-                    <td>{{.Published.Format "Jan 02, 2006"}}</td>
-                </tr>
-            {{else}}
-                <tr>
-                    <td colspan="3">No service updates are published.</td>
-                </tr>
-            {{end}}
-            </tbody>
-        </table>
-
-        <div class="card-footer text-end">
-            <a class="btn btn-secondary" href="/admin/updates/form/" role="button">Add Update</a>
-        </div>
-    </div>
 {{end}}
 
 {{define "scripts"}}{{end}}

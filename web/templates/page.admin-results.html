@@ -1,0 +1,49 @@
+{{template "admin-layout" .}}
+
+{{define "title"}}Admin Console{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item active" aria-current="page">Admin Console</li>
+{{end}}
+
+{{define "content"}}
+    <h1>Meets</h1>
+
+    <br>
+    <div class="card">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Organizer</th>
+                    <th scope="col">Location</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .Meets}}
+                <tr>
+                    <td><a href="/admin/standards/{{.ID}}/">{{.Name}}</a></td>
+                    <td>
+                        {{ if and .MinAgeTime .MaxAgeTime }}
+                            {{.MinAgeTime}} - {{.MaxAgeTime}}
+                        {{ else if .MinAgeTime }}
+                            {{.MinAgeTime}} & Over
+                        {{ else if .MaxAgeTime }}
+                            {{.MaxAgeTime}} & Under
+                        {{ end }}
+                    </td>
+                    <td>
+                        {{.Jurisdiction.Title}} - {{.Jurisdiction.SubTitle}}
+                    </td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="3">No meets registered.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+{{end}}
+
+{{define "scripts"}}{{end}}

@@ -1,0 +1,42 @@
+{{template "admin-layout" .}}
+
+{{define "title"}}Admin Console{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item active" aria-current="page">Admin Console</li>
+{{end}}
+
+{{define "content"}}
+    <h1>Service Updates</h1>
+
+    <br>
+
+    <div class="card">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Published</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .ServiceUpdates}}
+                <tr>
+                    <td><a href="/admin/updates/{{.ID}}/">{{.Title}}</a></td>
+                    <td>{{.Published.Format "Jan 02, 2006"}}</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="3">No service updates are published.</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+
+        <div class="card-footer text-end">
+            <a class="btn btn-secondary" href="/admin/updates/form/" role="button">Add Update</a>
+        </div>
+    </div>
+{{end}}
+
+{{define "scripts"}}{{end}}

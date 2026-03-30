@@ -25,11 +25,33 @@ type AdminController struct {
 func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
 	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
 
+	html := utils.GetTemplate("admin", "admin-console")
+	err := html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.ConsoleView: %v", err)
+	}
+}
+
+func (ac *AdminController) StandardsView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
 	timeStandards, err := times.FindAllTimeStandards(ac.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
+
+	ctx["TimeStandards"] = timeStandards
+
+	html := utils.GetTemplate("admin", "admin-standards")
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.ConsoleView: %v", err)
+	}
+}
+
+func (ac *AdminController) ServiceUpdatesView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
 
 	serviceUpdates, err := content.FindServiceUpdates(ac.DB)
 	if err != nil {
@@ -37,11 +59,20 @@ func (ac *AdminController) ConsoleView(res http.ResponseWriter, _ *http.Request,
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 
-	ctx["TimeStandards"] = timeStandards
 	ctx["ServiceUpdates"] = serviceUpdates
 
-	html := utils.GetTemplate("admin", "admin-console")
+	html := utils.GetTemplate("admin", "admin-updates")
 	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.ConsoleView: %v", err)
+	}
+}
+
+func (ac *AdminController) MeetsView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
+	html := utils.GetTemplate("admin", "admin-results")
+	err := html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("admin.ConsoleView: %v", err)
 	}
@@ -141,7 +172,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 	ctx["NotImportedRecords"] = notImportedRecords
 	ctx["FailedRecords"] = failedRecords
 
-	html := utils.GetTemplateWithFunctions("admin", "admin-standard-update", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("admin", "admin-standards-update", template.FuncMap{
 		"Title":              utils.Title,
 		"FormatMilliseconds": utils.FormatMilliseconds,
 	})
@@ -152,7 +183,7 @@ func (ac *AdminController) TimeStandardForm(res http.ResponseWriter, req *http.R
 }
 
 func renderTimeStandardFormView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplateWithFunctions("admin", "admin-standard-form", template.FuncMap{
+	html := utils.GetTemplateWithFunctions("admin", "admin-standards-form", template.FuncMap{
 		"Title": utils.Title,
 	})
 	err := html.Execute(res, ctx)
@@ -233,11 +264,11 @@ func (ac *AdminController) ServiceUpdateForm(res http.ResponseWriter, req *http.
 		renderServiceUpdateFormView(res, ctx)
 	}
 
-	http.Redirect(res, req, "/admin/console/", http.StatusSeeOther)
+	http.Redirect(res, req, "/admin/updates/", http.StatusSeeOther)
 }
 
 func renderServiceUpdateFormView(res http.ResponseWriter, ctx map[string]any) {
-	html := utils.GetTemplate("admin", "admin-update-form")
+	html := utils.GetTemplate("admin", "admin-updates-form")
 	err := html.Execute(res, ctx)
 	if err != nil {
 		log.Printf("admin.ServiceUpdateFormView: %v", err)
