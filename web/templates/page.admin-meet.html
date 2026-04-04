@@ -1,0 +1,25 @@
+{{template "admin-layout" .}}
+
+{{define "title"}}Admin Console{{end}}
+
+{{define "breadcrumb"}}
+    <li class="breadcrumb-item active" aria-current="page">Meet</li>
+{{end}}
+
+{{define "content"}}
+    <h1>Meet</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="name">Name</label>
+                <input type="text" readonly class="form-control-plaintext" name="name" id="name" value="{{.Meet.Name}}">
+            </div>
+
+            <a class="btn btn-primary" href="/admin/meets/{{.Meet}}/results/import" role="button">Import Results</a>
+            <a class="btn btn-secondary" href="/admin/meets/" role="button">Back</a>
+        </div>
+    </div>
+{{end}}
+
+{{define "scripts"}}{{end}}

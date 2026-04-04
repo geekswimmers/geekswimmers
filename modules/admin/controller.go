@@ -71,10 +71,33 @@ func (ac *AdminController) ServiceUpdatesView(res http.ResponseWriter, _ *http.R
 func (ac *AdminController) MeetsView(res http.ResponseWriter, _ *http.Request, sessionData *storage.SessionData) {
 	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
 
-	html := utils.GetTemplate("admin", "admin-results")
+	meets, err := times.FindMeets(ac.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+	}
+
+	ctx["Meets"] = meets
+
+	html := utils.GetTemplate("admin", "admin-meets")
+	err = html.Execute(res, ctx)
+	if err != nil {
+		log.Printf("admin.MeetsView: %v", err)
+	}
+}
+
+func (ac *AdminController) MeetView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
+
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	meet := times.GetMeet(id, ac.DB)
+
+	ctx["Meet"] = meet
+
+	html := utils.GetTemplate("admin", "admin-meet")
 	err := html.Execute(res, ctx)
 	if err != nil {
-		log.Printf("admin.ConsoleView: %v", err)
+		log.Printf("admin.MeetView: %v", err)
 	}
 }
 

@@ -15,26 +15,24 @@
             <thead>
                 <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">Organizer</th>
-                    <th scope="col">Location</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Website</th>
                 </tr>
             </thead>
             <tbody>
             {{range .Meets}}
                 <tr>
-                    <td><a href="/admin/standards/{{.ID}}/">{{.Name}}</a></td>
-                    <td>
-                        {{ if and .MinAgeTime .MaxAgeTime }}
-                            {{.MinAgeTime}} - {{.MaxAgeTime}}
-                        {{ else if .MinAgeTime }}
-                            {{.MinAgeTime}} & Over
-                        {{ else if .MaxAgeTime }}
-                            {{.MaxAgeTime}} & Under
-                        {{ end }}
-                    </td>
-                    <td>
-                        {{.Jurisdiction.Title}} - {{.Jurisdiction.SubTitle}}
-                    </td>
+                    <td><a href="/admin/meets/{{.ID}}/">{{.Name}}</a></td>
+                    <td>{{.StartDate.Format "Jan 02, 2006"}}</td>
+                    <td>{{.EndDate.Format "Jan 02, 2006"}}</td>
+                    <td>{{.Duration}}</td>
+                    {{if .Website.Valid}}
+                        <td><a href="{{.Website.String}}">Website</a></td>
+                    {{else}}
+                        <td>&nbsp;</td>
+                    {{end}}
                 </tr>
             {{else}}
                 <tr>

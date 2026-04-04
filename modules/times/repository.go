@@ -822,6 +822,26 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 	return times, nil
 }
 
+func InsertStandardTime(standardTime *StandardTime, db storage.Database) error {
+	stm := `insert into standard_time (time_standard, age, gender, course, style, distance, standard, definition, update_date)
+             values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+
+	_, err := db.Exec(context.Background(), stm,
+		standardTime.TimeStandard.ID,
+		standardTime.Definition.Age,
+		standardTime.Definition.Gender,
+		standardTime.Definition.Course,
+		standardTime.Definition.Style,
+		standardTime.Definition.Distance,
+		standardTime.Standard,
+		standardTime.Definition.ID,
+		standardTime.UpdateDate)
+	if err != nil {
+		return fmt.Errorf("user.InsertStandardTime: %v", err)
+	}
+	return nil
+}
+
 func findStandardsEvent(timeStandard *TimeStandard, definition *StandardDefinition, db storage.Database) ([]*StandardTime, error) {
 	stm := `select ts.id , ts.name, st.standard, st.update_date
 			from standard_time st
@@ -929,6 +949,29 @@ func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]
 	return meets, nil
 }
 
+func FindMeets(db storage.Database) ([]*Meet, error) {
+	stm := `select m.id, m.name, m.start_date, m.end_date, m.website
+			from meet m
+			order by m.start_date desc`
+	rows, err := db.Query(context.Background(), stm)
+	if err != nil {
+		return nil, fmt.Errorf("findMeets: %v", err)
+	}
+	defer rows.Close()
+
+	var meets []*Meet
+	for rows.Next() {
+		meet := &Meet{}
+		err = rows.Scan(&meet.ID, &meet.Name, &meet.StartDate, &meet.EndDate, &meet.Website)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findStandardChampionshipMeets: %v", err)
+		}
+		meets = append(meets, meet)
+	}
+
+	return meets, nil
+}
+
 func FindMeetsSeasonByTimeStandard(timeStandard TimeStandard, currentSwimSeason *SwimSeason, db storage.Database) ([]*Meet, error) {
 	stm := `select m.id, m.name, m.course, m.start_date
 			from meet m
@@ -955,7 +998,7 @@ func FindMeetsSeasonByTimeStandard(timeStandard TimeStandard, currentSwimSeason 
 }
 
 func GetMeet(id int64, db storage.Database) *Meet {
-	stm := `select m.id, m.name, m.age_date, m.min_age_enforced, m.max_age_enforced
+	stm := `select m.name, m.age_date, m.min_age_enforced, m.max_age_enforced
 			from meet m
 			where m.id = $1`
 	row := db.QueryRow(context.Background(), stm, id)
@@ -963,7 +1006,7 @@ func GetMeet(id int64, db storage.Database) *Meet {
 	meet := &Meet{
 		ID: id,
 	}
-	err := row.Scan(&meet.Name, &meet.Course, &meet.AgeDate, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
+	err := row.Scan(&meet.Name, &meet.AgeDate, &meet.MinAgeEnforced, &meet.MaxAgeEnforced)
 	if err != nil {
 		if err.Error() == storage.ErrNoRows {
 			return nil
@@ -972,24 +1015,4 @@ func GetMeet(id int64, db storage.Database) *Meet {
 	}
 
 	return meet
-}
-
-func InsertStandardTime(standardTime *StandardTime, db storage.Database) error {
-	stm := `insert into standard_time (time_standard, age, gender, course, style, distance, standard, definition, update_date)
-             values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
-
-	_, err := db.Exec(context.Background(), stm,
-		standardTime.TimeStandard.ID,
-		standardTime.Definition.Age,
-		standardTime.Definition.Gender,
-		standardTime.Definition.Course,
-		standardTime.Definition.Style,
-		standardTime.Definition.Distance,
-		standardTime.Standard,
-		standardTime.Definition.ID,
-		standardTime.UpdateDate)
-	if err != nil {
-		return fmt.Errorf("user.InsertStandardTime: %v", err)
-	}
-	return nil
 }

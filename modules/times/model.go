@@ -59,6 +59,8 @@ type Meet struct {
 	Course         string
 	AgeDate        time.Time
 	StartDate      time.Time
+	EndDate        time.Time
+	Website        sql.NullString
 	Season         SwimSeason
 	TimeStandard   TimeStandard
 	MinAgeEnforced bool
@@ -68,6 +70,15 @@ type Meet struct {
 	// Transient
 	Age          int64
 	StandardTime StandardTime
+}
+
+func (meet *Meet) Duration() string {
+	duration := meet.EndDate.Sub(meet.StartDate).Hours()/24 + 1
+
+	if duration == 1 {
+		return fmt.Sprintf("%v day", duration)
+	}
+	return fmt.Sprintf("%v days", duration)
 }
 
 type RecordDefinition struct {
