@@ -133,6 +133,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Post("/signup/", s.handleRequest(userController.SignUp))
 
 	s.Router.Get("/admin/console/", s.handleAdminAuthRequest(adminController.ConsoleView))
+	s.Router.Post("/admin/meets/:id/results/", s.handleAdminAuthRequest(adminController.MeetResultsImport))
 	s.Router.Get("/admin/meets/:id/", s.handleAdminAuthRequest(adminController.MeetView))
 	s.Router.Get("/admin/meets/", s.handleAdminAuthRequest(adminController.MeetsView))
 	s.Router.Get("/admin/standards/:id/", s.handleAdminAuthRequest(adminController.TimeStandardFormView))

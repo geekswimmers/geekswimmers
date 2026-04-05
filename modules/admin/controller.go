@@ -101,6 +101,33 @@ func (ac *AdminController) MeetView(res http.ResponseWriter, req *http.Request, 
 	}
 }
 
+func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
+	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
+	_ = id // Keep for future use
+
+	// Limit upload file size to 10MB
+	err := req.ParseMultipartForm(10 << 20)
+	if err != nil {
+		log.Printf("admin.MeetResultsImport: %v", err)
+		res.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(res, "Error uploading the file. It is larger than 10MB.")
+		return
+	}
+
+	resultsFile, _, err := req.FormFile("resultsFile")
+	if err != nil {
+		log.Printf("admin.MeetResultsImport: %v", err)
+		res.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(res, "Error uploading the file. Please check the file format.")
+		return
+	}
+	defer utils.CloseMultipartFile(resultsFile)
+
+	log.Printf("Results file: %v", resultsFile)
+
+	res.WriteHeader(http.StatusOK)
+}
+
 func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	ctx := modules.InitializeRequestContext(sessionData, ac.BaseTemplateData)
 

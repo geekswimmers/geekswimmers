@@ -16,8 +16,32 @@
                 <input type="text" readonly class="form-control-plaintext" name="name" id="name" value="{{.Meet.Name}}">
             </div>
 
-            <a class="btn btn-primary" href="/admin/meets/{{.Meet}}/results/import" role="button">Import Results</a>
+            <a class="btn btn-info" href="#" data-bs-toggle="modal" data-bs-target="#importResultsDialog" role="button">Import Results</a>
             <a class="btn btn-secondary" href="/admin/meets/" role="button">Back</a>
+        </div>
+    </div>
+
+    <div class="modal fade" id="importResultsDialog" tabindex="-1" aria-labelledby="Import Results" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="results-form" method="post" action="/admin/meets/{{.Meet.ID}}/results/" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Import Meet Results</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Select a results files (cl2, hy3)</p>
+                        <div class="mb-3">
+                            <input type="file" class="form-control" id="resultsFile" name="resultsFile" required>
+                            <div id="resultsFileError" class="text-danger mt-1" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 {{end}}

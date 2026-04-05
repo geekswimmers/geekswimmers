@@ -23,9 +23,9 @@
 
             <form id="signup-form" method="post" action="/admin/standards/{{.TimeStandard.ID}}/" enctype="multipart/form-data">
                 {{if .Error }}
-                <div class="alert alert-warning" role="alert">
-                    {{html .Error}}
-                </div>
+                    <div class="alert alert-warning" role="alert">
+                        {{html .Error}}
+                    </div>
                 {{end}}
 
                 <div class="row">

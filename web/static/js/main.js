@@ -144,3 +144,39 @@ function formatMilliseconds(milliseconds) {
 
     return `${signal}${minStr}:${secStr}.${csStr}`;
 }
+
+const meetResultsForm = document.getElementById('results-form');
+if (meetResultsForm) {
+    meetResultsForm.addEventListener('submit', submitResultsForm);
+}
+
+function submitResultsForm(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const errorField = document.getElementById('resultsFileError');
+    errorField.innerText = '';
+    errorField.style.display = 'none';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(async response => {
+        if (response.ok) {
+            const modalElement = document.getElementById('importResultsDialog');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            location.reload();
+        } else {
+            const errorMsg = await response.text();
+            errorField.innerText = errorMsg;
+            errorField.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        errorField.innerText = 'An unexpected error occurred.';
+        errorField.style.display = 'block';
+    });
+}
