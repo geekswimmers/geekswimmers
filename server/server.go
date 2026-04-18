@@ -204,7 +204,3 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 
 	s.Router.NotFound = http.HandlerFunc(webController.NotFoundView)
 }
-
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.Router.ServeHTTP(w, r)
-}
