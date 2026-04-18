@@ -81,6 +81,22 @@ func (meet *Meet) Duration() string {
 	return fmt.Sprintf("%v days", duration)
 }
 
+type MeetEvent struct {
+	ID     int64
+	MeetID int64
+	Event  swimming.Event
+	Gender string
+}
+
+type MeetResult struct {
+	ID         int64
+	MeetEvent  MeetEvent
+	Swimmer    swimming.Swimmer
+	Team       swimming.Team
+	ResultTime *int64
+	DQ         bool
+}
+
 type RecordDefinition struct {
 	ID       int64
 	MinAge   *int64

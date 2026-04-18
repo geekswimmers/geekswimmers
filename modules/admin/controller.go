@@ -103,9 +103,7 @@ func (ac *AdminController) MeetView(res http.ResponseWriter, req *http.Request, 
 
 func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-	_ = id // Keep for future use
 
-	// Limit upload file size to 10MB
 	err := req.ParseMultipartForm(10 << 20)
 	if err != nil {
 		log.Printf("admin.MeetResultsImport: %v", err)
@@ -114,7 +112,7 @@ func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.
 		return
 	}
 
-	resultsFile, _, err := req.FormFile("resultsFile")
+	resultsFile, header, err := req.FormFile("resultsFile")
 	if err != nil {
 		log.Printf("admin.MeetResultsImport: %v", err)
 		res.WriteHeader(http.StatusBadRequest)
@@ -123,9 +121,17 @@ func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.
 	}
 	defer utils.CloseMultipartFile(resultsFile)
 
-	log.Printf("Results file: %v", resultsFile)
+	if strings.ToLower(filepath.Ext(header.Filename)) != ".hy3" {
+		res.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(res, "Invalid file extension. Please upload a HY3 file.")
+		return
+	}
 
-	res.WriteHeader(http.StatusOK)
+	rawResults := parseHY3(resultsFile)
+	imported, skipped, failed := processMeetResults(id, rawResults, ac.DB)
+	log.Printf("admin.MeetResultsImport meet=%d: imported=%d skipped=%d failed=%d", id, imported, skipped, failed)
+
+	http.Redirect(res, req, fmt.Sprintf("/admin/meets/%d/", id), http.StatusSeeOther)
 }
 
 func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"geekswimmers/storage"
+	"time"
 )
 
 func findStyles(db storage.Database) ([]*Style, error) {
@@ -180,6 +181,60 @@ func FindTeamsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]
 	}
 
 	return teams, nil
+}
+
+func FindTeamByAcronym(acronym string, db storage.Database) (*Team, error) {
+	stm := `select t.id, t.full_name, t.acronym
+	        from team t
+	        where t.acronym = $1`
+	row := db.QueryRow(context.Background(), stm, acronym)
+
+	team := &Team{}
+	err := row.Scan(&team.ID, &team.FullName, &team.Acronym)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindTeamByAcronym: %v", err)
+	}
+	return team, nil
+}
+
+func FindSwimmerByNameAndBirthDate(firstName, lastName string, birthDate time.Time, db storage.Database) (*Swimmer, error) {
+	stm := `select s.id, s.first_name, s.last_name, s.gender
+	        from swimmer s
+	        where lower(s.first_name) = lower($1)
+	          and lower(s.last_name) = lower($2)
+	          and s.birth_date = $3`
+	row := db.QueryRow(context.Background(), stm, firstName, lastName, birthDate)
+
+	swimmer := &Swimmer{}
+	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.Gender)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindSwimmerByNameAndBirthDate: %v", err)
+	}
+	return swimmer, nil
+}
+
+func FindSwimEventByStrokeAndDistance(stroke string, distance int64, db storage.Database) (*Event, error) {
+	stm := `select se.id, se.distance, ss.stroke
+	        from swim_event se
+	        join swim_style ss on se.style = ss.id
+	        where ss.stroke = $1 and se.distance = $2`
+	row := db.QueryRow(context.Background(), stm, stroke, distance)
+
+	event := &Event{}
+	err := row.Scan(&event.ID, &event.Distance, &event.Style.Stroke)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindSwimEventByStrokeAndDistance: %v", err)
+	}
+	return event, nil
 }
 
 func FindSwimmer(swimmerId int64, db storage.Database) (*Swimmer, error) {

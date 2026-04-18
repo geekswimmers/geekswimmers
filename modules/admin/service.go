@@ -12,6 +12,84 @@ import (
 	"time"
 )
 
+func processMeetResults(meetID int64, rawResults []hy3RawResult, db storage.Database) (imported, skipped, failed int) {
+	for _, raw := range rawResults {
+		team, err := swimming.FindTeamByAcronym(raw.TeamAcronym, db)
+		if err != nil {
+			log.Printf("processMeetResults: %v", err)
+			failed++
+			continue
+		}
+		if team == nil {
+			skipped++
+			continue
+		}
+
+		swimmer, err := swimming.FindSwimmerByNameAndBirthDate(raw.FirstName, raw.LastName, raw.BirthDate, db)
+		if err != nil {
+			log.Printf("processMeetResults: %v", err)
+			failed++
+			continue
+		}
+		if swimmer == nil {
+			skipped++
+			continue
+		}
+
+		event, err := swimming.FindSwimEventByStrokeAndDistance(raw.Stroke, raw.Distance, db)
+		if err != nil {
+			log.Printf("processMeetResults: %v", err)
+			failed++
+			continue
+		}
+		if event == nil {
+			skipped++
+			continue
+		}
+
+		meetEvent, err := findMeetEvent(meetID, event.ID, raw.Gender, db)
+		if err != nil {
+			log.Printf("processMeetResults: %v", err)
+			failed++
+			continue
+		}
+		if meetEvent == nil {
+			meetEvent = &times.MeetEvent{MeetID: meetID, Event: *event, Gender: raw.Gender}
+			if err = insertMeetEvent(meetEvent, db); err != nil {
+				log.Printf("processMeetResults: %v", err)
+				failed++
+				continue
+			}
+		}
+
+		var resultTime *int64
+		if !raw.DQ && raw.Time != "" {
+			t, err := utils.MillisecondsFromText(raw.Time)
+			if err != nil {
+				log.Printf("processMeetResults: invalid time %q: %v", raw.Time, err)
+				failed++
+				continue
+			}
+			resultTime = &t
+		}
+
+		result := &times.MeetResult{
+			MeetEvent:  *meetEvent,
+			Swimmer:    *swimmer,
+			Team:       *team,
+			ResultTime: resultTime,
+			DQ:         raw.DQ,
+		}
+		if err = insertMeetResult(result, db); err != nil {
+			log.Printf("processMeetResults: %v", err)
+			failed++
+			continue
+		}
+		imported++
+	}
+	return
+}
+
 func processStandardRecords(records [][]string, timeStandard *times.TimeStandard, publicationDate time.Time, db storage.Database) ([]times.StandardTime, []times.StandardTime, []string) {
 	headers := records[0]
 	dataRows := records[1:]
