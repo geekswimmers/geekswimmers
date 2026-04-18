@@ -12,8 +12,47 @@ import (
 	"time"
 )
 
-func processMeetResults(meetID int64, rawResults []hy3RawResult, db storage.Database) (imported, skipped, failed int) {
-	for _, raw := range rawResults {
+func findOrCreateMeet(parsed hy3ParsedFile, db storage.Database) (*times.Meet, error) {
+	meet, err := times.FindMeetByNameAndDate(parsed.MeetName, parsed.StartDate, db)
+	if err != nil {
+		return nil, err
+	}
+	if meet != nil {
+		return meet, nil
+	}
+
+	season, err := times.FindSeasonByDate(parsed.StartDate, db)
+	if err != nil {
+		return nil, err
+	}
+
+	meet = &times.Meet{
+		Name:      parsed.MeetName,
+		Course:    parsed.Course,
+		StartDate: parsed.StartDate,
+		EndDate:   parsed.EndDate,
+		Location:  sql.NullString{String: parsed.Location, Valid: parsed.Location != ""},
+		Facility:  sql.NullString{String: parsed.Facility, Valid: parsed.Facility != ""},
+	}
+	if season != nil {
+		meet.Season = *season
+	}
+
+	if err = times.InsertMeet(meet, db); err != nil {
+		return nil, err
+	}
+	return meet, nil
+}
+
+func processMeetResults(parsed hy3ParsedFile, db storage.Database) (meetID int64, imported, skipped, failed int) {
+	meet, err := findOrCreateMeet(parsed, db)
+	if err != nil {
+		log.Printf("processMeetResults: %v", err)
+		return 0, 0, 0, 0
+	}
+	meetID = meet.ID
+
+	for _, raw := range parsed.Results {
 		team, err := swimming.FindTeamByAcronym(raw.TeamAcronym, db)
 		if err != nil {
 			log.Printf("processMeetResults: %v", err)

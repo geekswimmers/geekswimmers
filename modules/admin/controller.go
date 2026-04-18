@@ -102,8 +102,6 @@ func (ac *AdminController) MeetView(res http.ResponseWriter, req *http.Request, 
 }
 
 func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {
-	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
-
 	err := req.ParseMultipartForm(10 << 20)
 	if err != nil {
 		log.Printf("admin.MeetResultsImport: %v", err)
@@ -127,11 +125,11 @@ func (ac *AdminController) MeetResultsImport(res http.ResponseWriter, req *http.
 		return
 	}
 
-	rawResults := parseHY3(resultsFile)
-	imported, skipped, failed := processMeetResults(id, rawResults, ac.DB)
-	log.Printf("admin.MeetResultsImport meet=%d: imported=%d skipped=%d failed=%d", id, imported, skipped, failed)
+	parsedFile := parseHY3(resultsFile)
+	meetID, imported, skipped, failed := processMeetResults(parsedFile, ac.DB)
+	log.Printf("admin.MeetResultsImport meet=%d: imported=%d skipped=%d failed=%d", meetID, imported, skipped, failed)
 
-	http.Redirect(res, req, fmt.Sprintf("/admin/meets/%d/", id), http.StatusSeeOther)
+	http.Redirect(res, req, fmt.Sprintf("/admin/meets/%d/", meetID), http.StatusSeeOther)
 }
 
 func (ac *AdminController) TimeStandardFormView(res http.ResponseWriter, req *http.Request, sessionData *storage.SessionData) {

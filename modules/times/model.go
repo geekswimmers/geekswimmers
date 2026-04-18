@@ -61,6 +61,8 @@ type Meet struct {
 	StartDate      time.Time
 	EndDate        time.Time
 	Website        sql.NullString
+	Location       sql.NullString
+	Facility       sql.NullString
 	Season         SwimSeason
 	TimeStandard   TimeStandard
 	MinAgeEnforced bool

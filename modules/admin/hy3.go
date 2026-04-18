@@ -12,6 +12,20 @@ import (
 // Field positions in HY3 records (0-indexed).
 // These follow the HY-TEK Meet Manager HY3 file specification.
 const (
+	// B1 - Meet record
+	hy3B1NameStart     = 2
+	hy3B1NameEnd       = 30
+	hy3B1CourseStart   = 30
+	hy3B1CourseEnd     = 32
+	hy3B1StartDateStart = 32
+	hy3B1StartDateEnd   = 38
+	hy3B1EndDateStart   = 38
+	hy3B1EndDateEnd     = 44
+	hy3B1LocationStart  = 44
+	hy3B1LocationEnd    = 74
+	hy3B1FacilityStart  = 74
+	hy3B1FacilityEnd    = 104
+
 	// C1 - Team record
 	hy3C1AcronymStart = 2
 	hy3C1AcronymEnd   = 7
@@ -26,16 +40,25 @@ const (
 	hy3D0BirthDateEnd   = 54
 
 	// E0 - Individual event
-	hy3E0GenderPos      = 2
-	hy3E0DistanceStart  = 9
-	hy3E0DistanceEnd    = 13
-	hy3E0StrokePos      = 13
+	hy3E0DistanceStart = 9
+	hy3E0DistanceEnd   = 13
+	hy3E0StrokePos     = 13
 
 	// E1 - Individual result
 	hy3E1FinalTimeStart = 10
 	hy3E1FinalTimeEnd   = 18
 	hy3E1TimeCodePos    = 18
 )
+
+type hy3ParsedFile struct {
+	MeetName  string
+	Course    string
+	StartDate time.Time
+	EndDate   time.Time
+	Location  string
+	Facility  string
+	Results   []hy3RawResult
+}
 
 type hy3RawResult struct {
 	TeamAcronym string
@@ -49,8 +72,8 @@ type hy3RawResult struct {
 	DQ          bool
 }
 
-func parseHY3(r io.Reader) []hy3RawResult {
-	var results []hy3RawResult
+func parseHY3(r io.Reader) hy3ParsedFile {
+	var parsed hy3ParsedFile
 
 	var currentTeam string
 	var currentFirstName, currentLastName string
@@ -67,6 +90,18 @@ func parseHY3(r io.Reader) []hy3RawResult {
 		}
 
 		switch line[0:2] {
+		case "B1":
+			parsed.MeetName = strings.TrimSpace(safeSlice(line, hy3B1NameStart, hy3B1NameEnd))
+			parsed.Course = hy3ParseCourse(safeSlice(line, hy3B1CourseStart, hy3B1CourseEnd))
+			if sd, err := time.Parse("010206", safeSlice(line, hy3B1StartDateStart, hy3B1StartDateEnd)); err == nil {
+				parsed.StartDate = sd
+			}
+			if ed, err := time.Parse("010206", safeSlice(line, hy3B1EndDateStart, hy3B1EndDateEnd)); err == nil {
+				parsed.EndDate = ed
+			}
+			parsed.Location = strings.TrimSpace(safeSlice(line, hy3B1LocationStart, hy3B1LocationEnd))
+			parsed.Facility = strings.TrimSpace(safeSlice(line, hy3B1FacilityStart, hy3B1FacilityEnd))
+
 		case "C1":
 			currentTeam = strings.TrimSpace(safeSlice(line, hy3C1AcronymStart, hy3C1AcronymEnd))
 			currentFirstName, currentLastName = "", ""
@@ -103,7 +138,7 @@ func parseHY3(r io.Reader) []hy3RawResult {
 				continue
 			}
 
-			results = append(results, hy3RawResult{
+			parsed.Results = append(parsed.Results, hy3RawResult{
 				TeamAcronym: currentTeam,
 				FirstName:   currentFirstName,
 				LastName:    currentLastName,
@@ -117,7 +152,18 @@ func parseHY3(r io.Reader) []hy3RawResult {
 		}
 	}
 
-	return results
+	return parsed
+}
+
+func hy3ParseCourse(code string) string {
+	switch strings.TrimSpace(strings.ToUpper(code)) {
+	case "SC", "S":
+		return swimming.CourseShort
+	case "LC", "L":
+		return swimming.CourseLong
+	default:
+		return ""
+	}
 }
 
 func hy3ParseGender(code byte) string {

@@ -2,11 +2,13 @@ package times
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"geekswimmers/modules/swimming"
 	"geekswimmers/storage"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -1015,4 +1017,63 @@ func GetMeet(id int64, db storage.Database) *Meet {
 	}
 
 	return meet
+}
+
+func FindSeasonByDate(date time.Time, db storage.Database) (*SwimSeason, error) {
+	stm := `select id, name, start_date, end_date
+	        from swim_season
+	        where start_date <= $1 and end_date >= $1
+	        limit 1`
+	row := db.QueryRow(context.Background(), stm, date)
+
+	season := &SwimSeason{}
+	err := row.Scan(&season.ID, &season.Name, &season.StartDate, &season.EndDate)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindSeasonByDate: %v", err)
+	}
+	return season, nil
+}
+
+func FindMeetByNameAndDate(name string, startDate time.Time, db storage.Database) (*Meet, error) {
+	stm := `select id from meet where lower(name) = lower($1) and start_date = $2`
+	row := db.QueryRow(context.Background(), stm, name, startDate)
+
+	meet := &Meet{}
+	err := row.Scan(&meet.ID)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindMeetByNameAndDate: %v", err)
+	}
+	meet.Name = name
+	meet.StartDate = startDate
+	return meet, nil
+}
+
+func InsertMeet(meet *Meet, db storage.Database) error {
+	var seasonID sql.NullInt64
+	if meet.Season.ID != 0 {
+		seasonID = sql.NullInt64{Int64: meet.Season.ID, Valid: true}
+	}
+
+	stm := `insert into meet (name, course, season, start_date, end_date, location, facility)
+	        values ($1, $2, $3, $4, $5, $6, $7)
+	        returning id`
+	row := db.QueryRow(context.Background(), stm,
+		meet.Name,
+		meet.Course,
+		seasonID,
+		meet.StartDate,
+		meet.EndDate,
+		meet.Location,
+		meet.Facility)
+	err := row.Scan(&meet.ID)
+	if err != nil {
+		return fmt.Errorf("InsertMeet: %v", err)
+	}
+	return nil
 }
