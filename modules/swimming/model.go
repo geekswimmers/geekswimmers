@@ -123,14 +123,15 @@ type Team struct {
 }
 
 type Swimmer struct {
-	ID          int64
-	FirstName   string
-	LastName    string
-	Gender      sql.NullString
-	BirthDate   sql.NullTime
-	Team        *Team
-	SwimRanking sql.NullString
-	SwimCloud   sql.NullString
+	ID             int64
+	FirstName      string
+	LastName       string
+	Gender         sql.NullString
+	BirthDate      sql.NullTime
+	Team           *Team
+	SwimRanking    sql.NullString
+	SwimCloud      sql.NullString
+	NationalNumber sql.NullString
 
 	// Transient
 	NumRecords int64

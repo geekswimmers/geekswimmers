@@ -183,6 +183,32 @@ func FindTeamsByJurisdiction(jurisdiction Jurisdiction, db storage.Database) ([]
 	return teams, nil
 }
 
+func FindSwimmerByNationalNumber(nationalNumber string, db storage.Database) (*Swimmer, error) {
+	stm := `select s.id, s.first_name, s.last_name, s.gender, s.national_number
+	        from swimmer s
+	        where s.national_number = $1`
+	row := db.QueryRow(context.Background(), stm, nationalNumber)
+
+	swimmer := &Swimmer{}
+	err := row.Scan(&swimmer.ID, &swimmer.FirstName, &swimmer.LastName, &swimmer.Gender, &swimmer.NationalNumber)
+	if err != nil && err.Error() == storage.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("FindSwimmerByNationalNumber: %v", err)
+	}
+	return swimmer, nil
+}
+
+func UpdateSwimmerNationalNumber(swimmerID int64, nationalNumber string, db storage.Database) error {
+	stm := `update swimmer set national_number = $1 where id = $2 and national_number is null`
+	_, err := db.Exec(context.Background(), stm, nationalNumber, swimmerID)
+	if err != nil {
+		return fmt.Errorf("UpdateSwimmerNationalNumber: %v", err)
+	}
+	return nil
+}
+
 func FindTeamByAcronym(acronym string, db storage.Database) (*Team, error) {
 	stm := `select t.id, t.full_name, t.acronym
 	        from team t

@@ -31,13 +31,15 @@ const (
 	hy3C1AcronymEnd   = 7
 
 	// D0 - Athlete record
-	hy3D0LastNameStart  = 2
-	hy3D0LastNameEnd    = 32
-	hy3D0FirstNameStart = 32
-	hy3D0FirstNameEnd   = 47
-	hy3D0GenderPos      = 47
-	hy3D0BirthDateStart = 48
-	hy3D0BirthDateEnd   = 54
+	hy3D0LastNameStart        = 2
+	hy3D0LastNameEnd          = 32
+	hy3D0FirstNameStart       = 32
+	hy3D0FirstNameEnd         = 47
+	hy3D0GenderPos            = 47
+	hy3D0BirthDateStart       = 48
+	hy3D0BirthDateEnd         = 54
+	hy3D0NationalNumberStart  = 54
+	hy3D0NationalNumberEnd    = 74
 
 	// E0 - Individual event
 	hy3E0DistanceStart = 9
@@ -61,15 +63,16 @@ type hy3ParsedFile struct {
 }
 
 type hy3RawResult struct {
-	TeamAcronym string
-	FirstName   string
-	LastName    string
-	BirthDate   time.Time
-	Gender      string
-	Stroke      string
-	Distance    int64
-	Time        string
-	DQ          bool
+	TeamAcronym    string
+	FirstName      string
+	LastName       string
+	BirthDate      time.Time
+	Gender         string
+	NationalNumber string
+	Stroke         string
+	Distance       int64
+	Time           string
+	DQ             bool
 }
 
 func parseHY3(r io.Reader) hy3ParsedFile {
@@ -78,7 +81,7 @@ func parseHY3(r io.Reader) hy3ParsedFile {
 	var currentTeam string
 	var currentFirstName, currentLastName string
 	var currentBirthDate time.Time
-	var currentGender string
+	var currentGender, currentNationalNumber string
 	var currentStroke string
 	var currentDistance int64
 
@@ -106,7 +109,7 @@ func parseHY3(r io.Reader) hy3ParsedFile {
 			currentTeam = strings.TrimSpace(safeSlice(line, hy3C1AcronymStart, hy3C1AcronymEnd))
 			currentFirstName, currentLastName = "", ""
 			currentBirthDate = time.Time{}
-			currentGender = ""
+			currentGender, currentNationalNumber = "", ""
 
 		case "D0":
 			currentLastName = strings.TrimSpace(safeSlice(line, hy3D0LastNameStart, hy3D0LastNameEnd))
@@ -117,6 +120,7 @@ func parseHY3(r io.Reader) hy3ParsedFile {
 			} else {
 				currentBirthDate = time.Time{}
 			}
+			currentNationalNumber = strings.TrimSpace(safeSlice(line, hy3D0NationalNumberStart, hy3D0NationalNumberEnd))
 			currentStroke = ""
 			currentDistance = 0
 
@@ -139,15 +143,16 @@ func parseHY3(r io.Reader) hy3ParsedFile {
 			}
 
 			parsed.Results = append(parsed.Results, hy3RawResult{
-				TeamAcronym: currentTeam,
-				FirstName:   currentFirstName,
-				LastName:    currentLastName,
-				BirthDate:   currentBirthDate,
-				Gender:      currentGender,
-				Stroke:      currentStroke,
-				Distance:    currentDistance,
-				Time:        strings.TrimSpace(safeSlice(line, hy3E1FinalTimeStart, hy3E1FinalTimeEnd)),
-				DQ:          timeCode == 'Q',
+				TeamAcronym:    currentTeam,
+				FirstName:      currentFirstName,
+				LastName:       currentLastName,
+				BirthDate:      currentBirthDate,
+				Gender:         currentGender,
+				NationalNumber: currentNationalNumber,
+				Stroke:         currentStroke,
+				Distance:       currentDistance,
+				Time:           strings.TrimSpace(safeSlice(line, hy3E1FinalTimeStart, hy3E1FinalTimeEnd)),
+				DQ:             timeCode == 'Q',
 			})
 		}
 	}

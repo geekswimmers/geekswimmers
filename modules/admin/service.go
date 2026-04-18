@@ -12,6 +12,34 @@ import (
 	"time"
 )
 
+func findSwimmer(raw hy3RawResult, db storage.Database) (*swimming.Swimmer, error) {
+	if raw.NationalNumber != "" {
+		swimmer, err := swimming.FindSwimmerByNationalNumber(raw.NationalNumber, db)
+		if err != nil {
+			return nil, err
+		}
+		if swimmer != nil {
+			if !swimmer.NationalNumber.Valid {
+				if err = swimming.UpdateSwimmerNationalNumber(swimmer.ID, raw.NationalNumber, db); err != nil {
+					log.Printf("findSwimmer: %v", err)
+				}
+			}
+			return swimmer, nil
+		}
+	}
+
+	swimmer, err := swimming.FindSwimmerByNameAndBirthDate(raw.FirstName, raw.LastName, raw.BirthDate, db)
+	if err != nil {
+		return nil, err
+	}
+	if swimmer != nil && raw.NationalNumber != "" && !swimmer.NationalNumber.Valid {
+		if err = swimming.UpdateSwimmerNationalNumber(swimmer.ID, raw.NationalNumber, db); err != nil {
+			log.Printf("findSwimmer: %v", err)
+		}
+	}
+	return swimmer, nil
+}
+
 func findOrCreateMeet(parsed hy3ParsedFile, db storage.Database) (*times.Meet, error) {
 	meet, err := times.FindMeetByNameAndDate(parsed.MeetName, parsed.StartDate, db)
 	if err != nil {
@@ -64,7 +92,7 @@ func processMeetResults(parsed hy3ParsedFile, db storage.Database) (meetID int64
 			continue
 		}
 
-		swimmer, err := swimming.FindSwimmerByNameAndBirthDate(raw.FirstName, raw.LastName, raw.BirthDate, db)
+		swimmer, err := findSwimmer(raw, db)
 		if err != nil {
 			log.Printf("processMeetResults: %v", err)
 			failed++
