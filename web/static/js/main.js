@@ -169,8 +169,7 @@ function submitResultsForm(event) {
             modal.hide();
             location.reload();
         } else {
-            const errorMsg = await response.text();
-            errorField.innerText = errorMsg;
+            errorField.innerText = await response.text();
             errorField.style.display = 'block';
         }
     })
