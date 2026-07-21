@@ -7,6 +7,7 @@ import (
 	"log"
 	"regexp"
 	"strings"
+	texttemplate "text/template"
 
 	"github.com/yuin/goldmark"
 	"golang.org/x/text/cases"
@@ -43,10 +44,10 @@ func GetTemplateWithFunctions(layout, page string, funcMap template.FuncMap) *te
 	return html
 }
 
-func GetSvgReportTemplate(name string) *template.Template {
-	svg, err := template.
+func GetSvgReportTemplate(name string) *texttemplate.Template {
+	svg, err := texttemplate.
 		New(fmt.Sprintf("%s.svg", name)).
-		Funcs(template.FuncMap{"FormatMilliseconds": FormatMilliseconds}).
+		Funcs(texttemplate.FuncMap{"FormatMilliseconds": FormatMilliseconds}).
 		ParseFiles(fmt.Sprintf("web/templates/reports/%s.svg", name))
 	if err != nil {
 		log.Print(err)

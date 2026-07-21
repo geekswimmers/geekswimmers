@@ -533,6 +533,7 @@ func (rc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 	if err != nil {
 		log.Printf("times.RecordPosterView: %v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	records = groupPosterRecordsByDefinition(records)
 
