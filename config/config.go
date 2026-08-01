@@ -55,9 +55,6 @@ const (
 
 	// MonitoringGoogleAnalytics is the Google Analytics ID.
 	MonitoringGoogleAnalytics = "monitoring.googleanalytics"
-
-	// FeedbackForm is the URL of the feedback form.
-	FeedbackForm = "miscellaneous.feedbackform"
 )
 
 type Config interface {
@@ -138,8 +135,6 @@ func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	utils.LogError(viperConfig.BindEnv(ServerURL, "SERVER_URL"), "SERVER_URL not available")
 
 	utils.LogError(viperConfig.BindEnv(MonitoringGoogleAnalytics, "MONITORING_GOOGLE_ANALYTICS"), "MONITORING_GOOGLE_ANALYTICS not available")
-
-	utils.LogError(viperConfig.BindEnv(FeedbackForm, "MISCELLANEOUS_FEEDBACKFORM"), "MISCELLANEOUS_FEEDBACKFORM not available")
 }
 
 func checkRequiredConfigEntries(c Config) error {

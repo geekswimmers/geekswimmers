@@ -25,6 +25,3 @@ secretkey = ""
 
 [monitoring]
 googleanalytics = ""
-
-[miscellaneous]
-feedbackform = ""

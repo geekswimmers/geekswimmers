@@ -17,7 +17,6 @@ import (
 // This context is shared globally within the application. Do not put any session-specific data here.
 type BaseTemplateData struct {
 	Email                     string
-	FeedbackForm              string
 	MonitoringGoogleAnalytics string
 }
 

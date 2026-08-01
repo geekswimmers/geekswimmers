@@ -135,12 +135,11 @@ Configuration is loaded from `config.toml` (or provided via environment variable
 - **email** - SMTP settings for transactional emails
 - **recaptcha** - reCAPTCHA keys
 - **monitoring** - Google Analytics ID
-- **miscellaneous** - Feedback form URL
 
 Environment variables override TOML values:
 - `DATABASE_URL`, `DATABASE_MAXOPENCONNS`, `DATABASE_CONNMAXLIFETIME`
 - `EMAIL_*`, `GOOGLE_*`, `RECAPTCHA_*`
-- `PORT`, `SERVER_SESSION_KEY`, `SERVER_URL`, `MONITORING_GOOGLE_ANALYTICS`, `MISCELLANEOUS_FEEDBACKFORM`
+- `PORT`, `SERVER_SESSION_KEY`, `SERVER_URL`, `MONITORING_GOOGLE_ANALYTICS`
 
 **To generate a secure session key:**
 ```bash
