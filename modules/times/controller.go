@@ -181,7 +181,6 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 		swimSeason, err = GetLatestSwimSeason(sc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
-			http.Error(res, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
 		swimSeason = &SwimSeason{
@@ -220,13 +219,23 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 	ctx["SwimSeason"] = swimSeason
 
-	timeStandards, err := FindTimeStandards(*swimSeason, jurisdiction, sc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-	}
+	if swimSeason == nil {
+		timeStandards, err := FindAllTimeStandards(sc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
 
-	ctx["TimeStandards"] = timeStandards
+		ctx["TimeStandards"] = timeStandards
+	} else {
+		timeStandards, err := FindTimeStandards(*swimSeason, jurisdiction, sc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+
+		ctx["TimeStandards"] = timeStandards
+	}
 
 	html := utils.GetTemplate("base", "timestandards")
 	err = html.Execute(res, ctx)
