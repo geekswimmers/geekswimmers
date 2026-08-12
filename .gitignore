@@ -3,7 +3,7 @@ geekswimmers
 .env
 .vscode/settings.json
 *.bkp
-.env
+main
 
 .idea/
 test/
