@@ -32,6 +32,8 @@ func CreateServer(c config.Config, db storage.Database) *Server {
 	s.Router = pat.New()
 
 	btd := utils.BaseTemplateData{
+		AppName:                   c.GetString(config.AppName),
+		AppLogo:                   c.GetString(config.AppLogo),
 		MonitoringGoogleAnalytics: c.GetString(config.MonitoringGoogleAnalytics),
 	}
 	s.Routes(btd)

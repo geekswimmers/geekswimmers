@@ -16,6 +16,9 @@ const (
 	// DefaultConfigFile is the file to be used if no custom config file is informed through a flag.
 	DefaultConfigFile = "./config.toml"
 
+	AppName = "app.name"
+	AppLogo = "app.logo"
+
 	// DatabaseURL contains all the parameters required to connect to the database.
 	DatabaseURL = "database.url"
 	// DatabaseMaxOpenConns limits the number of open connections (in-use + idle) at the same time. The default is unlimited.
@@ -113,6 +116,10 @@ This function maps environment variables to configuration entries, considering o
 func bindEnvironmentVariables(viperConfig *viper.Viper) {
 	viperConfig.AutomaticEnv()
 	viperConfig.SetEnvPrefix("geekswimmers")
+
+	utils.LogError(viperConfig.BindEnv(AppName, "APP_NAME"), "APP_NAME not available")
+	utils.LogError(viperConfig.BindEnv(AppLogo, "APP_LOGO"), "APP_LOGO not available")
+
 	utils.LogError(viperConfig.BindEnv(DatabaseURL, "DATABASE_URL"), "DATABASE_URL not available")
 	utils.LogError(viperConfig.BindEnv(DatabaseMaxOpenConns, "DATABASE_MAXOPENCONNS"), "DATABASE_MAXOPENCONNS not available")
 	utils.LogError(viperConfig.BindEnv(DatabaseConnMaxLifetime, "DATABASE_CONNMAXLIFETIME"), "DATABASE_CONNMAXLIFETIME not available")
