@@ -66,6 +66,20 @@ func groupByDefinition(grouping map[int64]*Record, record *Record, key int64) {
 	}
 }
 
+func attachRecordsHistory(records []*Record, history map[int64][]*Record) {
+	for _, record := range records {
+		hist := history[record.Definition.ID]
+		if len(hist) <= 1 {
+			continue
+		}
+
+		record.Previous = make([]Record, 0, len(hist)-1)
+		for _, h := range hist[1:] {
+			record.Previous = append(record.Previous, *h)
+		}
+	}
+}
+
 func groupPosterRecordsByDefinition(records []*RecordPoster) []*RecordPoster {
 	grouping := make(map[string]*RecordPoster)
 	for _, record := range records {

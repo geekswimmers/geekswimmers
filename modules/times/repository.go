@@ -235,7 +235,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 }
 
 func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select bt.record_time, r.year, r.month, rd.style, rd.distance, s.first_name, s.last_name 
+	sql := `select bt.record_time, r.year, r.month, rd.id, rd.style, rd.distance, s.first_name, s.last_name
 			from record r
 				join record_set rs on rs.id = r.record_set
 				join record_definition rd on rd.id = r.definition
@@ -269,10 +269,11 @@ func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db 
 	var records []*Record
 	for rows.Next() {
 		record := &Record{
+			RecordSet:  recordSet,
 			Definition: RecordDefinition{},
 			Swimmer:    &swimming.Swimmer{},
 		}
-		err = rows.Scan(&record.Time, &record.Year, &record.Month,
+		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Definition.ID,
 			&record.Definition.Style, &record.Definition.Distance,
 			&record.Swimmer.FirstName, &record.Swimmer.LastName)
 		if err != nil && err.Error() != storage.ErrNoRows {
@@ -282,6 +283,38 @@ func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db 
 	}
 
 	return records, nil
+}
+
+func findRecordsHistoryByRecordSet(recordSet RecordSet, db storage.Database) (map[int64][]*Record, error) {
+	stm := `select r.definition, r.record_time, r.year, r.month, coalesce(r.holder, ''),
+				coalesce(s.id, 0), coalesce(s.first_name, ''), coalesce(s.last_name, '')
+			from record r
+				left join swimmer s on s.id = r.swimmer
+			where r.record_set = $1
+			order by r.definition, r.record_time asc`
+	rows, err := db.Query(context.Background(), stm, recordSet.ID)
+	if err != nil {
+		return nil, fmt.Errorf("findRecordsHistoryByRecordSet: %v", err)
+	}
+	defer rows.Close()
+
+	history := make(map[int64][]*Record)
+	for rows.Next() {
+		var definitionID int64
+		record := &Record{
+			RecordSet: recordSet,
+			Swimmer:   &swimming.Swimmer{},
+		}
+		err = rows.Scan(&definitionID, &record.Time, &record.Year, &record.Month, &record.Holder,
+			&record.Swimmer.ID, &record.Swimmer.FirstName, &record.Swimmer.LastName)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("findRecordsHistoryByRecordSet: %v", err)
+		}
+		record.Definition.ID = definitionID
+		history[definitionID] = append(history[definitionID], record)
+	}
+
+	return history, nil
 }
 
 func findRecentRecords(recordSet RecordSet, db storage.Database) ([]*Record, error) {

@@ -571,7 +571,7 @@ func (rc *RecordsController) RecordPosterView(res http.ResponseWriter, req *http
 	}
 }
 
-func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.Request) {
+func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.Request, _ *storage.SessionData) {
 	id, _ := strconv.ParseInt(req.URL.Query().Get(":id"), 10, 64)
 	recordSet := RecordSet{
 		ID: id,
@@ -588,6 +588,11 @@ func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.R
 	}
 
 	recordsAgeRanges, err := findRecordsAgeRanges(recordSet, rc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
+	}
+
+	recordsHistory, err := findRecordsHistoryByRecordSet(recordSet, rc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
@@ -641,6 +646,10 @@ func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.R
 			log.Printf("times.%v", err)
 			break
 		}
+	}
+
+	for _, records := range recordsGenderCourse {
+		attachRecordsHistory(records, recordsHistory)
 	}
 
 	ctx := map[string]any{

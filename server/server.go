@@ -182,7 +182,7 @@ func (s *Server) Routes(btc utils.BaseTemplateData) {
 	s.Router.Get("/times/records/:id/swimmers/:swimmerId/", s.handleRequest(recordsController.RecordSwimmerView))
 	s.Router.Get("/times/records/:id/history/:defId/", s.handleRequest(recordsController.RecordHistoryView))
 	s.Router.Get("/times/records/:id/poster/", s.handleRequest(recordsController.RecordPosterView))
-	s.Router.Get("/times/records/:id/page/", s.handleRequest(recordsController.RecordPageView))
+	s.Router.Get("/times/records/:id/page/", s.handleAuthRequest(recordsController.RecordPageView))
 	s.Router.Get("/times/records/:id/", s.handleRequest(recordsController.RecordsView))
 	s.Router.Get("/times/records", s.handleRequest(recordsController.RecordsListView))
 	s.Router.Get("/times/standards/:id/event/:eventId/", s.handleRequest(standardsController.StandardsEventView))
