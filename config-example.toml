@@ -1,3 +1,7 @@
+[app]
+name = "Geek Swimmers"
+logo = "logo.png"
+
 [database]
 url = "postgres://geekswimmers_usr:secretpassword@localhost:5432/geekswimmers"
 maxopenconns = 10
@@ -5,7 +9,8 @@ connmaxlifetime = 30 # minutes
 
 [server]
 port = 8080
-sessionkey = "a"
+# Before deploying the app in production, change the sessionkey. Follow the instructions on geekswimmers.com
+sessionkey = "WFE5FU3TGN7LWJBRMIXUNQ4W5ZNXJRCXSCGVOBPIXRQ4JUMZ5V3D6YUGSKWIGXP3ZXOLYWA4XMXG3GL235GEM5Z64IP7FNTPMEQDFMY="
 
 [google]
 clientid = ""
