@@ -81,7 +81,7 @@ func applyLayout(layout, page string) []string {
 }
 
 func Title(str string) string {
-	if len(str) == 0 {
+	if len(str) < 3 {
 		return str
 	}
 

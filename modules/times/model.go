@@ -100,13 +100,14 @@ type MeetResult struct {
 }
 
 type RecordDefinition struct {
-	ID       int64
-	MinAge   *int64
-	MaxAge   *int64
-	Gender   string
-	Course   string
-	Style    string
-	Distance int64
+	ID         int64
+	MinAge     *int64
+	MaxAge     *int64
+	Gender     string
+	Course     string
+	Style      string
+	StyleShort string
+	Distance   int64
 
 	// Transient
 	Age      int64
@@ -176,6 +177,17 @@ func (record *Record) AllHolders() string {
 
 func (record *Record) MonthName() string {
 	return utils.MonthName(*record.Month)
+}
+
+func (record *Record) MonthNumber() string {
+	if *record.Month < 10 {
+		return fmt.Sprintf("0%d", *record.Month)
+	}
+	return fmt.Sprintf("%d", *record.Month)
+}
+
+func (record *Record) YearShort() string {
+	return fmt.Sprintf("%02d", *record.Year%100)
 }
 
 type RecordPoster struct {

@@ -592,9 +592,14 @@ func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.R
 		log.Printf("times.%v", err)
 	}
 
-	recordsHistory, err := findRecordsHistoryByRecordSet(recordSet, rc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
+	showHistory := req.URL.Query().Get("history") == "true"
+
+	var recordsHistory map[int64][]*Record
+	if showHistory {
+		recordsHistory, err = findRecordsHistoryByRecordSet(recordSet, rc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+		}
 	}
 
 	recordsGenderCourse := make(map[string][]*Record)
@@ -648,8 +653,10 @@ func (rc *RecordsController) RecordPageView(res http.ResponseWriter, req *http.R
 		}
 	}
 
-	for _, records := range recordsGenderCourse {
-		attachRecordsHistory(records, recordsHistory)
+	if showHistory {
+		for _, records := range recordsGenderCourse {
+			attachRecordsHistory(records, recordsHistory)
+		}
 	}
 
 	ctx := map[string]any{

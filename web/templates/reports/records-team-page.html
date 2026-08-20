@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <title>Club Records</title>
 </head>
+
+<style>
+    table {
+        width: 100%;
+        margin: 10px auto;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    th {
+        padding: 0.6em;
+        background-color: #eee;
+        text-align: left;
+    }
+
+    td {
+        padding: 0.6em;
+    }
+
+    tr.record-previous td {
+        padding: 0.3em 0.6em 0.3em 1.5em;
+        color: #666;
+        font-size: 0.9em;
+        border-top: none;
+    }
+</style>
+
 <body>
-    <style>
-        table {
-            width: 100%;
-            margin: 10px auto;
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th {
-            padding: 0.6em;
-            background-color: #eee;
-            text-align: left;
-        }
-
-        td {
-            padding: 0.6em;
-        }
-
-        tr.record-previous td {
-            padding: 0.3em 0.6em 0.3em 1.5em;
-            color: #666;
-            font-size: 0.9em;
-            border-top: none;
-        }
-    </style>
-
     <h1>Recent Records</h1>
 
     <table>
@@ -118,17 +119,17 @@
             <tbody>
             {{range $records}}
             <tr>
-                <td>{{.Definition.Distance}} {{.Definition.Style | Title}}</td>
+                <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
                 <td>{{.Time | FormatMilliseconds}}</td>
                 <td>{{.HolderName}}</td>
-                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                <td>{{if .Year}}{{.Year}}{{end}}</td>
             </tr>
             {{range .Previous}}
                 <tr class="record-previous">
                     <td></td>
                     <td>{{.Time | FormatMilliseconds}}</td>
                     <td>{{.HolderName}}</td>
-                    <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                    <td>{{if .Year}}{{.Year}}{{end}}</td>
                 </tr>
             {{end}}
             {{end}}
@@ -156,17 +157,17 @@
             <tbody>
             {{range $records}}
             <tr>
-                <td>{{.Definition.Distance}} {{.Definition.Style | Title}}</td>
+                <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
                 <td>{{.Time | FormatMilliseconds}}</td>
                 <td>{{.HolderName}}</td>
-                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                <td>{{if .Year}}{{.Year}}{{end}}</td>
             </tr>
             {{range .Previous}}
                 <tr class="record-previous">
                     <td></td>
                     <td>{{.Time | FormatMilliseconds}}</td>
                     <td>{{.HolderName}}</td>
-                    <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                    <td>{{if .Year}}{{.Year}}{{end}}</td>
                 </tr>
             {{end}}
             {{end}}
@@ -196,17 +197,17 @@
             <tbody>
             {{range $records}}
             <tr>
-                <td>{{.Definition.Distance}} {{.Definition.Style | Title}}</td>
+                <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
                 <td>{{.Time | FormatMilliseconds}}</td>
                 <td>{{.HolderName}}</td>
-                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                <td>{{if .Year}}{{.Year}}{{end}}</td>
             </tr>
             {{range .Previous}}
                 <tr class="record-previous">
                     <td></td>
                     <td>{{.Time | FormatMilliseconds}}</td>
                     <td>{{.HolderName}}</td>
-                    <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                    <td>{{if .Year}}{{.Year}}{{end}}</td>
                 </tr>
             {{end}}
             {{end}}
@@ -234,17 +235,17 @@
             <tbody>
             {{range $records}}
             <tr>
-                <td>{{.Definition.Distance}} {{.Definition.Style | Title}}</td>
+                <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
                 <td>{{.Time | FormatMilliseconds}}</td>
                 <td>{{.HolderName}}</td>
-                <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                <td>{{if .Year}}{{.Year}}{{end}}</td>
             </tr>
             {{range .Previous}}
                 <tr class="record-previous">
                     <td></td>
                     <td>{{.Time | FormatMilliseconds}}</td>
                     <td>{{.HolderName}}</td>
-                    <td>{{if .Month}}{{.MonthName}}-{{end}}{{if .Year}}{{.Year}}{{end}}</td>
+                    <td>{{if .Year}}{{.Year}}{{end}}</td>
                 </tr>
             {{end}}
             {{end}}

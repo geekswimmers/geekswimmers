@@ -235,7 +235,7 @@ func FindRecordsByRecordSet(recordSet RecordSet, example RecordDefinition, db st
 }
 
 func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db storage.Database) ([]*Record, error) {
-	sql := `select bt.record_time, r.year, r.month, rd.id, rd.style, rd.distance, s.first_name, s.last_name
+	sql := `select bt.record_time, r.year, r.month, rd.id, rd.style, rd.distance, ss.stroke_short, s.first_name, s.last_name
 			from record r
 				join record_set rs on rs.id = r.record_set
 				join record_definition rd on rd.id = r.definition
@@ -274,7 +274,7 @@ func findRecordsByAgeGroup(recordSet RecordSet, definition RecordDefinition, db 
 			Swimmer:    &swimming.Swimmer{},
 		}
 		err = rows.Scan(&record.Time, &record.Year, &record.Month, &record.Definition.ID,
-			&record.Definition.Style, &record.Definition.Distance,
+			&record.Definition.Style, &record.Definition.Distance, &record.Definition.StyleShort,
 			&record.Swimmer.FirstName, &record.Swimmer.LastName)
 		if err != nil && err.Error() != storage.ErrNoRows {
 			return nil, fmt.Errorf("findRecordsByAgeGroup: %v", err)
