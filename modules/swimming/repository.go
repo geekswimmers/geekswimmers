@@ -114,6 +114,32 @@ func findInstructions(style *Style, db storage.Database) ([]*Instruction, error)
 	return instructions, nil
 }
 
+func FindJurisdictionsInUseByStandards(db storage.Database) ([]*Jurisdiction, error) {
+	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
+			from jurisdiction j
+			where j.id in (select distinct jurisdiction from time_standard)`
+
+	rows, err := db.Query(context.Background(), stm)
+	if err != nil {
+		return nil, fmt.Errorf("FindJurisdictionsInUseByStandards: %v", err)
+	}
+	defer rows.Close()
+
+	var jurisdictions []*Jurisdiction
+	for rows.Next() {
+		jurisdiction := &Jurisdiction{}
+		err = rows.Scan(&jurisdiction.ID, &jurisdiction.Country, &jurisdiction.Province, &jurisdiction.Region, &jurisdiction.City, &jurisdiction.Team, &jurisdiction.Meet)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("FindJurisdictionsInUseByStandards: %v", err)
+		}
+		jurisdiction.Title = jurisdiction.GetTitle()
+		jurisdiction.SubTitle = jurisdiction.GetSubTitle()
+		jurisdictions = append(jurisdictions, jurisdiction)
+	}
+
+	return jurisdictions, nil
+}
+
 func FindJurisdictionsByLevel(level string, db storage.Database) ([]*Jurisdiction, error) {
 	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
 	        from jurisdiction j`

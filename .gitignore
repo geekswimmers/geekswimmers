@@ -3,6 +3,7 @@ geekswimmers
 .env
 .vscode/settings.json
 *.bkp
+*.backup
 main
 
 .idea/

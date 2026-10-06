@@ -598,6 +598,31 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 	return timeStandards, nil
 }
 
+func FindTimeStandardsByJurisdiction(jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
+	stm := `select distinct ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
+	        from time_standard ts
+				join jurisdiction j on j.id = ts.jurisdiction
+			where (j.id = $1 or j.region is null)
+			order by ts.name`
+	rows, err := db.Query(context.Background(), stm, jurisdiction.ID.Int64)
+	if err != nil {
+		return nil, fmt.Errorf("FindTimeStandardsByJurisdiction: %v", err)
+	}
+	defer rows.Close()
+
+	var timeStandards []*TimeStandard
+	for rows.Next() {
+		timeStandard := &TimeStandard{}
+		err = rows.Scan(&timeStandard.ID, &timeStandard.Name, &timeStandard.MinAgeTime, &timeStandard.MaxAgeTime, &timeStandard.Benchmark)
+		if err != nil && err.Error() != storage.ErrNoRows {
+			return nil, fmt.Errorf("FindTimeStandardsByJurisdiction: %v", err)
+		}
+		timeStandards = append(timeStandards, timeStandard)
+	}
+
+	return timeStandards, nil
+}
+
 func FindAllTimeStandards(db storage.Database) ([]*TimeStandard, error) {
 	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time,
                    j.world, j.country, j.province, j.region, j.city, j.team, j.meet

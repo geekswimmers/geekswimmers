@@ -118,20 +118,20 @@
             </thead>
             <tbody>
             {{range $records}}
-            <tr>
-                <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
-                <td>{{.Time | FormatMilliseconds}}</td>
-                <td>{{.HolderName}}</td>
-                <td>{{if .Year}}{{.Year}}{{end}}</td>
-            </tr>
-            {{range .Previous}}
-                <tr class="record-previous">
-                    <td></td>
+                <tr>
+                    <td>{{.Definition.Distance}} {{.Definition.StyleShort | Title}}</td>
                     <td>{{.Time | FormatMilliseconds}}</td>
                     <td>{{.HolderName}}</td>
                     <td>{{if .Year}}{{.Year}}{{end}}</td>
                 </tr>
-            {{end}}
+                {{range .Previous}}
+                    <tr class="record-previous">
+                        <td></td>
+                        <td>{{.Time | FormatMilliseconds}}</td>
+                        <td>{{.HolderName}}</td>
+                        <td>{{if .Year}}{{.Year}}{{end}}</td>
+                    </tr>
+                {{end}}
             {{end}}
             </tbody>
         </table>

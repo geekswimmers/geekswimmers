@@ -175,19 +175,6 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *http.Request) {
 	ctx := modules.InitializeRequestContext(storage.NewSessionData(req), sc.BaseTemplateData)
 
-	swimSeasonID, err := strconv.ParseInt(req.URL.Query().Get("season"), 10, 64)
-	var swimSeason *SwimSeason
-	if err != nil {
-		swimSeason, err = GetLatestSwimSeason(sc.DB)
-		if err != nil {
-			log.Printf("times.%v", err)
-		}
-	} else {
-		swimSeason = &SwimSeason{
-			ID: swimSeasonID,
-		}
-	}
-
 	jurisdictionID, _ := strconv.ParseInt(req.URL.Query().Get("jurisdiction"), 10, 64)
 	jurisdiction := swimming.Jurisdiction{
 		ID: sql.NullInt64{
@@ -197,15 +184,7 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 	ctx["Jurisdiction"] = jurisdiction
 
-	seasons, err := findSwimSeasons(sc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
-		http.Error(res, err.Error(), http.StatusInternalServerError)
-	}
-
-	ctx["SwimSeasons"] = seasons
-
-	jurisdictions, err := swimming.FindJurisdictionsByLevel(swimming.JurisdictionLevelRegion, sc.DB)
+	jurisdictions, err := swimming.FindJurisdictionsInUseByStandards(sc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
@@ -213,27 +192,19 @@ func (sc *StandardsController) TimeStandardsView(res http.ResponseWriter, req *h
 
 	ctx["Jurisdictions"] = jurisdictions
 
-	if swimSeasonID == 0 && len(seasons) > 0 {
-		swimSeason.ID = seasons[0].ID
-	}
-
-	ctx["SwimSeason"] = swimSeason
-
-	if swimSeason == nil {
+	if jurisdictionID > 0 {
+		timeStandards, err := FindTimeStandardsByJurisdiction(jurisdiction, sc.DB)
+		if err != nil {
+			log.Printf("times.%v", err)
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+		}
+		ctx["TimeStandards"] = timeStandards
+	} else {
 		timeStandards, err := FindAllTimeStandards(sc.DB)
 		if err != nil {
 			log.Printf("times.%v", err)
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 		}
-
-		ctx["TimeStandards"] = timeStandards
-	} else {
-		timeStandards, err := FindTimeStandards(*swimSeason, jurisdiction, sc.DB)
-		if err != nil {
-			log.Printf("times.%v", err)
-			http.Error(res, err.Error(), http.StatusInternalServerError)
-		}
-
 		ctx["TimeStandards"] = timeStandards
 	}
 
@@ -256,10 +227,10 @@ func (sc *StandardsController) TimeStandardView(res http.ResponseWriter, req *ht
 	}
 
 	age, err := strconv.ParseInt(req.URL.Query().Get("age"), 10, 64)
-	if err != nil {
+	if err != nil && timeStandard.MinAgeTime != nil {
 		age = *timeStandard.MinAgeTime
 	}
-	if age < *timeStandard.MinAgeTime {
+	if timeStandard.MinAgeTime != nil && age < *timeStandard.MinAgeTime {
 		age = *timeStandard.MinAgeTime
 	}
 	if timeStandard.MaxAgeTime != nil && age > *timeStandard.MaxAgeTime {
