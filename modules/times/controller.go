@@ -67,10 +67,6 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	if err != nil {
 		jurisdictionId = 0
 	}
-	meets, err := FindMeetsWithTimeStandardByJurisdiction(jurisdictionId, bc.DB)
-	if err != nil {
-		log.Printf("times.%v", err)
-	}
 
 	swimmer := &swimming.Swimmer{
 		BirthDate: sql.NullTime{
@@ -81,6 +77,13 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 			String: gender,
 			Valid:  true,
 		},
+	}
+
+	// Time standards
+	// Time standards related to meets
+	meets, err := FindMeetsWithTimeStandardByJurisdiction(jurisdictionId, bc.DB)
+	if err != nil {
+		log.Printf("times.%v", err)
 	}
 
 	var foundMeets []*Meet
@@ -131,6 +134,15 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 	}
 
+	sort.SliceStable(foundMeets, func(i, j int) bool {
+		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
+	})
+
+	ctx["Meets"] = foundMeets
+
+	// Time standards without meets
+
+	// Records
 	recordExample := RecordDefinition{
 		Age:      swimmer.AgeAt(time.Now()),
 		Gender:   gender,
@@ -138,10 +150,12 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		Style:    style,
 		Distance: distance,
 	}
+
 	records, err := FindRecordsByExample(recordExample, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
+
 	for _, record := range records {
 		record.Difference = swimmerTime - record.Time
 
@@ -152,13 +166,9 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 	}
 
-	sort.SliceStable(foundMeets, func(i, j int) bool {
-		return foundMeets[i].StandardTime.Difference < foundMeets[j].StandardTime.Difference
-	})
-
-	ctx["Meets"] = foundMeets
 	ctx["Records"] = records
 
+	// Response
 	html := utils.GetTemplateWithFunctions("base", "benchmark", template.FuncMap{
 		"Title":              utils.Title,
 		"FormatMilliseconds": utils.FormatMilliseconds,
