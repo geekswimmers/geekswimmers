@@ -43,7 +43,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 		}
 	}
 
-	jurisdiction := req.URL.Query().Get("jurisdiction")
+	jurisdictionId, _ := strconv.ParseInt(req.URL.Query().Get("jurisdiction"), 10, 64)
 	birthDate, _ := time.Parse("2006-01-02", req.URL.Query().Get("birthDate"))
 	gender := req.URL.Query().Get("gender")
 	course := req.URL.Query().Get("course")
@@ -63,9 +63,11 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 	ctx["Distance"] = distance
 	ctx["Style"] = style
 
-	jurisdictionId, err := strconv.ParseInt(jurisdiction, 10, 64)
-	if err != nil {
-		jurisdictionId = 0
+	jurisdiction := &swimming.Jurisdiction{
+		ID: sql.NullInt64{
+			Int64: jurisdictionId,
+			Valid: true,
+		},
 	}
 
 	swimmer := &swimming.Swimmer{
@@ -81,7 +83,7 @@ func (bc *BenchmarkController) BenchmarkTime(res http.ResponseWriter, req *http.
 
 	// Time standards
 	// Time standards related to meets
-	meets, err := FindMeetsWithTimeStandardByJurisdiction(jurisdictionId, bc.DB)
+	meets, err := FindMeetsWithTimeStandardByJurisdiction(jurisdiction.ID.Int64, bc.DB)
 	if err != nil {
 		log.Printf("times.%v", err)
 	}
