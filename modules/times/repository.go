@@ -573,9 +573,9 @@ func findRecordsBySwimmer(recordSet *RecordSet, swimmer *swimming.Swimmer, activ
 
 func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
 	stm := `select distinct ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
-	        from time_standard ts
+	        from standard ts
 				join jurisdiction j on j.id = ts.jurisdiction
-				join meet m on m.time_standard = ts.id
+				join meet m on m.standard = ts.id
 			where (j.id = $1 or j.region is null)
 			    and m.season = $2
 			order by ts.name`
@@ -600,7 +600,7 @@ func FindTimeStandards(season SwimSeason, jurisdiction swimming.Jurisdiction, db
 
 func FindTimeStandardsByJurisdiction(jurisdiction swimming.Jurisdiction, db storage.Database) ([]*TimeStandard, error) {
 	stm := `select distinct ts.id, ts.name, ts.min_age_time, ts.max_age_time, ts.benchmark
-	        from time_standard ts
+	        from standard ts
 				join jurisdiction j on j.id = ts.jurisdiction
 			where (j.id = $1 or j.region is null)
 			order by ts.name`
@@ -626,7 +626,7 @@ func FindTimeStandardsByJurisdiction(jurisdiction swimming.Jurisdiction, db stor
 func FindAllTimeStandards(db storage.Database) ([]*TimeStandard, error) {
 	stm := `select ts.id, ts.name, ts.min_age_time, ts.max_age_time,
                    j.world, j.country, j.province, j.region, j.city, j.team, j.meet
-	        from time_standard ts
+	        from standard ts
 				join jurisdiction j on j.id = ts.jurisdiction
 			order by ts.name`
 	rows, err := db.Query(context.Background(), stm)
@@ -656,7 +656,7 @@ func FindAllTimeStandards(db storage.Database) ([]*TimeStandard, error) {
 
 func GetTimeStandard(id int64, db storage.Database) (*TimeStandard, error) {
 	stm := `select ts.name, ts.min_age_time, ts.max_age_time, ts.open, coalesce(ts.source_title, 'None'), coalesce(ts.source_link, '#')
-			from time_standard ts
+			from standard ts
 	        where ts.id = $1`
 
 	row := db.QueryRow(context.Background(), stm, id)
@@ -712,11 +712,11 @@ func GetStandardTimeByDefinition(definition *StandardDefinition, timeStandard *T
 	stm := `select st.id, st.standard, st.update_date
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
-			where st.time_standard = $1
+			where st.standard = $1
 			  and st.definition = $2
 			  and st.update_date = (select max(stm.update_date) 
 			                        from standard_time stm
-			                        where stm.time_standard = $1
+			                        where stm.standard = $1
 			                          and stm.definition = $2)`
 	row := db.QueryRow(context.Background(), stm, timeStandard.ID, definition.ID)
 
@@ -746,9 +746,9 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 							where sd.age between $1 and $2
 								and sd.gender = $3
 								and sd.course = $4
-								and ist.time_standard = $5
+								and ist.standard = $5
 							group by ss.sequence, sd.id, sd.style, sd.distance, sd.age) re on st.definition = re.def
-				where st.time_standard = $5
+				where st.standard = $5
 					and st.update_date = re.update_date 
 				order by re.sequence, st.standard asc`
 
@@ -769,9 +769,9 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		 						join swim_style ss on ss.stroke = sd.style
 							where sd.gender = $1
 								and sd.course = $2
-								and ist.time_standard = $3
+								and ist.standard = $3
 							group by ss.sequence, sd.id, sd.style, sd.distance, sd.age) re on st.definition = re.def
-				where st.time_standard = $3
+				where st.standard = $3
 					and st.update_date = re.update_date 
 				order by re.sequence, st.standard asc`
 
@@ -803,14 +803,14 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		stm := `select ts.id, ts.name, st.standard
-				from time_standard ts
-					join standard_time st on ts.id = st.time_standard
+				from standard ts
+					join standard_time st on ts.id = st.standard
 				    join standard_definition sd on st.definition = sd.id
-				where st.time_standard = $1
+				where st.standard = $1
 				  	and st.update_date = (select max(stm.update_date) 
 										  from standard_time stm
 											join standard_definition sdm on stm.definition = sdm.id
-										  where stm.time_standard = $1
+										  where stm.standard = $1
 										    and sdm.age = $2
 										    and sdm.gender = $4
 										    and sdm.course = $5
@@ -828,11 +828,11 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 			example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	} else {
 		stm := `select ts.id, ts.name, st.standard
-				from time_standard ts
-					join standard_time st on ts.id = st.time_standard
+				from standard ts
+					join standard_time st on ts.id = st.standard
 				    join standard_definition sd on st.definition = sd.id
-				where st.time_standard = $1
-				    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
+				where st.standard = $1
+				    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.standard = st.standard)
 					and sd.gender = $2
 					and sd.course  = $3
 					and sd.style = $4
@@ -857,8 +857,8 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 	stm := `select st.id, sd.course, sd.style, sd.distance, st.standard 
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
-			where st.time_standard = $1
-			    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.time_standard = st.time_standard)
+			where st.standard = $1
+			    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.standard = st.standard)
 			    and sd.gender = $2
 				and sd.course = $3
 				and (sd.age = $4 or sd.age is null)`
@@ -883,7 +883,7 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 }
 
 func InsertStandardTime(standardTime *StandardTime, db storage.Database) error {
-	stm := `insert into standard_time (time_standard, age, gender, course, style, distance, standard, definition, update_date)
+	stm := `insert into standard_time (standard, age, gender, course, style, distance, standard_time, definition, update_date)
              values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
 	_, err := db.Exec(context.Background(), stm,
@@ -906,7 +906,7 @@ func findStandardsEvent(timeStandard *TimeStandard, definition *StandardDefiniti
 	stm := `select ts.id , ts.name, st.standard, st.update_date
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
-				join time_standard ts on ts.id = st.time_standard
+				join standard ts on ts.id = st.standard
 			where ts.id = $1 
 				and sd.id = $2
 			order by st.update_date desc`
@@ -936,7 +936,7 @@ func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) 
 	stm := `select min(sd.age) as min_age, max(sd.age) as max_age 
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
-			where st.time_standard = $1`
+			where st.standard = $1`
 
 	row := db.QueryRow(context.Background(), stm, timeStandard.ID)
 
@@ -952,16 +952,16 @@ func FindMinAndMaxStandardAges(timeStandard *TimeStandard, db storage.Database) 
 }
 
 func FindMeetsWithTimeStandardByJurisdiction(jurisdictionId int64, db storage.Database) ([]*Meet, error) {
-	stm := `select m.name, m.age_date, m.time_standard, m.course, ss.id, ss.name,
+	stm := `select m.name, m.age_date, m.standard, m.course, ss.id, ss.name,
 	            ts.min_age_time, ts.max_age_time, ts.open, m.min_age_enforced, m.max_age_enforced
 			from meet m
 			    join swim_season ss on ss.id = m.season
-			    join time_standard ts on ts.id = m.time_standard
+			    join standard ts on ts.id = m.standard
 				join jurisdiction j on j.id = ts.jurisdiction
 			where (j.id = $1 or j.region is null)
 			    and ss.start_date <= now() and ss.end_date >= now()
 			 	and m.end_date >= now()
-			 	and m.time_standard is not null
+			 	and m.standard is not null
 				and m.age_date is not null
 				and ts.benchmark = true
 			order by m.age_date`
@@ -988,7 +988,7 @@ func FindMeetsWithTimeStandardByJurisdiction(jurisdictionId int64, db storage.Da
 func FindMeetsByTimeStandard(timeStandard TimeStandard, db storage.Database) ([]*Meet, error) {
 	stm := `select m.id, m.name, m.course, m.start_date
 			from meet m
-			where m.time_standard = $1
+			where m.standard = $1
 			order by m.start_date desc`
 	rows, err := db.Query(context.Background(), stm, timeStandard.ID)
 	if err != nil {
@@ -1035,7 +1035,7 @@ func FindMeets(db storage.Database) ([]*Meet, error) {
 func FindMeetsSeasonByTimeStandard(timeStandard TimeStandard, currentSwimSeason *SwimSeason, db storage.Database) ([]*Meet, error) {
 	stm := `select m.id, m.name, m.course, m.start_date
 			from meet m
-			where m.time_standard = $1
+			where m.standard = $1
 				and m.season = $2
 			order by m.start_date desc`
 	rows, err := db.Query(context.Background(), stm, timeStandard.ID, currentSwimSeason.ID)
