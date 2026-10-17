@@ -739,14 +739,14 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		// Age groups
 		stm := `select st.definition, re.style, re.distance, re.age, st.standard
 				from standard_time st
-  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(ist.update_date) as update_date
-							from standard_time ist
-								join standard_definition sd on ist.definition = sd.id
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(stm.update_date) as update_date
+							from standard_time stm
+								join standard_definition sd on stm.definition = sd.id
 		 						join swim_style ss on ss.stroke = sd.style
 							where sd.age between $1 and $2
 								and sd.gender = $3
 								and sd.course = $4
-								and ist.standard = $5
+								and stm.standard = $5
 							group by ss.sequence, sd.id, sd.style, sd.distance, sd.age) re on st.definition = re.def
 				where st.standard = $5
 					and st.update_date = re.update_date 
@@ -763,9 +763,9 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		// Open
 		stm := `select st.definition, re.style, re.distance, re.age, st.standard
 				from standard_time st
-  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(ist.update_date) as update_date
-							from standard_time ist
-								join standard_definition sd on ist.definition = sd.id
+  				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(stm.update_date) as update_date
+							from standard_time stm
+								join standard_definition sd on stm.definition = sd.id
 		 						join swim_style ss on ss.stroke = sd.style
 							where sd.gender = $1
 								and sd.course = $2
@@ -832,7 +832,9 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 					join standard_time st on ts.id = st.standard
 				    join standard_definition sd on st.definition = sd.id
 				where st.standard = $1
-				    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.standard = st.standard)
+				    and st.update_date = (select max(stm.update_date) 
+					                      from standard_time stm 
+										  where stm.standard = st.standard)
 					and sd.gender = $2
 					and sd.course  = $3
 					and sd.style = $4
@@ -858,7 +860,9 @@ func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age in
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
 			where st.standard = $1
-			    and st.update_date = (select max(stm.update_date) from standard_time stm where stm.standard = st.standard)
+			    and st.update_date = (select max(stm.update_date) 
+									  from standard_time stm 
+									  where stm.standard = st.standard)
 			    and sd.gender = $2
 				and sd.course = $3
 				and (sd.age = $4 or sd.age is null)`
