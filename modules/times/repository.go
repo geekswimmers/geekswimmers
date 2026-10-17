@@ -709,7 +709,7 @@ func FindStandardDefinition(standardDefinition *StandardDefinition, db storage.D
 }
 
 func GetStandardTimeByDefinition(definition *StandardDefinition, timeStandard *TimeStandard, db storage.Database) (*StandardTime, error) {
-	stm := `select st.id, st.standard, st.update_date
+	stm := `select st.id, st.standard_time, st.update_date
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
 			where st.standard = $1
@@ -737,7 +737,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 
 	if !example.TimeStandard.Open && example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
 		// Age groups
-		stm := `select st.definition, re.style, re.distance, re.age, st.standard
+		stm := `select st.definition, re.style, re.distance, re.age, st.standard_time
 				from standard_time st
   				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(stm.update_date) as update_date
 							from standard_time stm
@@ -761,7 +761,7 @@ func findStandardTimes(example StandardTime, db storage.Database) ([]*StandardTi
 		defer rows.Close()
 	} else {
 		// Open
-		stm := `select st.definition, re.style, re.distance, re.age, st.standard
+		stm := `select st.definition, re.style, re.distance, re.age, st.standard_time
 				from standard_time st
   				right join (select ss.sequence, sd.id as def, sd.style, sd.distance, sd.age, max(stm.update_date) as update_date
 							from standard_time stm
@@ -802,7 +802,7 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 	var row pgx.Row
 
 	if example.TimeStandard.MinAgeTime != nil && example.TimeStandard.MaxAgeTime != nil {
-		stm := `select ts.id, ts.name, st.standard
+		stm := `select ts.id, ts.name, st.standard_time
 				from standard ts
 					join standard_time st on ts.id = st.standard
 				    join standard_definition sd on st.definition = sd.id
@@ -827,7 +827,7 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 		row = db.QueryRow(context.Background(), stm,
 			example.TimeStandard.ID, minAge, maxAge, example.Definition.Gender, example.Definition.Course, example.Definition.Style, example.Definition.Distance)
 	} else {
-		stm := `select ts.id, ts.name, st.standard
+		stm := `select ts.id, ts.name, st.standard_time
 				from standard ts
 					join standard_time st on ts.id = st.standard
 				    join standard_definition sd on st.definition = sd.id
@@ -856,7 +856,7 @@ func GetStandardTimeMeetByExample(example StandardTime, db storage.Database) (*S
 }
 
 func FindStandardTimesBySwimmer(swimmer *swimming.Swimmer, course string, age int64, timeStandard TimeStandard, db storage.Database) ([]*StandardTime, error) {
-	stm := `select st.id, sd.course, sd.style, sd.distance, st.standard 
+	stm := `select st.id, sd.course, sd.style, sd.distance, st.standard_time
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
 			where st.standard = $1
@@ -907,7 +907,7 @@ func InsertStandardTime(standardTime *StandardTime, db storage.Database) error {
 }
 
 func findStandardsEvent(timeStandard *TimeStandard, definition *StandardDefinition, db storage.Database) ([]*StandardTime, error) {
-	stm := `select ts.id , ts.name, st.standard, st.update_date
+	stm := `select ts.id , ts.name, st.standard_time, st.update_date
 			from standard_time st
 				join standard_definition sd on st.definition = sd.id
 				join standard ts on ts.id = st.standard
