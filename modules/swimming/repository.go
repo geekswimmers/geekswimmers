@@ -117,7 +117,7 @@ func findInstructions(style *Style, db storage.Database) ([]*Instruction, error)
 func FindJurisdictionsInUseByStandards(db storage.Database) ([]*Jurisdiction, error) {
 	stm := `select j.id, j.country, j.province, j.region, j.city, j.team, j.meet
 			from jurisdiction j
-			where j.id in (select distinct jurisdiction from time_standard)`
+			where j.id in (select distinct jurisdiction from standard)`
 
 	rows, err := db.Query(context.Background(), stm)
 	if err != nil {
